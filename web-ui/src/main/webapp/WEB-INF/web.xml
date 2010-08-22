@@ -10,11 +10,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:services-context.xml,
-            classpath:META-INF/spring/application-context.xml,
-            classpath:META-INF/spring/database-context.xml,
-            classpath:META-INF/spring/datainit-context.xml,
-            classpath:message-push-context.xml
+            classpath:application-context.xml
         </param-value>
     </context-param>
 
@@ -39,10 +35,6 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <listener>
-        <listener-class>flex.messaging.HttpFlexSession</listener-class>
-    </listener>
-
     <!-- ====================================================================== -->
     <!--                             Filters                                    -->
     <!-- ====================================================================== -->
@@ -58,11 +50,11 @@
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/messagebroker/*</url-pattern>
+        <url-pattern>/tradeitem/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>addressbook.swf</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
 </web-app>
