@@ -10,7 +10,10 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:application-context.xml
+            classpath:META-INF/spring/command-context.xml,
+            classpath:META-INF/spring/configuration-context.xml,
+            classpath:META-INF/spring/cqrs-infrastructure-context.xml,
+            classpath:META-INF/spring/persistence-infrastructure-context.xml
         </param-value>
     </context-param>
 
@@ -50,11 +53,11 @@
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/tradeitem/*</url-pattern>
+        <url-pattern>/messagebroker/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>addressbook.swf</welcome-file>
     </welcome-file-list>
 
 </web-app>
