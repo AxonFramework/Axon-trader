@@ -7,11 +7,6 @@
         <constructor-arg value="org.axonframework.samples.trader.app.command.trading.OrderBook"/>
         <property name="eventBus" ref="eventBus"/>
         <property name="eventStore" ref="eventStore"/>
-        <!--
-       <property name="conflictResolver">
-            <bean class="nl.jteam.cqrs.command.AcceptLowerConflictResolver"/>
-        </property>
-        -->
     </bean>
 
 </beans>

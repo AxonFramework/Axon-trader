@@ -10,7 +10,6 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-        	classpath:application-context.xml,
             classpath:META-INF/spring/command-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
             classpath:META-INF/spring/cqrs-infrastructure-context.xml,

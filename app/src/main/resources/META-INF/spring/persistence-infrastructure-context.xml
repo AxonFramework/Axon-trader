@@ -42,7 +42,4 @@
             </bean>
         </property>
     </bean>
-
-    <bean class="nl.jteam.cqrs.init.DatabaseInitializer"/>
-
 </beans>
