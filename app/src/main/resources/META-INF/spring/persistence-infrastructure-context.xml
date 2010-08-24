@@ -30,16 +30,26 @@
 
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
-        <property name="targetDataSource">
-            <bean class="com.mchange.v2.c3p0.ComboPooledDataSource">
-                <property name="driverClass" value="${db.driverClass}"/>
-                <property name="jdbcUrl" value="${db.url"/>
-                <property name="user" value="${db.user}"/>
-                <property name="password" value="${db.password}"/>
-                <property name="maxPoolSize" value="${db.maxPoolSize}"/>
-                <property name="minPoolSize" value="${db.minPoolSize}"/>
-            </bean>
-        </property>
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${db.driverClass}"/>
+        <property name="jdbcUrl" value="${db.url}"/>
+        <property name="user" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="maxPoolSize" value="${db.maxPoolSize}"/>
+        <property name="minPoolSize" value="${db.minPoolSize}"/>
     </bean>
+
+
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">-->
+        <!--<property name="targetDataSource">-->
+            <!--<bean class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+                <!--<property name="driverClass" value="${db.driverClass}"/>-->
+                <!--<property name="jdbcUrl" value="${db.url"/>-->
+                <!--<property name="user" value="${db.user}"/>-->
+                <!--<property name="password" value="${db.password}"/>-->
+                <!--<property name="maxPoolSize" value="${db.maxPoolSize}"/>-->
+                <!--<property name="minPoolSize" value="${db.minPoolSize}"/>-->
+            <!--</bean>-->
+        <!--</property>-->
+    <!--</bean>-->
 </beans>
