@@ -3,9 +3,12 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.app.api.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 /**
  * @author Allard Buijze
@@ -31,6 +34,12 @@ public class OrderBookCommandHandler {
                                command.getTradeCount(),
                                command.getItemPrice(),
                                command.getUserId());
+    }
+
+    @CommandHandler
+    public void handleCreateOrderBook(CreateOrderBookCommand command) {
+        OrderBook orderBook = new OrderBook(UUID.randomUUID(),command.getTradeItemIdentifier());
+        repository.add(orderBook);
     }
 
     @Autowired

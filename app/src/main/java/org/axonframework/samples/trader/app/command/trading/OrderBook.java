@@ -3,6 +3,7 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
 
@@ -19,12 +20,16 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
-    public OrderBook() {
+    public OrderBook(UUID identifier, UUID tradeItemIdentifier) {
+        super(identifier);
+        apply(new OrderBookCreatedEvent(tradeItemIdentifier));
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     public OrderBook(UUID identifier) {
         super(identifier);
     }
+
 
     public void addBuyOrder(UUID orderId, long tradeCount, int itemPrice, UUID userId) {
         apply(new BuyOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
@@ -76,6 +81,11 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
         if (lowestSeller.getItemsRemaining() <= 0) {
             sellOrders.remove(lowestSeller);
         }
+    }
+
+    @EventHandler
+    protected void onOrderBookCreated(OrderBookCreatedEvent event) {
+        // Nothing for now
     }
 
     private static class OrderComparator implements Comparator<Order> {

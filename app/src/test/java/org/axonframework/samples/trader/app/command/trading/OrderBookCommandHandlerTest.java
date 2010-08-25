@@ -1,9 +1,6 @@
 package org.axonframework.samples.trader.app.command.trading;
 
-import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
-import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
+import org.axonframework.samples.trader.app.api.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.*;
@@ -61,4 +58,13 @@ public class OrderBookCommandHandlerTest {
                               new TradeExecutedEvent(90, 100, buyOrder1, sellOrderId));
     }
 
+    @Test
+    public void testCreateOrderBook() {
+        UUID orderBook = UUID.randomUUID();
+        UUID tradeItemIdentifier = UUID.randomUUID();
+        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(tradeItemIdentifier);
+        fixture.given()
+                .when(createOrderBookCommand)
+                .expectEvents(new OrderBookCreatedEvent(tradeItemIdentifier));
+    }
 }
