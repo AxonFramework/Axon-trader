@@ -1,4 +1,4 @@
-package org.axonframework.samples.trader.app.query;
+package org.axonframework.samples.trader.app.query.user;
 
 import org.hibernate.annotations.Type;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author Jettro Coenradie
  */
 @Entity
-public class OrderBookEntry {
+public class UserEntry {
     @Id
     @GeneratedValue
     private Long db_identifier;
@@ -21,9 +21,11 @@ public class OrderBookEntry {
     @Type(type = "org.axonframework.samples.trader.app.query.UUIDUserType")
     private UUID identifier;
 
-    @Basic(optional = true)
-    @Type(type = "org.axonframework.samples.trader.app.query.UUIDUserType")
-    private UUID tradeItemIdentifier;
+    @Basic
+    private String name;
+
+    @Basic
+    private String username;
 
     public Long getDb_identifier() {
         return db_identifier;
@@ -41,11 +43,19 @@ public class OrderBookEntry {
         this.identifier = identifier;
     }
 
-    public UUID getTradeItemIdentifier() {
-        return tradeItemIdentifier;
+    public String getName() {
+        return name;
     }
 
-    void setTradeItemIdentifier(UUID tradeItemIdentifier) {
-        this.tradeItemIdentifier = tradeItemIdentifier;
+    void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    void setUsername(String username) {
+        this.username = username;
     }
 }

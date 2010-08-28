@@ -7,7 +7,7 @@ import java.util.UUID;
  */
 public class CreateSellOrderCommand extends AbstractOrderCommand {
 
-    public CreateSellOrderCommand(UUID userId, UUID tradeItemId, long tradeCount, int itemPrice) {
-        super(userId, tradeItemId, tradeCount, itemPrice);
+    public CreateSellOrderCommand(UUID userId, UUID orderBookId, long tradeCount, int itemPrice) {
+        super(userId, orderBookId, tradeCount, itemPrice);
     }
 }

@@ -8,14 +8,14 @@ import java.util.UUID;
 public abstract class AbstractOrderCommand {
 
     private UUID userId;
-    private UUID tradeItemId;
+    private UUID orderBookId;
     private long tradeCount;
     private int itemPrice;
     private UUID orderId;
 
-    protected AbstractOrderCommand(UUID userId, UUID tradeItemId, long tradeCount, int itemPrice) {
+    protected AbstractOrderCommand(UUID userId, UUID orderBookId, long tradeCount, int itemPrice) {
         this.userId = userId;
-        this.tradeItemId = tradeItemId;
+        this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
         this.orderId = UUID.randomUUID();
@@ -25,8 +25,8 @@ public abstract class AbstractOrderCommand {
         return userId;
     }
 
-    public UUID getTradeItemId() {
-        return tradeItemId;
+    public UUID getOrderBookId() {
+        return orderBookId;
     }
 
     public long getTradeCount() {

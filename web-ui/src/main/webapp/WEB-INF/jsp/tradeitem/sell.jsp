@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-Sell : <c:out value='${identifier}'/>
+Sell : <c:out value='${order.tradeItemId}'/>
 
 <form:form commandName="order">
     <form:errors/>

@@ -20,7 +20,7 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
-        OrderBook orderBook = repository.load(command.getTradeItemId(), null);
+        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addBuyOrder(command.getOrderId(),
                               command.getTradeCount(),
                               command.getItemPrice(),
@@ -29,7 +29,7 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
-        OrderBook orderBook = repository.load(command.getTradeItemId(), null);
+        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
                                command.getTradeCount(),
                                command.getItemPrice(),
