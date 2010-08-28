@@ -54,6 +54,7 @@
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/tradeitem/*</url-pattern>
+        <url-pattern>/orderbook/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
