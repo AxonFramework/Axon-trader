@@ -1,5 +1,6 @@
 package org.axonframework.samples.trader.webui.order;
 
+import org.axonframework.samples.trader.app.query.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.OrderBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -28,8 +31,9 @@ public class OrderBookController {
     }
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
-    public String buy(@PathVariable String identifier, Model model) {
-//        repository.
+    public String getOrders(@PathVariable String identifier, Model model) {
+        OrderBookEntry orderBook = repository.findByIdentifier(UUID.fromString(identifier));
+        model.addAttribute("orderBook", orderBook);
         return "orderbook/orders";
     }
 

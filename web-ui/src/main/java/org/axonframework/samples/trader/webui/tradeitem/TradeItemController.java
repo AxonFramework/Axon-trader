@@ -2,6 +2,7 @@ package org.axonframework.samples.trader.webui.tradeitem;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
+import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.TradeItemEntry;
 import org.axonframework.samples.trader.app.query.TradeItemRepository;
@@ -42,8 +43,10 @@ public class TradeItemController {
     }
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.GET)
-    public String buy(@PathVariable String identifier, Model model) {
-        model.addAttribute("identifier",identifier);
+    public String buyForm(@PathVariable String identifier, Model model) {
+        SellOrder order = new SellOrder();
+        order.setTradeItemId(identifier);
+        model.addAttribute("order", order);
         return "tradeitem/buy";
     }
 
@@ -70,10 +73,33 @@ public class TradeItemController {
                     order.getItemPrice());
             FutureCallback callback = new FutureCallback();
             commandBus.dispatch(command,callback);
-            // TODO jettro : Hier komt een NullPointer
             try {
                 Object o = callback.get();
-                System.out.println("toString " + o.toString());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        return "tradeitem/sell";
+    }
+
+    @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.POST)
+    public String buy(@ModelAttribute("order") SellOrder order, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
+
+            UUID tradeItemId = UUID.fromString(order.getTradeItemId());
+            TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
+
+            CreateBuyOrderCommand command = new CreateBuyOrderCommand(
+                    username.getIdentifier(),
+                    tradeItemByIdentifier.getOrderBookIdentifier(),
+                    order.getTradeCount(),
+                    order.getItemPrice());
+            FutureCallback callback = new FutureCallback();
+            commandBus.dispatch(command,callback);
+            try {
+                Object o = callback.get();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

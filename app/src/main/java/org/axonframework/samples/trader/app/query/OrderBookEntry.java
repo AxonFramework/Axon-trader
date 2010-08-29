@@ -2,10 +2,8 @@ package org.axonframework.samples.trader.app.query;
 
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,6 +25,9 @@ public class OrderBookEntry {
 
     @Basic
     private String tradeItemName;
+
+    @OneToMany(mappedBy = "orderBookEntry")
+    private List<OrderEntry> orders;
 
     public Long getDb_identifier() {
         return db_identifier;
@@ -58,5 +59,13 @@ public class OrderBookEntry {
 
     void setTradeItemName(String tradeItemName) {
         this.tradeItemName = tradeItemName;
+    }
+
+    public List<OrderEntry> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntry> orders) {
+        this.orders = orders;
     }
 }
