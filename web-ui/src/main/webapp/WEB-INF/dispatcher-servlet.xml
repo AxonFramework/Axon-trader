@@ -16,6 +16,20 @@
         <property name="alwaysUseFullPath" value="true"/>
     </bean>
 
+    <bean id="andnowwhat" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/index.html">
+                    <ref local="staticViewController"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="staticViewController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+    <!--<bean id="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator"/>-->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>

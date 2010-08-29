@@ -85,6 +85,8 @@
             <artifactId>spring-security-config</artifactId>
             <version>3.0.3.RELEASE</version>
         </dependency>
+
+        <!-- web -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
@@ -94,6 +96,11 @@
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>2.4.2</version>
         </dependency>
 
         <!-- other -->
