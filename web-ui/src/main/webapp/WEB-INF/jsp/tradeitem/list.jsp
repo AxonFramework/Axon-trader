@@ -2,13 +2,16 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<table>
+<table id="hor-minimalist-b">
+    <thead>
     <tr>
         <th>Name</th>
         <th>Value</th>
         <th># Shares</th>
         <th>actions</th>
     </tr>
+    </thead>
+    <tbody>
     <c:forEach items="${items}" var="item">
         <tr>
             <td><c:out value='${item.name}'/></td>
@@ -17,9 +20,10 @@
             <td>
                 <c:if test="${item.tradeStarted}">
                     <a href="${ctx}/tradeitem/buy/<c:out value='${item.identifier}'/>">buy</a>
-                &nbsp<a href="${ctx}/tradeitem/sell/<c:out value='${item.identifier}'/>">sell</a>
+                    &nbsp<a href="${ctx}/tradeitem/sell/<c:out value='${item.identifier}'/>">sell</a>
                 </c:if>
             </td>
         </tr>
     </c:forEach>
+    </tbody>
 </table>

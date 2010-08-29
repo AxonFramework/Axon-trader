@@ -2,8 +2,19 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<ul>
-<c:forEach items="${items}" var="item">
-        <li><c:out value='${item.tradeItemName}'/> &nbsp;<a href="${ctx}/orderbook/<c:out value='${item.identifier}'/>">orders</a></li>
-</c:forEach>
-</ul>
+<table id="hor-minimalist-b">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach items="${items}" var="item">
+        <tr>
+            <td><c:out value='${item.tradeItemName}'/></td>
+            <td><a href="${ctx}/orderbook/<c:out value='${item.identifier}'/>">orders</a></td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>

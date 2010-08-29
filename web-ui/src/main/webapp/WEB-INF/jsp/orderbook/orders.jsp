@@ -2,7 +2,8 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<table>
+<table id="hor-minimalist-b">
+    <thead>
     <tr>
         <th>Type</th>
         <th>Count</th>
@@ -10,6 +11,8 @@
         <th>Remaining</th>
         <th>User</th>
     </tr>
+    </thead>
+    <tbody>
     <c:forEach items="${orderBook.orders}" var="order">
         <tr>
             <td><c:out value='${order.type}'/></td>
@@ -19,5 +22,5 @@
             <td><c:out value='${order.userId}'/></td>
         </tr>
     </c:forEach>
-
+    </tbody>
 </table>

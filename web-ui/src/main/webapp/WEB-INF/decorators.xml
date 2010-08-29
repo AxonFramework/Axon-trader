@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <decorators defaultdir="/WEB-INF/decorators">
+    <decorator name="basic" page="basic.jsp">
+        <pattern>/spring_security_login</pattern>
+    </decorator>
     <decorator name="master" page="master.jsp">
         <pattern>/*</pattern>
     </decorator>

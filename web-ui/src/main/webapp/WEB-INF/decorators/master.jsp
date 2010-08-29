@@ -3,15 +3,50 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
 <html>
-  <head>
-    <title><decorator:title /></title>
-  </head>
-  <body>
-    <div id="header">
-       <a href="${ctx}/orderbook">Order book</a> &nbsp; <a href="${ctx}/tradeitem">Trade item</a>
+<head>
+    <title><decorator:title/></title>
+    <link rel="stylesheet" href="${ctx}/style/main.css"/>
+    <link rel="stylesheet" href="${ctx}/style/redmond/jquery-ui-1.8.4.custom.css"/>
+    <script type="text/javascript" src="${ctx}/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="${ctx}/js/jquery-ui-1.8.4.custom.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#tabs').tabs({
+                select: function(event, ui) {
+                    var url = $.data(ui.tab, 'load.tabs');
+                    if (url) {
+                        location.href = url;
+                        return false;
+                    }
+                    return true;
+                }
+            });
+
+            $('#primaryNavigation ul li.current').removeClass('current');
+            var loc = window.location.pathname;
+//            window.alert(loc);
+            if (loc.indexOf('/orderbook') > -1) {
+                $('#primaryNavigation ul li.orderbook').addClass('current');
+            } else if (loc.indexOf('/tradeitem') > -1) {
+                $('#primaryNavigation ul li.tradeitem').addClass('current');
+//            } else {
+//                $('#primaryNavigation ul li.orderbook').addClass('current');
+            }
+
+        });
+    </script>
+</head>
+<body>
+<div id="header">
+    <div id="primaryNavigation">
+        <ul>
+            <li class="orderbook"><a href="${ctx}/orderbook"><span>Order book</span></a></li>
+            <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Trade item</span></a></li>
+        </ul>
     </div>
-    <div id="main">
-      <decorator:body />
-    </div>
-  </body>
+</div>
+<div id="main">
+    <decorator:body/>
+</div>
+</body>
 </html>
