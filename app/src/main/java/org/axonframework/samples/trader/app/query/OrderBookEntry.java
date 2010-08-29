@@ -25,6 +25,9 @@ public class OrderBookEntry {
     @Type(type = "org.axonframework.samples.trader.app.query.UUIDUserType")
     private UUID tradeItemIdentifier;
 
+    @Basic
+    private String tradeItemName;
+
     public Long getDb_identifier() {
         return db_identifier;
     }
@@ -47,5 +50,13 @@ public class OrderBookEntry {
 
     void setTradeItemIdentifier(UUID tradeItemIdentifier) {
         this.tradeItemIdentifier = tradeItemIdentifier;
+    }
+
+    public String getTradeItemName() {
+        return tradeItemName;
+    }
+
+    void setTradeItemName(String tradeItemName) {
+        this.tradeItemName = tradeItemName;
     }
 }

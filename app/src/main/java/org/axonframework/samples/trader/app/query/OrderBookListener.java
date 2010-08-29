@@ -21,13 +21,16 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
+        TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(event.getTradeItemIdentifier());
+        tradeItemByIdentifier.setOrderBookIdentifier(event.getOrderBookIdentifier());
+        entityManager.merge(tradeItemByIdentifier);
+
         OrderBookEntry entry = new OrderBookEntry();
         entry.setIdentifier(event.getOrderBookIdentifier());
         entry.setTradeItemIdentifier(event.getTradeItemIdentifier());
+        entry.setTradeItemName(tradeItemByIdentifier.getName());
         entityManager.persist(entry);
 
-        TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(event.getTradeItemIdentifier());
-        tradeItemByIdentifier.setOrderBookIdentifier(event.getOrderBookIdentifier());
     }
 
     @Autowired

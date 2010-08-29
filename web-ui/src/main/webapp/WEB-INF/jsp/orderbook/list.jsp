@@ -4,7 +4,6 @@
 
 <ul>
 <c:forEach items="${items}" var="item">
-        <li><c:out value='${item.tradeItemName}'/>&nbsp<a href="${ctx}/orderbook/buy/<c:out value='${item.identifier}'/>">buy</a>
-            &nbsp<a href="${ctx}/orderbook/sell/<c:out value='${item.identifier}'/>">sell</a></li>
+        <li><c:out value='${item.tradeItemName}'/> &nbsp;<a href="${ctx}/orderbook/<c:out value='${item.identifier}'/>">orders</a></li>
 </c:forEach>
 </ul>
