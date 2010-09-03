@@ -1,0 +1,4 @@
+This is a sample application to demonstrate the possibilities of the Axon framework in a high load environment. We
+have chosen to create a Trader application. All you need to run it is java and maven. If they are correct installed, the
+ easiest way to start the demo is to do a mvn clean install on the highest level of the project. Than step into the
+ web-ui project and do mvn clean jetty:run-war.
