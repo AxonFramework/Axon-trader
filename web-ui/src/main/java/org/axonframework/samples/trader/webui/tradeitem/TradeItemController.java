@@ -1,7 +1,7 @@
 package org.axonframework.samples.trader.webui.tradeitem;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.callbacks.FutureCallback;
+import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.TradeItemEntry;
@@ -14,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.UUID;
 
@@ -71,13 +74,8 @@ public class TradeItemController {
                     tradeItemByIdentifier.getOrderBookIdentifier(),
                     order.getTradeCount(),
                     order.getItemPrice());
-            FutureCallback callback = new FutureCallback();
-            commandBus.dispatch(command,callback);
-            try {
-                Object o = callback.get();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+
+            commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
         }
         return "tradeitem/sell";
@@ -96,14 +94,7 @@ public class TradeItemController {
                     tradeItemByIdentifier.getOrderBookIdentifier(),
                     order.getTradeCount(),
                     order.getItemPrice());
-            FutureCallback callback = new FutureCallback();
-            commandBus.dispatch(command,callback);
-            try {
-                Object o = callback.get();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
+            commandBus.dispatch(command, NoOpCallback.INSTANCE);
         }
         return "tradeitem/sell";
     }
