@@ -4,6 +4,8 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
+import org.axonframework.samples.trader.app.query.OrderBookEntry;
+import org.axonframework.samples.trader.app.query.OrderBookRepository;
 import org.axonframework.samples.trader.app.query.TradeItemEntry;
 import org.axonframework.samples.trader.app.query.TradeItemRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
@@ -29,14 +31,16 @@ import java.util.UUID;
 public class TradeItemController {
 
     private TradeItemRepository tradeItemRepository;
+    private OrderBookRepository orderBookRepository;
     private UserRepository userRepository;
     private CommandBus commandBus;
 
     @Autowired
-    public TradeItemController(TradeItemRepository tradeItemRepository, CommandBus commandBus, UserRepository userRepository) {
+    public TradeItemController(TradeItemRepository tradeItemRepository, CommandBus commandBus, UserRepository userRepository, OrderBookRepository orderBookRepository) {
         this.tradeItemRepository = tradeItemRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
+        this.orderBookRepository = orderBookRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -44,6 +48,17 @@ public class TradeItemController {
         model.addAttribute("items", tradeItemRepository.listAllTradeItems());
         return "tradeitem/list";
     }
+
+    @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
+    public String details(@PathVariable String identifier, Model model) {
+        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(UUID.fromString(identifier));
+        OrderBookEntry bookEntry = orderBookRepository.findByTradeItem(tradeItem.getIdentifier());
+        model.addAttribute("tradeItem",tradeItem);
+        model.addAttribute("sellOrders", bookEntry.sellOrders());
+        model.addAttribute("buyOrders", bookEntry.buyOrders());
+        return "tradeitem/details";
+    }
+
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.GET)
     public String buyForm(@PathVariable String identifier, Model model) {

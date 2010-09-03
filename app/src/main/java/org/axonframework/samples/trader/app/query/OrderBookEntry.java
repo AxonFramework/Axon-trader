@@ -3,6 +3,7 @@ package org.axonframework.samples.trader.app.query;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,26 @@ public class OrderBookEntry {
 
     @OneToMany(mappedBy = "orderBookEntry")
     private List<OrderEntry> orders;
+
+    public List<OrderEntry> sellOrders() {
+        List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
+        for (OrderEntry order : orders) {
+            if (order.getType().equalsIgnoreCase("sell")) {
+                sellOrders.add(order);
+            }
+        }
+        return sellOrders;
+    }
+
+    public List<OrderEntry> buyOrders() {
+        List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
+        for (OrderEntry order : orders) {
+            if (order.getType().equalsIgnoreCase("buy")) {
+                buyOrders.add(order);
+            }
+        }
+        return buyOrders;
+    }
 
     public Long getDb_identifier() {
         return db_identifier;

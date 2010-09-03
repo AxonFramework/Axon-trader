@@ -10,4 +10,6 @@ public interface OrderBookRepository {
     List<OrderBookEntry> listAllOrderBooks();
 
     OrderBookEntry findByIdentifier(UUID aggregateIdentifier);
+
+    OrderBookEntry findByTradeItem(UUID tradeItemIdentifier);
 }

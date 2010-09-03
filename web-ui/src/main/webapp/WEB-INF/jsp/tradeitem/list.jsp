@@ -1,14 +1,16 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-
-<c:set var="ctx" value="${pageContext.request.contextPath}"/>
-
-<table id="hor-minimalist-b">
+<%@include file="../include.jsp"%>
+<html>
+<head>
+    <title>Trade items</title>
+</head>
+<body>
+<table class="hor-minimalist-b">
     <thead>
     <tr>
         <th>Name</th>
         <th>Value</th>
         <th># Shares</th>
-        <th>actions</th>
+        <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
@@ -17,13 +19,10 @@
             <td><c:out value='${item.name}'/></td>
             <td><c:out value='${item.value}'/></td>
             <td><c:out value='${item.amountOfShares}'/></td>
-            <td>
-                <c:if test="${item.tradeStarted}">
-                    <a href="${ctx}/tradeitem/buy/<c:out value='${item.identifier}'/>">buy</a>
-                    &nbsp<a href="${ctx}/tradeitem/sell/<c:out value='${item.identifier}'/>">sell</a>
-                </c:if>
-            </td>
+            <td><a href="${ctx}/tradeitem/<c:out value='${item.identifier}'/>">details</a></td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+</body>
+</html>

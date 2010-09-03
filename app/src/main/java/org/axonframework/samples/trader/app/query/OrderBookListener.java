@@ -4,6 +4,7 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,6 +64,11 @@ public class OrderBookListener {
         entry.setOrderBookEntry(orderBook);
         entry.setType("Sell");
         entityManager.persist(entry);
+    }
+
+    @EventHandler
+    public void handleTradeExecuted(TradeExecutedEvent event) {
+        
     }
 
     @Autowired

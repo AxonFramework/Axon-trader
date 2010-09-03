@@ -24,13 +24,10 @@
 
             $('#primaryNavigation ul li.current').removeClass('current');
             var loc = window.location.pathname;
-//            window.alert(loc);
-            if (loc.indexOf('/orderbook') > -1) {
-                $('#primaryNavigation ul li.orderbook').addClass('current');
-            } else if (loc.indexOf('/tradeitem') > -1) {
+            if (loc.indexOf('/tradeitem') > -1) {
                 $('#primaryNavigation ul li.tradeitem').addClass('current');
-//            } else {
-//                $('#primaryNavigation ul li.orderbook').addClass('current');
+            } else {
+                $('#primaryNavigation ul li.home').addClass('current');
             }
 
         });
@@ -40,7 +37,7 @@
 <div id="header">
     <div id="primaryNavigation">
         <ul>
-            <li class="orderbook"><a href="${ctx}/orderbook"><span>Order book</span></a></li>
+            <li class="home"><a href="/"><span>Home</span></a></li> <%-- TODO jettro : Make use of ctx and make it work --%>
             <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Trade item</span></a></li>
         </ul>
     </div>

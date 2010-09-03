@@ -71,6 +71,7 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     protected void onTradeExecuted(TradeExecutedEvent event) {
+        // TODO jettro : is this safe to do? Or is it safe because we do everything in one thread?
         Order highestBuyer = buyOrders.last();
         Order lowestSeller = sellOrders.first();
         highestBuyer.recordTraded(event.getTradeCount());

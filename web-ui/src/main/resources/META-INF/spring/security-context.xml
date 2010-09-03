@@ -14,6 +14,8 @@
             <user-service>
                 <user name="admin1" password="admin1" authorities="ROLE_USER, ROLE_ADMIN"/>
                 <user name="buyer1" password="buyer1" authorities="ROLE_USER"/>
+                <user name="buyer2" password="buyer2" authorities="ROLE_USER"/>
+                <user name="buyer3" password="buyer3" authorities="ROLE_USER"/>
             </user-service>
         </authentication-provider>
     </authentication-manager>
