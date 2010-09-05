@@ -12,6 +12,8 @@ import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEnt
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.axonframework.samples.trader.app.query.user.UserRepository;
+import org.axonframework.samples.trader.webui.order.AbstractOrder;
+import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
 import org.axonframework.samples.trader.webui.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,8 +76,8 @@ public class TradeItemController {
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.GET)
     public String buyForm(@PathVariable String identifier, Model model) {
-        SellOrder order = new SellOrder();
-        order.setTradeItemId(identifier);
+        BuyOrder order = new BuyOrder();
+        prepareInitialOrder(identifier, order);
         model.addAttribute("order", order);
         return "tradeitem/buy";
     }
@@ -82,13 +85,13 @@ public class TradeItemController {
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.GET)
     public String sellForm(@PathVariable String identifier, Model model) {
         SellOrder order = new SellOrder();
-        order.setTradeItemId(identifier);
+        prepareInitialOrder(identifier,order);
         model.addAttribute("order", order);
         return "tradeitem/sell";
     }
 
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.POST)
-    public String sell(@ModelAttribute("order") SellOrder order, BindingResult bindingResult) {
+    public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
@@ -103,12 +106,13 @@ public class TradeItemController {
 
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
+            return "redirect:/tradeitem/" + order.getTradeItemId();
         }
         return "tradeitem/sell";
     }
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.POST)
-    public String buy(@ModelAttribute("order") SellOrder order, BindingResult bindingResult) {
+    public String buy(@ModelAttribute("order") BuyOrder order, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
@@ -121,8 +125,16 @@ public class TradeItemController {
                     order.getTradeCount(),
                     order.getItemPrice());
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
+            return "redirect:/tradeitem/" + order.getTradeItemId();
         }
-        return "tradeitem/sell";
+
+        return "tradeitem/buy";
+    }
+
+    private void prepareInitialOrder(String identifier, AbstractOrder order) {
+        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(UUID.fromString(identifier));
+        order.setTradeItemId(identifier);
+        order.setTradeItemName(tradeItem.getName());
     }
 
 }

@@ -62,6 +62,17 @@
 
 /* Enf of primary navigation */
 
+/* forms */
+.errorBox {
+    border: 2px solid red;
+    color: red;
+    margin: 5px 5px;
+    padding: 5px;
+    display:block;
+}
+
+/* end of forms */
+
 /* Layout */
 #tradeItemDetails {
     margin: 20px;

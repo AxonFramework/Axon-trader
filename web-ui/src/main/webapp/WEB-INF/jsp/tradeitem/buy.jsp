@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-Sell : <c:out value='${order.tradeItemId}'/>
+<p>Buy order for : <c:out value='${order.tradeItemName}'/></p>
 
 <form:form commandName="order">
-    <form:errors/>
+    <form:errors path="*" cssClass="errorBox"/>
     <form:hidden path="tradeItemId"/>
+    <form:hidden path="tradeItemName"/>
     <table>
           <tr>
               <td>Price:</td>
@@ -17,7 +18,7 @@ Sell : <c:out value='${order.tradeItemId}'/>
           </tr>
           <tr>
               <td colspan="2">
-                  <input type="submit" value="Save Changes" />
+                  <input type="submit" value="Place Order" />
               </td>
           </tr>
       </table>
