@@ -5,11 +5,13 @@ import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
+import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -68,7 +70,24 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleTradeExecuted(TradeExecutedEvent event) {
-        
+        UUID buyOrderId = event.getBuyOrderId();
+        UUID sellOrderId = event.getSellOrderId();
+
+        UUID orderBookIdentifier = event.getOrderBookIdentifier();
+        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByOrderBookIdentifier(orderBookIdentifier);
+
+        TradeExecutedEntry entry = new TradeExecutedEntry();
+        entry.setTradeCount(event.getTradeCount());
+        entry.setTradePrice(event.getTradePrice());
+        entry.setTradeItemName(tradeItem.getName());
+        entry.setOrderBookIdentifier(orderBookIdentifier);
+        entityManager.persist(entry);
+
+        OrderEntry buyOrderEntry = orderBookRepository.findByOrderIdentifier(buyOrderId);
+        buyOrderEntry.setItemsRemaining(buyOrderEntry.getItemsRemaining() - event.getTradeCount());
+
+        OrderEntry sellOrderEntry = orderBookRepository.findByOrderIdentifier(sellOrderId);
+        sellOrderEntry.setItemsRemaining(sellOrderEntry.getItemsRemaining() - event.getTradeCount());
     }
 
     @Autowired

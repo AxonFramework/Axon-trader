@@ -32,4 +32,11 @@ public class TradeItemRepositoryJpa implements TradeItemRepository {
                 .getSingleResult();
     }
 
+    @Override
+    public TradeItemEntry findTradeItemByOrderBookIdentifier(UUID orderBookIdentifier) {
+        return (TradeItemEntry) entityManager.createQuery("SELECT e FROM TradeItemEntry e where e.orderBookIdentifier = :orderBookIdentifier")
+                .setParameter("orderBookIdentifier",orderBookIdentifier)
+                .getSingleResult();
+    }
+
 }

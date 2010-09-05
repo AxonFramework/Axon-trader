@@ -103,12 +103,7 @@
     display: block;
 }
 
-#orderBook #sellOrders {
-    margin: 0 50px;
-    float: left;
-}
-
-#orderBook #buyOrders {
+#orderBook .list {
     margin: 0 50px;
     float: left;
 }

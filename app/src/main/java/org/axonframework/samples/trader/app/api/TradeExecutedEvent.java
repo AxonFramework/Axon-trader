@@ -21,6 +21,10 @@ public class TradeExecutedEvent extends DomainEvent {
         this.sellOrderId = sellOrderId;
     }
 
+    public UUID getOrderBookIdentifier() {
+        return getAggregateIdentifier();
+    }
+
     public long getTradeCount() {
         return tradeCount;
     }

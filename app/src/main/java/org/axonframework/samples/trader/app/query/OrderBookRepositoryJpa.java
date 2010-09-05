@@ -45,4 +45,12 @@ public class OrderBookRepositoryJpa implements OrderBookRepository {
         orderBook.getOrders().size(); // to support lazy loading if we collect all order books
         return orderBook;
     }
+
+    @Override
+    public OrderEntry findByOrderIdentifier(UUID orderIdentifier) {
+        return (OrderEntry) entityManager.createQuery(
+                "SELECT e FROM OrderEntry e where e.identifier = :orderIdentifier")
+                .setParameter("orderIdentifier",orderIdentifier)
+                .getSingleResult();
+    }
 }

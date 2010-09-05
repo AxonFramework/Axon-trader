@@ -18,7 +18,7 @@
     </c:if>
 </div>
 <div id="orderBook">
-    <div id="sellOrders">
+    <div class="list">
         <h3>Sell Orders</h3>
         <table class="hor-minimalist-b">
             <thead>
@@ -39,7 +39,7 @@
             </tbody>
         </table>
     </div>
-    <div id="buyOrders">
+    <div class="list">
         <h3>Buy Orders</h3>
         <table class="hor-minimalist-b">
             <thead>
@@ -60,6 +60,26 @@
             </tbody>
         </table>
     </div>
+    <div class="list">
+        <h3>Executed trades</h3>
+        <table class="hor-minimalist-b">
+            <thead>
+            <tr>
+                <th>Count</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${executedTrades}" var="trade">
+                <tr>
+                    <td><c:out value='${trade.tradeCount}'/></td>
+                    <td><c:out value='${trade.tradePrice}'/></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 </body>
 </html>

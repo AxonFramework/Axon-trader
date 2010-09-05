@@ -8,6 +8,8 @@ import org.axonframework.samples.trader.app.query.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.OrderBookRepository;
 import org.axonframework.samples.trader.app.query.TradeItemEntry;
 import org.axonframework.samples.trader.app.query.TradeItemRepository;
+import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
+import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.axonframework.samples.trader.app.query.user.UserRepository;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,14 +36,20 @@ public class TradeItemController {
     private TradeItemRepository tradeItemRepository;
     private OrderBookRepository orderBookRepository;
     private UserRepository userRepository;
+    private TradeExecutedRepository tradeExecutedRepository;
     private CommandBus commandBus;
 
     @Autowired
-    public TradeItemController(TradeItemRepository tradeItemRepository, CommandBus commandBus, UserRepository userRepository, OrderBookRepository orderBookRepository) {
+    public TradeItemController(TradeItemRepository tradeItemRepository,
+                               CommandBus commandBus,
+                               UserRepository userRepository,
+                               OrderBookRepository orderBookRepository,
+                               TradeExecutedRepository tradeExecutedRepository) {
         this.tradeItemRepository = tradeItemRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
         this.orderBookRepository = orderBookRepository;
+        this.tradeExecutedRepository = tradeExecutedRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -53,9 +62,11 @@ public class TradeItemController {
     public String details(@PathVariable String identifier, Model model) {
         TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(UUID.fromString(identifier));
         OrderBookEntry bookEntry = orderBookRepository.findByTradeItem(tradeItem.getIdentifier());
+        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findExecutedTradesForOrderBook(bookEntry.getIdentifier());
         model.addAttribute("tradeItem",tradeItem);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
+        model.addAttribute("executedTrades", executedTrades);
         return "tradeitem/details";
     }
 

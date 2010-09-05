@@ -10,4 +10,6 @@ public interface TradeItemRepository {
     List<TradeItemEntry> listAllTradeItems();
 
     TradeItemEntry findTradeItemByIdentifier(UUID tradeItemIdentifier);
+
+    TradeItemEntry findTradeItemByOrderBookIdentifier(UUID orderBookIdentifier);
 }
