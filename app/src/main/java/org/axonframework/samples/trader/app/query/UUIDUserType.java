@@ -40,7 +40,6 @@ public class UUIDUserType implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
-        // TODO jettro : check if this is oke
         String get = rs.getString(names[0]);
         if (get != null) {
             return UUID.fromString(get);
@@ -50,7 +49,6 @@ public class UUIDUserType implements UserType {
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
-        // TODO jettro : check if this is oke
         if (value!=null) {
             st.setString(index, value.toString());
         }
