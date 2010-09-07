@@ -33,7 +33,9 @@ public class DBInit {
     @PostConstruct
     public void createItems() {
         UUID userIdentifier = createuser("Buyer One", "buyer1");
-        UUID adminIdentifier = createuser("Admin One", "admin1");
+        createuser("Buyer two", "buyer2");
+        createuser("Buyer three", "buyer3");
+        createuser("Admin One", "admin1");
 
         createTradeItem(userIdentifier);
         createOrderBook();
@@ -58,11 +60,11 @@ public class DBInit {
 
     private UUID createuser(String username, String name) {
         CreateUserCommand createUser = new CreateUserCommand(username, name);
-        FutureCallback createUserCallback = new FutureCallback();
+        FutureCallback<CreateUserCommand, UUID> createUserCallback = new FutureCallback<CreateUserCommand, UUID>();
         commandBus.dispatch(createUser, createUserCallback);
         UUID userIdentifier;
         try {
-            userIdentifier = (UUID) createUserCallback.get();
+            userIdentifier = createUserCallback.get();
             System.out.println("Identifier created user is : " + userIdentifier.toString());
         } catch (Exception e) {
             throw new RuntimeException(e);
