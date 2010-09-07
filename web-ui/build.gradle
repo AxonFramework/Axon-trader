@@ -1,0 +1,25 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+configurations {
+    all*.exclude group: "commons-logging", module:"commons-logging"
+}
+
+dependencies {
+    compile project(':app')
+
+    compile "org.springframework:spring-webmvc:$springVersion",
+            "org.springframework:spring-aop:$springVersion",
+            "org.springframework.security:spring-security-web:$springSecurityVersion",
+            "org.springframework.security:spring-security-config:$springSecurityVersion"
+
+    compile "javax.validation:validation-api:1.0.0.GA",
+            "org.hibernate:hibernate-validator:4.0.2.GA"
+
+    runtime "javax.servlet:jstl:1.1.2",
+            "taglibs:standard:1.1.2",
+            "opensymphony:sitemesh:2.4.2"
+
+
+    providedCompile "javax.servlet:servlet-api:2.5"
+}
