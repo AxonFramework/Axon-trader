@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 /**
  * @author Jettro Coenradie
  */
-@Repository
+//@Repository
 @Transactional(readOnly = true)
 public class UserRepositoryJpa implements UserRepository {
     @PersistenceContext

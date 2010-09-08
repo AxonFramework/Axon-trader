@@ -1,5 +1,6 @@
 package org.axonframework.samples.trader.webui.init;
 
+import com.mongodb.Mongo;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
@@ -23,15 +24,21 @@ public class DBInit {
 
     private CommandBus commandBus;
     private TradeItemRepository tradeItemRepository;
+    private Mongo mongo;
 
     @Autowired
-    public DBInit(CommandBus commandBus, TradeItemRepository tradeItemRepository) {
+    public DBInit(CommandBus commandBus,
+                  TradeItemRepository tradeItemRepository,
+                  Mongo mongo) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
+        this.mongo = mongo;
     }
 
     @PostConstruct
     public void createItems() {
+        mongo.getDB("axontrader").getCollection("users").drop();
+
         UUID userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
         createuser("Buyer three", "buyer3");

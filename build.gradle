@@ -35,7 +35,7 @@ subprojects {
     sourceCompatibility = 1.6
 }
 
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '0.9-rc-1'
-//    jarPath = 'wrapper'
-//}
+task wrapper(type: Wrapper) {
+    gradleVersion = '0.9-rc-1'
+    jarPath = 'wrapper'
+}
