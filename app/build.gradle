@@ -1,5 +1,3 @@
-apply plugin: 'java'
-
 dependencies {
     compile "org.axonframework:axon-core:$axonVersion"
 

@@ -6,34 +6,36 @@ sourceCompatibility = 1.6
 
 subprojects {
     apply plugin: 'java'
-    
+
+    configurations {
+        all*.exclude group: "commons-logging", module: "commons-logging"
+    }
+
     repositories {
         mavenCentral()
     }
-    
+
     dependencies {
         compile "org.slf4j:jcl-over-slf4j:$slf4jVersion",
                 "org.slf4j:jul-to-slf4j:$slf4jVersion"
         runtime "org.slf4j:slf4j-log4j12:$slf4jVersion"
-        
-        compile ("log4j:log4j:1.2.15") {
-            exclude group:"com.sun.jdmk", module:"jmxtools"
-            exclude group:"com.sun.jmx", module:"jmxri"
-            exclude group:"javax.mail", module:"mail"
-            exclude group:"javax.jms", module:"jms"
+
+        compile("log4j:log4j:1.2.15") {
+            exclude group: "com.sun.jdmk", module: "jmxtools"
+            exclude group: "com.sun.jmx", module: "jmxri"
+            exclude group: "javax.mail", module: "mail"
+            exclude group: "javax.jms", module: "jms"
         }
 
         testCompile 'junit:junit:4.7'
     }
-
-
 
     group = 'org.axonframework.samples.trader'
     version = '1.0-SNAPSHOT'
     sourceCompatibility = 1.6
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '0.9-rc-1'
-    jarPath = 'wrapper'
-}
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '0.9-rc-1'
+//    jarPath = 'wrapper'
+//}
