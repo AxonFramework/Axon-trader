@@ -1,8 +1,5 @@
-package org.axonframework.samples.trader.app.query;
+package org.axonframework.samples.trader.app.query.orderbook;
 
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
 import java.util.UUID;
 
 /**

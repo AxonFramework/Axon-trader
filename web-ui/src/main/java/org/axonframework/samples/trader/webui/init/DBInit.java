@@ -7,8 +7,8 @@ import org.axonframework.samples.trader.app.api.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.MongoHelper;
-import org.axonframework.samples.trader.app.query.TradeItemEntry;
-import org.axonframework.samples.trader.app.query.TradeItemRepository;
+import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
+import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

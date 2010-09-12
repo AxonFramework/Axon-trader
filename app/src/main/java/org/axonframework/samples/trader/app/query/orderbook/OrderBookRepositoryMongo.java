@@ -1,8 +1,9 @@
-package org.axonframework.samples.trader.app.query;
+package org.axonframework.samples.trader.app.query.orderbook;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

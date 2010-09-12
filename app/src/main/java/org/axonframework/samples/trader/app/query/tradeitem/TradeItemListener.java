@@ -1,9 +1,10 @@
-package org.axonframework.samples.trader.app.query;
+package org.axonframework.samples.trader.app.query.tradeitem;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.tradeitem.TradeItemCreatedEvent;
+import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

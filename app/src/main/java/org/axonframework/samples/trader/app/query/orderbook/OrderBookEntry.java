@@ -1,4 +1,4 @@
-package org.axonframework.samples.trader.app.query;
+package org.axonframework.samples.trader.app.query.orderbook;
 
 import java.util.ArrayList;
 import java.util.List;

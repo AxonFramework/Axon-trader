@@ -1,4 +1,4 @@
-package org.axonframework.samples.trader.app.query;
+package org.axonframework.samples.trader.app.query.tradeitem;
 
 import java.util.UUID;
 
