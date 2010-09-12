@@ -25,6 +25,10 @@ public class MongoHelper {
         return getDatabase().getCollection("tradeitems");
     }
 
+    public DBCollection tradesExecuted() {
+        return getDatabase().getCollection("tradesexecuted");
+    }
+
     public DB getDatabase() {
         return mongoDb.getDB("axontrader");
     }

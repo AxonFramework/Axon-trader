@@ -7,7 +7,6 @@ import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
-import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +31,8 @@ public class OrderBookListener {
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
         DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getTradeItemIdentifier().toString()).get();
         DBObject tradeItem = mongo.tradeItems().findOne(query);
-        tradeItem.put("orderBookIdentifier",event.getOrderBookIdentifier().toString());
-        mongo.tradeItems().update(query,tradeItem);
+        tradeItem.put("orderBookIdentifier", event.getOrderBookIdentifier().toString());
+        mongo.tradeItems().update(query, tradeItem);
 
         OrderBookEntry entry = new OrderBookEntry();
         entry.setIdentifier(event.getOrderBookIdentifier());
@@ -79,13 +78,14 @@ public class OrderBookListener {
 
         UUID orderBookIdentifier = event.getOrderBookIdentifier();
         TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByOrderBookIdentifier(orderBookIdentifier);
+        DBObject tradeExecutedMongo = BasicDBObjectBuilder.start()
+                .add("count", event.getTradeCount())
+                .add("price", event.getTradePrice())
+                .add("name", tradeItem.getName())
+                .add("orderBookIdentifier", orderBookIdentifier.toString())
+                .get();
 
-        TradeExecutedEntry entry = new TradeExecutedEntry();
-        entry.setTradeCount(event.getTradeCount());
-        entry.setTradePrice(event.getTradePrice());
-        entry.setTradeItemName(tradeItem.getName());
-        entry.setOrderBookIdentifier(orderBookIdentifier);
-        entityManager.persist(entry);
+        mongo.tradesExecuted().insert(tradeExecutedMongo);
 
         OrderEntry buyOrderEntry = orderBookRepository.findByOrderIdentifier(buyOrderId);
         buyOrderEntry.setItemsRemaining(buyOrderEntry.getItemsRemaining() - event.getTradeCount());
