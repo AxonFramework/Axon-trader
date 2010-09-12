@@ -11,30 +11,12 @@ import java.util.UUID;
 /**
  * @author Jettro Coenradie
  */
-@Entity
 public class TradeItemEntry {
-    @Id
-    @GeneratedValue
-    private Long db_identifier;
-
-    @Basic
-    @Type(type = "org.axonframework.samples.trader.app.query.UUIDUserType")
     private UUID identifier;
-
-    @Basic
-    @Type(type = "org.axonframework.samples.trader.app.query.UUIDUserType")
     private UUID orderBookIdentifier;
-
-    @Basic
     private String name;
-
-    @Basic
     private long value;
-
-    @Basic
     private long amountOfShares;
-
-    @Basic
     private boolean tradeStarted;
 
     public long getAmountOfShares() {
@@ -43,14 +25,6 @@ public class TradeItemEntry {
 
     void setAmountOfShares(long amountOfShares) {
         this.amountOfShares = amountOfShares;
-    }
-
-    public Long getDb_identifier() {
-        return db_identifier;
-    }
-
-    void setDb_identifier(Long db_identifier) {
-        this.db_identifier = db_identifier;
     }
 
     public UUID getIdentifier() {
