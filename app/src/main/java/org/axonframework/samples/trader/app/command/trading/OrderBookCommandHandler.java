@@ -20,25 +20,27 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
+        // TODO add validation here
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addBuyOrder(command.getOrderId(),
-                              command.getTradeCount(),
-                              command.getItemPrice(),
-                              command.getUserId());
+                command.getTradeCount(),
+                command.getItemPrice(),
+                command.getUserId());
     }
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
+        // TODO add validation here
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
-                               command.getTradeCount(),
-                               command.getItemPrice(),
-                               command.getUserId());
+                command.getTradeCount(),
+                command.getItemPrice(),
+                command.getUserId());
     }
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook = new OrderBook(UUID.randomUUID(),command.getTradeItemIdentifier());
+        OrderBook orderBook = new OrderBook(UUID.randomUUID(), command.getTradeItemIdentifier());
         repository.add(orderBook);
     }
 

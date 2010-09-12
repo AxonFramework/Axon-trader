@@ -5,6 +5,8 @@ dependencies {
             "c3p0:c3p0:0.9.1",
             "org.hsqldb:hsqldb:1.8.0.10"
 
+    compile "org.mongodb:mongo-java-driver:2.1"
+
     compile "org.springframework:spring-tx:$springVersion",
             "org.springframework:spring-orm:$springVersion",
             "org.springframework:spring-jdbc:$springVersion"

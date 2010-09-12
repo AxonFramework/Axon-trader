@@ -1,12 +1,12 @@
 package org.axonframework.samples.trader.webui.init;
 
-import com.mongodb.Mongo;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.samples.trader.app.api.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
+import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.axonframework.samples.trader.app.query.TradeItemEntry;
 import org.axonframework.samples.trader.app.query.TradeItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ public class DBInit {
 
     private CommandBus commandBus;
     private TradeItemRepository tradeItemRepository;
-    private Mongo mongo;
+    private MongoHelper mongo;
 
     @Autowired
     public DBInit(CommandBus commandBus,
                   TradeItemRepository tradeItemRepository,
-                  Mongo mongo) {
+                  MongoHelper mongo) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
@@ -37,7 +37,8 @@ public class DBInit {
 
     @PostConstruct
     public void createItems() {
-        mongo.getDB("axontrader").getCollection("users").drop();
+        mongo.users().drop();
+        mongo.tradeItems().drop();
 
         UUID userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");

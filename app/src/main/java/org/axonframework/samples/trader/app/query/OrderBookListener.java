@@ -1,5 +1,7 @@
 package org.axonframework.samples.trader.app.query;
 
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
@@ -18,6 +20,7 @@ import java.util.UUID;
  */
 @Component
 public class OrderBookListener {
+    private MongoHelper mongo;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -27,14 +30,15 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
-        TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(event.getTradeItemIdentifier());
-        tradeItemByIdentifier.setOrderBookIdentifier(event.getOrderBookIdentifier());
-        entityManager.merge(tradeItemByIdentifier);
+        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getTradeItemIdentifier().toString()).get();
+        DBObject tradeItem = mongo.tradeItems().findOne(query);
+        tradeItem.put("orderBookIdentifier",event.getOrderBookIdentifier().toString());
+        mongo.tradeItems().update(query,tradeItem);
 
         OrderBookEntry entry = new OrderBookEntry();
         entry.setIdentifier(event.getOrderBookIdentifier());
         entry.setTradeItemIdentifier(event.getTradeItemIdentifier());
-        entry.setTradeItemName(tradeItemByIdentifier.getName());
+        entry.setTradeItemName((String) tradeItem.get("name"));
         entityManager.persist(entry);
     }
 
@@ -98,5 +102,10 @@ public class OrderBookListener {
     @Autowired
     public void setOrderBookRepository(OrderBookRepository orderBookRepository) {
         this.orderBookRepository = orderBookRepository;
+    }
+
+    @Autowired
+    public void setMongo(MongoHelper mongo) {
+        this.mongo = mongo;
     }
 }

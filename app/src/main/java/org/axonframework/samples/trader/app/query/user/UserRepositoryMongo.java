@@ -1,8 +1,9 @@
 package org.axonframework.samples.trader.app.query.user;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
+import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,12 +14,13 @@ import java.util.UUID;
  */
 @Repository
 public class UserRepositoryMongo implements UserRepository {
-    private Mongo mongo;
+    private MongoHelper mongo;
 
     @Override
     public UserEntry findByUsername(String username) {
-        BasicDBObject query = new BasicDBObject("username",username);
-        DBObject one = mongo.getDB("axontrader").getCollection("users").findOne(query);
+        DBObject query = BasicDBObjectBuilder.start("username",username).get();
+        DBObject one = mongo.users().findOne(query);
+
         UserEntry entry = new UserEntry();
         entry.setIdentifier((UUID) one.get("identifier"));
         entry.setName((String) one.get("name"));
@@ -27,7 +29,7 @@ public class UserRepositoryMongo implements UserRepository {
     }
 
     @Autowired
-    public void setMongo(Mongo mongo) {
-        this.mongo = mongo;
+    public void setMongohelper(MongoHelper mongoHelper) {
+        this.mongo = mongoHelper;
     }
 }
