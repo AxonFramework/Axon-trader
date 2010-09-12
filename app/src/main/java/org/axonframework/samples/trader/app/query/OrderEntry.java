@@ -8,41 +8,14 @@ import java.util.UUID;
 /**
  * @author Jettro Coenradie
  */
-@Entity
 public class OrderEntry {
-    @Id
-    @GeneratedValue
-    private Long db_identifier;
-
-    @Basic
-    @Type(type = "org.axonframework.samples.trader.app.query.UUIDUserType")
     private UUID identifier;
-
-    @ManyToOne(fetch = FetchType.EAGER)
     private OrderBookEntry orderBookEntry;
-
-    @Basic
     private long tradeCount;
-
-    @Basic
     private int itemPrice;
-
-    @Basic
     private UUID userId;
-
-    @Basic
     private long itemsRemaining;
-
-    @Basic
     private String type;
-
-    public Long getDb_identifier() {
-        return db_identifier;
-    }
-
-    void setDb_identifier(Long db_identifier) {
-        this.db_identifier = db_identifier;
-    }
 
     public UUID getIdentifier() {
         return identifier;

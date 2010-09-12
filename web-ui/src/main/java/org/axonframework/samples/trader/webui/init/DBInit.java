@@ -39,6 +39,10 @@ public class DBInit {
     public void createItems() {
         mongo.users().drop();
         mongo.tradeItems().drop();
+        mongo.orderBooks().drop();
+        mongo.tradesExecuted().drop();
+        mongo.orders().drop();
+
 
         UUID userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");

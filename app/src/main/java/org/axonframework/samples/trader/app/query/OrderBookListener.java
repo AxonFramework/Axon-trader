@@ -3,15 +3,12 @@ package org.axonframework.samples.trader.app.query;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
+import org.axonframework.samples.trader.app.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,10 +16,9 @@ import java.util.UUID;
  */
 @Component
 public class OrderBookListener {
+    private static final String BUY = "Buy";
+    private static final String SELL = "Sell";
     private MongoHelper mongo;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private TradeItemRepository tradeItemRepository;
     private OrderBookRepository orderBookRepository;
@@ -34,41 +30,43 @@ public class OrderBookListener {
         tradeItem.put("orderBookIdentifier", event.getOrderBookIdentifier().toString());
         mongo.tradeItems().update(query, tradeItem);
 
-        OrderBookEntry entry = new OrderBookEntry();
-        entry.setIdentifier(event.getOrderBookIdentifier());
-        entry.setTradeItemIdentifier(event.getTradeItemIdentifier());
-        entry.setTradeItemName((String) tradeItem.get("name"));
-        entityManager.persist(entry);
+        DBObject orderBook = BasicDBObjectBuilder.start()
+                .add("identifier", event.getOrderBookIdentifier().toString())
+                .add("tradeItemIdentifier", event.getTradeItemIdentifier().toString())
+                .add("tradeItemName", tradeItem.get("name")).get();
+        mongo.orderBooks().insert(orderBook);
     }
 
     @EventHandler
     public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findByIdentifier(event.getAggregateIdentifier());
+        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getAggregateIdentifier().toString()).get();
+        DBObject orderBook = mongo.orderBooks().findOne(query);
 
-        OrderEntry entry = new OrderEntry();
-        entry.setIdentifier(event.getOrderId());
-        entry.setItemPrice(event.getItemPrice());
-        entry.setItemsRemaining(event.getTradeCount());
-        entry.setTradeCount(event.getTradeCount());
-        entry.setUserId(event.getUserId());
-        entry.setOrderBookEntry(orderBook);
-        entry.setType("Buy");
-        entityManager.persist(entry);
+        DBObject buyOrder = createPlacedOrder(event, BUY);
+
+        if (!orderBook.containsField("buyOrders")) {
+            orderBook.put("buyOrders", new ArrayList());
+        }
+
+        ((List) orderBook.get("buyOrders")).add(buyOrder);
+
+        mongo.orderBooks().update(query, orderBook);
     }
 
     @EventHandler
     public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findByIdentifier(event.getAggregateIdentifier());
+        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getAggregateIdentifier().toString()).get();
+        DBObject orderBook = mongo.orderBooks().findOne(query);
 
-        OrderEntry entry = new OrderEntry();
-        entry.setIdentifier(event.getOrderId());
-        entry.setItemPrice(event.getItemPrice());
-        entry.setItemsRemaining(event.getTradeCount());
-        entry.setTradeCount(event.getTradeCount());
-        entry.setUserId(event.getUserId());
-        entry.setOrderBookEntry(orderBook);
-        entry.setType("Sell");
-        entityManager.persist(entry);
+        DBObject buyOrder = createPlacedOrder(event, SELL);
+
+        if (!orderBook.containsField("sellOrders")) {
+            orderBook.put("sellOrders", new ArrayList());
+        }
+
+        ((List) orderBook.get("sellOrders")).add(buyOrder);
+
+        mongo.orderBooks().update(query, orderBook);
     }
 
     @EventHandler
@@ -87,11 +85,40 @@ public class OrderBookListener {
 
         mongo.tradesExecuted().insert(tradeExecutedMongo);
 
-        OrderEntry buyOrderEntry = orderBookRepository.findByOrderIdentifier(buyOrderId);
-        buyOrderEntry.setItemsRemaining(buyOrderEntry.getItemsRemaining() - event.getTradeCount());
+        DBObject query = BasicDBObjectBuilder.start()
+                .add("identifier", event.getAggregateIdentifier().toString())
+                .get();
+        DBObject orderBook = mongo.orderBooks().findOne(query);
+        List buyOrders = (List) orderBook.get("buyOrders");
+        for (Object orderObj : buyOrders) {
+            DBObject order = (DBObject) orderObj;
+            if (((String)order.get("identifier")).equals(buyOrderId.toString())) {
+                long itemsRemaining = (Long)order.get("itemsRemaining");
+                order.put("itemsRemaining",itemsRemaining-event.getTradeCount());
+                break;
+            }
+        }
 
-        OrderEntry sellOrderEntry = orderBookRepository.findByOrderIdentifier(sellOrderId);
-        sellOrderEntry.setItemsRemaining(sellOrderEntry.getItemsRemaining() - event.getTradeCount());
+        List sellOrders = (List) orderBook.get("sellOrders");
+        for (Object orderObj : sellOrders) {
+            DBObject order = (DBObject) orderObj;
+            if (((String)order.get("identifier")).equals(sellOrderId.toString())) {
+                long itemsRemaining = (Long)order.get("itemsRemaining");
+                order.put("itemsRemaining",itemsRemaining-event.getTradeCount());
+                break;
+            }
+        }
+        mongo.orderBooks().update(query,orderBook);
+    }
+
+    private DBObject createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
+        return BasicDBObjectBuilder.start()
+                .add("identifier", event.getOrderId().toString())
+                .add("itemPrice", event.getItemPrice())
+                .add("itemsRemaining", event.getTradeCount())
+                .add("tradeCount", event.getTradeCount())
+                .add("userId", event.getUserId().toString())
+                .add("type", type).get();
     }
 
     @Autowired

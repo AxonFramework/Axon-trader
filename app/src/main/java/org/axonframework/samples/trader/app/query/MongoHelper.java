@@ -29,6 +29,14 @@ public class MongoHelper {
         return getDatabase().getCollection("tradesexecuted");
     }
 
+    public DBCollection orderBooks() {
+        return getDatabase().getCollection("orderbooks");
+    }
+
+    public DBCollection orders() {
+        return getDatabase().getCollection("orders");
+    }
+
     public DB getDatabase() {
         return mongoDb.getDB("axontrader");
     }
