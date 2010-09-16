@@ -6,6 +6,7 @@ import org.axonframework.samples.trader.app.api.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.app.api.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.TradeExecutedEvent;
+import org.axonframework.unitofwork.CurrentUnitOfWork;
 
 import java.util.Comparator;
 import java.util.SortedSet;

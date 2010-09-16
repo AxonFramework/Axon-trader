@@ -6,8 +6,20 @@
 
     <context:component-scan base-package="org.axonframework.samples.trader.app"/>
 
-    <bean class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
+    <bean id="orderBookRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
         <constructor-arg value="org.axonframework.samples.trader.app.command.trading.OrderBook"/>
+        <property name="eventBus" ref="eventBus"/>
+        <property name="eventStore" ref="eventStore"/>
+    </bean>
+
+    <bean id="tradeItemRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
+        <constructor-arg value="org.axonframework.samples.trader.app.command.trading.TradeItem"/>
+        <property name="eventBus" ref="eventBus"/>
+        <property name="eventStore" ref="eventStore"/>
+    </bean>
+
+    <bean id="userRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
+        <constructor-arg value="org.axonframework.samples.trader.app.command.user.User"/>
         <property name="eventBus" ref="eventBus"/>
         <property name="eventStore" ref="eventStore"/>
     </bean>

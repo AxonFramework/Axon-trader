@@ -42,31 +42,37 @@ public class DBInit {
         mongo.orderBooks().drop();
         mongo.tradesExecuted().drop();
         mongo.orders().drop();
-
+        mongo.domainEvents().drop();
+        mongo.snapshotEvents().drop();
 
         UUID userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
         createuser("Buyer three", "buyer3");
         createuser("Admin One", "admin1");
 
-        createTradeItem(userIdentifier);
-        createOrderBook();
+        createTradeItems(userIdentifier);
+        createOrderBooks();
     }
 
-    private void createTradeItem(UUID userIdentifier) {
-        CreateTradeItemCommand command = new CreateTradeItemCommand(
-                userIdentifier, "Philips 3D TV", 1000, 10000);
-
+    private void createTradeItems(UUID userIdentifier) {
+        CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips 3D TV", 1000, 10000);
         commandBus.dispatch(command, NoOpCallback.INSTANCE);
+
+        command = new CreateTradeItemCommand(userIdentifier,"Sony Ultra TV", 500, 5000);
+        commandBus.dispatch(command, NoOpCallback.INSTANCE);
+
+        command = new CreateTradeItemCommand(userIdentifier,"Smart 2 wheel roller", 15000, 100000);
+        commandBus.dispatch(command, NoOpCallback.INSTANCE);
+
     }
 
-    private void createOrderBook() {
+    private void createOrderBooks() {
         List<TradeItemEntry> tradeItemEntries = tradeItemRepository.listAllTradeItems();
-        TradeItemEntry tradeItemEntry = tradeItemEntries.get(0);
 
-        CreateOrderBookCommand command = new CreateOrderBookCommand(tradeItemEntry.getIdentifier());
-
-        commandBus.dispatch(command, NoOpCallback.INSTANCE);
+        for (TradeItemEntry tradeItemEntry : tradeItemEntries) {
+            CreateOrderBookCommand command = new CreateOrderBookCommand(tradeItemEntry.getIdentifier());
+            commandBus.dispatch(command, NoOpCallback.INSTANCE);
+        }
     }
 
 

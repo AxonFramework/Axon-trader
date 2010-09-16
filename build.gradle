@@ -1,3 +1,5 @@
+apply plugin: 'java'
+
 axonVersion = "0.6"
 springVersion = "3.0.4.RELEASE"
 springSecurityVersion = "3.0.3.RELEASE"
@@ -27,7 +29,7 @@ subprojects {
             exclude group: "javax.jms", module: "jms"
         }
 
-        testCompile 'junit:junit:4.7'
+        testCompile 'junit:junit:4.8.1'
     }
 
     group = 'org.axonframework.samples.trader'

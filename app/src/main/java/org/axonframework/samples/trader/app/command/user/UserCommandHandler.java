@@ -3,7 +3,10 @@ package org.axonframework.samples.trader.app.command.user;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
+import org.axonframework.unitofwork.CurrentUnitOfWork;
+import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -24,8 +27,9 @@ public class UserCommandHandler {
     }
 
     @Autowired
-    public void setRepository(Repository<User> repository) {
-        this.repository = repository;
+    @Qualifier("userRepository")
+    public void setRepository(Repository<User> userRepository) {
+        this.repository = userRepository;
     }
 
 }

@@ -5,7 +5,9 @@ import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
+import org.axonframework.unitofwork.CurrentUnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -45,7 +47,8 @@ public class OrderBookCommandHandler {
     }
 
     @Autowired
-    public void setRepository(Repository<OrderBook> repository) {
-        this.repository = repository;
+    @Qualifier("orderBookRepository")
+    public void setRepository(Repository<OrderBook> orderBookRepository) {
+        this.repository = orderBookRepository;
     }
 }

@@ -30,10 +30,6 @@
     <name>Axon Trader Sample - Web ui</name>
     <packaging>war</packaging>
 
-    <properties>
-        <spring.version>3.0.4.RELEASE</spring.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -83,12 +79,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>3.0.3.RELEASE</version>
+            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>3.0.3.RELEASE</version>
+            <version>${spring.security.version}</version>
         </dependency>
 
         <!-- web -->
@@ -117,31 +113,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>4.0.2.GA</version>
-        </dependency>
-        <!-- other -->
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jdmk</groupId>
-                    <artifactId>jmxtools</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jmx</groupId>
-                    <artifactId>jmxri</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

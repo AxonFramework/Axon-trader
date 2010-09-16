@@ -46,4 +46,17 @@ public class MongoHelper {
         this.mongoDb = mongoDb;
     }
 
+    /* axon framework system tables */
+    public DBCollection domainEvents() {
+        return systemDatabase().getCollection("domainevents");
+    }
+
+    public DBCollection snapshotEvents() {
+        return systemDatabase().getCollection("snapshotevents");
+    }
+
+    public DB systemDatabase() {
+        return mongoDb.getDB("axonframework");
+    }
+
 }

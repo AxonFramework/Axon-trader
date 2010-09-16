@@ -24,7 +24,6 @@ public class OrderBookListener {
     private MongoHelper mongo;
 
     private TradeItemRepository tradeItemRepository;
-    private OrderBookRepository orderBookRepository;
 
     @EventHandler
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
@@ -88,6 +87,7 @@ public class OrderBookListener {
 
         mongo.tradesExecuted().insert(tradeExecutedMongo);
 
+        // TODO find a better solution or maybe pull them apart
         DBObject query = BasicDBObjectBuilder.start()
                 .add("identifier", event.getAggregateIdentifier().toString())
                 .get();
@@ -127,11 +127,6 @@ public class OrderBookListener {
     @Autowired
     public void setTradeItemRepository(TradeItemRepository tradeItemRepository) {
         this.tradeItemRepository = tradeItemRepository;
-    }
-
-    @Autowired
-    public void setOrderBookRepository(OrderBookRepository orderBookRepository) {
-        this.orderBookRepository = orderBookRepository;
     }
 
     @Autowired

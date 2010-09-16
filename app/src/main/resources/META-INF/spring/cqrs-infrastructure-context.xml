@@ -10,12 +10,11 @@
 
     <bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus">
         <property name="interceptors">
-            <bean class="org.axonframework.commandhandling.interceptors.SpringTransactionalInterceptor">
-                <property name="transactionManager" ref="transactionManager"/>
-            </bean>
+            <bean class="org.axonframework.commandhandling.interceptors.SimpleUnitOfWorkInterceptor"/>
         </property>
     </bean>
 
-    <bean id="eventStore" class="org.axonframework.eventstore.jpa.JpaEventStore"/>
-
+    <bean id="eventStore" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoEventStore">
+        <constructor-arg index="0" ref="mongoHelper"/>
+    </bean>
 </beans>
