@@ -3,6 +3,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="mongoDb" class="com.mongodb.Mongo"/>
-
+    <bean id="mongoDb" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoFactory">
+        <property name="testContext" value="${test.context}"/>
+        <property name="mongoAddresses">
+            <list value-type="com.mongodb.ServerAddress">
+                <bean class="com.mongodb.ServerAddress">
+                    <constructor-arg index="0" value="localhost"/>
+                    <constructor-arg index="1" value="27017"/>
+                </bean>
+                <bean class="com.mongodb.ServerAddress">
+                    <constructor-arg index="0" value="localhost"/>
+                    <constructor-arg index="1" value="27018"/>
+                </bean>
+                <bean class="com.mongodb.ServerAddress">
+                    <constructor-arg index="0" value="localhost"/>
+                    <constructor-arg index="1" value="27019"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
 </beans>

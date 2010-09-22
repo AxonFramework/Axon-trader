@@ -16,5 +16,6 @@
 
     <bean id="eventStore" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoEventStore">
         <constructor-arg index="0" ref="mongoHelper"/>
+        <constructor-arg index="1" value="${test.context}"/>
     </bean>
 </beans>

@@ -6,6 +6,8 @@ import org.axonframework.domain.DomainEventStream;
 import org.axonframework.domain.SimpleDomainEventStream;
 import org.axonframework.eventstore.*;
 import org.axonframework.samples.trader.app.query.MongoHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +19,27 @@ import java.util.UUID;
  * @author Jettro Coenradie
  */
 public class MongoEventStore implements SnapshotEventStore, EventStoreManagement {
+    private static final Logger logger = LoggerFactory.getLogger(MongoEventStore.class);
     private static final int EVENT_VISITOR_BATCH_SIZE = 50;
     private final MongoHelper mongo;
     private final EventSerializer eventSerializer;
+    private final WriteConcern writeConcern;
 
-    public MongoEventStore(EventSerializer eventSerializer, MongoHelper mongo) {
+    public MongoEventStore(EventSerializer eventSerializer, MongoHelper mongo, String testContext) {
         this.eventSerializer = eventSerializer;
         this.mongo = mongo;
+        boolean testEnabled = Boolean.parseBoolean(testContext);
+        if (testEnabled) {
+            writeConcern = WriteConcern.SAFE;
+            logger.debug("Mongo event store created for test environment");
+        } else {
+            writeConcern = WriteConcern.REPLICAS_SAFE;
+            logger.debug("Mongo event store created for production environment");
+        }
     }
 
-    public MongoEventStore(MongoHelper mongo) {
-        this(new XStreamEventSerializer(), mongo);
+    public MongoEventStore(MongoHelper mongo, String testContext) {
+        this(new XStreamEventSerializer(), mongo, testContext);
     }
 
     @Override
@@ -45,7 +57,8 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
                     .get();
             entries.add(mongoEntry);
         }
-        mongo.domainEvents().insert(entries.toArray(new DBObject[entries.size()]),WriteConcern.SAFE);
+        mongo.domainEvents().insert(entries.toArray(new DBObject[entries.size()]), writeConcern);
+        logger.debug("Event of type {} appended", type);
     }
 
     @Override
@@ -63,8 +76,8 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
         if (events.isEmpty()) {
             throw new EventStreamNotFoundException(
                     String.format("Aggregate of type [%s] with identifier [%s] cannot be found.",
-                                  type,
-                                  identifier.toString()));
+                            type,
+                            identifier.toString()));
         }
         return new SimpleDomainEventStream(events);
     }
@@ -90,22 +103,22 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
 
     private SnapshotEventEntry loadLastSnapshotEvent(String type, UUID identifier) {
         DBObject mongoEntry = BasicDBObjectBuilder.start()
-                .add("aggregateIdentifier",identifier.toString())
+                .add("aggregateIdentifier", identifier.toString())
                 .add("type", type)
                 .get();
-        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry).sort(new BasicDBObject("sequenceNumber",-1));
+        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry).sort(new BasicDBObject("sequenceNumber", -1));
 
         if (!dbCursor.hasNext()) {
             return null;
         }
         DBObject first = dbCursor.next();
         SnapshotEventEntry snapshot = new SnapshotEventEntry(
-                (String)first.get("aggregateIdentifier"),
-                (Long)first.get("sequenceNumber"),
-                (byte[])first.get("serializedEvent"),
-                (String)first.get("timeStamp"),
-                (String)first.get("type")
-                );
+                (String) first.get("aggregateIdentifier"),
+                (Long) first.get("sequenceNumber"),
+                (byte[]) first.get("serializedEvent"),
+                (String) first.get("timeStamp"),
+                (String) first.get("type")
+        );
         return snapshot;
     }
 
@@ -119,7 +132,7 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
                 .add("timeStamp", snapshotEventEntry.getTimeStamp())
                 .add("type", snapshotEventEntry.getType())
                 .get();
-        mongo.snapshotEvents().insert(mongoSnapshotEntry,WriteConcern.SAFE);
+        mongo.snapshotEvents().insert(mongoSnapshotEntry, writeConcern);
     }
 
 
@@ -156,11 +169,11 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
 
     private DomainEventEntry createDomainEventEntry(DBObject dbObject) {
         return new DomainEventEntry(
-                        (String)dbObject.get("aggregateIdentifier"),
-                        (Long)dbObject.get("sequenceNumber"),
-                        (byte[])dbObject.get("serializedEvent"),
-                        (String)dbObject.get("timeStamp"),
-                        (String)dbObject.get("type")
-                );
+                (String) dbObject.get("aggregateIdentifier"),
+                (Long) dbObject.get("sequenceNumber"),
+                (byte[]) dbObject.get("serializedEvent"),
+                (String) dbObject.get("timeStamp"),
+                (String) dbObject.get("type")
+        );
     }
 }
