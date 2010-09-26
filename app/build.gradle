@@ -5,5 +5,6 @@ dependencies {
 
     compile "com.thoughtworks.xstream:xstream:1.3.1"
 
-    testCompile "org.axonframework:axon-test:$axonVersion"
+    testCompile "org.axonframework:axon-test:$axonVersion",
+            "org.springframework:spring-test:$springVersion"
 }

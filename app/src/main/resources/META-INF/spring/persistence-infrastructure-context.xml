@@ -8,16 +8,16 @@
         <property name="mongoAddresses">
             <list value-type="com.mongodb.ServerAddress">
                 <bean class="com.mongodb.ServerAddress">
-                    <constructor-arg index="0" value="localhost"/>
-                    <constructor-arg index="1" value="27017"/>
+                    <constructor-arg index="0" value="${server1.host}"/>
+                    <constructor-arg index="1" value="${server1.port}"/>
                 </bean>
                 <bean class="com.mongodb.ServerAddress">
-                    <constructor-arg index="0" value="localhost"/>
-                    <constructor-arg index="1" value="27018"/>
+                    <constructor-arg index="0" value="${server2.host}"/>
+                    <constructor-arg index="1" value="${server2.port}"/>
                 </bean>
                 <bean class="com.mongodb.ServerAddress">
-                    <constructor-arg index="0" value="localhost"/>
-                    <constructor-arg index="1" value="27019"/>
+                    <constructor-arg index="0" value="${server3.host}"/>
+                    <constructor-arg index="1" value="${server3.port}"/>
                 </bean>
             </list>
         </property>

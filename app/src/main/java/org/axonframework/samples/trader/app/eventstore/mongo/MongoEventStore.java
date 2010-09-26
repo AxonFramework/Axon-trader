@@ -14,17 +14,37 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * db.things.ensureIndex({firstname: 1, lastname: 1}, {unique: true});
+ * <p>This is an implementation of the <code>SnapshotEventStore</code> based on a MongoDB instance. Since the events
+ * must be persisted, we use the highest possible WriteConcern. For a test environment with only one node, this is
+ * the SAFE WriteConcern. In a production environment with a Mongo Replica set, the REPLICAS_SAFE WriteConcern is used.
+ * </p>
+ * <p>Whether to initialize a test environment or a production environment is decided based on the provided testContext
+ * parameter. If passed true, the test environment is setup. If passed false, the production environment is assumed</p>
  *
  * @author Jettro Coenradie
  */
 public class MongoEventStore implements SnapshotEventStore, EventStoreManagement {
     private static final Logger logger = LoggerFactory.getLogger(MongoEventStore.class);
+
+    private static final String AGGREGATE_IDENTIFIER = "aggregateIdentifier";
+    private static final String SEQUENCE_NUMBER = "sequenceNumber";
+    private static final String TIME_STAMP = "timeStamp";
+    private static final String TYPE = "type";
+    private static final String SERIALIZED_EVENT = "serializedEvent";
+
     private static final int EVENT_VISITOR_BATCH_SIZE = 50;
     private final MongoHelper mongo;
     private final EventSerializer eventSerializer;
     private final WriteConcern writeConcern;
 
+    /**
+     * Constructor that accepts an EventSerializer, the MongoHelper and a string containing the testContext. The
+     * TestContext can be Null. Provide true in case of the test context.
+     *
+     * @param eventSerializer Your own EventSerializer
+     * @param mongo MongoHelper to obtain the database and the collections.
+     * @param testContext String containing true or anything else
+     */
     public MongoEventStore(EventSerializer eventSerializer, MongoHelper mongo, String testContext) {
         this.eventSerializer = eventSerializer;
         this.mongo = mongo;
@@ -38,6 +58,12 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
         }
     }
 
+    /**
+     * Constructor that uses the default EventSerializer.
+     *
+     * @param mongo MongoHelper to obtain the database and the collections.
+     * @param testContext String containing true or anything else
+     */
     public MongoEventStore(MongoHelper mongo, String testContext) {
         this(new XStreamEventSerializer(), mongo, testContext);
     }
@@ -48,17 +74,14 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
         while (events.hasNext()) {
             DomainEvent event = events.next();
             DomainEventEntry entry = new DomainEventEntry(type, event, eventSerializer);
-            DBObject mongoEntry = BasicDBObjectBuilder.start()
-                    .add("aggregateIdentifier", entry.getAggregateIdentifier().toString())
-                    .add("sequenceNumber", entry.getSequenceNumber())
-                    .add("timeStamp", entry.getTimeStamp().toString())
-                    .add("type", entry.getType())
-                    .add("serializedEvent", entry.getSerializedEvent())
-                    .get();
+            DBObject mongoEntry = createMongoEventEntry(entry);
             entries.add(mongoEntry);
         }
         mongo.domainEvents().insert(entries.toArray(new DBObject[entries.size()]), writeConcern);
-        logger.debug("Event of type {} appended", type);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("{} events of type {} appended", new Object[]{entries.size(), type});
+        }
     }
 
     @Override
@@ -86,55 +109,18 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
         return new SimpleDomainEventStream(readEventSegmentInternal(type, identifier, firstSequenceNumber));
     }
 
-    private List<DomainEvent> readEventSegmentInternal(String type, UUID identifier, long firstSequenceNumber) {
-        DBObject mongoEntry = BasicDBObjectBuilder.start()
-                .add("aggregateIdentifier", identifier)
-                .add("sequenceNumber", firstSequenceNumber)
-                .add("type", type)
-                .get();
-
-        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry);
-        List<DomainEvent> events = new ArrayList<DomainEvent>(dbCursor.size());
-        while (dbCursor.hasNext()) {
-            events.add(eventSerializer.deserialize((byte[]) dbCursor.next().get("serializedEvent")));
-        }
-        return events;
-    }
-
-    private SnapshotEventEntry loadLastSnapshotEvent(String type, UUID identifier) {
-        DBObject mongoEntry = BasicDBObjectBuilder.start()
-                .add("aggregateIdentifier", identifier.toString())
-                .add("type", type)
-                .get();
-        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry).sort(new BasicDBObject("sequenceNumber", -1));
-
-        if (!dbCursor.hasNext()) {
-            return null;
-        }
-        DBObject first = dbCursor.next();
-        SnapshotEventEntry snapshot = new SnapshotEventEntry(
-                (String) first.get("aggregateIdentifier"),
-                (Long) first.get("sequenceNumber"),
-                (byte[]) first.get("serializedEvent"),
-                (String) first.get("timeStamp"),
-                (String) first.get("type")
-        );
-        return snapshot;
-    }
-
     @Override
     public void appendSnapshotEvent(String type, DomainEvent snapshotEvent) {
         SnapshotEventEntry snapshotEventEntry = new SnapshotEventEntry(type, snapshotEvent, eventSerializer);
         DBObject mongoSnapshotEntry = BasicDBObjectBuilder.start()
-                .add("aggregateIdentifier", snapshotEventEntry.getAggregateIdentifier())
-                .add("sequenceNumber", snapshotEventEntry.getSequenceNumber())
-                .add("serializedEvent", snapshotEventEntry.getSerializedEvent())
-                .add("timeStamp", snapshotEventEntry.getTimeStamp())
-                .add("type", snapshotEventEntry.getType())
+                .add(AGGREGATE_IDENTIFIER, snapshotEventEntry.getAggregateIdentifier().toString())
+                .add(SEQUENCE_NUMBER, snapshotEventEntry.getSequenceNumber())
+                .add(SERIALIZED_EVENT, snapshotEventEntry.getSerializedEvent())
+                .add(TIME_STAMP, snapshotEventEntry.getTimeStamp())
+                .add(TYPE, snapshotEventEntry.getType())
                 .get();
         mongo.snapshotEvents().insert(mongoSnapshotEntry, writeConcern);
     }
-
 
     @Override
     public void visitEvents(EventVisitor visitor) {
@@ -152,10 +138,56 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
 
     }
 
+    private DBObject createMongoEventEntry(DomainEventEntry entry) {
+        return BasicDBObjectBuilder.start()
+                .add(AGGREGATE_IDENTIFIER, entry.getAggregateIdentifier().toString())
+                .add(SEQUENCE_NUMBER, entry.getSequenceNumber())
+                .add(TIME_STAMP, entry.getTimeStamp().toString())
+                .add(TYPE, entry.getType())
+                .add(SERIALIZED_EVENT, entry.getSerializedEvent())
+                .get();
+    }
+
+    private List<DomainEvent> readEventSegmentInternal(String type, UUID identifier, long firstSequenceNumber) {
+        DBObject mongoEntry = BasicDBObjectBuilder.start()
+                .add(AGGREGATE_IDENTIFIER, identifier.toString())
+                .add(SEQUENCE_NUMBER, firstSequenceNumber)
+                .add(TYPE, type)
+                .get();
+
+        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry);
+        List<DomainEvent> events = new ArrayList<DomainEvent>(dbCursor.size());
+        while (dbCursor.hasNext()) {
+            events.add(eventSerializer.deserialize((byte[]) dbCursor.next().get(SERIALIZED_EVENT)));
+        }
+        return events;
+    }
+
+
+    private SnapshotEventEntry loadLastSnapshotEvent(String type, UUID identifier) {
+        DBObject mongoEntry = BasicDBObjectBuilder.start()
+                .add(AGGREGATE_IDENTIFIER, identifier.toString())
+                .add(TYPE, type)
+                .get();
+        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry).sort(new BasicDBObject(SEQUENCE_NUMBER, -1));
+
+        if (!dbCursor.hasNext()) {
+            return null;
+        }
+        DBObject first = dbCursor.next();
+        return new SnapshotEventEntry(
+                (String) first.get(AGGREGATE_IDENTIFIER),
+                (Long) first.get(SEQUENCE_NUMBER),
+                (byte[]) first.get(SERIALIZED_EVENT),
+                (String) first.get(TIME_STAMP),
+                (String) first.get(TYPE)
+        );
+    }
+
     private List<DomainEventEntry> fetchBatch(int startPosition, int batchSize) {
         DBObject sort = BasicDBObjectBuilder.start()
-                .add("timeStamp", -1)
-                .add("sequenceNumber", -1)
+                .add(TIME_STAMP, -1)
+                .add(SEQUENCE_NUMBER, -1)
                 .get();
         DBCursor batchDomainEvents = mongo.domainEvents().find().sort(sort).limit(batchSize).skip(startPosition);
         List<DomainEventEntry> entries = new ArrayList<DomainEventEntry>();
@@ -169,11 +201,11 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
 
     private DomainEventEntry createDomainEventEntry(DBObject dbObject) {
         return new DomainEventEntry(
-                (String) dbObject.get("aggregateIdentifier"),
-                (Long) dbObject.get("sequenceNumber"),
-                (byte[]) dbObject.get("serializedEvent"),
-                (String) dbObject.get("timeStamp"),
-                (String) dbObject.get("type")
+                (String) dbObject.get(AGGREGATE_IDENTIFIER),
+                (Long) dbObject.get(SEQUENCE_NUMBER),
+                (byte[]) dbObject.get(SERIALIZED_EVENT),
+                (String) dbObject.get(TIME_STAMP),
+                (String) dbObject.get(TYPE)
         );
     }
 }
