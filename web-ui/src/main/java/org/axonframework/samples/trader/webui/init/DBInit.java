@@ -3,7 +3,7 @@ package org.axonframework.samples.trader.webui.init;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
-import org.axonframework.samples.trader.app.api.CreateOrderBookCommand;
+import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.MongoHelper;

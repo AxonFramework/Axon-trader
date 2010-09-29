@@ -3,7 +3,7 @@ package org.axonframework.samples.trader.app.query.orderbook;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.app.api.*;
+import org.axonframework.samples.trader.app.api.order.*;
 import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
 import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;

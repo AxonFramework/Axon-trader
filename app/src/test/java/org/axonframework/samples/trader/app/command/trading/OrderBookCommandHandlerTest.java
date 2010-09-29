@@ -1,6 +1,6 @@
 package org.axonframework.samples.trader.app.command.trading;
 
-import org.axonframework.samples.trader.app.api.*;
+import org.axonframework.samples.trader.app.api.order.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.*;

@@ -2,8 +2,8 @@ package org.axonframework.samples.trader.webui.tradeitem;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
-import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
-import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
+import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookRepository;
 import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;

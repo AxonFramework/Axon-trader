@@ -1,4 +1,4 @@
-package org.axonframework.samples.trader.app.api;
+package org.axonframework.samples.trader.app.api.order;
 
 import java.util.UUID;
 

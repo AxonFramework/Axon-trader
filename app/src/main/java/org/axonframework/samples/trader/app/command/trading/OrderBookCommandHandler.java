@@ -2,10 +2,9 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.app.api.CreateBuyOrderCommand;
-import org.axonframework.samples.trader.app.api.CreateOrderBookCommand;
-import org.axonframework.samples.trader.app.api.CreateSellOrderCommand;
-import org.axonframework.unitofwork.CurrentUnitOfWork;
+import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
