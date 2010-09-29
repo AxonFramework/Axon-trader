@@ -21,6 +21,7 @@ public class UserListener {
                 .add("identifier", event.getUserIdentifier())
                 .add("name", event.getName())
                 .add("username", event.getUsername())
+                .add("password", event.getPassword())
                 .get();
 
         mongo.users().insert(userEntry);

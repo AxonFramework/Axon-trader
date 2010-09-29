@@ -8,10 +8,12 @@ import java.util.UUID;
 public class CreateUserCommand {
     private String username;
     private String name;
+    private String password;
 
-    public CreateUserCommand(String name, String username) {
+    public CreateUserCommand(String name, String username, String password) {
         this.name = name;
         this.username = username;
+        this.password = password;
     }
 
     public String getName() {
@@ -20,5 +22,9 @@ public class CreateUserCommand {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

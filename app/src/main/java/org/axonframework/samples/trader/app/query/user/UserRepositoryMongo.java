@@ -25,6 +25,7 @@ public class UserRepositoryMongo implements UserRepository {
         entry.setIdentifier((UUID) one.get("identifier"));
         entry.setName((String) one.get("name"));
         entry.setUsername((String) one.get("username"));
+        entry.setPassword((String) one.get("password"));
         return entry;
     }
 

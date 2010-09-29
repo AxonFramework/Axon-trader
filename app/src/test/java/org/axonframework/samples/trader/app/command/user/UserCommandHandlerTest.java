@@ -25,7 +25,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleCreateUser() throws Exception {
         fixture.given()
-            .when(new CreateUserCommand("Buyer 1", "buyer1"))
-            .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1"));
+            .when(new CreateUserCommand("Buyer 1", "buyer1", "buyer1"))
+            .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1", "buyer1"));
     }
 }

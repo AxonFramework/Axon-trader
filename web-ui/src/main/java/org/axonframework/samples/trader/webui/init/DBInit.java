@@ -37,13 +37,8 @@ public class DBInit {
 
     @PostConstruct
     public void createItems() {
-        mongo.users().drop();
-        mongo.tradeItems().drop();
-        mongo.orderBooks().drop();
-        mongo.tradesExecuted().drop();
-        mongo.orders().drop();
-        mongo.domainEvents().drop();
-        mongo.snapshotEvents().drop();
+        mongo.getDatabase().dropDatabase();
+        mongo.systemDatabase().dropDatabase();
 
         UUID userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
@@ -76,14 +71,13 @@ public class DBInit {
     }
 
 
-    private UUID createuser(String username, String name) {
-        CreateUserCommand createUser = new CreateUserCommand(username, name);
+    private UUID createuser(String longName, String userName) {
+        CreateUserCommand createUser = new CreateUserCommand(longName, userName, userName);
         FutureCallback<CreateUserCommand, UUID> createUserCallback = new FutureCallback<CreateUserCommand, UUID>();
         commandBus.dispatch(createUser, createUserCallback);
         UUID userIdentifier;
         try {
             userIdentifier = createUserCallback.get();
-            System.out.println("Identifier created user is : " + userIdentifier.toString());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

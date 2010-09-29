@@ -11,9 +11,9 @@ import java.util.UUID;
  */
 public class User extends AbstractAnnotatedAggregateRoot {
 
-    public User(UUID identifier, String username, String name) {
+    public User(UUID identifier, String username, String name, String password) {
         super(identifier);
-        apply(new UserCreatedEvent(name,username));
+        apply(new UserCreatedEvent(name,username, password));
     }
 
     @SuppressWarnings({"UnusedDeclaration"})

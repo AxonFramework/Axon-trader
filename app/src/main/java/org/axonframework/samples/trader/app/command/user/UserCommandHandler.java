@@ -21,7 +21,7 @@ public class UserCommandHandler {
     @CommandHandler
     public UUID handleCreateUser(CreateUserCommand command) {
         UUID identifier = UUID.randomUUID();
-        User user = new User(identifier, command.getUsername(), command.getName());
+        User user = new User(identifier, command.getUsername(), command.getName(), command.getPassword());
         repository.add(user);
         return identifier;
     }
