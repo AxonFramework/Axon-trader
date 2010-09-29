@@ -1,3 +1,5 @@
+<%@ page import="org.springframework.security.core.Authentication" %>
+<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
@@ -36,8 +38,20 @@
 <body>
 <div id="header">
     <div id="primaryNavigation">
+        <span id="usermenu">
+            <%
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth != null) { %>
+
+               <%= ((org.axonframework.samples.trader.webui.security.FrontendUser)auth.getPrincipal()).getLongName() %>
+            &nbsp;&nbsp;<a href="${ctx}/j_spring_security_logout">logout</a>
+           <% } else { %>
+               &nbsp;&nbsp;<a href="${ctx}/login.jsp">login</a>
+           <% }%>
+            </span>
         <ul>
-            <li class="home"><a href="/"><span>Home</span></a></li> <%-- TODO jettro : Make use of ctx and make it work --%>
+            <li class="home"><a href="/"><span>Home</span></a></li>
+            <%-- TODO jettro : Make use of ctx and make it work --%>
             <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Trade item</span></a></li>
         </ul>
     </div>

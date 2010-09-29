@@ -21,6 +21,10 @@ public class UserRepositoryMongo implements UserRepository {
         DBObject query = BasicDBObjectBuilder.start("username",username).get();
         DBObject one = mongo.users().findOne(query);
 
+        if (null == one) {
+            return null;
+        }
+
         UserEntry entry = new UserEntry();
         entry.setIdentifier((UUID) one.get("identifier"));
         entry.setName((String) one.get("name"));

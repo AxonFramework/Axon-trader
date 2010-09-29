@@ -60,6 +60,15 @@
     margin-bottom: 0;
 }
 
+#primaryNavigation #usermenu {
+    color:yellow;
+    float:right;
+}
+
+#primaryNavigation #usermenu a {
+    color : white;
+}
+
 /* Enf of primary navigation */
 
 /* forms */

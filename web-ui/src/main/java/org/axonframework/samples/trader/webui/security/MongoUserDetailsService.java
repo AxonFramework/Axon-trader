@@ -30,9 +30,14 @@ public class MongoUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
         UserEntry foundUser = userRepository.findByUsername(username);
+
+        if (null == foundUser) {
+            return null;
+        }
+
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
 
-        return new User(foundUser.getUsername(),foundUser.getPassword(),true,true,true,true, authorities);
+        return new FrontendUser(foundUser.getUsername(),foundUser.getPassword(),foundUser.getName(), authorities);
     }
 }

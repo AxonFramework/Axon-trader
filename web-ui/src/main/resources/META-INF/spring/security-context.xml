@@ -11,7 +11,12 @@
     <context:component-scan base-package="org.axonframework.samples.trader.webui.security"/>
 
     <http auto-config='true'>
+        <intercept-url pattern="/js/**" filters="none"/>
+        <intercept-url pattern="/style/**" filters="none"/>
+        <intercept-url pattern="/login.jsp*" filters="none"/>
         <intercept-url pattern="/**" access="ROLE_USER"/>
+        <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/>
+        <logout logout-success-url="/"/>
     </http>
 
     <authentication-manager>
