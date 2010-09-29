@@ -17,8 +17,8 @@ import java.util.List;
  * <li>Test - configure this factory with setTestContext(true)</li>
  * <li>Production - the list of provide <code>ServerAddress</code> instances becomes mandatory.</li>
  * </ul>
- * <p>For production usage we expect the minimum of 2 instances of servers to be configured. If not, an
- * <code>IllegalStateException</code> is thrown.</p>
+ * <p>For production usage we expect at least 1 server to be configured. If not, an <code>IllegalStateException</code>
+ * is thrown. Be warned, it is better to provided multiple servers in case of a Replica Set.</p>
  *
  * @author Jettro Coenradie
  */
@@ -65,8 +65,8 @@ public class MongoFactory implements FactoryBean<Mongo>, InitializingBean {
         if (testContext) {
             this.mongo = new Mongo();
         } else {
-            if (mongoAddresses.isEmpty() || mongoAddresses.size() < 2) {
-                throw new IllegalStateException("Please configure at least 2 instances of Mongo for production.");
+            if (mongoAddresses.isEmpty()) {
+                throw new IllegalStateException("Please configure at least 1 instance of Mongo for production.");
             }
             this.mongo = new Mongo(mongoAddresses);
         }
