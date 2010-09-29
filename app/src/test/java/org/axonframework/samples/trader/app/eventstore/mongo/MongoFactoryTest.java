@@ -15,13 +15,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jettro Coenradie
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
+@ContextConfiguration(locations={"classpath:META-INF/spring/persistence-infrastructure-context.xml",
+        "classpath:META-INF/spring/configuration-context.xml"})
 public class MongoFactoryTest {
 
     @Autowired
     private ApplicationContext context;
 
-    @Ignore
+    @Test
     public void checkMongoFactory() {
         Mongo mongoDb = (Mongo) context.getBean("mongoDb");
         for (ServerAddress server : mongoDb.getAllAddress()) {
