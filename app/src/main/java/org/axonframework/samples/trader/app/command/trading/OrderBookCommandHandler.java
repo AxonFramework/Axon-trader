@@ -23,6 +23,7 @@ public class OrderBookCommandHandler {
     public void handleBuyOrder(CreateBuyOrderCommand command) {
         // TODO add validation here
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+
         orderBook.addBuyOrder(command.getOrderId(),
                 command.getTradeCount(),
                 command.getItemPrice(),

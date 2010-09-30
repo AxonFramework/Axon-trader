@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * <p>This is an implementation of the <code>SnapshotEventStore</code> based on a MongoDB instance. Since the events
- * must be persisted, we use the highest possible WriteConcern. For a test environment with only one node, this is
+ * <p>This is an implementation of the <code>SnapshotEventStore</code> based on a MongoDB instance or cluster. Since the
+ * events must be persisted, we use the highest possible WriteConcern. For a test environment with only one node, this is
  * the SAFE WriteConcern. In a production environment with a Mongo Replica set, the REPLICAS_SAFE WriteConcern is used.
  * </p>
  * <p>Whether to initialize a test environment or a production environment is decided based on the provided testContext

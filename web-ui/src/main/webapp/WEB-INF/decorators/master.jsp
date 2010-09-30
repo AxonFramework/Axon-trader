@@ -49,10 +49,9 @@
            <% } else { %>
                &nbsp;&nbsp;<a href="${ctx}/login.jsp">login</a>
            <% }%>
-            </span>
+        </span>
         <ul>
-            <li class="home"><a href="/"><span>Home</span></a></li>
-            <%-- TODO jettro : Make use of ctx and make it work --%>
+            <li class="home"><a href="${ctx}/"><span>Home</span></a></li>
             <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Trade item</span></a></li>
         </ul>
     </div>

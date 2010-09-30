@@ -18,7 +18,7 @@ import java.util.List;
  * <li>Production - the list of provide <code>ServerAddress</code> instances becomes mandatory.</li>
  * </ul>
  * <p>For production usage we expect at least 1 server to be configured. If not, an <code>IllegalStateException</code>
- * is thrown. Be warned, it is better to provided multiple servers in case of a Replica Set.</p>
+ * is thrown. Be warned, it is better to provide multiple servers in case of a Replica Set.</p>
  *
  * @author Jettro Coenradie
  */
