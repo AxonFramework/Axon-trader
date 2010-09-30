@@ -169,7 +169,7 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
                 .add(AGGREGATE_IDENTIFIER, identifier.toString())
                 .add(TYPE, type)
                 .get();
-        DBCursor dbCursor = mongo.domainEvents().find(mongoEntry).sort(new BasicDBObject(SEQUENCE_NUMBER, -1));
+        DBCursor dbCursor = mongo.snapshotEvents().find(mongoEntry).sort(new BasicDBObject(SEQUENCE_NUMBER, -1));
 
         if (!dbCursor.hasNext()) {
             return null;
