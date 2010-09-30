@@ -1,5 +1,6 @@
 <%@ page import="org.springframework.security.core.Authentication" %>
 <%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
+<%@ page import="org.axonframework.samples.trader.app.api.user.UserAccount" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
@@ -43,7 +44,7 @@
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 if (auth != null) { %>
 
-               <%= ((org.axonframework.samples.trader.webui.security.FrontendUser)auth.getPrincipal()).getLongName() %>
+               <%= ((UserAccount)auth.getPrincipal()).getFullName() %>
             &nbsp;&nbsp;<a href="${ctx}/j_spring_security_logout">logout</a>
            <% } else { %>
                &nbsp;&nbsp;<a href="${ctx}/login.jsp">login</a>

@@ -20,7 +20,7 @@
     </http>
 
     <authentication-manager>
-        <authentication-provider user-service-ref="mongoUserDetailsService"/>
+        <authentication-provider ref="traderAuthenticationProvider"/>
     </authentication-manager>
 
 </beans:beans>

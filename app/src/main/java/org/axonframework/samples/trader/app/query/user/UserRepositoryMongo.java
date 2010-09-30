@@ -1,6 +1,5 @@
 package org.axonframework.samples.trader.app.query.user;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import org.axonframework.samples.trader.app.query.MongoHelper;
@@ -18,7 +17,7 @@ public class UserRepositoryMongo implements UserRepository {
 
     @Override
     public UserEntry findByUsername(String username) {
-        DBObject query = BasicDBObjectBuilder.start("username",username).get();
+        DBObject query = BasicDBObjectBuilder.start("username", username).get();
         DBObject one = mongo.users().findOne(query);
 
         if (null == one) {
@@ -29,7 +28,6 @@ public class UserRepositoryMongo implements UserRepository {
         entry.setIdentifier((UUID) one.get("identifier"));
         entry.setName((String) one.get("name"));
         entry.setUsername((String) one.get("username"));
-        entry.setPassword((String) one.get("password"));
         return entry;
     }
 

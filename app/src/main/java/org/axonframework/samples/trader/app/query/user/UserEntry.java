@@ -1,21 +1,22 @@
 package org.axonframework.samples.trader.app.query.user;
 
+import org.axonframework.samples.trader.app.api.user.UserAccount;
+
 import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
  */
-public class UserEntry {
+public class UserEntry implements UserAccount {
     private UUID identifier;
     private String name;
     private String username;
-    private String password;
 
     public UUID getIdentifier() {
         return identifier;
     }
 
-    void setIdentifier(UUID identifier) {
+    public void setIdentifier(UUID identifier) {
         this.identifier = identifier;
     }
 
@@ -23,7 +24,7 @@ public class UserEntry {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -31,15 +32,22 @@ public class UserEntry {
         return username;
     }
 
-    void setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public String getUserId() {
+        return this.identifier.toString();
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getUserName() {
+        return this.username;
+    }
+
+    @Override
+    public String getFullName() {
+        return this.name;
     }
 }

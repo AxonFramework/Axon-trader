@@ -1,5 +1,6 @@
 package org.axonframework.samples.trader.webui.util;
 
+import org.axonframework.samples.trader.app.api.user.UserAccount;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,12 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SecurityUtil {
     public static String obtainLoggedinUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
+        if (principal instanceof UserAccount) {
+            return ((UserAccount) principal).getUserName();
         } else {
-            username = principal.toString();
+            throw new IllegalStateException("Wrong security implementation, expecting a UserAccount as principal");
         }
-        return username;
     }
 }
