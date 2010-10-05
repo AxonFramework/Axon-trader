@@ -1,11 +1,10 @@
 package org.axonframework.samples.trader.app.command.user;
 
+import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.user.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
-
-import java.util.UUID;
 
 import static org.axonframework.samples.trader.app.util.DigestUtils.sha1;
 
@@ -15,13 +14,13 @@ import static org.axonframework.samples.trader.app.util.DigestUtils.sha1;
 public class User extends AbstractAnnotatedAggregateRoot {
     private String passwordHash;
 
-    public User(UUID identifier, String username, String name, String password) {
+    public User(AggregateIdentifier identifier, String username, String name, String password) {
         super(identifier);
-        apply(new UserCreatedEvent(name,username, hashOf(password.toCharArray())));
+        apply(new UserCreatedEvent(name, username, hashOf(password.toCharArray())));
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
-    public User(UUID identifier) {
+    public User(AggregateIdentifier identifier) {
         super(identifier);
     }
 

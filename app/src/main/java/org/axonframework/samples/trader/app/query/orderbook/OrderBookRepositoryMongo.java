@@ -32,27 +32,27 @@ public class OrderBookRepositoryMongo implements OrderBookRepository {
     }
 
     @Override
-    public OrderBookEntry findByIdentifier(UUID aggregateIdentifier) {
-        DBObject one = mongo.orderBooks().findOne(new BasicDBObject("identifier", aggregateIdentifier.toString()));
+    public OrderBookEntry findByIdentifier(String aggregateIdentifier) {
+        DBObject one = mongo.orderBooks().findOne(new BasicDBObject("identifier", aggregateIdentifier));
         return mapOrderBookEntryFromMongo(one);
     }
 
     @Override
-    public OrderBookEntry findByTradeItem(UUID tradeItemIdentifier) {
-        DBObject one = mongo.orderBooks().findOne(new BasicDBObject("tradeItemIdentifier", tradeItemIdentifier.toString()));
+    public OrderBookEntry findByTradeItem(String tradeItemIdentifier) {
+        DBObject one = mongo.orderBooks().findOne(new BasicDBObject("tradeItemIdentifier", tradeItemIdentifier));
         return mapOrderBookEntryFromMongo(one);
     }
 
     @Override
-    public OrderEntry findByOrderIdentifier(UUID orderIdentifier) {
+    public OrderEntry findByOrderIdentifier(String orderIdentifier) {
         throw new UnsupportedOperationException();
     }
 
     private OrderBookEntry mapOrderBookEntryFromMongo(DBObject next) {
         OrderBookEntry entry = new OrderBookEntry();
         entry.setTradeItemName((String) next.get("tradeItemName"));
-        entry.setIdentifier(UUID.fromString((String) next.get("identifier")));
-        entry.setTradeItemIdentifier(UUID.fromString((String) next.get("tradeItemIdentifier")));
+        entry.setIdentifier((String) next.get("identifier"));
+        entry.setTradeItemIdentifier((String) next.get("tradeItemIdentifier"));
         if (next.containsField("sellOrders")) {
             List<DBObject> sellOrderObjects = (List<DBObject>) next.get("sellOrders");
             for (DBObject sellOrderObject : sellOrderObjects) {

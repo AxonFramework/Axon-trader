@@ -31,7 +31,7 @@
         <spring.version>3.0.4.RELEASE</spring.version>
         <spring.security.version>3.0.3.RELEASE</spring.security.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <axon.version>0.6</axon.version>
+        <axon.version>0.7-SNAPSHOT</axon.version>
     </properties>
 
     <modules>

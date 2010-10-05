@@ -2,6 +2,7 @@ package org.axonframework.samples.trader.webui.tradeitem;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
+import org.axonframework.domain.AggregateIdentifierFactory;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
@@ -63,7 +64,7 @@ public class TradeItemController {
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String details(@PathVariable String identifier, Model model) {
-        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(UUID.fromString(identifier));
+        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(identifier);
         OrderBookEntry bookEntry = orderBookRepository.findByTradeItem(tradeItem.getIdentifier());
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findExecutedTradesForOrderBook(bookEntry.getIdentifier());
         model.addAttribute("tradeItem",tradeItem);
@@ -95,12 +96,12 @@ public class TradeItemController {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            UUID tradeItemId = UUID.fromString(order.getTradeItemId());
+            String tradeItemId = order.getTradeItemId();
             TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
 
             CreateSellOrderCommand command = new CreateSellOrderCommand(
-                    username.getIdentifier(),
-                    tradeItemByIdentifier.getOrderBookIdentifier(),
+                    AggregateIdentifierFactory.fromString(username.getIdentifier()),
+                    AggregateIdentifierFactory.fromString(tradeItemByIdentifier.getOrderBookIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
 
@@ -116,12 +117,12 @@ public class TradeItemController {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            UUID tradeItemId = UUID.fromString(order.getTradeItemId());
+            String tradeItemId = order.getTradeItemId();
             TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
 
             CreateBuyOrderCommand command = new CreateBuyOrderCommand(
-                    username.getIdentifier(),
-                    tradeItemByIdentifier.getOrderBookIdentifier(),
+                    AggregateIdentifierFactory.fromString(username.getIdentifier()),
+                    AggregateIdentifierFactory.fromString(tradeItemByIdentifier.getOrderBookIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
@@ -132,7 +133,7 @@ public class TradeItemController {
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
-        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(UUID.fromString(identifier));
+        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(identifier);
         order.setTradeItemId(identifier);
         order.setTradeItemName(tradeItem.getName());
     }

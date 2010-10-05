@@ -1,5 +1,7 @@
 package org.axonframework.samples.trader.app.eventstore.mongo;
 
+import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.AggregateIdentifierFactory;
 import org.axonframework.domain.DomainEvent;
 import org.axonframework.eventstore.EventSerializer;
 import org.joda.time.LocalDateTime;
@@ -36,8 +38,8 @@ public class AbstractEventEntry {
         return eventSerializer.deserialize(serializedEvent);
     }
 
-    public UUID getAggregateIdentifier() {
-        return UUID.fromString(aggregateIdentifier);
+    public AggregateIdentifier getAggregateIdentifier() {
+        return AggregateIdentifierFactory.fromString(aggregateIdentifier);
     }
 
     public String getType() {

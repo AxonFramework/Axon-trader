@@ -1,5 +1,6 @@
 package org.axonframework.samples.trader.app.command.trading;
 
+import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.order.BuyOrderPlacedEvent;
@@ -20,23 +21,23 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
-    public OrderBook(UUID identifier, UUID tradeItemIdentifier) {
+    public OrderBook(AggregateIdentifier identifier, AggregateIdentifier tradeItemIdentifier) {
         super(identifier);
         apply(new OrderBookCreatedEvent(tradeItemIdentifier));
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
-    public OrderBook(UUID identifier) {
+    public OrderBook(AggregateIdentifier identifier) {
         super(identifier);
     }
 
 
-    public void addBuyOrder(UUID orderId, long tradeCount, int itemPrice, UUID userId) {
+    public void addBuyOrder(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
         apply(new BuyOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
         executeTrades();
     }
 
-    public void addSellOrder(UUID orderId, long tradeCount, int itemPrice, UUID userId) {
+    public void addSellOrder(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
         apply(new SellOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
         executeTrades();
     }

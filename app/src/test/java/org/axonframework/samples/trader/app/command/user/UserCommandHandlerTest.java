@@ -46,7 +46,7 @@ public class UserCommandHandlerTest {
     public void testHandleAuthenticateUser() throws Exception {
         UserEntry userEntry = new UserEntry();
         userEntry.setUsername("buyer1");
-        userEntry.setIdentifier(fixture.getAggregateIdentifier());
+        userEntry.setIdentifier(fixture.getAggregateIdentifier().asString());
         userEntry.setName("Buyer One");
         when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 

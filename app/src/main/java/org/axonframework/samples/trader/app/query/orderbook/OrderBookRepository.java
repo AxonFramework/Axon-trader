@@ -9,9 +9,9 @@ import java.util.UUID;
 public interface OrderBookRepository {
     List<OrderBookEntry> listAllOrderBooks();
 
-    OrderBookEntry findByIdentifier(UUID aggregateIdentifier);
+    OrderBookEntry findByIdentifier(String aggregateIdentifier);
 
-    OrderBookEntry findByTradeItem(UUID tradeItemIdentifier);
+    OrderBookEntry findByTradeItem(String tradeItemIdentifier);
 
-    OrderEntry findByOrderIdentifier(UUID orderIdentifier);
+    OrderEntry findByOrderIdentifier(String orderIdentifier);
 }

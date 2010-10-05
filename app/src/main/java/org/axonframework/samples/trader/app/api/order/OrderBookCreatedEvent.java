@@ -1,5 +1,6 @@
 package org.axonframework.samples.trader.app.api.order;
 
+import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 import java.util.UUID;
@@ -8,17 +9,17 @@ import java.util.UUID;
  * @author Jettro Coenradie
  */
 public class OrderBookCreatedEvent extends DomainEvent {
-    private UUID tradeItemIdentifier;
+    private AggregateIdentifier tradeItemIdentifier;
 
-    public OrderBookCreatedEvent(UUID tradeItemIdentifier) {
+    public OrderBookCreatedEvent(AggregateIdentifier tradeItemIdentifier) {
         this.tradeItemIdentifier = tradeItemIdentifier;
     }
 
-    public UUID getTradeItemIdentifier() {
+    public AggregateIdentifier getTradeItemIdentifier() {
         return tradeItemIdentifier;
     }
 
-    public UUID getOrderBookIdentifier() {
+    public AggregateIdentifier getOrderBookIdentifier() {
         return getAggregateIdentifier();
     }
 }

@@ -3,6 +3,8 @@ package org.axonframework.samples.trader.webui.init;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
+import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.AggregateIdentifierFactory;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
@@ -40,7 +42,7 @@ public class DBInit {
         mongo.getDatabase().dropDatabase();
         mongo.systemDatabase().dropDatabase();
 
-        UUID userIdentifier = createuser("Buyer One", "buyer1");
+        AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
         createuser("Buyer three", "buyer3");
         createuser("Admin One", "admin1");
@@ -49,7 +51,7 @@ public class DBInit {
         createOrderBooks();
     }
 
-    private void createTradeItems(UUID userIdentifier) {
+    private void createTradeItems(AggregateIdentifier userIdentifier) {
         CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips 3D TV", 1000, 10000);
         commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
@@ -65,17 +67,19 @@ public class DBInit {
         List<TradeItemEntry> tradeItemEntries = tradeItemRepository.listAllTradeItems();
 
         for (TradeItemEntry tradeItemEntry : tradeItemEntries) {
-            CreateOrderBookCommand command = new CreateOrderBookCommand(tradeItemEntry.getIdentifier());
+            CreateOrderBookCommand command = new CreateOrderBookCommand(
+                    AggregateIdentifierFactory.fromString(tradeItemEntry.getIdentifier()));
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
         }
     }
 
 
-    private UUID createuser(String longName, String userName) {
+    private AggregateIdentifier createuser(String longName, String userName) {
         CreateUserCommand createUser = new CreateUserCommand(longName, userName, userName);
-        FutureCallback<CreateUserCommand, UUID> createUserCallback = new FutureCallback<CreateUserCommand, UUID>();
+        FutureCallback<CreateUserCommand, AggregateIdentifier> createUserCallback =
+                new FutureCallback<CreateUserCommand, AggregateIdentifier>();
         commandBus.dispatch(createUser, createUserCallback);
-        UUID userIdentifier;
+        AggregateIdentifier userIdentifier;
         try {
             userIdentifier = createUserCallback.get();
         } catch (Exception e) {

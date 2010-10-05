@@ -32,7 +32,7 @@ public class OrderBookController {
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String getOrders(@PathVariable String identifier, Model model) {
-        OrderBookEntry orderBook = repository.findByIdentifier(UUID.fromString(identifier));
+        OrderBookEntry orderBook = repository.findByIdentifier(identifier);
         model.addAttribute("orderBook", orderBook);
         return "orderbook/orders";
     }

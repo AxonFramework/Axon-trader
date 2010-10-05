@@ -1,5 +1,8 @@
 package org.axonframework.samples.trader.app.api.order;
 
+import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.AggregateIdentifierFactory;
+
 import java.util.UUID;
 
 /**
@@ -7,25 +10,25 @@ import java.util.UUID;
  */
 public abstract class AbstractOrderCommand {
 
-    private UUID userId;
-    private UUID orderBookId;
+    private AggregateIdentifier userId;
+    private AggregateIdentifier orderBookId;
     private long tradeCount;
     private int itemPrice;
-    private UUID orderId;
+    private AggregateIdentifier orderId;
 
-    protected AbstractOrderCommand(UUID userId, UUID orderBookId, long tradeCount, int itemPrice) {
+    protected AbstractOrderCommand(AggregateIdentifier userId, AggregateIdentifier orderBookId, long tradeCount, int itemPrice) {
         this.userId = userId;
         this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
-        this.orderId = UUID.randomUUID();
+        this.orderId = AggregateIdentifierFactory.fromUUID( UUID.randomUUID());
     }
 
-    public UUID getUserId() {
+    public AggregateIdentifier getUserId() {
         return userId;
     }
 
-    public UUID getOrderBookId() {
+    public AggregateIdentifier getOrderBookId() {
         return orderBookId;
     }
 
@@ -37,7 +40,7 @@ public abstract class AbstractOrderCommand {
         return itemPrice;
     }
 
-    public UUID getOrderId() {
+    public AggregateIdentifier getOrderId() {
         return orderId;
     }
 }

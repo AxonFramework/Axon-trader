@@ -1,17 +1,19 @@
 package org.axonframework.samples.trader.app.api.tradeitem;
 
+import org.axonframework.domain.AggregateIdentifier;
+
 import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
  */
 public class CreateTradeItemCommand {
-    private UUID userId;
+    private AggregateIdentifier userId;
     private String tradeItemName;
     private long tradeItemValue;
     private long amountOfShares;
 
-    public CreateTradeItemCommand(UUID userId, String tradeItemName, long tradeItemValue, long amountOfShares) {
+    public CreateTradeItemCommand(AggregateIdentifier userId, String tradeItemName, long tradeItemValue, long amountOfShares) {
         this.amountOfShares = amountOfShares;
         this.tradeItemName = tradeItemName;
         this.tradeItemValue = tradeItemValue;
@@ -30,7 +32,7 @@ public class CreateTradeItemCommand {
         return tradeItemValue;
     }
 
-    public UUID getUserId() {
+    public AggregateIdentifier getUserId() {
         return userId;
     }
 }

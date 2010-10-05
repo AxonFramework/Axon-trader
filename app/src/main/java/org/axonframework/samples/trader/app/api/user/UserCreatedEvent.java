@@ -1,8 +1,7 @@
 package org.axonframework.samples.trader.app.api.user;
 
+import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
-
-import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -18,7 +17,7 @@ public class UserCreatedEvent extends DomainEvent {
         this.password = password;
     }
 
-    public UUID getUserIdentifier() {
+    public AggregateIdentifier getUserIdentifier() {
         return getAggregateIdentifier();
     }
 

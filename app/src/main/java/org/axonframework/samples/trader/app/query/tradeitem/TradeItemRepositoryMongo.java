@@ -31,14 +31,14 @@ public class TradeItemRepositoryMongo implements TradeItemRepository {
     }
 
     @Override
-    public TradeItemEntry findTradeItemByIdentifier(UUID tradeItemIdentifier) {
-        DBObject query = BasicDBObjectBuilder.start().add("identifier", tradeItemIdentifier.toString()).get();
+    public TradeItemEntry findTradeItemByIdentifier(String tradeItemIdentifier) {
+        DBObject query = BasicDBObjectBuilder.start().add("identifier", tradeItemIdentifier).get();
         return mapTradeItemFromMongo(mongo.tradeItems().findOne(query));
     }
 
     @Override
-    public TradeItemEntry findTradeItemByOrderBookIdentifier(UUID orderBookIdentifier) {
-        DBObject query = BasicDBObjectBuilder.start().add("orderBookIdentifier", orderBookIdentifier.toString()).get();
+    public TradeItemEntry findTradeItemByOrderBookIdentifier(String orderBookIdentifier) {
+        DBObject query = BasicDBObjectBuilder.start().add("orderBookIdentifier", orderBookIdentifier).get();
         return mapTradeItemFromMongo(mongo.tradeItems().findOne(query));
     }
 
@@ -50,13 +50,13 @@ public class TradeItemRepositoryMongo implements TradeItemRepository {
      */
     private TradeItemEntry mapTradeItemFromMongo(DBObject mongoTradeItemObject) {
         TradeItemEntry tradeItemEntry = new TradeItemEntry();
-        tradeItemEntry.setIdentifier(UUID.fromString((String) mongoTradeItemObject.get("identifier")));
+        tradeItemEntry.setIdentifier((String) mongoTradeItemObject.get("identifier"));
         tradeItemEntry.setName((String) mongoTradeItemObject.get("name"));
         tradeItemEntry.setValue((Long) mongoTradeItemObject.get("value"));
         tradeItemEntry.setAmountOfShares((Long) mongoTradeItemObject.get("amountOfShares"));
         tradeItemEntry.setTradeStarted((Boolean) mongoTradeItemObject.get("tradeStarted"));
         if (mongoTradeItemObject.containsField("orderBookIdentifier")) {
-            UUID uuidOrderBookIdentifier = UUID.fromString((String) mongoTradeItemObject.get("orderBookIdentifier"));
+            String uuidOrderBookIdentifier = (String) mongoTradeItemObject.get("orderBookIdentifier");
             tradeItemEntry.setOrderBookIdentifier(uuidOrderBookIdentifier);
         }
         return tradeItemEntry;

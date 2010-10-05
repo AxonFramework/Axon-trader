@@ -1,5 +1,7 @@
 package org.axonframework.samples.trader.app.api.order;
 
+import org.axonframework.domain.AggregateIdentifier;
+
 import java.util.UUID;
 
 /**
@@ -7,7 +9,7 @@ import java.util.UUID;
  */
 public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public SellOrderPlacedEvent(UUID orderId, long tradeCount, int itemPrice, UUID userId) {
+    public SellOrderPlacedEvent(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
         super(orderId, tradeCount, itemPrice, userId);
     }
 }

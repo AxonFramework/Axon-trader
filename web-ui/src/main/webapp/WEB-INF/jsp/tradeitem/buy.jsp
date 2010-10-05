@@ -18,7 +18,7 @@
           </tr>
           <tr>
               <td colspan="2">
-                  <input type="submit" value="Place Order" />
+                  <input type="submit" name="submit" value="Place Order" />
               </td>
           </tr>
       </table>

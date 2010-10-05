@@ -18,7 +18,7 @@ public class UserListener {
     @EventHandler
     public void handleUserCreated(UserCreatedEvent event) {
         DBObject userEntry = BasicDBObjectBuilder.start()
-                .add("identifier", event.getUserIdentifier())
+                .add("identifier", event.getUserIdentifier().asString())
                 .add("name", event.getName())
                 .add("username", event.getUsername())
                 .add("password", event.getPassword())

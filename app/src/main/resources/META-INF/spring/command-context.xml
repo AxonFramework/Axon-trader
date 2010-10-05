@@ -2,26 +2,59 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+       ">
+
+    <aop:aspectj-autoproxy/>
 
     <context:component-scan base-package="org.axonframework.samples.trader.app"/>
 
-    <bean id="orderBookRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
-        <constructor-arg value="org.axonframework.samples.trader.app.command.trading.OrderBook"/>
-        <property name="eventBus" ref="eventBus"/>
-        <property name="eventStore" ref="eventStore"/>
+    <axon:event-sourcing-repository id="orderBookRepository"
+                                    aggregate-type="org.axonframework.samples.trader.app.command.trading.OrderBook"
+                                    cache-ref="ehcache"
+                                    event-bus="eventBus"
+                                    event-store="eventStore"/>
+
+    <axon:event-sourcing-repository id="tradeItemRepository"
+                                    aggregate-type="org.axonframework.samples.trader.app.command.trading.TradeItem"
+                                    cache-ref="ehcache"
+                                    event-bus="eventBus"
+                                    event-store="eventStore"/>
+
+    <axon:event-sourcing-repository id="userRepository"
+                                    aggregate-type="org.axonframework.samples.trader.app.command.user.User"
+                                    cache-ref="ehcache"
+                                    event-bus="eventBus"
+                                    event-store="eventStore"/>
+
+
+    <bean id="ehcache" class="net.sf.ehcache.jcache.JCache">
+        <constructor-arg>
+            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+        </constructor-arg>
     </bean>
 
-    <bean id="tradeItemRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
-        <constructor-arg value="org.axonframework.samples.trader.app.command.trading.TradeItem"/>
-        <property name="eventBus" ref="eventBus"/>
-        <property name="eventStore" ref="eventStore"/>
-    </bean>
+    <!--<bean id="orderBookRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">-->
+    <!--<constructor-arg value="org.axonframework.samples.trader.app.command.trading.OrderBook"/>-->
+    <!--<property name="eventBus" ref="eventBus"/>-->
+    <!--<property name="eventStore" ref="eventStore"/>-->
+    <!--</bean>-->
 
-    <bean id="userRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">
-        <constructor-arg value="org.axonframework.samples.trader.app.command.user.User"/>
-        <property name="eventBus" ref="eventBus"/>
-        <property name="eventStore" ref="eventStore"/>
-    </bean>
+    <!--<bean id="tradeItemRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">-->
+    <!--<constructor-arg value="org.axonframework.samples.trader.app.command.trading.TradeItem"/>-->
+    <!--<property name="eventBus" ref="eventBus"/>-->
+    <!--<property name="eventStore" ref="eventStore"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="userRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">-->
+    <!--<constructor-arg value="org.axonframework.samples.trader.app.command.user.User"/>-->
+    <!--<property name="eventBus" ref="eventBus"/>-->
+    <!--<property name="eventStore" ref="eventStore"/>-->
+    <!--</bean>-->
 
 </beans>

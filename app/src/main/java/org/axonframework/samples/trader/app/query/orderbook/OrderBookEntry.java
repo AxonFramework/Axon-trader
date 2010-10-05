@@ -8,8 +8,8 @@ import java.util.UUID;
  * @author Jettro Coenradie
  */
 public class OrderBookEntry {
-    private UUID identifier;
-    private UUID tradeItemIdentifier;
+    private String identifier;
+    private String tradeItemIdentifier;
     private String tradeItemName;
     private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
     private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
@@ -22,19 +22,19 @@ public class OrderBookEntry {
         return buyOrders;
     }
 
-    public UUID getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
-    void setIdentifier(UUID identifier) {
+    void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
-    public UUID getTradeItemIdentifier() {
+    public String getTradeItemIdentifier() {
         return tradeItemIdentifier;
     }
 
-    void setTradeItemIdentifier(UUID tradeItemIdentifier) {
+    void setTradeItemIdentifier(String tradeItemIdentifier) {
         this.tradeItemIdentifier = tradeItemIdentifier;
     }
 

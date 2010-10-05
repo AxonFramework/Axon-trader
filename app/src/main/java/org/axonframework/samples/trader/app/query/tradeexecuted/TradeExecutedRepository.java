@@ -7,5 +7,5 @@ import java.util.UUID;
  * @author Jettro Coenradie
  */
 public interface TradeExecutedRepository {
-    List<TradeExecutedEntry> findExecutedTradesForOrderBook(UUID orderBookIdentifier);
+    List<TradeExecutedEntry> findExecutedTradesForOrderBook(String orderBookIdentifier);
 }

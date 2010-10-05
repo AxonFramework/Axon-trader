@@ -1,7 +1,5 @@
 package org.axonframework.samples.trader.app.query.tradeexecuted;
 
-import java.util.UUID;
-
 /**
  * @author Jettro Coenradie
  */
@@ -9,7 +7,7 @@ public class TradeExecutedEntry {
     private long tradeCount;
     private int tradePrice;
     private String tradeItemName;
-    private UUID orderBookIdentifier;
+    private String orderBookIdentifier;
 
     public long getTradeCount() {
         return tradeCount;
@@ -35,11 +33,11 @@ public class TradeExecutedEntry {
         this.tradePrice = tradePrice;
     }
 
-    public UUID getOrderBookIdentifier() {
+    public String getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public void setOrderBookIdentifier(UUID orderBookIdentifier) {
+    public void setOrderBookIdentifier(String orderBookIdentifier) {
         this.orderBookIdentifier = orderBookIdentifier;
     }
 }

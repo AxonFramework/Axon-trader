@@ -19,8 +19,8 @@ public class TradeExecutedRepositoryMongo implements TradeExecutedRepository {
     private MongoHelper mongo;
 
     @Override
-    public List<TradeExecutedEntry> findExecutedTradesForOrderBook(UUID orderBookIdentifier) {
-        DBObject query = BasicDBObjectBuilder.start().add("orderBookIdentifier", orderBookIdentifier.toString()).get();
+    public List<TradeExecutedEntry> findExecutedTradesForOrderBook(String orderBookIdentifier) {
+        DBObject query = BasicDBObjectBuilder.start().add("orderBookIdentifier", orderBookIdentifier).get();
         DBCursor tradesExecutedCursor = mongo.tradesExecuted().find(query);
         List<TradeExecutedEntry> tradesExecuted = new ArrayList<TradeExecutedEntry>();
         while (tradesExecutedCursor.hasNext()) {
@@ -32,7 +32,7 @@ public class TradeExecutedRepositoryMongo implements TradeExecutedRepository {
 
     private TradeExecutedEntry mapFromMongoToTradeExecutedEntry(DBObject tradeExecutedMongo) {
         TradeExecutedEntry entry = new TradeExecutedEntry();
-        entry.setOrderBookIdentifier(UUID.fromString((String) tradeExecutedMongo.get("orderBookIdentifier")));
+        entry.setOrderBookIdentifier((String) tradeExecutedMongo.get("orderBookIdentifier"));
         entry.setTradeCount((Long) tradeExecutedMongo.get("count"));
         entry.setTradeItemName((String) tradeExecutedMongo.get("name"));
         entry.setTradePrice((Integer) tradeExecutedMongo.get("price"));

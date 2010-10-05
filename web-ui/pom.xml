@@ -114,6 +114,16 @@
             <artifactId>hibernate-validator</artifactId>
             <version>4.0.2.GA</version>
         </dependency>
+
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>org.seleniumhq.webdriver</groupId>
+            <artifactId>webdriver-htmlunit</artifactId>
+            <version>0.9.7376</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
 </project>

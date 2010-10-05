@@ -1,5 +1,7 @@
 package org.axonframework.samples.trader.app.api.order;
 
+import org.axonframework.domain.AggregateIdentifier;
+
 import java.util.UUID;
 
 /**
@@ -7,7 +9,7 @@ import java.util.UUID;
  */
 public class CreateSellOrderCommand extends AbstractOrderCommand {
 
-    public CreateSellOrderCommand(UUID userId, UUID orderBookId, long tradeCount, int itemPrice) {
+    public CreateSellOrderCommand(AggregateIdentifier userId, AggregateIdentifier orderBookId, long tradeCount, int itemPrice) {
         super(userId, orderBookId, tradeCount, itemPrice);
     }
 }

@@ -1,18 +1,20 @@
 package org.axonframework.samples.trader.app.api.order;
 
+import org.axonframework.domain.AggregateIdentifier;
+
 import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
  */
 public class CreateOrderBookCommand {
-    private UUID tradeItemIdentifier;
+    private AggregateIdentifier tradeItemIdentifier;
 
-    public CreateOrderBookCommand(UUID tradeItemIdentifier) {
+    public CreateOrderBookCommand(AggregateIdentifier tradeItemIdentifier) {
         this.tradeItemIdentifier = tradeItemIdentifier;
     }
 
-    public UUID getTradeItemIdentifier() {
+    public AggregateIdentifier getTradeItemIdentifier() {
         return tradeItemIdentifier;
     }
 }

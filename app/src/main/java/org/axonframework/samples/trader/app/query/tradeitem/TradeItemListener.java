@@ -19,7 +19,7 @@ public class TradeItemListener {
     @EventHandler
     public void handleTradeItemCreatedEvent(TradeItemCreatedEvent event) {
         DBObject tradeItemEntry = BasicDBObjectBuilder.start()
-                .add("identifier", event.getTradeItemIdentifier().toString())
+                .add("identifier", event.getTradeItemIdentifier().asString())
                 .add("name", event.getTradeItemName())
                 .add("value", event.getTradeItemValue())
                 .add("amountOfShares", event.getAmountOfShares())

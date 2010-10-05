@@ -1,6 +1,6 @@
 package org.axonframework.samples.trader.app.command.trading;
 
-import java.util.UUID;
+import org.axonframework.domain.AggregateIdentifier;
 
 /**
  * @author Allard Buijze
@@ -9,11 +9,11 @@ class Order {
 
     private final int itemPrice;
     private final long tradeCount;
-    private final UUID userId;
+    private final AggregateIdentifier userId;
     private long itemsRemaining;
-    private UUID orderId;
+    private AggregateIdentifier orderId;
 
-    public Order(UUID orderId, int itemPrice, long tradeCount, UUID userId) {
+    public Order(AggregateIdentifier orderId, int itemPrice, long tradeCount, AggregateIdentifier userId) {
         this.orderId = orderId;
         this.itemPrice = itemPrice;
         this.tradeCount = tradeCount;
@@ -29,7 +29,7 @@ class Order {
         return tradeCount;
     }
 
-    public UUID getUserId() {
+    public AggregateIdentifier getUserId() {
         return userId;
     }
 
@@ -37,7 +37,7 @@ class Order {
         return itemsRemaining;
     }
 
-    public UUID getOrderId() {
+    public AggregateIdentifier getOrderId() {
         return orderId;
     }
 

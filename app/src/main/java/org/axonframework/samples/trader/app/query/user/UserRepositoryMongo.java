@@ -6,8 +6,6 @@ import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 /**
  * @author Jettro Coenradie
  */
@@ -25,7 +23,7 @@ public class UserRepositoryMongo implements UserRepository {
         }
 
         UserEntry entry = new UserEntry();
-        entry.setIdentifier((UUID) one.get("identifier"));
+        entry.setIdentifier((String) one.get("identifier"));
         entry.setName((String) one.get("name"));
         entry.setUsername((String) one.get("username"));
         return entry;

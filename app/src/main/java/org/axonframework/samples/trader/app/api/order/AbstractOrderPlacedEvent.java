@@ -1,5 +1,6 @@
 package org.axonframework.samples.trader.app.api.order;
 
+import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 import java.util.UUID;
@@ -9,19 +10,19 @@ import java.util.UUID;
  */
 public abstract class AbstractOrderPlacedEvent extends DomainEvent {
 
-    private final UUID orderId;
+    private final AggregateIdentifier orderId;
     private final long tradeCount;
     private final int itemPrice;
-    private final UUID userId;
+    private final AggregateIdentifier userId;
 
-    protected AbstractOrderPlacedEvent(UUID orderId, long tradeCount, int itemPrice, UUID userId) {
+    protected AbstractOrderPlacedEvent(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
         this.orderId = orderId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
         this.userId = userId;
     }
 
-    public UUID getOrderId() {
+    public AggregateIdentifier getOrderId() {
         return orderId;
     }
 
@@ -33,7 +34,7 @@ public abstract class AbstractOrderPlacedEvent extends DomainEvent {
         return itemPrice;
     }
 
-    public UUID getUserId() {
+    public AggregateIdentifier getUserId() {
         return userId;
     }
 
