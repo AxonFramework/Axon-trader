@@ -18,43 +18,41 @@
                                     aggregate-type="org.axonframework.samples.trader.app.command.trading.OrderBook"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
-                                    event-store="eventStore"/>
+                                    event-store="eventStore">
+        <axon:snapshot-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
 
     <axon:event-sourcing-repository id="tradeItemRepository"
                                     aggregate-type="org.axonframework.samples.trader.app.command.trading.TradeItem"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
-                                    event-store="eventStore"/>
+                                    event-store="eventStore">
+        <axon:snapshot-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
 
     <axon:event-sourcing-repository id="userRepository"
                                     aggregate-type="org.axonframework.samples.trader.app.command.user.User"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
-                                    event-store="eventStore"/>
+                                    event-store="eventStore">
+        <axon:snapshot-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
 
+    <bean id="snapshotter" class="org.axonframework.eventsourcing.SpringAggregateSnapshotter">
+        <property name="eventStore" ref="eventStore"/>
+        <property name="executor" ref="taskExecutor"/>
+    </bean>
 
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="2"/>
+        <property name="maxPoolSize" value="5"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <!-- TODO jettro : come up with a more than default configuration for caching -->
     <bean id="ehcache" class="net.sf.ehcache.jcache.JCache">
         <constructor-arg>
             <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
         </constructor-arg>
     </bean>
-
-    <!--<bean id="orderBookRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">-->
-    <!--<constructor-arg value="org.axonframework.samples.trader.app.command.trading.OrderBook"/>-->
-    <!--<property name="eventBus" ref="eventBus"/>-->
-    <!--<property name="eventStore" ref="eventStore"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="tradeItemRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">-->
-    <!--<constructor-arg value="org.axonframework.samples.trader.app.command.trading.TradeItem"/>-->
-    <!--<property name="eventBus" ref="eventBus"/>-->
-    <!--<property name="eventStore" ref="eventStore"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="userRepository" class="org.axonframework.eventsourcing.GenericEventSourcingRepository">-->
-    <!--<constructor-arg value="org.axonframework.samples.trader.app.command.user.User"/>-->
-    <!--<property name="eventBus" ref="eventBus"/>-->
-    <!--<property name="eventStore" ref="eventStore"/>-->
-    <!--</bean>-->
-
 </beans>

@@ -127,7 +127,7 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
                 .add(AGGREGATE_IDENTIFIER, snapshotEventEntry.getAggregateIdentifier().asString())
                 .add(SEQUENCE_NUMBER, snapshotEventEntry.getSequenceNumber())
                 .add(SERIALIZED_EVENT, snapshotEventEntry.getSerializedEvent())
-                .add(TIME_STAMP, snapshotEventEntry.getTimeStamp())
+                .add(TIME_STAMP, snapshotEventEntry.getTimeStamp().toString())
                 .add(TYPE, snapshotEventEntry.getType())
                 .get();
         mongo.snapshotEvents().insert(mongoSnapshotEntry, writeConcern);
@@ -169,21 +169,9 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
         DBCursor dbCursor = mongo.domainEvents().find(mongoEntry);
         List<DomainEvent> events = new ArrayList<DomainEvent>(dbCursor.size());
         while (dbCursor.hasNext()) {
-            long start = new Date().getTime();
-
             byte[] nextItem = (byte[]) dbCursor.next().get(SERIALIZED_EVENT);
-
-            long cursor = new Date().getTime() - start;
-
             DomainEvent deserialize = eventSerializer.deserialize(nextItem);
-
-            long des = new Date().getTime() - start - cursor;
-
             events.add(deserialize);
-
-            long add = new Date().getTime() - start - cursor - des;
-
-            System.out.println("cursor " + cursor + ", deserialize " + des + ", add" + add);
         }
         return events;
     }
