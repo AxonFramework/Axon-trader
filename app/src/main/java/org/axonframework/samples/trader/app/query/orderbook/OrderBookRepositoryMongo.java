@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -73,8 +72,8 @@ public class OrderBookRepositoryMongo implements OrderBookRepository {
         orderEntry.setType((String) orderObject.get("type"));
         orderEntry.setItemsRemaining((Long) orderObject.get("itemsRemaining"));
         orderEntry.setTradeCount((Long) orderObject.get("tradeCount"));
-        orderEntry.setUserId(UUID.fromString((String) orderObject.get("userId")));
-        orderEntry.setIdentifier(UUID.fromString((String) orderObject.get("identifier")));
+        orderEntry.setUserId((String) orderObject.get("userId"));
+        orderEntry.setIdentifier((String) orderObject.get("identifier"));
         orderEntry.setItemPrice((Integer) orderObject.get("itemPrice"));
         return orderEntry;
     }

@@ -1,24 +1,22 @@
 package org.axonframework.samples.trader.app.query.orderbook;
 
-import java.util.UUID;
-
 /**
  * @author Jettro Coenradie
  */
 public class OrderEntry {
-    private UUID identifier;
+    private String identifier;
     private OrderBookEntry orderBookEntry;
     private long tradeCount;
     private int itemPrice;
-    private UUID userId;
+    private String userId;
     private long itemsRemaining;
     private String type;
 
-    public UUID getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
-    void setIdentifier(UUID identifier) {
+    void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
@@ -54,11 +52,11 @@ public class OrderEntry {
         this.tradeCount = tradeCount;
     }
 
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    void setUserId(UUID userId) {
+    void setUserId(String userId) {
         this.userId = userId;
     }
 

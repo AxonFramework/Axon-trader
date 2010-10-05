@@ -7,15 +7,10 @@ import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.api.user.UserAccount;
-import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.axonframework.samples.trader.app.query.user.UserRepository;
-import org.axonframework.unitofwork.CurrentUnitOfWork;
-import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 /**
  * @author Jettro Coenradie

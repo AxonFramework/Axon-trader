@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -55,10 +54,10 @@ public class DBInit {
         CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips 3D TV", 1000, 10000);
         commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
-        command = new CreateTradeItemCommand(userIdentifier,"Sony Ultra TV", 500, 5000);
+        command = new CreateTradeItemCommand(userIdentifier, "Sony Ultra TV", 500, 5000);
         commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
-        command = new CreateTradeItemCommand(userIdentifier,"Smart 2 wheel roller", 15000, 100000);
+        command = new CreateTradeItemCommand(userIdentifier, "Smart 2 wheel roller", 15000, 100000);
         commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
     }

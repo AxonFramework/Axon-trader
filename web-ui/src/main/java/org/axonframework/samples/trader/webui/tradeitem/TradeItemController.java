@@ -7,10 +7,10 @@ import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookRepository;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedRepository;
+import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
+import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.axonframework.samples.trader.app.query.user.UserRepository;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -67,7 +66,7 @@ public class TradeItemController {
         TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(identifier);
         OrderBookEntry bookEntry = orderBookRepository.findByTradeItem(tradeItem.getIdentifier());
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findExecutedTradesForOrderBook(bookEntry.getIdentifier());
-        model.addAttribute("tradeItem",tradeItem);
+        model.addAttribute("tradeItem", tradeItem);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
         model.addAttribute("executedTrades", executedTrades);
@@ -86,7 +85,7 @@ public class TradeItemController {
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.GET)
     public String sellForm(@PathVariable String identifier, Model model) {
         SellOrder order = new SellOrder();
-        prepareInitialOrder(identifier,order);
+        prepareInitialOrder(identifier, order);
         model.addAttribute("order", order);
         return "tradeitem/sell";
     }

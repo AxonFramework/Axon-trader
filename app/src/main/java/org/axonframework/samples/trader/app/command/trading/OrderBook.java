@@ -11,7 +11,6 @@ import org.axonframework.samples.trader.app.api.order.TradeExecutedEvent;
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.UUID;
 
 /**
  * @author Allard Buijze
@@ -51,9 +50,9 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
                 long matchedTradeCount = Math.min(highestBuyer.getItemsRemaining(), lowestSeller.getItemsRemaining());
                 int matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
                 apply(new TradeExecutedEvent(matchedTradeCount,
-                                             matchedTradePrice,
-                                             highestBuyer.getOrderId(),
-                                             lowestSeller.getOrderId()));
+                        matchedTradePrice,
+                        highestBuyer.getOrderId(),
+                        lowestSeller.getOrderId()));
             } else {
                 tradingDone = true;
             }

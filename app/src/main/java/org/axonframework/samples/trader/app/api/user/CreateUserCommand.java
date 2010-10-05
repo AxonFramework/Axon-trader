@@ -1,7 +1,5 @@
 package org.axonframework.samples.trader.app.api.user;
 
-import java.util.UUID;
-
 /**
  * @author Jettro Coenradie
  */

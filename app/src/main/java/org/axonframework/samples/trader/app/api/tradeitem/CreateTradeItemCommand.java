@@ -2,8 +2,6 @@ package org.axonframework.samples.trader.app.api.tradeitem;
 
 import org.axonframework.domain.AggregateIdentifier;
 
-import java.util.UUID;
-
 /**
  * @author Jettro Coenradie
  */

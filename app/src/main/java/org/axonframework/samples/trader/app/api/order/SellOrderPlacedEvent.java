@@ -2,8 +2,6 @@ package org.axonframework.samples.trader.app.api.order;
 
 import org.axonframework.domain.AggregateIdentifier;
 
-import java.util.UUID;
-
 /**
  * @author Allard Buijze
  */

@@ -6,8 +6,6 @@ import org.axonframework.domain.DomainEvent;
 import org.axonframework.eventstore.EventSerializer;
 import org.joda.time.LocalDateTime;
 
-import java.util.UUID;
-
 /**
  * @author Jettro Coenradie
  */

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Jettro Coenradie
@@ -56,8 +55,8 @@ public class TradeItemRepositoryMongo implements TradeItemRepository {
         tradeItemEntry.setAmountOfShares((Long) mongoTradeItemObject.get("amountOfShares"));
         tradeItemEntry.setTradeStarted((Boolean) mongoTradeItemObject.get("tradeStarted"));
         if (mongoTradeItemObject.containsField("orderBookIdentifier")) {
-            String uuidOrderBookIdentifier = (String) mongoTradeItemObject.get("orderBookIdentifier");
-            tradeItemEntry.setOrderBookIdentifier(uuidOrderBookIdentifier);
+            String orderBookIdentifier = (String) mongoTradeItemObject.get("orderBookIdentifier");
+            tradeItemEntry.setOrderBookIdentifier(orderBookIdentifier);
         }
         return tradeItemEntry;
     }
