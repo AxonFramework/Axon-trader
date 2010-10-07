@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Jettro Coenradie
  */
@@ -26,7 +28,7 @@ public class MongoFactoryTest {
     public void checkMongoFactory() {
         Mongo mongoDb = (Mongo) context.getBean("mongoDb");
         for (ServerAddress server : mongoDb.getAllAddress()) {
-            System.out.println(server.getPort());
+            assertEquals(27017,server.getPort());
         }
 
     }

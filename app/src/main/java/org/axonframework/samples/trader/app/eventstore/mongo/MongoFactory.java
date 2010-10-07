@@ -2,8 +2,11 @@ package org.axonframework.samples.trader.app.eventstore.mongo;
 
 import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ import java.util.List;
  *
  * @author Jettro Coenradie
  */
-public class MongoFactory implements FactoryBean<Mongo>, InitializingBean {
+public class MongoFactory implements FactoryBean<Mongo>, InitializingBean, DisposableBean {
     private boolean testContext;
     private List<ServerAddress> mongoAddresses;
     private Mongo mongo;
@@ -70,5 +73,10 @@ public class MongoFactory implements FactoryBean<Mongo>, InitializingBean {
             }
             this.mongo = new Mongo(mongoAddresses);
         }
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        this.mongo.close();
     }
 }

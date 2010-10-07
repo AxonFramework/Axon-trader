@@ -10,8 +10,8 @@ import org.springframework.util.StopWatch;
 /**
  * @author Jettro Coenradie
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class ProfilingAspect {
 
     @Around("methodsToBeProfiled()")

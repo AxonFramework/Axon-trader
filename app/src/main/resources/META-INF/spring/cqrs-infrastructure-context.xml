@@ -12,17 +12,11 @@
     <axon:command-bus id="commandBus"/>
 
     <bean id="eventStore" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoEventStore">
-        <constructor-arg index="0" ref="mongoHelper"/>
+        <constructor-arg index="0" ref="axonMongoHelper"/>
         <constructor-arg index="1" value="${test.context}"/>
     </bean>
 
-    <!--<bean class="org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor"/>-->
-    <!--<bean class="org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor"/>-->
-    <!--<bean id="eventBus" class="org.axonframework.eventhandling.SimpleEventBus"/>-->
-    <!--<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus">-->
-    <!--<property name="interceptors">-->
-    <!--<bean class="org.axonframework.commandhandling.interceptors.SimpleUnitOfWorkInterceptor"/>-->
-    <!--</property>-->
-    <!--</bean>-->
-
+    <bean id="axonMongoHelper" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoHelper">
+        <constructor-arg ref="mongoDb"/>
+    </bean>
 </beans>

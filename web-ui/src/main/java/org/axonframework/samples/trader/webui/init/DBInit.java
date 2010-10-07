@@ -26,20 +26,23 @@ public class DBInit {
     private CommandBus commandBus;
     private TradeItemRepository tradeItemRepository;
     private MongoHelper mongo;
+    private org.axonframework.samples.trader.app.eventstore.mongo.MongoHelper systemMongo;
 
     @Autowired
     public DBInit(CommandBus commandBus,
                   TradeItemRepository tradeItemRepository,
-                  MongoHelper mongo) {
+                  MongoHelper mongo,
+                  org.axonframework.samples.trader.app.eventstore.mongo.MongoHelper systemMongo) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
+        this.systemMongo = systemMongo;
     }
 
     @PostConstruct
     public void createItems() {
         mongo.getDatabase().dropDatabase();
-        mongo.systemDatabase().dropDatabase();
+        systemMongo.database().dropDatabase();
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");

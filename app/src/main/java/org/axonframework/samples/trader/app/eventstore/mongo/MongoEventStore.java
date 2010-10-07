@@ -6,7 +6,6 @@ import org.axonframework.domain.DomainEvent;
 import org.axonframework.domain.DomainEventStream;
 import org.axonframework.domain.SimpleDomainEventStream;
 import org.axonframework.eventstore.*;
-import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,7 +196,6 @@ public class MongoEventStore implements SnapshotEventStore, EventStoreManagement
         );
     }
 
-    // TODO jettro, check if this is correct
     private List<DomainEventEntry> fetchBatch(int startPosition, int batchSize) {
         DBObject sort = BasicDBObjectBuilder.start()
                 .add(TIME_STAMP, -1)
