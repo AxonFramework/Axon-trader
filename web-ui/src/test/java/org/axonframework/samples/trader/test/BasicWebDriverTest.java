@@ -37,7 +37,7 @@ public class BasicWebDriverTest {
 
     private static void placeOrder(WebDriver driver, TradeItemsPage tradeItems, Random randomFactory, String[] orderActions) {
         long start = new Date().getTime();
-        int randomTradeItem = randomFactory.nextInt(3);
+        int randomTradeItem = randomFactory.nextInt(1000);
         String randomOrderAction = orderActions[randomFactory.nextInt(2)];
         int randomPrice = randomFactory.nextInt(500) + 1;
         int randomAmount = randomFactory.nextInt(50) + 1;

@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
+ * <p>Initializes the repository with a number of users, trade items and order books</p>
  * @author Jettro Coenradie
  */
 @Component
@@ -55,13 +56,18 @@ public class DBInit {
 
     private void createTradeItems(AggregateIdentifier userIdentifier) {
         CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips 3D TV", 1000, 10000);
-        commandBus.dispatch(command, NoOpCallback.INSTANCE);
+        commandBus.dispatch(command);
 
         command = new CreateTradeItemCommand(userIdentifier, "Sony Ultra TV", 500, 5000);
-        commandBus.dispatch(command, NoOpCallback.INSTANCE);
+        commandBus.dispatch(command);
 
         command = new CreateTradeItemCommand(userIdentifier, "Smart 2 wheel roller", 15000, 100000);
-        commandBus.dispatch(command, NoOpCallback.INSTANCE);
+        commandBus.dispatch(command);
+
+        for (int i=0; i < 1000; i++) {
+            command = new CreateTradeItemCommand(userIdentifier, "Product " + i, 15000, 100000);
+            commandBus.dispatch(command);
+        }
 
     }
 

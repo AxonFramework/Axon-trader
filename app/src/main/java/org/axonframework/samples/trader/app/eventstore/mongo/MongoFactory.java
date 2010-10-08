@@ -1,6 +1,7 @@
 package org.axonframework.samples.trader.app.eventstore.mongo;
 
 import com.mongodb.Mongo;
+import com.mongodb.MongoOptions;
 import com.mongodb.ServerAddress;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
@@ -65,13 +66,15 @@ public class MongoFactory implements FactoryBean<Mongo>, InitializingBean, Dispo
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        MongoOptions options = new MongoOptions();
+        options.connectionsPerHost = 100;
         if (testContext) {
             this.mongo = new Mongo();
         } else {
             if (mongoAddresses.isEmpty()) {
                 throw new IllegalStateException("Please configure at least 1 instance of Mongo for production.");
             }
-            this.mongo = new Mongo(mongoAddresses);
+            this.mongo = new Mongo(mongoAddresses,options);
         }
     }
 
