@@ -3,7 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="mongoDb" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoFactory">
+    <bean id="mongoDb" class="com.mongodb.Mongo" factory-bean="mongoFactoryBean" factory-method="createMongoInstance"/>
+
+    <bean id="mongoFactoryBean" class="org.axonframework.eventstore.mongo.MongoFactory">
         <property name="testContext" value="${test.context}"/>
         <property name="mongoAddresses">
             <list value-type="com.mongodb.ServerAddress">
@@ -21,7 +23,13 @@
                 </bean>
             </list>
         </property>
+        <property name="mongoOptions">
+            <bean class="com.mongodb.MongoOptions" factory-bean="mongoOptionsFactory" factory-method="createMongoOptions"/>
+        </property>
     </bean>
 
+    <bean id="mongoOptionsFactory" class="org.axonframework.eventstore.mongo.MongoOptionsFactory">
+        <property name="connectionsPerHost" value="100"/>
+    </bean>
 
 </beans>

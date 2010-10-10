@@ -11,12 +11,11 @@
 
     <axon:command-bus id="commandBus"/>
 
-    <bean id="eventStore" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoEventStore">
+    <bean id="eventStore" class="org.axonframework.eventstore.mongo.MongoEventStore">
         <constructor-arg index="0" ref="axonMongoHelper"/>
-        <constructor-arg index="1" value="${test.context}"/>
     </bean>
 
-    <bean id="axonMongoHelper" class="org.axonframework.samples.trader.app.eventstore.mongo.MongoHelper">
+    <bean id="axonMongoHelper" class="org.axonframework.eventstore.mongo.MongoHelper">
         <constructor-arg ref="mongoDb"/>
     </bean>
 </beans>

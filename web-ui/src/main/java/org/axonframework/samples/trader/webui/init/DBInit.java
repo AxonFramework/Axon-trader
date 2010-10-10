@@ -27,13 +27,13 @@ public class DBInit {
     private CommandBus commandBus;
     private TradeItemRepository tradeItemRepository;
     private MongoHelper mongo;
-    private org.axonframework.samples.trader.app.eventstore.mongo.MongoHelper systemMongo;
+    private org.axonframework.eventstore.mongo.MongoHelper systemMongo;
 
     @Autowired
     public DBInit(CommandBus commandBus,
                   TradeItemRepository tradeItemRepository,
                   MongoHelper mongo,
-                  org.axonframework.samples.trader.app.eventstore.mongo.MongoHelper systemMongo) {
+                  org.axonframework.eventstore.mongo.MongoHelper systemMongo) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
