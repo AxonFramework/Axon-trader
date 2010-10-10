@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-axonVersion = "0.6"
+axonVersion = "0.7-SNAPSHOT"
 springVersion = "3.0.4.RELEASE"
 springSecurityVersion = "3.0.3.RELEASE"
 slf4jVersion = "1.5.8"

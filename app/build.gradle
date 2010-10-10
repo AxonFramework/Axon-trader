@@ -5,6 +5,14 @@ dependencies {
 
     compile "com.thoughtworks.xstream:xstream:1.3.1"
 
+    compile "net.sf.ehcache:ehcache-core:2.2.0",
+            "net.sf.ehcache:ehcache-jcache:1.2"
+
+    compile "org.aspectj:aspectjrt:1.6.8",
+            "org.aspectj:aspectjweaver:1.6.8"
+
+    compile "org.springframework:spring-tx:$springVersion"
+
     testCompile "org.axonframework:axon-test:$axonVersion",
             "org.springframework:spring-test:$springVersion"
 }
