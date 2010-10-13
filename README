@@ -1,4 +1,42 @@
 This is a sample application to demonstrate the possibilities of the Axon framework in a high load environment. We
-have chosen to create a Trader application. All you need to run it is java and maven. If they are correct installed, the
- easiest way to start the demo is to do a mvn clean install on the highest level of the project. Than step into the
- web-ui project and do mvn clean jetty:run-war.
+have chosen to create a Trader application. All you need to run it is java, mongodb and maven or gradle.
+
+Initial setup
+-------------
+- Make sure you have java installed
+http://www.java.com/download/
+
+- Make sure you have maven or gradle installed (there is an easier way than this if you do not want to install gradle, read on)
+http://maven.apache.org/download.html#Installation
+http://www.gradle.org/installation.html
+
+- Make sure you have mongodb installed
+http://www.mongodb.org/display/DOCS/Quickstart
+
+When using mongodb in a test environment, it is easiest to just start one instance with the default port on your local machine. If you want another setup, you can find more information in the advanced configuration section.
+
+Running the sample
+------------------
+- First you need to download the source code, if you are reading this file you already have downloaded the source code, or you are on the main page of the Github project. In the later case, you can easily find a url to clone the repository or to download a zip with all the sources.
+
+* Maven
+- Make sure you have your mongo instance running
+- Step into the main folder of the project
+> mvn clean install
+> cd web-ui
+> mvn jetty:run-war
+- Browse to : http://localhost:8080/
+
+* gradle
+- Make sure you have your mongo instance running
+- Step into the main folder of the project
+> gradle jettyRun
+
+* gradle without installation
+- If you do not want to install gradle, there is an even easier approach. 
+- Step into the main folder of your project and still make sure you have mongodb running
+> gradlew jettyRun
+
+Advanced configuration
+----------------------
+To write when done :-)
