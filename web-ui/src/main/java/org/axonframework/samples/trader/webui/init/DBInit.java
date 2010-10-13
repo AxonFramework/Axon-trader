@@ -55,19 +55,20 @@ public class DBInit {
     }
 
     private void createTradeItems(AggregateIdentifier userIdentifier) {
-        CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips 3D TV", 1000, 10000);
+        CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips", 1000, 10000);
         commandBus.dispatch(command);
 
-        command = new CreateTradeItemCommand(userIdentifier, "Sony Ultra TV", 500, 5000);
+        command = new CreateTradeItemCommand(userIdentifier, "Shell", 500, 5000);
         commandBus.dispatch(command);
 
-        command = new CreateTradeItemCommand(userIdentifier, "Smart 2 wheel roller", 15000, 100000);
+        command = new CreateTradeItemCommand(userIdentifier, "Bp", 15000, 100000);
         commandBus.dispatch(command);
 
-        for (int i=0; i < 1000; i++) {
-            command = new CreateTradeItemCommand(userIdentifier, "Product " + i, 15000, 100000);
-            commandBus.dispatch(command);
-        }
+//        To bo used for performance tests
+//        for (int i=0; i < 1000; i++) {
+//            command = new CreateTradeItemCommand(userIdentifier, "Stock " + i, 15000, 100000);
+//            commandBus.dispatch(command);
+//        }
 
     }
 

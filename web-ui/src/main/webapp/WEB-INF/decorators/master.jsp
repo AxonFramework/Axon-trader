@@ -52,7 +52,7 @@
         </span>
         <ul>
             <li class="home"><a href="${ctx}/"><span>Home</span></a></li>
-            <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Trade item</span></a></li>
+            <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Stock</span></a></li>
         </ul>
     </div>
 </div>
