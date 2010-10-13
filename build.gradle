@@ -15,6 +15,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenRepo urls: "http://oss.sonatype.org/content/groups/public"
     }
 
     dependencies {
