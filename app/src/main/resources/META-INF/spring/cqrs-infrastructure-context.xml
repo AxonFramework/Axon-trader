@@ -27,10 +27,6 @@
     <axon:command-bus id="commandBus"/>
 
     <bean id="eventStore" class="org.axonframework.eventstore.mongo.MongoEventStore">
-        <constructor-arg index="0" ref="axonMongoHelper"/>
-    </bean>
-
-    <bean id="axonMongoHelper" class="org.axonframework.eventstore.mongo.AxonMongoWrapper">
         <constructor-arg ref="mongoDb"/>
     </bean>
 </beans>

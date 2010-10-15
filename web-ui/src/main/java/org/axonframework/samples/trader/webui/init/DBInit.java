@@ -15,6 +15,7 @@
 
 package org.axonframework.samples.trader.webui.init;
 
+import com.mongodb.Mongo;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
@@ -51,12 +52,12 @@ public class DBInit {
     public DBInit(CommandBus commandBus,
                   TradeItemRepository tradeItemRepository,
                   MongoHelper mongo,
-                  AxonMongoWrapper systemAxonMongo,
+                  Mongo systemMongo,
                   MongoEventStore eventStore) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
-        this.systemAxonMongo = systemAxonMongo;
+        this.systemAxonMongo = new AxonMongoWrapper(systemMongo);
         this.eventStore = eventStore;
     }
 
