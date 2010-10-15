@@ -20,6 +20,8 @@ import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.eventstore.mongo.AxonMongoWrapper;
+import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
@@ -42,23 +44,27 @@ public class DBInit {
     private CommandBus commandBus;
     private TradeItemRepository tradeItemRepository;
     private MongoHelper mongo;
-    private org.axonframework.eventstore.mongo.MongoHelper systemMongo;
+    private AxonMongoWrapper systemAxonMongo;
+    private MongoEventStore eventStore;
 
     @Autowired
     public DBInit(CommandBus commandBus,
                   TradeItemRepository tradeItemRepository,
                   MongoHelper mongo,
-                  org.axonframework.eventstore.mongo.MongoHelper systemMongo) {
+                  AxonMongoWrapper systemAxonMongo,
+                  MongoEventStore eventStore) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
-        this.systemMongo = systemMongo;
+        this.systemAxonMongo = systemAxonMongo;
+        this.eventStore = eventStore;
     }
 
     @PostConstruct
     public void createItems() {
         mongo.getDatabase().dropDatabase();
-        systemMongo.database().dropDatabase();
+//        systemAxonMongo.domainEvents().drop();
+//        systemAxonMongo.snapshotEvents().drop();
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
@@ -67,6 +73,7 @@ public class DBInit {
 
         createTradeItems(userIdentifier);
         createOrderBooks();
+        eventStore.initializeMongo();
     }
 
     private void createTradeItems(AggregateIdentifier userIdentifier) {

@@ -30,7 +30,7 @@
         <constructor-arg index="0" ref="axonMongoHelper"/>
     </bean>
 
-    <bean id="axonMongoHelper" class="org.axonframework.eventstore.mongo.MongoHelper">
+    <bean id="axonMongoHelper" class="org.axonframework.eventstore.mongo.AxonMongoWrapper">
         <constructor-arg ref="mongoDb"/>
     </bean>
 </beans>
