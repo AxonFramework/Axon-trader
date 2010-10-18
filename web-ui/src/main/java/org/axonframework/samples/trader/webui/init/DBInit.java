@@ -108,8 +108,8 @@ public class DBInit {
 
     private AggregateIdentifier createuser(String longName, String userName) {
         CreateUserCommand createUser = new CreateUserCommand(longName, userName, userName);
-        FutureCallback<CreateUserCommand, AggregateIdentifier> createUserCallback =
-                new FutureCallback<CreateUserCommand, AggregateIdentifier>();
+        FutureCallback<AggregateIdentifier> createUserCallback =
+                new FutureCallback<AggregateIdentifier>();
         commandBus.dispatch(createUser, createUserCallback);
         AggregateIdentifier userIdentifier;
         try {

@@ -64,7 +64,7 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
-        FutureCallback<AuthenticateUserCommand, UserAccount> accountCallback = new FutureCallback<AuthenticateUserCommand, UserAccount>();
+        FutureCallback<UserAccount> accountCallback = new FutureCallback<UserAccount>();
         commandBus.dispatch(new AuthenticateUserCommand(username, password.toCharArray()), accountCallback);
         UserAccount account;
         try {
