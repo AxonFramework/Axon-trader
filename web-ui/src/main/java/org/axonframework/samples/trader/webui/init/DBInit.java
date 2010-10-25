@@ -20,9 +20,9 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.AggregateIdentifierFactory;
-import org.axonframework.eventstore.mongo.AxonMongoWrapper;
+import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
+import org.axonframework.eventstore.mongo.MongoTemplate;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
@@ -37,6 +37,7 @@ import java.util.List;
 
 /**
  * <p>Initializes the repository with a number of users, trade items and order books</p>
+ *
  * @author Jettro Coenradie
  */
 @Component
@@ -45,7 +46,7 @@ public class DBInit {
     private CommandBus commandBus;
     private TradeItemRepository tradeItemRepository;
     private MongoHelper mongo;
-    private AxonMongoWrapper systemAxonMongo;
+    private MongoTemplate systemAxonMongo;
     private MongoEventStore eventStore;
 
     @Autowired
@@ -57,15 +58,15 @@ public class DBInit {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
-        this.systemAxonMongo = new AxonMongoWrapper(systemMongo);
+        this.systemAxonMongo = new MongoTemplate(systemMongo);
         this.eventStore = eventStore;
     }
 
     @PostConstruct
     public void createItems() {
         mongo.getDatabase().dropDatabase();
-//        systemAxonMongo.domainEvents().drop();
-//        systemAxonMongo.snapshotEvents().drop();
+        systemAxonMongo.domainEventCollection().drop();
+        systemAxonMongo.snapshotEventCollection().drop();
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
@@ -74,7 +75,7 @@ public class DBInit {
 
         createTradeItems(userIdentifier);
         createOrderBooks();
-        eventStore.initializeMongo();
+//        eventStore.initializeMongo();
     }
 
     private void createTradeItems(AggregateIdentifier userIdentifier) {
@@ -100,7 +101,7 @@ public class DBInit {
 
         for (TradeItemEntry tradeItemEntry : tradeItemEntries) {
             CreateOrderBookCommand command = new CreateOrderBookCommand(
-                    AggregateIdentifierFactory.fromString(tradeItemEntry.getIdentifier()));
+                    new StringAggregateIdentifier(tradeItemEntry.getIdentifier()));
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
         }
     }

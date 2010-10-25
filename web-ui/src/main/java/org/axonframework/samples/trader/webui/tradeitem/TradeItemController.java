@@ -17,7 +17,7 @@ package org.axonframework.samples.trader.webui.tradeitem;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
@@ -114,8 +114,8 @@ public class TradeItemController {
             TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
 
             CreateSellOrderCommand command = new CreateSellOrderCommand(
-                    AggregateIdentifierFactory.fromString(username.getIdentifier()),
-                    AggregateIdentifierFactory.fromString(tradeItemByIdentifier.getOrderBookIdentifier()),
+                    new StringAggregateIdentifier(username.getIdentifier()),
+                    new StringAggregateIdentifier(tradeItemByIdentifier.getOrderBookIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
 
@@ -135,8 +135,8 @@ public class TradeItemController {
             TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
 
             CreateBuyOrderCommand command = new CreateBuyOrderCommand(
-                    AggregateIdentifierFactory.fromString(username.getIdentifier()),
-                    AggregateIdentifierFactory.fromString(tradeItemByIdentifier.getOrderBookIdentifier()),
+                    new StringAggregateIdentifier(username.getIdentifier()),
+                    new StringAggregateIdentifier(tradeItemByIdentifier.getOrderBookIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
             commandBus.dispatch(command, NoOpCallback.INSTANCE);

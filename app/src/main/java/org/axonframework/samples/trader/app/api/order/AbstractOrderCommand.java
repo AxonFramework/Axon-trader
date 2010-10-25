@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.api.order;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 
 /**
  * @author Allard Buijze
@@ -34,7 +34,7 @@ public abstract class AbstractOrderCommand {
         this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
-        this.orderId = AggregateIdentifierFactory.randomIdentifier();
+        this.orderId = new UUIDAggregateIdentifier();
     }
 
     public AggregateIdentifier getUserId() {

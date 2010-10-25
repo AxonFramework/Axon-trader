@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.tradeitem.TradeItemCreatedEvent;
 import org.axonframework.test.FixtureConfiguration;
@@ -40,7 +40,7 @@ public class TradeItemCommandHandlerTest {
 
     @Test
     public void testCreateTradeItem() {
-        AggregateIdentifier userId = AggregateIdentifierFactory.randomIdentifier();
+        AggregateIdentifier userId = new UUIDAggregateIdentifier();
         CreateTradeItemCommand command = new CreateTradeItemCommand(userId, "TestItem", 1000, 10000);
 
         fixture.given()

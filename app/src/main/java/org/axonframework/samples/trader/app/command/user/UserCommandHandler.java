@@ -17,7 +17,8 @@ package org.axonframework.samples.trader.app.command.user;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.StringAggregateIdentifier;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
@@ -38,7 +39,7 @@ public class UserCommandHandler {
 
     @CommandHandler
     public AggregateIdentifier handleCreateUser(CreateUserCommand command) {
-        AggregateIdentifier identifier = AggregateIdentifierFactory.randomIdentifier();
+        AggregateIdentifier identifier = new UUIDAggregateIdentifier();
         User user = new User(identifier, command.getUsername(), command.getName(), command.getPassword());
         repository.add(user);
         return identifier;
@@ -56,7 +57,7 @@ public class UserCommandHandler {
     }
 
     private User onUser(String userId) {
-        return repository.load(AggregateIdentifierFactory.fromString(userId), null);
+        return repository.load(new StringAggregateIdentifier(userId), null);
     }
 
 

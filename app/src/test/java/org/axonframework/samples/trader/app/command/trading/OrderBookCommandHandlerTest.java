@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -40,14 +40,14 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testSimpleTradeExecution() {
-        AggregateIdentifier buyOrder = AggregateIdentifierFactory.randomIdentifier();
-        AggregateIdentifier sellingUser = AggregateIdentifierFactory.randomIdentifier();
+        AggregateIdentifier buyOrder = new UUIDAggregateIdentifier();
+        AggregateIdentifier sellingUser = new UUIDAggregateIdentifier();
         CreateSellOrderCommand orderCommand = new CreateSellOrderCommand(sellingUser,
                 fixture.getAggregateIdentifier(),
                 100,
                 100);
         AggregateIdentifier sellOrder = orderCommand.getOrderId();
-        fixture.given(new BuyOrderPlacedEvent(buyOrder, 200, 100, AggregateIdentifierFactory.randomIdentifier()))
+        fixture.given(new BuyOrderPlacedEvent(buyOrder, 200, 100, new UUIDAggregateIdentifier()))
                 .when(orderCommand)
                 .expectEvents(new SellOrderPlacedEvent(sellOrder, 100, 100, sellingUser),
                         new TradeExecutedEvent(100, 100, buyOrder, sellOrder));
@@ -55,18 +55,18 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testMassiveSellerTradeExecution() {
-        AggregateIdentifier buyOrder1 = AggregateIdentifierFactory.randomIdentifier();
-        AggregateIdentifier buyOrder2 = AggregateIdentifierFactory.randomIdentifier();
-        AggregateIdentifier buyOrder3 = AggregateIdentifierFactory.randomIdentifier();
-        AggregateIdentifier sellingUser = AggregateIdentifierFactory.randomIdentifier();
+        AggregateIdentifier buyOrder1 = new UUIDAggregateIdentifier();
+        AggregateIdentifier buyOrder2 = new UUIDAggregateIdentifier();
+        AggregateIdentifier buyOrder3 = new UUIDAggregateIdentifier();
+        AggregateIdentifier sellingUser = new UUIDAggregateIdentifier();
         CreateSellOrderCommand sellOrder = new CreateSellOrderCommand(sellingUser,
                 fixture.getAggregateIdentifier(),
                 200,
                 100);
         AggregateIdentifier sellOrderId = sellOrder.getOrderId();
-        fixture.given(new BuyOrderPlacedEvent(buyOrder1, 100, 100, AggregateIdentifierFactory.randomIdentifier()),
-                new BuyOrderPlacedEvent(buyOrder2, 66, 120, AggregateIdentifierFactory.randomIdentifier()),
-                new BuyOrderPlacedEvent(buyOrder3, 44, 140, AggregateIdentifierFactory.randomIdentifier()))
+        fixture.given(new BuyOrderPlacedEvent(buyOrder1, 100, 100, new UUIDAggregateIdentifier()),
+                new BuyOrderPlacedEvent(buyOrder2, 66, 120, new UUIDAggregateIdentifier()),
+                new BuyOrderPlacedEvent(buyOrder3, 44, 140, new UUIDAggregateIdentifier()))
                 .when(sellOrder)
                 .expectEvents(new SellOrderPlacedEvent(sellOrderId, 200, 100, sellingUser),
                         new TradeExecutedEvent(44, 120, buyOrder3, sellOrderId),
@@ -76,7 +76,7 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testCreateOrderBook() {
-        AggregateIdentifier tradeItemIdentifier = AggregateIdentifierFactory.randomIdentifier();
+        AggregateIdentifier tradeItemIdentifier = new UUIDAggregateIdentifier();
         CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(tradeItemIdentifier);
         fixture.given()
                 .when(createOrderBookCommand)

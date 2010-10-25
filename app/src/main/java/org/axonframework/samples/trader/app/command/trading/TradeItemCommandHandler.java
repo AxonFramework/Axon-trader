@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class TradeItemCommandHandler {
 
     @CommandHandler
     public void handleCreateTradeItem(CreateTradeItemCommand command) {
-        TradeItem tradeItem = new TradeItem(AggregateIdentifierFactory.randomIdentifier(),
+        TradeItem tradeItem = new TradeItem(new UUIDAggregateIdentifier(),
                 command.getTradeItemName(),
                 command.getTradeItemValue(),
                 command.getAmountOfShares());

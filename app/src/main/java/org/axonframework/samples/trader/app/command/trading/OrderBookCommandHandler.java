@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.AggregateIdentifierFactory;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
@@ -56,7 +56,7 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook = new OrderBook(AggregateIdentifierFactory.randomIdentifier(), command.getTradeItemIdentifier());
+        OrderBook orderBook = new OrderBook(new UUIDAggregateIdentifier(), command.getTradeItemIdentifier());
         repository.add(orderBook);
     }
 
