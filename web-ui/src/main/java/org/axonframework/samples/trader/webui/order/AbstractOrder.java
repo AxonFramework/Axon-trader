@@ -24,7 +24,7 @@ public class AbstractOrder {
     private String tradeItemId;
     private String tradeItemName;
 
-    @Min(0)
+    @Min(1)
     private long tradeCount;
 
     @Min(0)

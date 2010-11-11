@@ -24,32 +24,20 @@
 
     <context:component-scan base-package="org.axonframework.samples.trader.webui"/>
 
-    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-        <property name="alwaysUseFullPath" value="true"/>
-    </bean>
+    <context:annotation-config/>
 
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-        <property name="alwaysUseFullPath" value="true"/>
-    </bean>
+    <mvc:annotation-driven/>
 
-    <bean id="andnowwhat" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="urlMap">
-            <map>
-                <entry key="/index.html">
-                    <ref local="staticViewController"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
+    <mvc:view-controller path="/index.html" view-name="index"/>
 
-    <bean id="staticViewController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
-    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+    <mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>
+    <mvc:resources mapping="/style/**" location="/style/" cache-period="31556926"/>
 
-    <!--<bean id="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator"/>-->
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <mvc:default-servlet-handler/>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:annotation-driven/>
 </beans>

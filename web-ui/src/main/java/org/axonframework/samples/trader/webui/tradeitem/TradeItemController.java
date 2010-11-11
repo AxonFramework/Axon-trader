@@ -127,7 +127,7 @@ public class TradeItemController {
     }
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.POST)
-    public String buy(@ModelAttribute("order") BuyOrder order, BindingResult bindingResult) {
+    public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
