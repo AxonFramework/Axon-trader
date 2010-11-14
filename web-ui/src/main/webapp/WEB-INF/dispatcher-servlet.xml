@@ -26,7 +26,8 @@
 
     <context:annotation-config/>
 
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven validator="validator"/>
+
 
     <mvc:view-controller path="/index.html" view-name="index"/>
 
@@ -38,6 +39,20 @@
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>/WEB-INF/messages/validation</value>
+                <value>/WEB-INF/messages/fields</value>
+            </list>
+        </property>
     </bean>
 
 </beans>

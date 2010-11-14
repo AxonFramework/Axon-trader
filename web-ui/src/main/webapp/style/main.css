@@ -95,6 +95,13 @@
     display:block;
 }
 
+.error {
+    border: 1px solid red;
+    color: red;
+    /*margin: 5px 5px;*/
+    padding: 2px;
+}
+
 /* end of forms */
 
 /* Layout */
