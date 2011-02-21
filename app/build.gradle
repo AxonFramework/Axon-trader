@@ -29,5 +29,6 @@ dependencies {
     compile "org.springframework:spring-tx:$springVersion"
 
     testCompile "org.axonframework:axon-test:$axonVersion",
-            "org.springframework:spring-test:$springVersion"
+            "org.springframework:spring-test:$springVersion",
+            "org.mockito:mockito-all:1.8.5"
 }

@@ -14,15 +14,22 @@
  */
 
 apply plugin: 'java'
+apply plugin: 'idea'
 
-axonVersion = "0.7-SNAPSHOT"
-springVersion = "3.0.4.RELEASE"
-springSecurityVersion = "3.0.3.RELEASE"
-slf4jVersion = "1.5.8"
+axonVersion = "1.0-rc1"
+springVersion = "3.0.5.RELEASE"
+springSecurityVersion = "3.0.5.RELEASE"
+slf4jVersion = "1.6.1"
 sourceCompatibility = 1.6
+
+ideaProject {
+    javaVersion = 1.6
+}
+
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'idea'
 
     configurations {
         all*.exclude group: "commons-logging", module: "commons-logging"
@@ -34,11 +41,13 @@ subprojects {
     }
 
     dependencies {
-        compile "org.slf4j:jcl-over-slf4j:$slf4jVersion",
-                "org.slf4j:jul-to-slf4j:$slf4jVersion"
-        runtime "org.slf4j:slf4j-log4j12:$slf4jVersion"
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
 
-        compile("log4j:log4j:1.2.15") {
+        runtime "org.slf4j:jcl-over-slf4j:$slf4jVersion",
+                "org.slf4j:jul-to-slf4j:$slf4jVersion",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
+        runtime("log4j:log4j:1.2.16") {
             exclude group: "com.sun.jdmk", module: "jmxtools"
             exclude group: "com.sun.jmx", module: "jmxri"
             exclude group: "javax.mail", module: "mail"
@@ -51,9 +60,4 @@ subprojects {
     group = 'org.axonframework.samples.trader'
     version = '1.0-SNAPSHOT'
     sourceCompatibility = 1.6
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '0.9-rc-1'
-    jarPath = 'wrapper'
 }

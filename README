@@ -6,7 +6,7 @@ Initial setup
 - Make sure you have java installed
 http://www.java.com/download/
 
-- Make sure you have maven or gradle installed (there is an easier way than this if you do not want to install gradle, read on)
+- Make sure you have maven or gradle installed
 http://maven.apache.org/download.html#Installation
 http://www.gradle.org/installation.html
 
@@ -31,11 +31,6 @@ Running the sample
 - Make sure you have your mongo instance running
 - Step into the main folder of the project
 > gradle jettyRun
-
-* gradle without installation
-- If you do not want to install gradle, there is an even easier approach. 
-- Step into the main folder of your project and still make sure you have mongodb running
-> gradlew jettyRun
 
 Advanced configuration
 ----------------------
