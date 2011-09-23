@@ -75,7 +75,7 @@ public class DBInit {
 
         createTradeItems(userIdentifier);
         createOrderBooks();
-//        eventStore.initializeMongo();
+        eventStore.ensureIndexes();
     }
 
     private void createTradeItems(AggregateIdentifier userIdentifier) {

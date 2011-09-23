@@ -16,10 +16,10 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
-axonVersion = "1.0-rc1"
-springVersion = "3.0.5.RELEASE"
-springSecurityVersion = "3.0.5.RELEASE"
-slf4jVersion = "1.6.1"
+axonVersion = "1.2"
+springVersion = "3.0.6.RELEASE"
+springSecurityVersion = "3.0.8.RELEASE"
+slf4jVersion = "1.6.2"
 sourceCompatibility = 1.6
 
 ideaProject {

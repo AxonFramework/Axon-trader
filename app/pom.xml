@@ -34,11 +34,16 @@
             <artifactId>axon-core</artifactId>
             <version>${axon.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework.incubator</groupId>
+            <artifactId>axon-mongo</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.1</version>
+            <version>2.6.5</version>
         </dependency>
 
         <dependency>
