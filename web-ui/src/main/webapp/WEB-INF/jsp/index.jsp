@@ -14,15 +14,68 @@
   --%>
 
 <html>
-<head><title>Index</title></head>
+<head>
+    <title>Welcome to the axon trader</title>
+</head>
 <body>
-<p>Welcome to the proof of concept of Axon Trader.</p>
+<content tag="title">Welcome</content>
+<content tag="tagline">Have fun playing with the trader</content>
+<content tag="herounit">
+    <div class="hero-unit">
+        <h1>The trader</h1>
+
+        <p>Welcome to the proof of concept of Axon Trader. This sample is created to showcase axon capabilities. Next to
+            that
+            we wanted to create a cool app with a nice front-end that we can really use as a showcase.</p>
+
+
+        <p><a class="btn primary large" href="${ctx}/tradeitem">Learn more &raquo;</a></p>
+    </div>
+</content>
 
 <p>There are a few things implemented. You can choose the company to trade stock items for. Before you can
-    use them you need to login. Use the following credentials to try it out</p>
+    use them you need to login.</p>
 
-<p><strong>buyer1 / buyer1</strong></p>
-<p><strong>buyer2 / buyer2</strong></p>
-<p><strong>buyer3 / buyer3</strong></p>
+<div class="row">
+    <div class="span5">
+        <h2>Available Credentials</h2>
+        <table class="zebra-striped">
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Password</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>buyer1</td>
+                <td>buyer1</td>
+            </tr>
+            <tr>
+                <td>buyer2</td>
+                <td>buyer2</td>
+            </tr>
+            <tr>
+                <td>buyer3</td>
+                <td>buyer3</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="span4">
+        <h2>Check the stocks</h2>
+
+        <p>If you have logged in, you can go to the trade items</p>
+
+        <p><a class="btn primary" href="${ctx}/tradeitem">To the items &raquo;</a></p>
+    </div>
+    <div class="span5">
+        <h2>Administration</h2>
+
+        <p>We have a few options for creating new trade items and new users. This can be found in the admin
+            part of the website.</p>
+    </div>
+</div>
+
 </body>
 </html>

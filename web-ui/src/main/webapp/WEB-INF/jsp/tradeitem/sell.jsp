@@ -16,5 +16,6 @@
   ~ limitations under the License.
   --%>
 
-<p>Sell order for : <c:out value='${order.tradeItemName}'/></p>
+<content tag="title">Sell order for : <c:out value='${order.tradeItemName}'/></content>
+<content tag="tagline">Enter items to sell and for how much</content>
 <jsp:include page="form-include.jsp"/>

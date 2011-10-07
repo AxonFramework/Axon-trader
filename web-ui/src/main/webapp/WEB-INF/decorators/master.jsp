@@ -1,8 +1,6 @@
-<%@ page import="org.springframework.security.core.Authentication" %>
-<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
-<%@ page import="org.axonframework.samples.trader.app.api.user.UserAccount" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%--
   ~ Copyright (c) 2010. Gridshore
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,59 +18,70 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
     <title><decorator:title/></title>
+    <meta name="description" content="Website contaning the Axon sample using a trader application">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="${ctx}/style/bootstrap-1.3.0.min.css">
     <link rel="stylesheet" href="${ctx}/style/main.css"/>
-    <link rel="stylesheet" href="${ctx}/style/redmond/jquery-ui-1.8.4.custom.css"/>
-    <script type="text/javascript" src="${ctx}/js/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="${ctx}/js/jquery-ui-1.8.4.custom.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('#tabs').tabs({
-                select: function(event, ui) {
-                    var url = $.data(ui.tab, 'load.tabs');
-                    if (url) {
-                        location.href = url;
-                        return false;
-                    }
-                    return true;
-                }
-            });
+    <script type="text/javascript" src="${ctx}/js/jquery-1.6.4.min.js"></script>
 
-            $('#primaryNavigation ul li.current').removeClass('current');
-            var loc = window.location.pathname;
-            if (loc.indexOf('/tradeitem') > -1) {
-                $('#primaryNavigation ul li.tradeitem').addClass('current');
-            } else {
-                $('#primaryNavigation ul li.home').addClass('current');
-            }
-
-        });
-    </script>
+    <decorator:head/>
 </head>
 <body>
-<div id="header">
-    <div id="primaryNavigation">
-        <span id="usermenu">
-            <%
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null) { %>
-
-               <%= ((UserAccount)auth.getPrincipal()).getFullName() %>
-            &nbsp;&nbsp;<a href="${ctx}/j_spring_security_logout">logout</a>
-           <% } else { %>
-               &nbsp;&nbsp;<a href="${ctx}/login.jsp">login</a>
-           <% }%>
-        </span>
-        <ul>
-            <li class="home"><a href="${ctx}/"><span>Home</span></a></li>
-            <li class="tradeitem"><a href="${ctx}/tradeitem"><span>Stock</span></a></li>
-        </ul>
+<div class="topbar">
+    <div class="fill">
+        <div class="container">
+            <a class="brand" href="${ctx}/">Axon Trader</a>
+            <ul class="nav">
+                <li class="active"><a href="${ctx}/">Home</a></li>
+                <li><a href="${ctx}/tradeitem">Stocks</a></li>
+            </ul>
+            <sec:authorize access="isAuthenticated()">
+                <p class="pull-right credentials">
+                    <sec:authentication property="principal.fullName"/>
+                    &nbsp;&nbsp;<a href="${ctx}/j_spring_security_logout">logout</a>
+                </p>
+            </sec:authorize>
+            <sec:authorize access="isAnonymous()">
+                <form action="<c:url value='j_spring_security_check'/>" class="pull-right" method="POST">
+                    <input class="input-small" type="text" placeholder="Username" name='j_username'
+                           value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'/>
+                    <input class="input-small" type="password" placeholder="Password" name='j_password'/>
+                    <button class="btn" type="submit">Sign in</button>
+                </form>
+            </sec:authorize>
+        </div>
     </div>
 </div>
-<div id="main">
-    <decorator:body/>
+
+<div class="container">
+    <decorator:getProperty property="page.herounit"/>
+
+    <div class="content">
+        <div class="page-header">
+            <h1><decorator:getProperty property="page.title"/>
+                <small><decorator:getProperty property="page.tagline"/></small>
+            </h1>
+        </div>
+        <div class="row">
+            <div class="span14">
+                <decorator:body/>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; Gridshore 2011</p>
+    </footer>
+
 </div>
+<!-- /container -->
 </body>
 </html>

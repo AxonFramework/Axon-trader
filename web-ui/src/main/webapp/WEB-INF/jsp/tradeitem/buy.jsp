@@ -16,6 +16,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   --%>
-
-<p>Buy order for : <c:out value='${order.tradeItemName}'/></p>
+<content tag="title">Buy order for : <c:out value='${order.tradeItemName}'/></content>
+<content tag="tagline">Enter items to buy and for how much</content>
 <jsp:include page="form-include.jsp"/>

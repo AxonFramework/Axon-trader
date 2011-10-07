@@ -19,23 +19,31 @@
     <title>Trade item details</title>
 </head>
 <body>
-<div id="tradeItemDetails">
-    <span class="detailTitle"><c:out value="${tradeItem.name}"/></span>
+<content tag="title"><c:out value="${tradeItem.name}"/></content>
+<content tag="tagline">
     <span class="detailLabel">Value : </span>
     <span><c:out value="${tradeItem.value}"/></span>
     <span class="detailLabel"># Shares : </span>
     <span><c:out value="${tradeItem.amountOfShares}"/></span>
-</div>
-<div id="actions">
-    <c:if test="${tradeItem.tradeStarted}">
-        <a href="${ctx}/tradeitem/buy/<c:out value='${tradeItem.identifier}'/>">buy</a>
-        &nbsp<a href="${ctx}/tradeitem/sell/<c:out value='${tradeItem.identifier}'/>">sell</a>
-    </c:if>
-</div>
-<div id="orderBook">
-    <div class="list">
+</content>
+
+
+<c:if test="${tradeItem.tradeStarted}">
+    <div class="row">
+        <div class="span14">
+            <p>
+                <a class="btn primary"
+                   href="${ctx}/tradeitem/buy/<c:out value='${tradeItem.identifier}'/>">Buy &raquo;</a>
+                <a class="btn primary"
+                   href="${ctx}/tradeitem/sell/<c:out value='${tradeItem.identifier}'/>">Sell &raquo;</a>
+            </p>
+        </div>
+    </div>
+</c:if>
+<div class="row">
+    <div class="span5">
         <h3>Sell Orders</h3>
-        <table class="hor-minimalist-b">
+        <table class="zebra-striped">
             <thead>
             <tr>
                 <th>Count</th>
@@ -54,9 +62,9 @@
             </tbody>
         </table>
     </div>
-    <div class="list">
+    <div class="span5">
         <h3>Buy Orders</h3>
-        <table class="hor-minimalist-b">
+        <table class="zebra-striped">
             <thead>
             <tr>
                 <th>Count</th>
@@ -75,9 +83,9 @@
             </tbody>
         </table>
     </div>
-    <div class="list">
+    <div class="span4">
         <h3>Executed trades</h3>
-        <table class="hor-minimalist-b">
+        <table class="zebra-striped">
             <thead>
             <tr>
                 <th>Count</th>
@@ -94,7 +102,6 @@
             </tbody>
         </table>
     </div>
-
 </div>
 </body>
 </html>

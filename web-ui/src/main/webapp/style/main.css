@@ -1,183 +1,44 @@
-/*
- * Copyright (c) 2010. Gridshore
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-#main {
-    border: 1px solid #3b4a5b;
-    top: 100px;
-    width: 100%;
-    height: 80%;
+/* Override some defaults */
+html, body {
+    background-color: #eee;
 }
 
-#header {
-    top: 0;
-    width: 100%;
-    border: 1px solid #3b4a5b;
+body {
+    padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
 }
 
-/*Primary Navigation*/
-#primaryNavigation {
-    top: 0;
-    background: #192839;
+.container > footer p {
+    text-align: center; /* center align it with the container */
 }
 
-#primaryNavigation ul {
-    padding: 0 .8em 2px;
-    margin: 0;
+.container {
+    width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
 }
 
-#primaryNavigation li {
-    display: inline;
-    list-style: none;
-    margin: 0;
-    background: #192839;
-    padding: 0;
+/* The white background content wrapper */
+.content {
+    background-color: #fff;
+    padding: 20px;
+    margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 }
 
-#primaryNavigation li.current {
-    border-bottom: 2px solid #176092;
-    background: #192839;
-    margin-bottom: 0;
-    cursor: default;
+/* Page header tweaks */
+.page-header {
+    background-color: #f5f5f5;
+    padding: 20px 20px 10px;
+    margin: -20px -20px 20px;
 }
 
-#primaryNavigation li a {
-    padding: 0 1em;
-    line-height: 25px;
-    font-size: 1.2em;
-    color: #D0D0D0;
-    text-decoration: none;
-    margin-bottom: 2px;
+p.credentials {
+    color: #f5f5f5;
 }
 
-#primaryNavigation li.current a, #primaryNavigation li.current a:hover {
-    border-bottom: 3px solid #ffff99;
-    background: #192839;
-    margin-bottom: 0;
-    cursor: default;
-    color: #ffff99;
+.topbar .btn {
+    border: 0;
 }
-
-#primaryNavigation li a:hover {
-    color: #4082ae;
-    border-bottom: 2px solid #4082ae;
-    margin-bottom: 0;
-}
-
-#primaryNavigation #usermenu {
-    color:yellow;
-    float:right;
-}
-
-#primaryNavigation #usermenu a {
-    color : white;
-}
-
-/* Enf of primary navigation */
-
-/* forms */
-.errorBox {
-    border: 2px solid red;
-    color: red;
-    margin: 5px 5px;
-    padding: 5px;
-    display:block;
-}
-
-.error {
-    border: 1px solid red;
-    color: red;
-    /*margin: 5px 5px;*/
-    padding: 2px;
-}
-
-/* end of forms */
-
-/* Layout */
-#tradeItemDetails {
-    margin: 20px;
-    padding: 10px 25px;
-    background-color: #ffff99;
-    color: #192839;
-    border: 1px solid #192839;
-}
-
-#tradeItemDetails .detailTitle {
-    font-weight: bold;
-    font-size: large;
-}
-
-#tradeItemDetails .detailLabel {
-    margin-left: 50px;
-}
-
-#actions {
-    margin: 20px;
-    border-bottom: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    padding: 10px 25px;
-}
-
-#actions a {
-    color: #192839;
-    margin: 10px 20px;
-    font-size: large;
-}
-
-#actions a:hover {
-    text-decoration: overline underline;
-    color: #4082ae;
-}
-
-#orderBook {
-    width: 90%;
-    display: block;
-}
-
-#orderBook .list {
-    margin: 0 50px;
-    float: left;
-}
-
-/* End of layout */
-
-/* Basic table*/
-.hor-minimalist-b {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    font-size: 12px;
-    background: #fff; /*margin: 45px 0 0 45px;*/
-/*width: 480px;*/
-    border-collapse: collapse;
-    text-align: left;
-}
-
-.hor-minimalist-b th {
-    font-size: 14px;
-    font-weight: normal;
-    color: #039;
-    padding: 10px 8px;
-    border-bottom: 2px solid #6678b1;
-}
-
-.hor-minimalist-b td {
-    border-bottom: 1px solid #ccc;
-    color: #669;
-    padding: 6px 8px;
-}
-
-.hor-minimalist-b tbody tr:hover td {
-    color: #009;
-}
-
-/* End of basic table */

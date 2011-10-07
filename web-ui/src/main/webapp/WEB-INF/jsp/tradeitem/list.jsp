@@ -1,4 +1,4 @@
-<%@include file="../include.jsp"%>
+<%@include file="../include.jsp" %>
 <%--
   ~ Copyright (c) 2010. Gridshore
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,20 @@
 <html>
 <head>
     <title>Trade items</title>
+    <script type="text/javascript" src="${ctx}/js/jquery.tablesorter.min.js"></script>
+    <script>
+        $(function() {
+            $("table#available-stock").tablesorter({ sortList: [
+                [0,0]
+            ] });
+        });
+    </script>
 </head>
 <body>
-<table class="hor-minimalist-b">
+<content tag="title">All stock items</content>
+<content tag="tagline">Choose the stock to start trading with</content>
+<p>You can sort the table by clicking on the headers.</p>
+<table class="zebra-striped" id="available-stock">
     <thead>
     <tr>
         <th>Name</th>
