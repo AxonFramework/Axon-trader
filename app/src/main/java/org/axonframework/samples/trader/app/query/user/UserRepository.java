@@ -15,9 +15,13 @@
 
 package org.axonframework.samples.trader.app.query.user;
 
+import java.util.List;
+
 /**
  * @author Jettro Coenradie
  */
 public interface UserRepository {
     UserEntry findByUsername(String username);
+
+    List<UserEntry> obtainAllUsers();
 }

@@ -16,10 +16,14 @@
 package org.axonframework.samples.trader.app.query.user;
 
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jettro Coenradie
@@ -37,6 +41,20 @@ public class UserRepositoryMongo implements UserRepository {
             return null;
         }
 
+        return mapToUserEntry(one);
+    }
+
+    @Override
+    public List<UserEntry> obtainAllUsers() {
+        DBCursor dbCursor = mongo.users().find();
+        List<UserEntry> users = new ArrayList<UserEntry>(dbCursor.size());
+        while (dbCursor.hasNext()) {
+            users.add(mapToUserEntry(dbCursor.next()));
+        }
+        return users;
+    }
+
+    private UserEntry mapToUserEntry(DBObject one) {
         UserEntry entry = new UserEntry();
         entry.setIdentifier((String) one.get("identifier"));
         entry.setName((String) one.get("name"));

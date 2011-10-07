@@ -17,7 +17,7 @@ package org.axonframework.samples.trader.app.query;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
+import org.axonframework.eventstore.mongo.MongoTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MongoHelper {
-    private Mongo mongoDb;
+    private MongoTemplate mongoTemplate;
 
     public DBCollection users() {
         return getDatabase().getCollection("users");
@@ -53,11 +53,11 @@ public class MongoHelper {
     }
 
     public DB getDatabase() {
-        return mongoDb.getDB("axontrader");
+        return mongoTemplate.database();
     }
 
     @Autowired
-    public void setMongoDb(Mongo mongoDb) {
-        this.mongoDb = mongoDb;
+    public void setMongoDb(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
     }
 }

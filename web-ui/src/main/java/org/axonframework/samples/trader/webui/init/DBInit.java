@@ -15,7 +15,6 @@
 
 package org.axonframework.samples.trader.webui.init;
 
-import com.mongodb.Mongo;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
@@ -32,8 +31,8 @@ import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>Initializes the repository with a number of users, trade items and order books</p>
@@ -53,20 +52,35 @@ public class DBInit {
     public DBInit(CommandBus commandBus,
                   TradeItemRepository tradeItemRepository,
                   MongoHelper mongo,
-                  Mongo systemMongo,
+                  MongoTemplate systemMongo,
                   MongoEventStore eventStore) {
         this.commandBus = commandBus;
         this.tradeItemRepository = tradeItemRepository;
         this.mongo = mongo;
-        this.systemAxonMongo = new MongoTemplate(systemMongo);
+        this.systemAxonMongo = systemMongo;
         this.eventStore = eventStore;
     }
 
-    @PostConstruct
+    public String obtainInfo() {
+        Set<String> collectionNames = systemAxonMongo.database().getCollectionNames();
+        StringBuilder sb = new StringBuilder();
+        for (String name : collectionNames) {
+            sb.append(name);
+            sb.append("  ");
+        }
+        return sb.toString();
+    }
+
+    //    @PostConstruct
     public void createItems() {
         mongo.getDatabase().dropDatabase();
         systemAxonMongo.domainEventCollection().drop();
         systemAxonMongo.snapshotEventCollection().drop();
+        mongo.users().drop();
+        mongo.orderBooks().drop();
+        mongo.orders().drop();
+        mongo.tradeItems().drop();
+        mongo.tradesExecuted().drop();
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
