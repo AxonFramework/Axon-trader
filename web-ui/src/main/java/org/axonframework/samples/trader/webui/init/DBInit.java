@@ -71,7 +71,6 @@ public class DBInit {
         return sb.toString();
     }
 
-    //    @PostConstruct
     public void createItems() {
         mongo.getDatabase().dropDatabase();
         systemAxonMongo.domainEventCollection().drop();

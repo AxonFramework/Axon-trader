@@ -31,7 +31,7 @@
 
     <http auto-config='true' use-expressions="true">
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>
-        <intercept-url pattern="/init/**" access="isAnonymous() or isAuthenticated()"/>
+        <intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
         <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/>
         <logout logout-success-url="/"/>

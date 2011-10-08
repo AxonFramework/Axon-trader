@@ -13,21 +13,31 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app;
+package org.axonframework.samples.trader.webui.init;
 
 import org.cloudfoundry.runtime.env.CloudEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
+ * Class used by the spring container to set the active profile. The profiles are used to set environment specific
+ * beans like the mongo factory for connecting to the mongo database.
+ * <p/>
+ * We detect whether we can find an active CloudFoundry environment, if so we set the cloud profile as the active
+ * profile. If not, we set the default profile as the active one.
+ *
  * @author Jettro Coenradie
  */
 public class CloudApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    private final static Logger logger = LoggerFactory.getLogger(CloudApplicationContextInitializer.class);
+
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         CloudEnvironment env = new CloudEnvironment();
         if (env.getInstanceInfo() != null) {
-            System.out.println("cloud API: " + env.getCloudApiUri());
+            logger.info("Cloud API: {}", env.getCloudApiUri());
             applicationContext.getEnvironment().setActiveProfiles("cloud");
         } else {
             applicationContext.getEnvironment().setActiveProfiles("default");

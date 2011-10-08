@@ -41,7 +41,8 @@
             <a class="brand" href="${ctx}/">Axon Trader</a>
             <ul class="nav">
                 <li class="active"><a href="${ctx}/">Home</a></li>
-                <li><a href="${ctx}/tradeitem">Stocks</a></li>
+                <li><a href="${ctx}/tradeitem">Trade items</a></li>
+                <li><a href="${ctx}/data/collections">Data</a></li>
             </ul>
             <sec:authorize access="isAuthenticated()">
                 <p class="pull-right credentials">
@@ -70,6 +71,7 @@
                 <small><decorator:getProperty property="page.tagline"/></small>
             </h1>
         </div>
+        <decorator:getProperty property="page.breadcrumb"/>
         <div class="row">
             <div class="span14">
                 <decorator:body/>

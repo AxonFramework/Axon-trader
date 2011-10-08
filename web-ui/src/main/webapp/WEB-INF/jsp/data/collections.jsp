@@ -16,11 +16,23 @@
 
 <html>
 <head>
-    <title>Initialize MongoDB</title>
+    <title>MongoDB collections</title>
 </head>
 <body>
-<content tag="title">Initialize MongoDB</content>
-<content tag="tagline">Seeing this will mean that Mongo is initialized</content>
-<p><c:out value='${info}'/></p>
+<content tag="title">MongoDB collections</content>
+<content tag="tagline">Available collections in this Mongo instance.</content>
+<content tag="breadcrumb">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li class="active">Collections</li>
+    </ul>
+</content>
+
+<p>The collections</p>
+<ul>
+    <c:forEach items="${collections}" var="collection">
+        <li><a href="/data/collection/${collection}">${collection}</a></li>
+    </c:forEach>
+</ul>
 </body>
 </html>
