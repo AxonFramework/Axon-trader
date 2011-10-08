@@ -24,7 +24,7 @@
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="/mongo/collections">Collections</a> <span class="divider">/</span></li>
+        <li><a href="/data/collections">Collections</a> <span class="divider">/</span></li>
         <li class="active">${collectionName}</li>
     </ul>
 </content>
@@ -40,17 +40,17 @@
             </c:otherwise>
         </c:choose>
         <c:if test="${page - 2 > 0}">
-            <li><a href="#">${page - 2}</a></li>
+            <li><a href="?page=${page - 2}">${page - 2}</a></li>
         </c:if>
         <c:if test="${page - 1 > 0}">
-            <li><a href="#">${page - 1}</a></li>
+            <li><a href="?page=${page - 1}">${page - 1}</a></li>
         </c:if>
         <li class="active"><a>${page}</a></li>
         <c:if test="${page + 1 <= numPages}">
-            <li><a href="#">${page + 1}</a></li>
+            <li><a href="?page=${page + 1}">${page + 1}</a></li>
         </c:if>
         <c:if test="${page + 2 <= numPages}">
-            <li><a href="#">${page + 2}</a></li>
+            <li><a href="?page=${page + 2}">${page + 2}</a></li>
         </c:if>
         <c:choose>
             <c:when test="${page == numPages}">
