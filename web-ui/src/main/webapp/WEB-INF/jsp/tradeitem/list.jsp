@@ -29,6 +29,13 @@
 <body>
 <content tag="title">All stock items</content>
 <content tag="tagline">Choose the stock to start trading with</content>
+<content tag="breadcrumb">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li class="active">Trade Items</li>
+    </ul>
+</content>
+
 <p>You can sort the table by clicking on the headers.</p>
 <table class="zebra-striped" id="available-stock">
     <thead>

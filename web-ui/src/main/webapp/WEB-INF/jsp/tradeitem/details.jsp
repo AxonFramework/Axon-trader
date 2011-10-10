@@ -26,6 +26,13 @@
     <span class="detailLabel"># Shares : </span>
     <span><c:out value="${tradeItem.amountOfShares}"/></span>
 </content>
+<content tag="breadcrumb">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li><a href="/tradeitem">Trade Items</a> <span class="divider">/</span></li>
+        <li class="active"><c:out value='${tradeItem.name}'/></li>
+    </ul>
+</content>
 
 
 <c:if test="${tradeItem.tradeStarted}">

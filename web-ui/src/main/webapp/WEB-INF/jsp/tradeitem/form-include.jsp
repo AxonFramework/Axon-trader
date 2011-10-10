@@ -20,20 +20,22 @@
     <form:hidden path="tradeItemId"/>
     <form:hidden path="tradeItemName"/>
     <table>
-          <tr>
-              <td><spring:message code="order.price"/>:</td>
-              <td><form:input path="itemPrice" /></td>
-              <td><form:errors path="itemPrice" cssClass="errorBox"/></td>
-          </tr>
-          <tr>
-              <td><spring:message code="order.tradeCount"/>:</td>
-              <td><form:input path="tradeCount" /></td>
-              <td><form:errors path="tradeCount" cssClass="error"/> </td>
-          </tr>
-          <tr>
-              <td colspan="3">
-                  <input type="submit" name="submit" value="Place Order" />
-              </td>
-          </tr>
-      </table>
+        <tr>
+            <td><spring:message code="order.price"/>:</td>
+            <td><form:input path="itemPrice"/></td>
+            <td><form:errors path="itemPrice" cssClass="errorBox"/></td>
+        </tr>
+        <tr>
+            <td><spring:message code="order.tradeCount"/>:</td>
+            <td><form:input path="tradeCount"/></td>
+            <td><form:errors path="tradeCount" cssClass="error"/></td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <input class="btn primary" type="submit" name="submit" value="Place Order"/>
+                <input class="btn" type="reset" name="reset" value="Reset"/>
+                <a href="/tradeitem/<c:out value="${order.tradeItemId}"/>" class="btn">Cancel</a>
+            </td>
+        </tr>
+    </table>
 </form:form>
