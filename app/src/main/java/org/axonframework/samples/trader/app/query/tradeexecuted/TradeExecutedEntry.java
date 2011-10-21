@@ -21,7 +21,7 @@ package org.axonframework.samples.trader.app.query.tradeexecuted;
 public class TradeExecutedEntry {
     private long tradeCount;
     private int tradePrice;
-    private String tradeItemName;
+    private String companyName;
     private String orderBookIdentifier;
 
     public long getTradeCount() {
@@ -32,12 +32,12 @@ public class TradeExecutedEntry {
         this.tradeCount = tradeCount;
     }
 
-    public String getTradeItemName() {
-        return tradeItemName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setTradeItemName(String tradeItemName) {
-        this.tradeItemName = tradeItemName;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public int getTradePrice() {

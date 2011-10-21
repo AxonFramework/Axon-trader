@@ -29,7 +29,7 @@
             we wanted to create a cool app with a nice front-end that we can really use as a showcase.</p>
 
 
-        <p><a class="btn primary large" href="${ctx}/tradeitem">Learn more &raquo;</a></p>
+        <p><a class="btn primary large" href="${ctx}/company">Learn more &raquo;</a></p>
     </div>
 </content>
 
@@ -65,14 +65,14 @@
     <div class="span4">
         <h2>Check the stocks</h2>
 
-        <p>If you have logged in, you can go to the trade items</p>
+        <p>If you have logged in, you can go to the companies</p>
 
-        <p><a class="btn primary" href="${ctx}/tradeitem">To the items &raquo;</a></p>
+        <p><a class="btn primary" href="${ctx}/company">To the items &raquo;</a></p>
     </div>
     <div class="span5">
         <h2>Administration</h2>
 
-        <p>We have a few options for creating new trade items and new users. This can be found in the admin
+        <p>We have a few options for creating new companies and new users. This can be found in the admin
             part of the website.</p>
     </div>
 </div>

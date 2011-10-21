@@ -13,19 +13,19 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.webui.tradeitem;
+package org.axonframework.samples.trader.webui.companies;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.app.query.company.CompanyEntry;
+import org.axonframework.samples.trader.app.query.company.CompanyRepository;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedRepository;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.axonframework.samples.trader.app.query.user.UserRepository;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
@@ -48,22 +48,22 @@ import java.util.List;
  * @author Jettro Coenradie
  */
 @Controller
-@RequestMapping("/tradeitem")
-public class TradeItemController {
+@RequestMapping("/company")
+public class CompanyController {
 
-    private TradeItemRepository tradeItemRepository;
+    private CompanyRepository companyRepository;
     private OrderBookRepository orderBookRepository;
     private UserRepository userRepository;
     private TradeExecutedRepository tradeExecutedRepository;
     private CommandBus commandBus;
 
     @Autowired
-    public TradeItemController(TradeItemRepository tradeItemRepository,
-                               CommandBus commandBus,
-                               UserRepository userRepository,
-                               OrderBookRepository orderBookRepository,
-                               TradeExecutedRepository tradeExecutedRepository) {
-        this.tradeItemRepository = tradeItemRepository;
+    public CompanyController(CompanyRepository companyRepository,
+                             CommandBus commandBus,
+                             UserRepository userRepository,
+                             OrderBookRepository orderBookRepository,
+                             TradeExecutedRepository tradeExecutedRepository) {
+        this.companyRepository = companyRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
         this.orderBookRepository = orderBookRepository;
@@ -72,20 +72,20 @@ public class TradeItemController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(Model model) {
-        model.addAttribute("items", tradeItemRepository.listAllTradeItems());
-        return "tradeitem/list";
+        model.addAttribute("items", companyRepository.listAllCompanies());
+        return "company/list";
     }
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String details(@PathVariable String identifier, Model model) {
-        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(identifier);
-        OrderBookEntry bookEntry = orderBookRepository.findByTradeItem(tradeItem.getIdentifier());
+        CompanyEntry company = companyRepository.findCompanyByIdentifier(identifier);
+        OrderBookEntry bookEntry = orderBookRepository.findByCompany(company.getIdentifier());
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findExecutedTradesForOrderBook(bookEntry.getIdentifier());
-        model.addAttribute("tradeItem", tradeItem);
+        model.addAttribute("company", company);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
         model.addAttribute("executedTrades", executedTrades);
-        return "tradeitem/details";
+        return "company/details";
     }
 
 
@@ -94,7 +94,7 @@ public class TradeItemController {
         BuyOrder order = new BuyOrder();
         prepareInitialOrder(identifier, order);
         model.addAttribute("order", order);
-        return "tradeitem/buy";
+        return "company/buy";
     }
 
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.GET)
@@ -102,7 +102,7 @@ public class TradeItemController {
         SellOrder order = new SellOrder();
         prepareInitialOrder(identifier, order);
         model.addAttribute("order", order);
-        return "tradeitem/sell";
+        return "company/sell";
     }
 
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.POST)
@@ -110,20 +110,20 @@ public class TradeItemController {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            String tradeItemId = order.getTradeItemId();
-            TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
+            String companyId = order.getCompanyId();
+            CompanyEntry companyByIdentifier = companyRepository.findCompanyByIdentifier(companyId);
 
             CreateSellOrderCommand command = new CreateSellOrderCommand(
                     new StringAggregateIdentifier(username.getIdentifier()),
-                    new StringAggregateIdentifier(tradeItemByIdentifier.getOrderBookIdentifier()),
+                    new StringAggregateIdentifier(companyByIdentifier.getOrderBookIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
 
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
 
-            return "redirect:/tradeitem/" + order.getTradeItemId();
+            return "redirect:/company/" + order.getCompanyId();
         }
-        return "tradeitem/sell";
+        return "company/sell";
     }
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.POST)
@@ -131,25 +131,25 @@ public class TradeItemController {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            String tradeItemId = order.getTradeItemId();
-            TradeItemEntry tradeItemByIdentifier = tradeItemRepository.findTradeItemByIdentifier(tradeItemId);
+            String companyId = order.getCompanyId();
+            CompanyEntry companyByIdentifier = companyRepository.findCompanyByIdentifier(companyId);
 
             CreateBuyOrderCommand command = new CreateBuyOrderCommand(
                     new StringAggregateIdentifier(username.getIdentifier()),
-                    new StringAggregateIdentifier(tradeItemByIdentifier.getOrderBookIdentifier()),
+                    new StringAggregateIdentifier(companyByIdentifier.getOrderBookIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
-            return "redirect:/tradeitem/" + order.getTradeItemId();
+            return "redirect:/company/" + order.getCompanyId();
         }
 
-        return "tradeitem/buy";
+        return "company/buy";
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
-        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByIdentifier(identifier);
-        order.setTradeItemId(identifier);
-        order.setTradeItemName(tradeItem.getName());
+        CompanyEntry company = companyRepository.findCompanyByIdentifier(identifier);
+        order.setCompanyId(identifier);
+        order.setCompanyName(company.getName());
     }
 
 }

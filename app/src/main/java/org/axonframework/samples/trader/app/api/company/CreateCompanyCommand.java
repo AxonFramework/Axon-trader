@@ -13,39 +13,39 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.tradeitem;
+package org.axonframework.samples.trader.app.api.company;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
 
 /**
  * @author Jettro Coenradie
  */
-public class TradeItemCreatedEvent extends DomainEvent {
-    private String tradeItemName;
-    private long tradeItemValue;
+public class CreateCompanyCommand {
+    private AggregateIdentifier userId;
+    private String companyName;
+    private long companyValue;
     private long amountOfShares;
 
-    public TradeItemCreatedEvent(String tradeItemName, long amountOfShares, long tradeItemValue) {
+    public CreateCompanyCommand(AggregateIdentifier userId, String companyName, long companyValue, long amountOfShares) {
         this.amountOfShares = amountOfShares;
-        this.tradeItemName = tradeItemName;
-        this.tradeItemValue = tradeItemValue;
-    }
-
-    public AggregateIdentifier getTradeItemIdentifier() {
-        return getAggregateIdentifier();
+        this.companyName = companyName;
+        this.companyValue = companyValue;
+        this.userId = userId;
     }
 
     public long getAmountOfShares() {
         return amountOfShares;
     }
 
-    public String getTradeItemName() {
-        return tradeItemName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public long getTradeItemValue() {
-        return tradeItemValue;
+    public long getCompanyValue() {
+        return companyValue;
     }
 
+    public AggregateIdentifier getUserId() {
+        return userId;
+    }
 }

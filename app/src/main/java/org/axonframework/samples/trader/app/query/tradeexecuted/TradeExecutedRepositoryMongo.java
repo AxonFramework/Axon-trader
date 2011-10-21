@@ -48,7 +48,7 @@ public class TradeExecutedRepositoryMongo implements TradeExecutedRepository {
         TradeExecutedEntry entry = new TradeExecutedEntry();
         entry.setOrderBookIdentifier((String) tradeExecutedMongo.get("orderBookIdentifier"));
         entry.setTradeCount((Long) tradeExecutedMongo.get("count"));
-        entry.setTradeItemName((String) tradeExecutedMongo.get("name"));
+        entry.setCompanyName((String) tradeExecutedMongo.get("name"));
         entry.setTradePrice((Integer) tradeExecutedMongo.get("price"));
         return entry;
     }

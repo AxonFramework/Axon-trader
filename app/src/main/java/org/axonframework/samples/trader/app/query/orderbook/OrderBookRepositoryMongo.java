@@ -52,8 +52,8 @@ public class OrderBookRepositoryMongo implements OrderBookRepository {
     }
 
     @Override
-    public OrderBookEntry findByTradeItem(String tradeItemIdentifier) {
-        DBObject one = mongo.orderBooks().findOne(new BasicDBObject("tradeItemIdentifier", tradeItemIdentifier));
+    public OrderBookEntry findByCompany(String companyIdentifier) {
+        DBObject one = mongo.orderBooks().findOne(new BasicDBObject("companyIdentifier", companyIdentifier));
         return mapOrderBookEntryFromMongo(one);
     }
 
@@ -64,9 +64,9 @@ public class OrderBookRepositoryMongo implements OrderBookRepository {
 
     private OrderBookEntry mapOrderBookEntryFromMongo(DBObject next) {
         OrderBookEntry entry = new OrderBookEntry();
-        entry.setTradeItemName((String) next.get("tradeItemName"));
+        entry.setCompanyName((String) next.get("companyName"));
         entry.setIdentifier((String) next.get("identifier"));
-        entry.setTradeItemIdentifier((String) next.get("tradeItemIdentifier"));
+        entry.setCompanyIdentifier((String) next.get("companyIdentifier"));
         if (next.containsField("sellOrders")) {
             List<DBObject> sellOrderObjects = (List<DBObject>) next.get("sellOrders");
             for (DBObject sellOrderObject : sellOrderObjects) {

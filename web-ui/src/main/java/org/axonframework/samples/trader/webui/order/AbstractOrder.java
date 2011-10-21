@@ -21,8 +21,8 @@ import javax.validation.constraints.Min;
  * @author Jettro Coenradie
  */
 public class AbstractOrder {
-    private String tradeItemId;
-    private String tradeItemName;
+    private String companyId;
+    private String companyName;
 
     @Min(1)
     private long tradeCount;
@@ -33,11 +33,11 @@ public class AbstractOrder {
     public AbstractOrder() {
     }
 
-    public AbstractOrder(int itemPrice, long tradeCount, String tradeItemId, String tradeItemName) {
+    public AbstractOrder(int itemPrice, long tradeCount, String companyId, String companyName) {
         this.itemPrice = itemPrice;
         this.tradeCount = tradeCount;
-        this.tradeItemId = tradeItemId;
-        this.tradeItemName = tradeItemName;
+        this.companyId = companyId;
+        this.companyName = companyName;
     }
 
     public int getItemPrice() {
@@ -56,19 +56,19 @@ public class AbstractOrder {
         this.tradeCount = tradeCount;
     }
 
-    public String getTradeItemId() {
-        return tradeItemId;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setTradeItemId(String tradeItemId) {
-        this.tradeItemId = tradeItemId;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
-    public String getTradeItemName() {
-        return tradeItemName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setTradeItemName(String tradeItemName) {
-        this.tradeItemName = tradeItemName;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

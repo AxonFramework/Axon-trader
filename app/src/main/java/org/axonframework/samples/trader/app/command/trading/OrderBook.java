@@ -35,9 +35,9 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
-    public OrderBook(AggregateIdentifier identifier, AggregateIdentifier tradeItemIdentifier) {
+    public OrderBook(AggregateIdentifier identifier, AggregateIdentifier companyIdentifier) {
         super(identifier);
-        apply(new OrderBookCreatedEvent(tradeItemIdentifier));
+        apply(new OrderBookCreatedEvent(companyIdentifier));
     }
 
     @SuppressWarnings({"UnusedDeclaration"})

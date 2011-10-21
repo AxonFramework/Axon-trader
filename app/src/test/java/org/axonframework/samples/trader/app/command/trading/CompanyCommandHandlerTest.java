@@ -17,8 +17,8 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
-import org.axonframework.samples.trader.app.api.tradeitem.TradeItemCreatedEvent;
+import org.axonframework.samples.trader.app.api.company.CompanyCreatedEvent;
+import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -27,24 +27,24 @@ import org.junit.Test;
 /**
  * @author Jettro Coenradie
  */
-public class TradeItemCommandHandlerTest {
+public class CompanyCommandHandlerTest {
     private FixtureConfiguration fixture;
 
     @Before
     public void setUp() {
         fixture = Fixtures.newGivenWhenThenFixture();
-        TradeItemCommandHandler commandHandler = new TradeItemCommandHandler();
-        commandHandler.setRepository(fixture.createGenericRepository(TradeItem.class));
+        CompanyCommandHandler commandHandler = new CompanyCommandHandler();
+        commandHandler.setRepository(fixture.createGenericRepository(Company.class));
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
 
     @Test
-    public void testCreateTradeItem() {
+    public void testCreateCompany() {
         AggregateIdentifier userId = new UUIDAggregateIdentifier();
-        CreateTradeItemCommand command = new CreateTradeItemCommand(userId, "TestItem", 1000, 10000);
+        CreateCompanyCommand command = new CreateCompanyCommand(userId, "TestItem", 1000, 10000);
 
         fixture.given()
                 .when(command)
-                .expectEvents(new TradeItemCreatedEvent("TestItem", 1000, 10000));
+                .expectEvents(new CompanyCreatedEvent("TestItem", 1000, 10000));
     }
 }

@@ -75,7 +75,7 @@
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>*</url-pattern>
-        <!--<url-pattern>/tradeitem/*</url-pattern>-->
+        <!--<url-pattern>/company/*</url-pattern>-->
         <!--<url-pattern>/orderbook/*</url-pattern>-->
         <!--<url-pattern>/spring_security_login</url-pattern>-->
         <!--<url-pattern>/j_spring_security_check</url-pattern>-->

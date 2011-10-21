@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.tradeitem;
+package org.axonframework.samples.trader.app.query.company;
 
 /**
  * @author Jettro Coenradie
  */
-public class TradeItemEntry {
+public class CompanyEntry {
     private String identifier;
     private String orderBookIdentifier;
     private String name;

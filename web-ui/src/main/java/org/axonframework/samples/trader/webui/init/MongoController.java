@@ -79,7 +79,7 @@ public class MongoController {
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String initializeMongo(Model model) {
         // TODO jettro: I just do not want to enable this by default. Need to think of something
-//        dbInit.createItems();
+        dbInit.createItems();
 
         model.addAttribute("info", "Mongo database is initialized.");
         return "data/info";

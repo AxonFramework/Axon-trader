@@ -21,8 +21,8 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.order.*;
 import org.axonframework.samples.trader.app.query.MongoHelper;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
+import org.axonframework.samples.trader.app.query.company.CompanyEntry;
+import org.axonframework.samples.trader.app.query.company.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,19 +38,19 @@ public class OrderBookListener {
     private static final String SELL = "Sell";
     private MongoHelper mongo;
 
-    private TradeItemRepository tradeItemRepository;
+    private CompanyRepository companyRepository;
 
     @EventHandler
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
-        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getTradeItemIdentifier().asString()).get();
-        DBObject tradeItem = mongo.tradeItems().findOne(query);
-        tradeItem.put("orderBookIdentifier", event.getOrderBookIdentifier().toString());
-        mongo.tradeItems().update(query, tradeItem);
+        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getCompanyIdentifier().asString()).get();
+        DBObject company = mongo.companies().findOne(query);
+        company.put("orderBookIdentifier", event.getOrderBookIdentifier().toString());
+        mongo.companies().update(query, company);
 
         DBObject orderBook = BasicDBObjectBuilder.start()
                 .add("identifier", event.getOrderBookIdentifier().toString())
-                .add("tradeItemIdentifier", event.getTradeItemIdentifier().toString())
-                .add("tradeItemName", tradeItem.get("name")).get();
+                .add("companyIdentifier", event.getCompanyIdentifier().toString())
+                .add("companyName", company.get("name")).get();
         mongo.orderBooks().insert(orderBook);
     }
 
@@ -92,11 +92,11 @@ public class OrderBookListener {
         AggregateIdentifier sellOrderId = event.getSellOrderId();
 
         AggregateIdentifier orderBookIdentifier = event.getOrderBookIdentifier();
-        TradeItemEntry tradeItem = tradeItemRepository.findTradeItemByOrderBookIdentifier(orderBookIdentifier.asString());
+        CompanyEntry company = companyRepository.findCompanyByOrderBookIdentifier(orderBookIdentifier.asString());
         DBObject tradeExecutedMongo = BasicDBObjectBuilder.start()
                 .add("count", event.getTradeCount())
                 .add("price", event.getTradePrice())
-                .add("name", tradeItem.getName())
+                .add("name", company.getName())
                 .add("orderBookIdentifier", orderBookIdentifier.asString())
                 .get();
 
@@ -140,8 +140,8 @@ public class OrderBookListener {
     }
 
     @Autowired
-    public void setTradeItemRepository(TradeItemRepository tradeItemRepository) {
-        this.tradeItemRepository = tradeItemRepository;
+    public void setCompanyRepository(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 
     @Autowired

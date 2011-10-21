@@ -41,7 +41,7 @@
             <a class="brand" href="${ctx}/">Axon Trader</a>
             <ul class="nav">
                 <li class="active"><a href="${ctx}/">Home</a></li>
-                <li><a href="${ctx}/tradeitem">Trade items</a></li>
+                <li><a href="${ctx}/company">Companies</a></li>
                 <li><a href="${ctx}/data/collections">Data</a></li>
             </ul>
             <sec:authorize access="isAuthenticated()">

@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class OrderBookEntry {
     private String identifier;
-    private String tradeItemIdentifier;
-    private String tradeItemName;
+    private String companyIdentifier;
+    private String companyName;
     private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
     private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
 
@@ -44,20 +44,20 @@ public class OrderBookEntry {
         this.identifier = identifier;
     }
 
-    public String getTradeItemIdentifier() {
-        return tradeItemIdentifier;
+    public String getCompanyIdentifier() {
+        return companyIdentifier;
     }
 
-    void setTradeItemIdentifier(String tradeItemIdentifier) {
-        this.tradeItemIdentifier = tradeItemIdentifier;
+    void setCompanyIdentifier(String companyIdentifier) {
+        this.companyIdentifier = companyIdentifier;
     }
 
-    public String getTradeItemName() {
-        return tradeItemName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    void setTradeItemName(String tradeItemName) {
-        this.tradeItemName = tradeItemName;
+    void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public List<OrderEntry> getBuyOrders() {

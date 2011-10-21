@@ -25,7 +25,7 @@ public interface OrderBookRepository {
 
     OrderBookEntry findByIdentifier(String aggregateIdentifier);
 
-    OrderBookEntry findByTradeItem(String tradeItemIdentifier);
+    OrderBookEntry findByCompany(String companyIdentifier);
 
     OrderEntry findByOrderIdentifier(String orderIdentifier);
 }

@@ -17,9 +17,7 @@ package org.axonframework.samples.trader.app.util;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 /**
@@ -37,10 +35,11 @@ public class ProfilingAspect {
             return pjp.proceed();
         } finally {
             sw.stop();
-            System.out.println(sw.getLastTaskName()+sw.shortSummary());
+            System.out.println(sw.getLastTaskName() + sw.shortSummary());
         }
     }
 
-    @Pointcut("execution(public * org.axonframework.samples.trader.app.eventstore.mongo.MongoEventStore.*(..))")
-    public void methodsToBeProfiled(){}
+    @Pointcut("execution(public * org.axonframework.eventstore.mongo.MongoEventStore.*(..))")
+    public void methodsToBeProfiled() {
+    }
 }

@@ -17,8 +17,8 @@
   --%>
 <form:form commandName="order">
     <form:errors path="*" cssClass="errorBox"/>
-    <form:hidden path="tradeItemId"/>
-    <form:hidden path="tradeItemName"/>
+    <form:hidden path="companyId"/>
+    <form:hidden path="companyName"/>
     <table>
         <tr>
             <td><spring:message code="order.price"/>:</td>
@@ -34,7 +34,7 @@
             <td colspan="3">
                 <input class="btn primary" type="submit" name="submit" value="Place Order"/>
                 <input class="btn" type="reset" name="reset" value="Reset"/>
-                <a href="/tradeitem/<c:out value="${order.tradeItemId}"/>" class="btn">Cancel</a>
+                <a href="/company/<c:out value="${order.companyId}"/>" class="btn">Cancel</a>
             </td>
         </tr>
     </table>

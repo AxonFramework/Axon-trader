@@ -22,14 +22,14 @@ import org.axonframework.domain.DomainEvent;
  * @author Jettro Coenradie
  */
 public class OrderBookCreatedEvent extends DomainEvent {
-    private AggregateIdentifier tradeItemIdentifier;
+    private AggregateIdentifier companyIdentifier;
 
-    public OrderBookCreatedEvent(AggregateIdentifier tradeItemIdentifier) {
-        this.tradeItemIdentifier = tradeItemIdentifier;
+    public OrderBookCreatedEvent(AggregateIdentifier companyIdentifier) {
+        this.companyIdentifier = companyIdentifier;
     }
 
-    public AggregateIdentifier getTradeItemIdentifier() {
-        return tradeItemIdentifier;
+    public AggregateIdentifier getCompanyIdentifier() {
+        return companyIdentifier;
     }
 
     public AggregateIdentifier getOrderBookIdentifier() {

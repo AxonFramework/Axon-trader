@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
+import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -27,23 +27,23 @@ import org.springframework.stereotype.Component;
  * @author Jettro Coenradie
  */
 @Component
-public class TradeItemCommandHandler {
-    private Repository<TradeItem> repository;
+public class CompanyCommandHandler {
+    private Repository<Company> repository;
 
     @CommandHandler
-    public void handleCreateTradeItem(CreateTradeItemCommand command) {
-        TradeItem tradeItem = new TradeItem(new UUIDAggregateIdentifier(),
-                command.getTradeItemName(),
-                command.getTradeItemValue(),
+    public void handleCreateCompany(CreateCompanyCommand command) {
+        Company company = new Company(new UUIDAggregateIdentifier(),
+                command.getCompanyName(),
+                command.getCompanyValue(),
                 command.getAmountOfShares());
-        repository.add(tradeItem);
+        repository.add(company);
 
     }
 
     @Autowired
-    @Qualifier("tradeItemRepository")
-    public void setRepository(Repository<TradeItem> tradeItemRepository) {
-        this.repository = tradeItemRepository;
+    @Qualifier("companyRepository")
+    public void setRepository(Repository<Company> companyRepository) {
+        this.repository = companyRepository;
     }
 
 }

@@ -36,8 +36,8 @@ public class MongoHelper {
         return getDatabase().getCollection("users");
     }
 
-    public DBCollection tradeItems() {
-        return getDatabase().getCollection("tradeitems");
+    public DBCollection companies() {
+        return getDatabase().getCollection("companies");
     }
 
     public DBCollection tradesExecuted() {

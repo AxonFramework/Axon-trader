@@ -22,12 +22,12 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.eventstore.mongo.MongoTemplate;
+import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
-import org.axonframework.samples.trader.app.api.tradeitem.CreateTradeItemCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.MongoHelper;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemEntry;
-import org.axonframework.samples.trader.app.query.tradeitem.TradeItemRepository;
+import org.axonframework.samples.trader.app.query.company.CompanyEntry;
+import org.axonframework.samples.trader.app.query.company.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <p>Initializes the repository with a number of users, trade items and order books</p>
+ * <p>Initializes the repository with a number of users, companiess and order books</p>
  *
  * @author Jettro Coenradie
  */
@@ -43,19 +43,19 @@ import java.util.Set;
 public class DBInit {
 
     private CommandBus commandBus;
-    private TradeItemRepository tradeItemRepository;
+    private CompanyRepository companyRepository;
     private MongoHelper mongo;
     private MongoTemplate systemAxonMongo;
     private MongoEventStore eventStore;
 
     @Autowired
     public DBInit(CommandBus commandBus,
-                  TradeItemRepository tradeItemRepository,
+                  CompanyRepository companyRepository,
                   MongoHelper mongo,
                   MongoTemplate systemMongo,
                   MongoEventStore eventStore) {
         this.commandBus = commandBus;
-        this.tradeItemRepository = tradeItemRepository;
+        this.companyRepository = companyRepository;
         this.mongo = mongo;
         this.systemAxonMongo = systemMongo;
         this.eventStore = eventStore;
@@ -78,7 +78,7 @@ public class DBInit {
         mongo.users().drop();
         mongo.orderBooks().drop();
         mongo.orders().drop();
-        mongo.tradeItems().drop();
+        mongo.companies().drop();
         mongo.tradesExecuted().drop();
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
@@ -86,35 +86,35 @@ public class DBInit {
         createuser("Buyer three", "buyer3");
         createuser("Admin One", "admin1");
 
-        createTradeItems(userIdentifier);
+        createCompanies(userIdentifier);
         createOrderBooks();
         eventStore.ensureIndexes();
     }
 
-    private void createTradeItems(AggregateIdentifier userIdentifier) {
-        CreateTradeItemCommand command = new CreateTradeItemCommand(userIdentifier, "Philips", 1000, 10000);
+    private void createCompanies(AggregateIdentifier userIdentifier) {
+        CreateCompanyCommand command = new CreateCompanyCommand(userIdentifier, "Philips", 1000, 10000);
         commandBus.dispatch(command);
 
-        command = new CreateTradeItemCommand(userIdentifier, "Shell", 500, 5000);
+        command = new CreateCompanyCommand(userIdentifier, "Shell", 500, 5000);
         commandBus.dispatch(command);
 
-        command = new CreateTradeItemCommand(userIdentifier, "Bp", 15000, 100000);
+        command = new CreateCompanyCommand(userIdentifier, "Bp", 15000, 100000);
         commandBus.dispatch(command);
 
 //        To bo used for performance tests
 //        for (int i=0; i < 1000; i++) {
-//            command = new CreateTradeItemCommand(userIdentifier, "Stock " + i, 15000, 100000);
+//            command = new CreateCompanyCommand(userIdentifier, "Stock " + i, 15000, 100000);
 //            commandBus.dispatch(command);
 //        }
 
     }
 
     private void createOrderBooks() {
-        List<TradeItemEntry> tradeItemEntries = tradeItemRepository.listAllTradeItems();
+        List<CompanyEntry> companyEntries = companyRepository.listAllCompanies();
 
-        for (TradeItemEntry tradeItemEntry : tradeItemEntries) {
+        for (CompanyEntry companyEntry : companyEntries) {
             CreateOrderBookCommand command = new CreateOrderBookCommand(
-                    new StringAggregateIdentifier(tradeItemEntry.getIdentifier()));
+                    new StringAggregateIdentifier(companyEntry.getIdentifier()));
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
         }
     }

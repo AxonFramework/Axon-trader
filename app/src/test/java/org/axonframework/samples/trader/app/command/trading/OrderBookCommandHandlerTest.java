@@ -76,10 +76,10 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testCreateOrderBook() {
-        AggregateIdentifier tradeItemIdentifier = new UUIDAggregateIdentifier();
-        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(tradeItemIdentifier);
+        AggregateIdentifier companyIdentifier = new UUIDAggregateIdentifier();
+        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(companyIdentifier);
         fixture.given()
                 .when(createOrderBookCommand)
-                .expectEvents(new OrderBookCreatedEvent(tradeItemIdentifier));
+                .expectEvents(new OrderBookCreatedEvent(companyIdentifier));
     }
 }

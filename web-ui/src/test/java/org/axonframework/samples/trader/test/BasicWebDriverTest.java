@@ -28,39 +28,39 @@ import java.util.Random;
  * @author Jettro Coenradie
  */
 public class BasicWebDriverTest {
-    private static final String SERVER = "http://localhost:8080/";
+    private static final String SERVER = "http://axon-trader.cloudfoundry.com/";
 
     public static void main(String[] args) {
 
         WebDriver driver = new HtmlUnitDriver();
 
         LoginPage login = new LoginPage(driver);
-        TradeItemsPage tradeItems = new TradeItemsPage(driver);
+        CompaniesPage companies = new CompaniesPage(driver);
         login.login("buyer1", "buyer1");
 
         Random randomFactory = new Random();
-        String[] orderActions = {"buy","sell"};
+        String[] orderActions = {"Buy »", "Sell »"};
 
         long start = new Date().getTime();
-        for (int i=0; i < 1000; i++) {
-            placeOrder(driver, tradeItems, randomFactory, orderActions);
+        for (int i = 0; i < 1000; i++) {
+            placeOrder(driver, companies, randomFactory, orderActions);
         }
 
         long end = new Date().getTime();
-        System.out.println("Total milli seconds : " + (end-start));
+        System.out.println("Total milli seconds : " + (end - start));
     }
 
-    private static void placeOrder(WebDriver driver, TradeItemsPage tradeItems, Random randomFactory, String[] orderActions) {
+    private static void placeOrder(WebDriver driver, CompaniesPage companies, Random randomFactory, String[] orderActions) {
         long start = new Date().getTime();
-        int randomTradeItem = randomFactory.nextInt(1000);
+        int randomCompany = randomFactory.nextInt(3);
         String randomOrderAction = orderActions[randomFactory.nextInt(2)];
         int randomPrice = randomFactory.nextInt(500) + 1;
         int randomAmount = randomFactory.nextInt(50) + 1;
 
 
-        tradeItems.selectTradeItem(randomTradeItem);
+        companies.selectCompany(randomCompany);
 
-        // trade item details
+        // company details
         driver.findElement(By.linkText(randomOrderAction)).click();
 
         // buy screen
@@ -69,20 +69,20 @@ public class BasicWebDriverTest {
         driver.findElement(By.name("submit")).submit();
         long duration = new Date().getTime() - start;
         System.out.println("order : (" + duration + ") "
-                + randomOrderAction + " " + randomTradeItem + " " + randomAmount + " " + randomPrice);
+                + randomOrderAction + " " + randomCompany + " " + randomAmount + " " + randomPrice);
     }
 
 
-    private static class TradeItemsPage {
+    private static class CompaniesPage {
         private WebDriver driver;
 
-        private TradeItemsPage(WebDriver driver) {
+        private CompaniesPage(WebDriver driver) {
             this.driver = driver;
         }
 
-        public void selectTradeItem(int itemToSelect) {
-            driver.get(SERVER + "tradeitem/");
-            List<WebElement> elements = driver.findElements(By.xpath("//table[@class='hor-minimalist-b']/tbody/tr"));
+        public void selectCompany(int itemToSelect) {
+            driver.get(SERVER + "company/");
+            List<WebElement> elements = driver.findElements(By.xpath("//table[@id='available-stock']/tbody/tr"));
             WebElement webElement = elements.get(itemToSelect);
             webElement.findElement(By.tagName("a")).click();
         }

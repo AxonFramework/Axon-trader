@@ -56,7 +56,7 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook = new OrderBook(new UUIDAggregateIdentifier(), command.getTradeItemIdentifier());
+        OrderBook orderBook = new OrderBook(new UUIDAggregateIdentifier(), command.getCompanyIdentifier());
         repository.add(orderBook);
     }
 

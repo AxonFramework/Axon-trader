@@ -21,13 +21,13 @@ import org.axonframework.domain.AggregateIdentifier;
  * @author Jettro Coenradie
  */
 public class CreateOrderBookCommand {
-    private AggregateIdentifier tradeItemIdentifier;
+    private AggregateIdentifier companyIdentifier;
 
-    public CreateOrderBookCommand(AggregateIdentifier tradeItemIdentifier) {
-        this.tradeItemIdentifier = tradeItemIdentifier;
+    public CreateOrderBookCommand(AggregateIdentifier companyIdentifier) {
+        this.companyIdentifier = companyIdentifier;
     }
 
-    public AggregateIdentifier getTradeItemIdentifier() {
-        return tradeItemIdentifier;
+    public AggregateIdentifier getCompanyIdentifier() {
+        return companyIdentifier;
     }
 }

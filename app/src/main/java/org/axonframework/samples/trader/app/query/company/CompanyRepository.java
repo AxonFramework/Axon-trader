@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.tradeitem;
+package org.axonframework.samples.trader.app.query.company;
 
 import java.util.List;
 
 /**
  * @author Jettro Coenradie
  */
-public interface TradeItemRepository {
-    List<TradeItemEntry> listAllTradeItems();
+public interface CompanyRepository {
+    List<CompanyEntry> listAllCompanies();
 
-    TradeItemEntry findTradeItemByIdentifier(String tradeItemIdentifier);
+    CompanyEntry findCompanyByIdentifier(String companyIdentifier);
 
-    TradeItemEntry findTradeItemByOrderBookIdentifier(String orderBookIdentifier);
+    CompanyEntry findCompanyByOrderBookIdentifier(String orderBookIdentifier);
 }

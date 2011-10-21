@@ -16,33 +16,33 @@
 
 <html>
 <head>
-    <title>Trade item details</title>
+    <title>Company details</title>
 </head>
 <body>
-<content tag="title"><c:out value="${tradeItem.name}"/></content>
+<content tag="title"><c:out value="${company.name}"/></content>
 <content tag="tagline">
     <span class="detailLabel">Value : </span>
-    <span><c:out value="${tradeItem.value}"/></span>
+    <span><c:out value="${company.value}"/></span>
     <span class="detailLabel"># Shares : </span>
-    <span><c:out value="${tradeItem.amountOfShares}"/></span>
+    <span><c:out value="${company.amountOfShares}"/></span>
 </content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="/tradeitem">Trade Items</a> <span class="divider">/</span></li>
-        <li class="active"><c:out value='${tradeItem.name}'/></li>
+        <li><a href="/company">Companies</a> <span class="divider">/</span></li>
+        <li class="active"><c:out value='${company.name}'/></li>
     </ul>
 </content>
 
 
-<c:if test="${tradeItem.tradeStarted}">
+<c:if test="${company.tradeStarted}">
     <div class="row">
         <div class="span14">
             <p>
                 <a class="btn primary"
-                   href="${ctx}/tradeitem/buy/<c:out value='${tradeItem.identifier}'/>">Buy &raquo;</a>
+                   href="${ctx}/company/buy/<c:out value='${company.identifier}'/>">Buy &raquo;</a>
                 <a class="btn primary"
-                   href="${ctx}/tradeitem/sell/<c:out value='${tradeItem.identifier}'/>">Sell &raquo;</a>
+                   href="${ctx}/company/sell/<c:out value='${company.identifier}'/>">Sell &raquo;</a>
             </p>
         </div>
     </div>
