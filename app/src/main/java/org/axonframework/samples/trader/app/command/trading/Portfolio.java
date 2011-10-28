@@ -81,11 +81,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void makePayment(long amountToPayInCents) {
-        if (amountOfMoney >= amountToPayInCents) {
-            apply(new PaymentMadeFromPortfolioEvent(amountToPayInCents));
-        } else {
-            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(amountToPayInCents));
-        }
+        apply(new PaymentMadeFromPortfolioEvent(amountToPayInCents));
     }
 
     public void reserveMoney(long amountToReserve) {
