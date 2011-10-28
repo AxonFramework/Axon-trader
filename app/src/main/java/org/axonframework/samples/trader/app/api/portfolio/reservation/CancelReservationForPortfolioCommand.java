@@ -13,26 +13,27 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.portfolio;
+package org.axonframework.samples.trader.app.api.portfolio.reservation;
 
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmReservationForPortfolioCommand {
+public class CancelReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier itemIdentifier;
-    private int amountOfItemsToConfirm;
+    private int amountOfCancelledItems;
 
-    public ConfirmReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfItemsToConfirm) {
+    public CancelReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.itemIdentifier = itemIdentifier;
-        this.amountOfItemsToConfirm = amountOfItemsToConfirm;
+
+        this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
-    public int getAmountOfItemsToConfirm() {
-        return amountOfItemsToConfirm;
+    public int getAmountOfItemsToCancel() {
+        return amountOfCancelledItems;
     }
 
     public AggregateIdentifier getItemIdentifier() {

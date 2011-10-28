@@ -13,25 +13,26 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.portfolio;
+package org.axonframework.samples.trader.app.api.portfolio.reservation;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemsReservedEvent extends DomainEvent {
+public class ConfirmReservationForPortfolioCommand {
+    private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier itemIdentifier;
-    private int amountOfItemsReserved;
+    private int amountOfItemsToConfirm;
 
-    public ItemsReservedEvent(AggregateIdentifier itemIdentifier, int amountOfItemsReserved) {
+    public ConfirmReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfItemsToConfirm) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.itemIdentifier = itemIdentifier;
-        this.amountOfItemsReserved = amountOfItemsReserved;
+        this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
-    public int getAmountOfItemsReserved() {
-        return amountOfItemsReserved;
+    public int getAmountOfItemsToConfirm() {
+        return amountOfItemsToConfirm;
     }
 
     public AggregateIdentifier getItemIdentifier() {
@@ -39,6 +40,6 @@ public class ItemsReservedEvent extends DomainEvent {
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
-        return getAggregateIdentifier();
+        return portfolioIdentifier;
     }
 }

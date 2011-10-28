@@ -18,7 +18,9 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.samples.trader.app.api.portfolio.*;
+import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
+import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.app.api.portfolio.reservation.*;
 
 import java.util.HashMap;
 import java.util.Map;
