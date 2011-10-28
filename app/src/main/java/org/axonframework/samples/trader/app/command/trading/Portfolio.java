@@ -20,8 +20,8 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.app.api.portfolio.item.*;
 import org.axonframework.samples.trader.app.api.portfolio.money.*;
-import org.axonframework.samples.trader.app.api.portfolio.reservation.*;
 
 import java.util.HashMap;
 import java.util.Map;

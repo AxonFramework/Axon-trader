@@ -21,8 +21,8 @@ import org.axonframework.samples.trader.app.api.portfolio.AddItemsToPortfolioCom
 import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.app.api.portfolio.item.*;
 import org.axonframework.samples.trader.app.api.portfolio.money.*;
-import org.axonframework.samples.trader.app.api.portfolio.reservation.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

@@ -13,35 +13,26 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.portfolio.reservation;
+package org.axonframework.samples.trader.app.api.portfolio.item;
 
 import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.DomainEvent;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReserveItemsCommand {
-    private AggregateIdentifier portfolioIdentifier;
-    private int amountOfItemsToReserve;
+public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
     private AggregateIdentifier itemIdentifier;
 
-    public ReserveItemsCommand(AggregateIdentifier portfolioIdentifier,
-                               AggregateIdentifier itemIdentifier,
-                               int amountOfItemsToReserve) {
-        this.portfolioIdentifier = portfolioIdentifier;
-        this.amountOfItemsToReserve = amountOfItemsToReserve;
+    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier itemIdentifier) {
         this.itemIdentifier = itemIdentifier;
-    }
-
-    public int getAmountOfItemsToReserve() {
-        return amountOfItemsToReserve;
-    }
-
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return portfolioIdentifier;
     }
 
     public AggregateIdentifier getItemIdentifier() {
         return itemIdentifier;
+    }
+
+    public AggregateIdentifier getPortfolioIdentifier() {
+        return getAggregateIdentifier();
     }
 }

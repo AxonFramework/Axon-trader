@@ -13,19 +13,27 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.portfolio.reservation;
+package org.axonframework.samples.trader.app.api.portfolio.item;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
+public class CancelReservationForPortfolioCommand {
+    private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier itemIdentifier;
+    private int amountOfCancelledItems;
 
-    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier itemIdentifier) {
+    public CancelReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfCancelledItems) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.itemIdentifier = itemIdentifier;
+
+        this.amountOfCancelledItems = amountOfCancelledItems;
+    }
+
+    public int getAmountOfItemsToCancel() {
+        return amountOfCancelledItems;
     }
 
     public AggregateIdentifier getItemIdentifier() {
@@ -33,6 +41,6 @@ public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
-        return getAggregateIdentifier();
+        return portfolioIdentifier;
     }
 }
