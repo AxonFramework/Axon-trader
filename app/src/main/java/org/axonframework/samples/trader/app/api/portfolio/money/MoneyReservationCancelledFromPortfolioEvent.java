@@ -21,18 +21,18 @@ import org.axonframework.domain.DomainEvent;
 /**
  * @author Jettro Coenradie
  */
-public class NotEnoughMoneyInPortfolioToMakePaymentFromEvent extends DomainEvent {
-    private long amountToPayInCents;
+public class MoneyReservationCancelledFromPortfolioEvent extends DomainEvent {
+    private long amountOfMoneyToCancel;
 
-    public NotEnoughMoneyInPortfolioToMakePaymentFromEvent(long amountToPayInCents) {
-        this.amountToPayInCents = amountToPayInCents;
+    public MoneyReservationCancelledFromPortfolioEvent(long amountOfMoneyToCancel) {
+        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
-        return this.getAggregateIdentifier();
+        return super.getAggregateIdentifier();
     }
 
-    public long getAmountToPayInCents() {
-        return amountToPayInCents;
+    public long getAmountOfMoneyToCancel() {
+        return amountOfMoneyToCancel;
     }
 }

@@ -20,9 +20,7 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.MoneyAddedToPortfolioEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.NotEnoughMoneyInPortfolioToMakePaymentFromEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.PaymentMadeFromPortfolioEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.*;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.*;
 
 import java.util.HashMap;
@@ -31,6 +29,9 @@ import java.util.Map;
 /**
  * Not a lot of checks are available. We will check if you still have item before you reserve them. Other than that
  * we will not do checks. It is possible to give more items than you reserve.
+ * <p/>
+ * When buying items you need to reserve money. Reservations need to be confirmed or cancelled. It is up to the user
+ * to confirm and cancel the right amounts. The Portfolio does not keep track of it.
  *
  * @author Jettro Coenradie
  */
@@ -39,6 +40,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     private Map<AggregateIdentifier, Integer> reservedItems = new HashMap<AggregateIdentifier, Integer>();
 
     private long amountOfMoney;
+    private long reservedAmountOfMoney;
 
     public Portfolio(AggregateIdentifier identifier) {
         super(identifier);
@@ -83,8 +85,24 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         if (amountOfMoney >= amountToPayInCents) {
             apply(new PaymentMadeFromPortfolioEvent(amountToPayInCents));
         } else {
-            apply(new NotEnoughMoneyInPortfolioToMakePaymentFromEvent(amountToPayInCents));
+            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(amountToPayInCents));
         }
+    }
+
+    public void reserveMoney(long amountToReserve) {
+        if (amountOfMoney >= amountToReserve) {
+            apply(new MoneyReservedFromPortfolioEvent(amountToReserve));
+        } else {
+            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(amountToReserve));
+        }
+    }
+
+    public void cancelMoneyReservation(long amountOfMoneyToCancel) {
+        apply(new MoneyReservationCancelledFromPortfolioEvent(amountOfMoneyToCancel));
+    }
+
+    public void confirmMoneyReservation(long amountOfMoneyToConfirm) {
+        apply(new MoneyReservationConfirmedFromPortfolioEvent(amountOfMoneyToConfirm));
     }
 
     /* EVENT HANDLING */
@@ -144,8 +162,25 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void onNotEnoughMoneyToMakePayment(NotEnoughMoneyInPortfolioToMakePaymentFromEvent event) {
+    public void onMoneyReservedFromPortfolio(MoneyReservedFromPortfolioEvent event) {
+        amountOfMoney -= event.getAmountToReserve();
+        reservedAmountOfMoney += event.getAmountToReserve();
+    }
+
+    @EventHandler
+    public void onNotEnoughMoneyToMakeReservation(NotEnoughMoneyInPortfolioToMakeReservationEvent event) {
         // do nothing
+    }
+
+    @EventHandler
+    public void onMoneyReservationCancelled(MoneyReservationCancelledFromPortfolioEvent event) {
+        amountOfMoney += event.getAmountOfMoneyToCancel();
+        reservedAmountOfMoney -= event.getAmountOfMoneyToCancel();
+    }
+
+    @EventHandler
+    public void onMoneyReservationConfirmed(MoneyReservationConfirmedFromPortfolioEvent event) {
+        reservedAmountOfMoney -= event.getAmountOfMoneyConfirmedInCents();
     }
 
     /* UTILITY METHODS */

@@ -21,8 +21,7 @@ import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.portfolio.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.app.api.portfolio.money.AddMoneyToPortfolioCommand;
-import org.axonframework.samples.trader.app.api.portfolio.money.MakePaymentFromPortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.money.*;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.CancelReservationForPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.ConfirmReservationForPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.ReserveItemsCommand;
@@ -77,6 +76,24 @@ public class PortfolioCommandHandler {
     public void handleMakePaymentFromPortfolioCommand(MakePaymentFromPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.makePayment(command.getAmountToPayInCents());
+    }
+
+    @CommandHandler
+    public void handleReserveMoneyFromPortfolioCommand(ReserveMoneyFromPortfolioCommand command) {
+        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+        portfolio.reserveMoney(command.getAmountOfMoneyToReserve());
+    }
+
+    @CommandHandler
+    public void handleCancelMoneyReservationFromPortfolioCommand(CancelMoneyReservationFromPortfolioCommand command) {
+        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+        portfolio.cancelMoneyReservation(command.getAmountOfMoneyToCancel());
+    }
+
+    @CommandHandler
+    public void handleConfirmMoneyReservationFromPortfolioCommand(ConfirmMoneyReservationFromPortfolionCommand command) {
+        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+        portfolio.confirmMoneyReservation(command.getAmountOfMoneyToConfirmInCents());
     }
 
     @Autowired
