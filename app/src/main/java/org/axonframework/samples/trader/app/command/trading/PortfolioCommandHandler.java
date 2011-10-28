@@ -21,6 +21,8 @@ import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.portfolio.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.money.AddMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.money.MakePaymentFromPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.CancelReservationForPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.ConfirmReservationForPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.ReserveItemsCommand;
@@ -63,6 +65,18 @@ public class PortfolioCommandHandler {
     public void handleCancelReservationCommand(CancelReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.cancelReservation(command.getItemIdentifier(), command.getAmountOfItemsToCancel());
+    }
+
+    @CommandHandler
+    public void handleAddMoneyToPortfolioCommand(AddMoneyToPortfolioCommand command) {
+        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+        portfolio.addMoney(command.getMoneyToAddInCents());
+    }
+
+    @CommandHandler
+    public void handleMakePaymentFromPortfolioCommand(MakePaymentFromPortfolioCommand command) {
+        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+        portfolio.makePayment(command.getAmountToPayInCents());
     }
 
     @Autowired

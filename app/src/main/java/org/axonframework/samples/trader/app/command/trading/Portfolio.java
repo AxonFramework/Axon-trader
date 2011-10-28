@@ -20,6 +20,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.MoneyAddedToPortfolioEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.NotEnoughMoneyInPortfolioToMakePaymentFromEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.PaymentMadeFromPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.*;
 
 import java.util.HashMap;
@@ -35,6 +38,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     private Map<AggregateIdentifier, Integer> availableItems = new HashMap<AggregateIdentifier, Integer>();
     private Map<AggregateIdentifier, Integer> reservedItems = new HashMap<AggregateIdentifier, Integer>();
 
+    private long amountOfMoney;
 
     public Portfolio(AggregateIdentifier identifier) {
         super(identifier);
@@ -71,6 +75,19 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new ReservationCancelledForPortfolioEvent(itemIdentifier, amountOfItemsToCancel));
     }
 
+    public void addMoney(long moneyToAddInCents) {
+        apply(new MoneyAddedToPortfolioEvent(moneyToAddInCents));
+    }
+
+    public void makePayment(long amountToPayInCents) {
+        if (amountOfMoney >= amountToPayInCents) {
+            apply(new PaymentMadeFromPortfolioEvent(amountToPayInCents));
+        } else {
+            apply(new NotEnoughMoneyInPortfolioToMakePaymentFromEvent(amountToPayInCents));
+        }
+    }
+
+    /* EVENT HANDLING */
     @EventHandler
     public void onPortfolioCreated(PortfolioCreatedEvent event) {
         // nothing for now
@@ -114,9 +131,24 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
         int available = obtainCurrentAvailableItems(event.getItemIdentifier());
         availableItems.put(event.getItemIdentifier(), available + event.getAmountOfCancelledItems());
-
     }
 
+    @EventHandler
+    public void onMoneyAddedToPortfolio(MoneyAddedToPortfolioEvent event) {
+        amountOfMoney += event.getMoneyAddedInCents();
+    }
+
+    @EventHandler
+    public void onPaymentMadeFromPortfolio(PaymentMadeFromPortfolioEvent event) {
+        amountOfMoney -= event.getAmountPaidInCents();
+    }
+
+    @EventHandler
+    public void onNotEnoughMoneyToMakePayment(NotEnoughMoneyInPortfolioToMakePaymentFromEvent event) {
+        // do nothing
+    }
+
+    /* UTILITY METHODS */
     private int obtainCurrentAvailableItems(AggregateIdentifier itemIdentifier) {
         int available = 0;
         if (availableItems.containsKey(itemIdentifier)) {

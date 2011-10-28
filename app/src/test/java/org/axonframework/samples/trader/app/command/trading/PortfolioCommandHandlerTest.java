@@ -21,11 +21,11 @@ import org.axonframework.samples.trader.app.api.portfolio.AddItemsToPortfolioCom
 import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.*;
 import org.axonframework.samples.trader.app.api.portfolio.reservation.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -127,19 +127,32 @@ public class PortfolioCommandHandlerTest {
     }
 
     /* Money related test methods */
-    @Ignore
+    @Test
     public void testAddingMoneyToThePortfolio() {
+        AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
+        AddMoneyToPortfolioCommand command = new AddMoneyToPortfolioCommand(portfolioIdentifier, 2000l);
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
+                .when(command)
+                .expectEvents(new MoneyAddedToPortfolioEvent(2000l));
 
     }
 
-    @Ignore
+    @Test
     public void testMakingPaymentFromPortfolio() {
-
+        AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
+        MakePaymentFromPortfolioCommand command = new MakePaymentFromPortfolioCommand(portfolioIdentifier, 300l);
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(400))
+                .when(command)
+                .expectEvents(new PaymentMadeFromPortfolioEvent(300l));
     }
 
-    @Ignore
+    @Test
     public void testMakingPaymentFromPortfolio_withoutEnoughMoney() {
-
+        AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
+        MakePaymentFromPortfolioCommand command = new MakePaymentFromPortfolioCommand(portfolioIdentifier, 300l);
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(200))
+                .when(command)
+                .expectEvents(new NotEnoughMoneyInPortfolioToMakePaymentFromEvent(300));
     }
 
 }
