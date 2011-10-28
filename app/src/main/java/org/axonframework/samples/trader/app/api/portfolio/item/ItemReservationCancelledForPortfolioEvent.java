@@ -16,23 +16,22 @@
 package org.axonframework.samples.trader.app.api.portfolio.item;
 
 import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.DomainEvent;
 
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmReservationForPortfolioCommand {
-    private AggregateIdentifier portfolioIdentifier;
+public class ItemReservationCancelledForPortfolioEvent extends DomainEvent {
     private AggregateIdentifier itemIdentifier;
-    private int amountOfItemsToConfirm;
+    private int amountOfCancelledItems;
 
-    public ConfirmReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfItemsToConfirm) {
-        this.portfolioIdentifier = portfolioIdentifier;
+    public ItemReservationCancelledForPortfolioEvent(AggregateIdentifier itemIdentifier, int amountOfCancelledItems) {
         this.itemIdentifier = itemIdentifier;
-        this.amountOfItemsToConfirm = amountOfItemsToConfirm;
+        this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
-    public int getAmountOfItemsToConfirm() {
-        return amountOfItemsToConfirm;
+    public int getAmountOfCancelledItems() {
+        return amountOfCancelledItems;
     }
 
     public AggregateIdentifier getItemIdentifier() {
@@ -40,6 +39,6 @@ public class ConfirmReservationForPortfolioCommand {
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
-        return portfolioIdentifier;
+        return getAggregateIdentifier();
     }
 }

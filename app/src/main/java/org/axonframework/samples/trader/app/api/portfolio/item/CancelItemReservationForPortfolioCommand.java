@@ -20,12 +20,12 @@ import org.axonframework.domain.AggregateIdentifier;
 /**
  * @author Jettro Coenradie
  */
-public class CancelReservationForPortfolioCommand {
+public class CancelItemReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier itemIdentifier;
     private int amountOfCancelledItems;
 
-    public CancelReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfCancelledItems) {
+    public CancelItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.itemIdentifier = itemIdentifier;
 

@@ -17,9 +17,7 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.portfolio.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.*;
 import org.axonframework.samples.trader.app.api.portfolio.money.*;
@@ -103,13 +101,13 @@ public class PortfolioCommandHandlerTest {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
         AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
 
-        ConfirmReservationForPortfolioCommand command =
-                new ConfirmReservationForPortfolioCommand(portfolioIdentifier, itemIdentifier, 100);
+        ConfirmItemReservationForPortfolioCommand command =
+                new ConfirmItemReservationForPortfolioCommand(portfolioIdentifier, itemIdentifier, 100);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
                 new ItemsAddedToPortfolioEvent(itemIdentifier, 400),
                 new ItemsReservedEvent(itemIdentifier, 100))
                 .when(command)
-                .expectEvents(new ReservationConfirmedForPortfolioEvent(itemIdentifier, 100));
+                .expectEvents(new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, 100));
     }
 
     @Test
@@ -117,13 +115,13 @@ public class PortfolioCommandHandlerTest {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
         AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
 
-        CancelReservationForPortfolioCommand command =
-                new CancelReservationForPortfolioCommand(portfolioIdentifier, itemIdentifier, 100);
+        CancelItemReservationForPortfolioCommand command =
+                new CancelItemReservationForPortfolioCommand(portfolioIdentifier, itemIdentifier, 100);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
                 new ItemsAddedToPortfolioEvent(itemIdentifier, 400),
                 new ItemsReservedEvent(itemIdentifier, 100))
                 .when(command)
-                .expectEvents(new ReservationCancelledForPortfolioEvent(itemIdentifier, 100));
+                .expectEvents(new ItemReservationCancelledForPortfolioEvent(itemIdentifier, 100));
     }
 
     /* Money related test methods */

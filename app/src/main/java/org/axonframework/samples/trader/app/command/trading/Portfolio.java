@@ -18,7 +18,6 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.samples.trader.app.api.portfolio.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.*;
 import org.axonframework.samples.trader.app.api.portfolio.money.*;
@@ -70,11 +69,11 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void confirmReservation(AggregateIdentifier itemIdentifier, int amountOfItemsToConfirm) {
-        apply(new ReservationConfirmedForPortfolioEvent(itemIdentifier, amountOfItemsToConfirm));
+        apply(new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, amountOfItemsToConfirm));
     }
 
     public void cancelReservation(AggregateIdentifier itemIdentifier, int amountOfItemsToCancel) {
-        apply(new ReservationCancelledForPortfolioEvent(itemIdentifier, amountOfItemsToCancel));
+        apply(new ItemReservationCancelledForPortfolioEvent(itemIdentifier, amountOfItemsToCancel));
     }
 
     public void addMoney(long moneyToAddInCents) {
@@ -137,13 +136,13 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void onReservationConfirmed(ReservationConfirmedForPortfolioEvent event) {
+    public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
         int reserved = obtainCurrentReservedItems(event.getItemIdentifier());
         reservedItems.put(event.getItemIdentifier(), reserved - event.getAmountOfConfirmedItems());
     }
 
     @EventHandler
-    public void onReservationCancelled(ReservationCancelledForPortfolioEvent event) {
+    public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
         int reserved = obtainCurrentReservedItems(event.getItemIdentifier());
         reservedItems.put(event.getItemIdentifier(), reserved + event.getAmountOfCancelledItems());
 

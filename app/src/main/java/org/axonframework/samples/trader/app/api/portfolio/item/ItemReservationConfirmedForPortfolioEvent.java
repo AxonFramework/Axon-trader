@@ -13,33 +13,32 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.portfolio;
+package org.axonframework.samples.trader.app.api.portfolio.item;
 
 import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.DomainEvent;
 
 /**
  * @author Jettro Coenradie
  */
-public class AddItemsToPortfolioCommand {
-    private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier itemIdentfier;
-    private int amountOfItemsToAdd;
+public class ItemReservationConfirmedForPortfolioEvent extends DomainEvent {
+    private AggregateIdentifier itemIdentifier;
+    private int amountOfConfirmedItems;
 
-    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentfier, int amountOfItemsToAdd) {
-        this.portfolioIdentifier = portfolioIdentifier;
-        this.itemIdentfier = itemIdentfier;
-        this.amountOfItemsToAdd = amountOfItemsToAdd;
+    public ItemReservationConfirmedForPortfolioEvent(AggregateIdentifier itemIdentifier, int amountOfConfirmedItems) {
+        this.itemIdentifier = itemIdentifier;
+        this.amountOfConfirmedItems = amountOfConfirmedItems;
     }
 
-    public int getAmountOfItemsToAdd() {
-        return amountOfItemsToAdd;
+    public int getAmountOfConfirmedItems() {
+        return amountOfConfirmedItems;
     }
 
-    public AggregateIdentifier getItemIdentfier() {
-        return itemIdentfier;
+    public AggregateIdentifier getItemIdentifier() {
+        return itemIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
-        return portfolioIdentifier;
+        return getAggregateIdentifier();
     }
 }

@@ -19,10 +19,10 @@ import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.app.api.portfolio.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.app.api.portfolio.item.CancelReservationForPortfolioCommand;
-import org.axonframework.samples.trader.app.api.portfolio.item.ConfirmReservationForPortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.item.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.item.CancelItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.item.ReserveItemsCommand;
 import org.axonframework.samples.trader.app.api.portfolio.money.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +55,13 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleConfirmReservationCommand(ConfirmReservationForPortfolioCommand command) {
+    public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmReservation(command.getItemIdentifier(), command.getAmountOfItemsToConfirm());
     }
 
     @CommandHandler
-    public void handleCancelReservationCommand(CancelReservationForPortfolioCommand command) {
+    public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.cancelReservation(command.getItemIdentifier(), command.getAmountOfItemsToCancel());
     }

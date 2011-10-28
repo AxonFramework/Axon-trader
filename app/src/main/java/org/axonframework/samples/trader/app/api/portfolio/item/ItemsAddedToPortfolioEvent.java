@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.portfolio;
+package org.axonframework.samples.trader.app.api.portfolio.item;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
