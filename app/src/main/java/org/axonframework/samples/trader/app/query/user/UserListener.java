@@ -15,11 +15,9 @@
 
 package org.axonframework.samples.trader.app.query.user;
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
-import org.axonframework.samples.trader.app.query.MongoHelper;
+import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,22 +26,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UserListener {
-    private MongoHelper mongo;
+    private UserRepository userRepository;
 
     @EventHandler
     public void handleUserCreated(UserCreatedEvent event) {
-        DBObject userEntry = BasicDBObjectBuilder.start()
-                .add("identifier", event.getUserIdentifier().asString())
-                .add("name", event.getName())
-                .add("username", event.getUsername())
-                .add("password", event.getPassword())
-                .get();
+        UserEntry userEntry = new UserEntry();
+        userEntry.setIdentifier(event.getUserIdentifier().asString());
+        userEntry.setName(event.getName());
+        userEntry.setUsername(event.getUsername());
+        userEntry.setPassword(event.getPassword());
 
-        mongo.users().insert(userEntry);
+        userRepository.save(userEntry);
     }
 
     @Autowired
-    public void setMongoHelper(MongoHelper mongoHelper) {
-        this.mongo = mongoHelper;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }

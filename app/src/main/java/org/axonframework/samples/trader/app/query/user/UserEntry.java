@@ -24,6 +24,7 @@ public class UserEntry implements UserAccount {
     private String identifier;
     private String name;
     private String username;
+    private String password;
 
     public String getIdentifier() {
         return identifier;
@@ -62,5 +63,9 @@ public class UserEntry implements UserAccount {
     @Override
     public String getFullName() {
         return this.name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
