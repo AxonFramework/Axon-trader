@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,15 +13,16 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.user;
+package org.axonframework.samples.trader.app.query.orderbook.repositories;
+
+import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
 /**
  * @author Jettro Coenradie
  */
-public interface UserRepository {
-    UserEntry findByUsername(String username);
-
-    List<UserEntry> obtainAllUsers();
+public interface OrderBookRepository extends PagingAndSortingRepository<OrderBookEntry, String> {
+    List<OrderBookEntry> findByCompanyIdentifier(String companyIdentifier);
 }

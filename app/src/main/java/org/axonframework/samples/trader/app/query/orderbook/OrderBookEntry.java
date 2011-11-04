@@ -15,6 +15,8 @@
 
 package org.axonframework.samples.trader.app.query.orderbook;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import java.util.List;
  * @author Jettro Coenradie
  */
 public class OrderBookEntry {
+    @Id
     private String identifier;
     private String companyIdentifier;
     private String companyName;

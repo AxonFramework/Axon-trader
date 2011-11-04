@@ -15,7 +15,7 @@
 
 package org.axonframework.samples.trader.webui.security;
 
-import org.axonframework.samples.trader.app.query.user.UserRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +37,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String showUsers(Model model) {
-        model.addAttribute("items", userRepository.obtainAllUsers());
+        model.addAttribute("items", userRepository.findAll());
         return "user/list";
     }
 }

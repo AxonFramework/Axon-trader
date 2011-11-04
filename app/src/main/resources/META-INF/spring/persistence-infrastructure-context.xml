@@ -23,6 +23,8 @@
 		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
+    <mongo:repositories base-package="org.axonframework.samples.trader.app.query.*.repositories"
+                        mongo-template-ref="mongoSpringTemplate"/>
 
     <bean id="mongoSpringTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="mongoDbFactory"/>

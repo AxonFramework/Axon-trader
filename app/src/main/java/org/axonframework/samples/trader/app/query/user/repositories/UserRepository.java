@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.tradeexecuted;
+package org.axonframework.samples.trader.app.query.user.repositories;
 
-import java.util.List;
+import org.axonframework.samples.trader.app.query.user.UserEntry;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * @author Jettro Coenradie
  */
-public interface TradeExecutedRepository {
-    List<TradeExecutedEntry> findExecutedTradesForOrderBook(String orderBookIdentifier);
+public interface UserRepository extends PagingAndSortingRepository<UserEntry, String> {
+    UserEntry findByUsername(String username);
 }

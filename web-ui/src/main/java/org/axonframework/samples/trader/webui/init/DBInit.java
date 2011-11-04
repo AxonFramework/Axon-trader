@@ -27,11 +27,10 @@ import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.CompanyRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -110,7 +109,7 @@ public class DBInit {
     }
 
     private void createOrderBooks() {
-        List<CompanyEntry> companyEntries = companyRepository.listAllCompanies();
+        Iterable<CompanyEntry> companyEntries = companyRepository.findAll();
 
         for (CompanyEntry companyEntry : companyEntries) {
             CreateOrderBookCommand command = new CreateOrderBookCommand(

@@ -21,13 +21,13 @@ import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.CompanyRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.app.query.orderbook.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
-import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedRepository;
+import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
-import org.axonframework.samples.trader.app.query.user.UserRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
 import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -72,15 +72,15 @@ public class CompanyController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(Model model) {
-        model.addAttribute("items", companyRepository.listAllCompanies());
+        model.addAttribute("items", companyRepository.findAll());
         return "company/list";
     }
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String details(@PathVariable String identifier, Model model) {
-        CompanyEntry company = companyRepository.findCompanyByIdentifier(identifier);
-        OrderBookEntry bookEntry = orderBookRepository.findByCompany(company.getIdentifier());
-        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findExecutedTradesForOrderBook(bookEntry.getIdentifier());
+        CompanyEntry company = companyRepository.findOne(identifier);
+        OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
+        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry.getIdentifier());
         model.addAttribute("company", company);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
@@ -110,12 +110,12 @@ public class CompanyController {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            String companyId = order.getCompanyId();
-            CompanyEntry companyByIdentifier = companyRepository.findCompanyByIdentifier(companyId);
+            // TODO: make this work for multiple orderbooks per company
+            OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(order.getCompanyId()).get(0);
 
             CreateSellOrderCommand command = new CreateSellOrderCommand(
                     new StringAggregateIdentifier(username.getIdentifier()),
-                    new StringAggregateIdentifier(companyByIdentifier.getOrderBookIdentifier()),
+                    new StringAggregateIdentifier(bookEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
 
@@ -131,12 +131,12 @@ public class CompanyController {
         if (!bindingResult.hasErrors()) {
             UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            String companyId = order.getCompanyId();
-            CompanyEntry companyByIdentifier = companyRepository.findCompanyByIdentifier(companyId);
+            // TODO: make this work for multiple orderbooks per company
+            OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(order.getCompanyId()).get(0);
 
             CreateBuyOrderCommand command = new CreateBuyOrderCommand(
                     new StringAggregateIdentifier(username.getIdentifier()),
-                    new StringAggregateIdentifier(companyByIdentifier.getOrderBookIdentifier()),
+                    new StringAggregateIdentifier(bookEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
             commandBus.dispatch(command, NoOpCallback.INSTANCE);
@@ -147,7 +147,7 @@ public class CompanyController {
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
-        CompanyEntry company = companyRepository.findCompanyByIdentifier(identifier);
+        CompanyEntry company = companyRepository.findOne(identifier);
         order.setCompanyId(identifier);
         order.setCompanyName(company.getName());
     }

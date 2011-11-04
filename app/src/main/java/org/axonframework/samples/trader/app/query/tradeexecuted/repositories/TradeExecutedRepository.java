@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,19 +13,16 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.orderbook;
+package org.axonframework.samples.trader.app.query.tradeexecuted.repositories;
+
+import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
 /**
  * @author Jettro Coenradie
  */
-public interface OrderBookRepository {
-    List<OrderBookEntry> listAllOrderBooks();
-
-    OrderBookEntry findByIdentifier(String aggregateIdentifier);
-
-    OrderBookEntry findByCompany(String companyIdentifier);
-
-    OrderEntry findByOrderIdentifier(String orderIdentifier);
+public interface TradeExecutedRepository extends PagingAndSortingRepository<TradeExecutedEntry, String> {
+    List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier);
 }

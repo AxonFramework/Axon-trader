@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.webui.order;
 
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.app.query.orderbook.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,13 +39,13 @@ public class OrderBookController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(Model model) {
-        model.addAttribute("items", repository.listAllOrderBooks());
+        model.addAttribute("items", repository.findAll());
         return "orderbook/list";
     }
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String getOrders(@PathVariable String identifier, Model model) {
-        OrderBookEntry orderBook = repository.findByIdentifier(identifier);
+        OrderBookEntry orderBook = repository.findOne(identifier);
         model.addAttribute("orderBook", orderBook);
         return "orderbook/orders";
     }

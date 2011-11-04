@@ -15,12 +15,14 @@
 
 package org.axonframework.samples.trader.app.query.company;
 
+import org.springframework.data.annotation.Id;
+
 /**
  * @author Jettro Coenradie
  */
 public class CompanyEntry {
+    @Id
     private String identifier;
-    private String orderBookIdentifier;
     private String name;
     private long value;
     private long amountOfShares;
@@ -30,7 +32,7 @@ public class CompanyEntry {
         return amountOfShares;
     }
 
-    void setAmountOfShares(long amountOfShares) {
+    public void setAmountOfShares(long amountOfShares) {
         this.amountOfShares = amountOfShares;
     }
 
@@ -38,7 +40,7 @@ public class CompanyEntry {
         return identifier;
     }
 
-    void setIdentifier(String identifier) {
+    public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
@@ -46,7 +48,7 @@ public class CompanyEntry {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -54,7 +56,7 @@ public class CompanyEntry {
         return tradeStarted;
     }
 
-    void setTradeStarted(boolean tradeStarted) {
+    public void setTradeStarted(boolean tradeStarted) {
         this.tradeStarted = tradeStarted;
     }
 
@@ -66,11 +68,4 @@ public class CompanyEntry {
         this.value = value;
     }
 
-    public String getOrderBookIdentifier() {
-        return orderBookIdentifier;
-    }
-
-    void setOrderBookIdentifier(String orderBookIdentifier) {
-        this.orderBookIdentifier = orderBookIdentifier;
-    }
 }

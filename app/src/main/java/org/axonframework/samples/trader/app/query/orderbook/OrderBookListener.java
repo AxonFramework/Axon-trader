@@ -15,19 +15,16 @@
 
 package org.axonframework.samples.trader.app.query.orderbook;
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.order.*;
-import org.axonframework.samples.trader.app.query.MongoHelper;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.CompanyRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
+import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Jettro Coenradie
@@ -36,54 +33,40 @@ import java.util.List;
 public class OrderBookListener {
     private static final String BUY = "Buy";
     private static final String SELL = "Sell";
-    private MongoHelper mongo;
 
+    private OrderBookRepository orderBookRepository;
     private CompanyRepository companyRepository;
+    private TradeExecutedRepository tradeExecutedRepository;
+
 
     @EventHandler
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
-        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getCompanyIdentifier().asString()).get();
-        DBObject company = mongo.companies().findOne(query);
-        company.put("orderBookIdentifier", event.getOrderBookIdentifier().toString());
-        mongo.companies().update(query, company);
-
-        DBObject orderBook = BasicDBObjectBuilder.start()
-                .add("identifier", event.getOrderBookIdentifier().toString())
-                .add("companyIdentifier", event.getCompanyIdentifier().toString())
-                .add("companyName", company.get("name")).get();
-        mongo.orderBooks().insert(orderBook);
+        CompanyEntry companyEntry = companyRepository.findOne(event.getCompanyIdentifier().asString());
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        orderBookEntry.setCompanyIdentifier(event.getCompanyIdentifier().asString());
+        orderBookEntry.setCompanyName(companyEntry.getName());
+        orderBookEntry.setIdentifier(event.getOrderBookIdentifier().asString());
+        orderBookRepository.save(orderBookEntry);
     }
 
     @EventHandler
     public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getAggregateIdentifier().asString()).get();
-        DBObject orderBook = mongo.orderBooks().findOne(query);
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().asString());
 
-        DBObject buyOrder = createPlacedOrder(event, BUY);
+        OrderEntry buyOrder = createPlacedOrder(event, BUY);
+        orderBook.buyOrders().add(buyOrder);
 
-        if (!orderBook.containsField("buyOrders")) {
-            orderBook.put("buyOrders", new ArrayList());
-        }
-
-        ((List) orderBook.get("buyOrders")).add(buyOrder);
-
-        mongo.orderBooks().update(query, orderBook);
+        orderBookRepository.save(orderBook);
     }
 
     @EventHandler
     public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        DBObject query = BasicDBObjectBuilder.start().add("identifier", event.getAggregateIdentifier().asString()).get();
-        DBObject orderBook = mongo.orderBooks().findOne(query);
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().asString());
 
-        DBObject buyOrder = createPlacedOrder(event, SELL);
+        OrderEntry sellOrder = createPlacedOrder(event, SELL);
+        orderBook.sellOrders().add(sellOrder);
 
-        if (!orderBook.containsField("sellOrders")) {
-            orderBook.put("sellOrders", new ArrayList());
-        }
-
-        ((List) orderBook.get("sellOrders")).add(buyOrder);
-
-        mongo.orderBooks().update(query, orderBook);
+        orderBookRepository.save(orderBook);
     }
 
     @EventHandler
@@ -92,51 +75,50 @@ public class OrderBookListener {
         AggregateIdentifier sellOrderId = event.getSellOrderId();
 
         AggregateIdentifier orderBookIdentifier = event.getOrderBookIdentifier();
-        CompanyEntry company = companyRepository.findCompanyByOrderBookIdentifier(orderBookIdentifier.asString());
-        DBObject tradeExecutedMongo = BasicDBObjectBuilder.start()
-                .add("count", event.getTradeCount())
-                .add("price", event.getTradePrice())
-                .add("name", company.getName())
-                .add("orderBookIdentifier", orderBookIdentifier.asString())
-                .get();
+        OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.asString());
 
-        mongo.tradesExecuted().insert(tradeExecutedMongo);
+        TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
+        tradeExecutedEntry.setCompanyName(orderBookEntry.getCompanyName());
+        tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getIdentifier());
+        tradeExecutedEntry.setTradeCount(event.getTradeCount());
+        tradeExecutedEntry.setTradePrice(event.getTradePrice());
+
+        tradeExecutedRepository.save(tradeExecutedEntry);
 
         // TODO find a better solution or maybe pull them apart
-        DBObject query = BasicDBObjectBuilder.start()
-                .add("identifier", event.getAggregateIdentifier().asString())
-                .get();
-        DBObject orderBook = mongo.orderBooks().findOne(query);
-        List buyOrders = (List) orderBook.get("buyOrders");
-        for (Object orderObj : buyOrders) {
-            DBObject order = (DBObject) orderObj;
-            if (((String) order.get("identifier")).equals(buyOrderId.asString())) {
-                long itemsRemaining = (Long) order.get("itemsRemaining");
-                order.put("itemsRemaining", itemsRemaining - event.getTradeCount());
+        for (OrderEntry order : orderBookEntry.buyOrders()) {
+            if (order.getIdentifier().equals(buyOrderId.asString())) {
+                long itemsRemaining = order.getItemsRemaining();
+                order.setItemsRemaining(itemsRemaining - event.getTradeCount());
                 break;
             }
         }
 
-        List sellOrders = (List) orderBook.get("sellOrders");
-        for (Object orderObj : sellOrders) {
-            DBObject order = (DBObject) orderObj;
-            if (((String) order.get("identifier")).equals(sellOrderId.asString())) {
-                long itemsRemaining = (Long) order.get("itemsRemaining");
-                order.put("itemsRemaining", itemsRemaining - event.getTradeCount());
+        for (OrderEntry order : orderBookEntry.sellOrders()) {
+            if (order.getIdentifier().equals(sellOrderId.asString())) {
+                long itemsRemaining = order.getItemsRemaining();
+                order.setItemsRemaining(itemsRemaining - event.getTradeCount());
                 break;
             }
         }
-        mongo.orderBooks().update(query, orderBook);
+        orderBookRepository.save(orderBookEntry);
     }
 
-    private DBObject createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
-        return BasicDBObjectBuilder.start()
-                .add("identifier", event.getOrderId().asString())
-                .add("itemPrice", event.getItemPrice())
-                .add("itemsRemaining", event.getTradeCount())
-                .add("tradeCount", event.getTradeCount())
-                .add("userId", event.getUserId().asString())
-                .add("type", type).get();
+    private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
+        OrderEntry entry = new OrderEntry();
+        entry.setIdentifier(event.getOrderId().asString());
+        entry.setItemsRemaining(event.getTradeCount());
+        entry.setTradeCount(event.getTradeCount());
+        entry.setUserId(event.getUserId().asString());
+        entry.setType(type);
+        entry.setItemPrice(event.getItemPrice());
+
+        return entry;
+    }
+
+    @Autowired
+    public void setOrderBookRepository(OrderBookRepository orderBookRepository) {
+        this.orderBookRepository = orderBookRepository;
     }
 
     @Autowired
@@ -145,7 +127,7 @@ public class OrderBookListener {
     }
 
     @Autowired
-    public void setMongo(MongoHelper mongo) {
-        this.mongo = mongo;
+    public void setTradeExecutedRepository(TradeExecutedRepository tradeExecutedRepository) {
+        this.tradeExecutedRepository = tradeExecutedRepository;
     }
 }

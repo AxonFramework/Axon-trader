@@ -35,6 +35,10 @@ public abstract class AbstractOrderPlacedEvent extends DomainEvent {
         this.userId = userId;
     }
 
+    public AggregateIdentifier orderBookIdentifier() {
+        return getAggregateIdentifier();
+    }
+
     public AggregateIdentifier getOrderId() {
         return orderId;
     }

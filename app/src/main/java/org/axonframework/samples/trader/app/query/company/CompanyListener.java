@@ -15,11 +15,9 @@
 
 package org.axonframework.samples.trader.app.query.company;
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.company.CompanyCreatedEvent;
-import org.axonframework.samples.trader.app.query.MongoHelper;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,23 +26,23 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CompanyListener {
-    private MongoHelper mongo;
 
+    private CompanyRepository companyRepository;
 
     @EventHandler
     public void handleCompanyCreatedEvent(CompanyCreatedEvent event) {
-        DBObject companyEntry = BasicDBObjectBuilder.start()
-                .add("identifier", event.getCompanyIdentifier().asString())
-                .add("name", event.getCompanyName())
-                .add("value", event.getCompanyValue())
-                .add("amountOfShares", event.getAmountOfShares())
-                .add("tradeStarted", true)
-                .get();
-        mongo.companies().insert(companyEntry);
+        CompanyEntry companyEntry = new CompanyEntry();
+        companyEntry.setIdentifier(event.getCompanyIdentifier().asString());
+        companyEntry.setValue(event.getCompanyValue());
+        companyEntry.setAmountOfShares(event.getAmountOfShares());
+        companyEntry.setTradeStarted(true);
+        companyEntry.setName(event.getCompanyName());
+
+        companyRepository.save(companyEntry);
     }
 
     @Autowired
-    public void setMongoHelper(MongoHelper mongoHelper) {
-        this.mongo = mongoHelper;
+    public void setCompanyRepository(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 }

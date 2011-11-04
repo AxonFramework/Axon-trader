@@ -1,5 +1,5 @@
 This is a sample application to demonstrate the possibilities of the Axon framework in a high load environment. We
-have chosen to create a Trader application. All you need to run it is java, mongodb and maven or gradle.
+have chosen to create a Trader application. All you need to run it is java, mongodb and maven.
 
 Initial setup
 -------------
@@ -26,11 +26,6 @@ Running the sample
 > cd web-ui
 > mvn jetty:run-war
 - Browse to : http://localhost:8080/
-
-* gradle
-- Make sure you have your mongo instance running
-- Step into the main folder of the project
-> gradle jettyRun
 
 Advanced configuration
 ----------------------
