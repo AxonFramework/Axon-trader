@@ -20,11 +20,11 @@ import org.axonframework.domain.AggregateIdentifier;
 /**
  * @author Jettro Coenradie
  */
-public class MakePaymentFromPortfolioCommand {
+public class WithdrawMoneyFromPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private long amountToPayInCents;
 
-    public MakePaymentFromPortfolioCommand(AggregateIdentifier portfolioIdentifier, long amountToPayInCents) {
+    public WithdrawMoneyFromPortfolioCommand(AggregateIdentifier portfolioIdentifier, long amountToPayInCents) {
 
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountToPayInCents = amountToPayInCents;

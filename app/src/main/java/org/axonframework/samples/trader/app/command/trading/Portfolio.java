@@ -77,11 +77,11 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void addMoney(long moneyToAddInCents) {
-        apply(new MoneyAddedToPortfolioEvent(moneyToAddInCents));
+        apply(new MoneyDepositedToPortfolioEvent(moneyToAddInCents));
     }
 
     public void makePayment(long amountToPayInCents) {
-        apply(new PaymentMadeFromPortfolioEvent(amountToPayInCents));
+        apply(new MoneyWithdrawnFromPortfolioEvent(amountToPayInCents));
     }
 
     public void reserveMoney(long amountToReserve) {
@@ -147,12 +147,12 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void onMoneyAddedToPortfolio(MoneyAddedToPortfolioEvent event) {
+    public void onMoneyAddedToPortfolio(MoneyDepositedToPortfolioEvent event) {
         amountOfMoney += event.getMoneyAddedInCents();
     }
 
     @EventHandler
-    public void onPaymentMadeFromPortfolio(PaymentMadeFromPortfolioEvent event) {
+    public void onPaymentMadeFromPortfolio(MoneyWithdrawnFromPortfolioEvent event) {
         amountOfMoney -= event.getAmountPaidInCents();
     }
 

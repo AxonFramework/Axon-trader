@@ -24,7 +24,7 @@ import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
-import org.axonframework.samples.trader.app.api.portfolio.money.AddMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.app.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
 import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
@@ -97,8 +97,8 @@ public class DBInit {
     }
 
     public void addMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
-        AddMoneyToPortfolioCommand command =
-                new AddMoneyToPortfolioCommand(new UUIDAggregateIdentifier(portfolioIdentifier), amountOfMoney);
+        DepositMoneyToPortfolioCommand command =
+                new DepositMoneyToPortfolioCommand(new UUIDAggregateIdentifier(portfolioIdentifier), amountOfMoney);
         commandBus.dispatch(command);
     }
 

@@ -67,13 +67,13 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleAddMoneyToPortfolioCommand(AddMoneyToPortfolioCommand command) {
+    public void handleAddMoneyToPortfolioCommand(DepositMoneyToPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.addMoney(command.getMoneyToAddInCents());
     }
 
     @CommandHandler
-    public void handleMakePaymentFromPortfolioCommand(MakePaymentFromPortfolioCommand command) {
+    public void handleMakePaymentFromPortfolioCommand(WithdrawMoneyFromPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.makePayment(command.getAmountToPayInCents());
     }

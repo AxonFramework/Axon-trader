@@ -17,9 +17,9 @@ package org.axonframework.samples.trader.app.query.portfolio;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.MoneyAddedToPortfolioEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.MoneyDepositedToPortfolioEvent;
 import org.axonframework.samples.trader.app.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.PaymentMadeFromPortfolioEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
 import org.axonframework.samples.trader.app.query.portfolio.repositories.PortfolioQueryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +50,14 @@ public class PortfolioListener {
     }
 
     @EventHandler
-    public void handleEvent(MoneyAddedToPortfolioEvent event) {
+    public void handleEvent(MoneyDepositedToPortfolioEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() + event.getMoneyAddedInCents());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
-    public void handleEvent(PaymentMadeFromPortfolioEvent event) {
+    public void handleEvent(MoneyWithdrawnFromPortfolioEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() - event.getAmountPaidInCents());
         portfolioRepository.save(portfolioEntry);

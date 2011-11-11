@@ -18,13 +18,15 @@ package org.axonframework.samples.trader.app.api.portfolio.money;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * Adding money to your Portfolio through a deposit
+ *
  * @author Jettro Coenradie
  */
-public class AddMoneyToPortfolioCommand {
+public class DepositMoneyToPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private long moneyToAddInCents;
 
-    public AddMoneyToPortfolioCommand(AggregateIdentifier portfolioIdentifier, long moneyToAddInCents) {
+    public DepositMoneyToPortfolioCommand(AggregateIdentifier portfolioIdentifier, long moneyToAddInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.moneyToAddInCents = moneyToAddInCents;
     }

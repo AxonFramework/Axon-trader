@@ -21,18 +21,19 @@ import org.axonframework.domain.DomainEvent;
 /**
  * @author Jettro Coenradie
  */
-public class MoneyAddedToPortfolioEvent extends DomainEvent {
-    private long moneyAddedInCents;
+public class MoneyWithdrawnFromPortfolioEvent extends DomainEvent {
+    private long amountPaidInCents;
 
-    public MoneyAddedToPortfolioEvent(long moneyAddedInCents) {
-        this.moneyAddedInCents = moneyAddedInCents;
+    public MoneyWithdrawnFromPortfolioEvent(long amountPaidInCents) {
+
+        this.amountPaidInCents = amountPaidInCents;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
         return this.getAggregateIdentifier();
     }
 
-    public long getMoneyAddedInCents() {
-        return moneyAddedInCents;
+    public long getAmountPaidInCents() {
+        return amountPaidInCents;
     }
 }

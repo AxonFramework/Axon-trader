@@ -126,38 +126,38 @@ public class PortfolioCommandHandlerTest {
 
     /* Money related test methods */
     @Test
-    public void testAddingMoneyToThePortfolio() {
+    public void testDepositingMoneyToThePortfolio() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AddMoneyToPortfolioCommand command = new AddMoneyToPortfolioCommand(portfolioIdentifier, 2000l);
+        DepositMoneyToPortfolioCommand command = new DepositMoneyToPortfolioCommand(portfolioIdentifier, 2000l);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
                 .when(command)
-                .expectEvents(new MoneyAddedToPortfolioEvent(2000l));
+                .expectEvents(new MoneyDepositedToPortfolioEvent(2000l));
 
     }
 
     @Test
-    public void testMakingPaymentFromPortfolio() {
+    public void testWithdrawingMoneyFromPortfolio() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        MakePaymentFromPortfolioCommand command = new MakePaymentFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(400))
+        WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
                 .when(command)
-                .expectEvents(new PaymentMadeFromPortfolioEvent(300l));
+                .expectEvents(new MoneyWithdrawnFromPortfolioEvent(300l));
     }
 
     @Test
-    public void testMakingPaymentFromPortfolio_withoutEnoughMoney() {
+    public void testWithdrawingMoneyFromPortfolio_withoutEnoughMoney() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        MakePaymentFromPortfolioCommand command = new MakePaymentFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(200))
+        WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(200))
                 .when(command)
-                .expectEvents(new PaymentMadeFromPortfolioEvent(300l));
+                .expectEvents(new MoneyWithdrawnFromPortfolioEvent(300l));
     }
 
     @Test
     public void testMakingMoneyReservation() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
                 .when(command)
                 .expectEvents(new MoneyReservedFromPortfolioEvent(300l));
     }
@@ -166,7 +166,7 @@ public class PortfolioCommandHandlerTest {
     public void testMakingMoneyReservation_withoutEnoughMoney() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier, 600l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
                 .when(command)
                 .expectEvents(new NotEnoughMoneyInPortfolioToMakeReservationEvent(600));
     }
@@ -175,7 +175,7 @@ public class PortfolioCommandHandlerTest {
     public void testCancelMoneyReservation() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
         CancelMoneyReservationFromPortfolioCommand command = new CancelMoneyReservationFromPortfolioCommand(portfolioIdentifier, 200l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
                 .when(command)
                 .expectEvents(new MoneyReservationCancelledFromPortfolioEvent(200l));
     }
@@ -184,7 +184,7 @@ public class PortfolioCommandHandlerTest {
     public void testConfirmMoneyReservation() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
         ConfirmMoneyReservationFromPortfolionCommand command = new ConfirmMoneyReservationFromPortfolionCommand(portfolioIdentifier, 200l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyAddedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
                 .when(command)
                 .expectEvents(new MoneyReservationConfirmedFromPortfolioEvent(200l));
     }
