@@ -22,10 +22,10 @@ import org.axonframework.samples.trader.app.api.order.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.app.api.order.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.app.api.order.TradeExecutedEvent;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
-import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
-import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedRepository;
+import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.test.utils.DomainEventUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,12 +47,12 @@ public class OrderBookListenerIntegrationTest {
     private OrderBookListener orderBookListener;
 
     @Autowired
-    private OrderBookRepository orderBookRepository;
+    private OrderBookQueryRepository orderBookRepository;
 
     @Autowired
-    private TradeExecutedRepository tradeExecutedRepository;
+    private TradeExecutedQueryRepository tradeExecutedRepository;
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyQueryRepository companyRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;

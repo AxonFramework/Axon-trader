@@ -20,7 +20,7 @@ import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.api.user.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
-import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -36,11 +36,11 @@ import static org.mockito.Mockito.when;
 public class UserCommandHandlerTest {
     private FixtureConfiguration fixture;
 
-    private UserRepository userQueryRepository;
+    private UserQueryRepository userQueryRepository;
 
     @Before
     public void setUp() {
-        userQueryRepository = mock(UserRepository.class);
+        userQueryRepository = mock(UserQueryRepository.class);
 
         fixture = Fixtures.newGivenWhenThenFixture();
         UserCommandHandler commandHandler = new UserCommandHandler();

@@ -15,7 +15,7 @@
 
 package org.axonframework.samples.trader.webui.security;
 
-import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,10 +28,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private UserRepository userRepository;
+    private UserQueryRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserQueryRepository userRepository) {
         this.userRepository = userRepository;
     }
 

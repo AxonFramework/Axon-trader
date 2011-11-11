@@ -40,6 +40,7 @@ public class CloudApplicationContextInitializer implements ApplicationContextIni
             logger.info("Cloud API: {}", env.getCloudApiUri());
             applicationContext.getEnvironment().setActiveProfiles("cloud");
         } else {
+            logger.info("Activating the default profile within the application context.");
             applicationContext.getEnvironment().setActiveProfiles("default");
         }
     }

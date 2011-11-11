@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.user.repositories;
+package org.axonframework.samples.trader.app.query.portfolio.repositories;
 
-import org.axonframework.samples.trader.app.query.user.UserEntry;
+import org.axonframework.samples.trader.app.query.portfolio.PortfolioEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * @author Jettro Coenradie
  */
-public interface UserRepository extends PagingAndSortingRepository<UserEntry, String> {
-    UserEntry findByUsername(String username);
+public interface PortfolioQueryRepository extends PagingAndSortingRepository<PortfolioEntry, String> {
+    PortfolioEntry findByUserIdentifier(String userIdentifier);
 }

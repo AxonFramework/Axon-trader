@@ -23,6 +23,6 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public interface OrderBookRepository extends PagingAndSortingRepository<OrderBookEntry, String> {
+public interface OrderBookQueryRepository extends PagingAndSortingRepository<OrderBookEntry, String> {
     List<OrderBookEntry> findByCompanyIdentifier(String companyIdentifier);
 }

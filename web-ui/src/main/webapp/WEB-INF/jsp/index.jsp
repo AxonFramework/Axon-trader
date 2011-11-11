@@ -25,11 +25,11 @@
         <h1>The trader</h1>
 
         <p>Welcome to the proof of concept of Axon Trader. This sample is created to showcase axon capabilities. Next to
-            that
-            we wanted to create a cool app with a nice front-end that we can really use as a showcase.</p>
+            that we wanted to create a cool app with a nice front-end that we can really use as a showcase.</p>
 
+        <p>If you are logged in, you can go to your dashboard.</p>
 
-        <p><a class="btn primary large" href="${ctx}/company">Learn more &raquo;</a></p>
+        <p><a class="btn primary large" href="${ctx}/dashboard">Dashboard &raquo;</a></p>
     </div>
 </content>
 

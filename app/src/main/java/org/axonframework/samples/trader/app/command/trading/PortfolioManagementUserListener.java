@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,11 +13,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.user;
+package org.axonframework.samples.trader.app.command.trading;
 
+import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
-import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,22 +28,19 @@ import org.springframework.stereotype.Component;
  * @author Jettro Coenradie
  */
 @Component
-public class UserListener {
-    private UserQueryRepository userRepository;
+public class PortfolioManagementUserListener {
+    private final static Logger logger = LoggerFactory.getLogger(PortfolioManagementUserListener.class);
+    private CommandBus commandBus;
 
     @EventHandler
-    public void handleUserCreated(UserCreatedEvent event) {
-        UserEntry userEntry = new UserEntry();
-        userEntry.setIdentifier(event.getUserIdentifier().asString());
-        userEntry.setName(event.getName());
-        userEntry.setUsername(event.getUsername());
-        userEntry.setPassword(event.getPassword());
-
-        userRepository.save(userEntry);
+    public void createNewPortfolioWhenUserIsCreated(UserCreatedEvent event) {
+        logger.debug("About to dispatch a new command to create a Portfolio for the new user {}", event.getUserIdentifier());
+        CreatePortfolioCommand command = new CreatePortfolioCommand(event.getUserIdentifier());
+        commandBus.dispatch(command);
     }
 
     @Autowired
-    public void setUserRepository(UserQueryRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setCommandBus(CommandBus commandBus) {
+        this.commandBus = commandBus;
     }
 }

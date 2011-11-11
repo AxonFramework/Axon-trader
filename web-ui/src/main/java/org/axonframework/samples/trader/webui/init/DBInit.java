@@ -20,14 +20,17 @@ import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.StringAggregateIdentifier;
+import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.app.api.portfolio.money.AddMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.OrderEntry;
+import org.axonframework.samples.trader.app.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +47,14 @@ import java.util.Set;
 public class DBInit {
 
     private CommandBus commandBus;
-    private CompanyRepository companyRepository;
+    private CompanyQueryRepository companyRepository;
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
     private MongoEventStore eventStore;
     private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
 
     @Autowired
     public DBInit(CommandBus commandBus,
-                  CompanyRepository companyRepository,
+                  CompanyQueryRepository companyRepository,
                   org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
                   MongoEventStore eventStore,
                   org.springframework.data.mongodb.core.MongoTemplate mongoTemplate) {
@@ -80,6 +83,8 @@ public class DBInit {
         mongoTemplate.dropCollection(OrderEntry.class);
         mongoTemplate.dropCollection(CompanyEntry.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
+        mongoTemplate.dropCollection(PortfolioEntry.class);
+//        mongoTemplate.dropCollection(TransactionEntry.class);
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
@@ -90,6 +95,13 @@ public class DBInit {
         createOrderBooks();
         eventStore.ensureIndexes();
     }
+
+    public void addMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
+        AddMoneyToPortfolioCommand command =
+                new AddMoneyToPortfolioCommand(new UUIDAggregateIdentifier(portfolioIdentifier), amountOfMoney);
+        commandBus.dispatch(command);
+    }
+
 
     private void createCompanies(AggregateIdentifier userIdentifier) {
         CreateCompanyCommand command = new CreateCompanyCommand(userIdentifier, "Philips", 1000, 10000);

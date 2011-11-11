@@ -21,13 +21,13 @@ import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
-import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedRepository;
+import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
-import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
 import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -51,18 +51,18 @@ import java.util.List;
 @RequestMapping("/company")
 public class CompanyController {
 
-    private CompanyRepository companyRepository;
-    private OrderBookRepository orderBookRepository;
-    private UserRepository userRepository;
-    private TradeExecutedRepository tradeExecutedRepository;
+    private CompanyQueryRepository companyRepository;
+    private OrderBookQueryRepository orderBookRepository;
+    private UserQueryRepository userRepository;
+    private TradeExecutedQueryRepository tradeExecutedRepository;
     private CommandBus commandBus;
 
     @Autowired
-    public CompanyController(CompanyRepository companyRepository,
+    public CompanyController(CompanyQueryRepository companyRepository,
                              CommandBus commandBus,
-                             UserRepository userRepository,
-                             OrderBookRepository orderBookRepository,
-                             TradeExecutedRepository tradeExecutedRepository) {
+                             UserQueryRepository userRepository,
+                             OrderBookQueryRepository orderBookRepository,
+                             TradeExecutedQueryRepository tradeExecutedRepository) {
         this.companyRepository = companyRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;

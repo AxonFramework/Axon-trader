@@ -23,7 +23,7 @@ import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.api.user.UserAccount;
-import org.axonframework.samples.trader.app.query.user.repositories.UserRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class UserCommandHandler {
     private Repository<User> repository;
 
-    private UserRepository userQueryRepository;
+    private UserQueryRepository userQueryRepository;
 
     @CommandHandler
     public AggregateIdentifier handleCreateUser(CreateUserCommand command) {
@@ -68,7 +68,7 @@ public class UserCommandHandler {
     }
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public void setUserRepository(UserQueryRepository userRepository) {
         this.userQueryRepository = userRepository;
     }
 }

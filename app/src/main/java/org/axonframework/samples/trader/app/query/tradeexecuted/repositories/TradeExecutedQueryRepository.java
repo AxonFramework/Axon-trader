@@ -13,14 +13,16 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.company.repositories;
+package org.axonframework.samples.trader.app.query.tradeexecuted.repositories;
 
-import org.axonframework.samples.trader.app.query.company.CompanyEntry;
+import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
+import java.util.List;
 
 /**
  * @author Jettro Coenradie
  */
-public interface CompanyRepository extends PagingAndSortingRepository<CompanyEntry, String> {
-
+public interface TradeExecutedQueryRepository extends PagingAndSortingRepository<TradeExecutedEntry, String> {
+    List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier);
 }

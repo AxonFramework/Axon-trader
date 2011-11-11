@@ -84,4 +84,13 @@ public class MongoController {
         model.addAttribute("info", "Mongo database is initialized.");
         return "data/info";
     }
+
+    @RequestMapping(value = "/portfolio/money/{identifier}/{amount}")
+    public String addMoneyToPortfolio(@PathVariable("identifier") String portfolioIdentifier,
+                                      @PathVariable("amount") long amount,
+                                      Model model) {
+        dbInit.addMoneyToPortfolio(portfolioIdentifier, amount);
+        model.addAttribute("info", "Added money to the portfolio.");
+        return "data/info";
+    }
 }

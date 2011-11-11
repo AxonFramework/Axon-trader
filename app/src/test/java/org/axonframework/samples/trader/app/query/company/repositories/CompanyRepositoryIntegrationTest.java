@@ -30,7 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
 public class CompanyRepositoryIntegrationTest {
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyQueryRepository companyRepository;
 
     @Test
     public void storeCompanyInRepository() {

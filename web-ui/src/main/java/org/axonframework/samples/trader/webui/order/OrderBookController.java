@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.webui.order;
 
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/orderbook")
 public class OrderBookController {
-    private OrderBookRepository repository;
+    private OrderBookQueryRepository repository;
 
     @Autowired
-    public OrderBookController(OrderBookRepository repository) {
+    public OrderBookController(OrderBookQueryRepository repository) {
         this.repository = repository;
     }
 

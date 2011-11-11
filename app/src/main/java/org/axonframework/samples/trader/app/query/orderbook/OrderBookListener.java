@@ -19,10 +19,10 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.order.*;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
-import org.axonframework.samples.trader.app.query.company.repositories.CompanyRepository;
-import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookRepository;
+import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
-import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedRepository;
+import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,9 +34,9 @@ public class OrderBookListener {
     private static final String BUY = "Buy";
     private static final String SELL = "Sell";
 
-    private OrderBookRepository orderBookRepository;
-    private CompanyRepository companyRepository;
-    private TradeExecutedRepository tradeExecutedRepository;
+    private OrderBookQueryRepository orderBookRepository;
+    private CompanyQueryRepository companyRepository;
+    private TradeExecutedQueryRepository tradeExecutedRepository;
 
 
     @EventHandler
@@ -117,17 +117,17 @@ public class OrderBookListener {
     }
 
     @Autowired
-    public void setOrderBookRepository(OrderBookRepository orderBookRepository) {
+    public void setOrderBookRepository(OrderBookQueryRepository orderBookRepository) {
         this.orderBookRepository = orderBookRepository;
     }
 
     @Autowired
-    public void setCompanyRepository(CompanyRepository companyRepository) {
+    public void setCompanyRepository(CompanyQueryRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 
     @Autowired
-    public void setTradeExecutedRepository(TradeExecutedRepository tradeExecutedRepository) {
+    public void setTradeExecutedRepository(TradeExecutedQueryRepository tradeExecutedRepository) {
         this.tradeExecutedRepository = tradeExecutedRepository;
     }
 }
