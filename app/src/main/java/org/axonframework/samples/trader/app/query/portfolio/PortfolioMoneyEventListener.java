@@ -17,9 +17,7 @@ package org.axonframework.samples.trader.app.query.portfolio;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.MoneyDepositedToPortfolioEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
+import org.axonframework.samples.trader.app.api.portfolio.money.*;
 import org.axonframework.samples.trader.app.query.portfolio.repositories.PortfolioQueryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +28,8 @@ import org.springframework.stereotype.Component;
  * @author Jettro Coenradie
  */
 @Component
-public class PortfolioListener {
-    private final static Logger logger = LoggerFactory.getLogger(PortfolioListener.class);
+public class PortfolioMoneyEventListener {
+    private final static Logger logger = LoggerFactory.getLogger(PortfolioMoneyEventListener.class);
 
     private PortfolioQueryRepository portfolioRepository;
 
@@ -67,11 +65,32 @@ public class PortfolioListener {
     public void handleEvent(MoneyReservedFromPortfolioEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney() + event.getAmountToReserve());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() - event.getAmountToReserve());
         portfolioRepository.save(portfolioEntry);
     }
 
+    @EventHandler
+    public void handleEvent(MoneyReservationCancelledFromPortfolioEvent event) {
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney() - event.getAmountOfMoneyToCancel());
+        portfolioRepository.save(portfolioEntry);
+    }
 
+    @EventHandler
+    public void handleEvent(MoneyReservationConfirmedFromPortfolioEvent event) {
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        long reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
+        long amountOfMoneyConfirmed = event.getAmountOfMoneyConfirmedInCents();
+        if (amountOfMoneyConfirmed < reservedAmountOfMoney) {
+            portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney - amountOfMoneyConfirmed);
+        } else {
+            portfolioEntry.setReservedAmountOfMoney(0);
+        }
+
+        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() - amountOfMoneyConfirmed);
+        portfolioRepository.save(portfolioEntry);
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setPortfolioRepository(PortfolioQueryRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;

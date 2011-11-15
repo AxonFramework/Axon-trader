@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,38 +13,23 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.query.orderbook;
-
-import org.springframework.data.annotation.Id;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.axonframework.samples.trader.app.query.portfolio;
 
 /**
  * @author Jettro Coenradie
  */
-public class OrderBookEntry {
-    @Id
+public class ItemEntry {
     private String identifier;
     private String companyIdentifier;
     private String companyName;
-    private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
-    private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
+    private int amount;
 
-    public List<OrderEntry> sellOrders() {
-        return sellOrders;
+    public int getAmount() {
+        return amount;
     }
 
-    public List<OrderEntry> buyOrders() {
-        return buyOrders;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public String getCompanyIdentifier() {
@@ -63,19 +48,11 @@ public class OrderBookEntry {
         this.companyName = companyName;
     }
 
-    public List<OrderEntry> getBuyOrders() {
-        return buyOrders;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setBuyOrders(List<OrderEntry> buyOrders) {
-        this.buyOrders = buyOrders;
-    }
-
-    public List<OrderEntry> getSellOrders() {
-        return sellOrders;
-    }
-
-    public void setSellOrders(List<OrderEntry> sellOrders) {
-        this.sellOrders = sellOrders;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

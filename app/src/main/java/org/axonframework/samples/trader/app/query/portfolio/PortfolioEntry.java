@@ -17,6 +17,9 @@ package org.axonframework.samples.trader.app.query.portfolio;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Jettro Coenradie
  */
@@ -27,6 +30,39 @@ public class PortfolioEntry {
     private long amountOfMoney;
     private long reservedAmountOfMoney;
 
+    private Map<String, ItemEntry> itemsInPossession = new HashMap<String, ItemEntry>();
+    private Map<String, ItemEntry> itemsReserved = new HashMap<String, ItemEntry>();
+
+    /*-------------------------------------------------------------------------------------------*/
+    /* utility functions                                                                         */
+    /*-------------------------------------------------------------------------------------------*/
+    public ItemEntry findReservedItemByIdentifier(String identifier) {
+        return itemsReserved.get(identifier);
+    }
+
+    public ItemEntry findItemInPossession(String identifier) {
+        return itemsInPossession.get(identifier);
+    }
+
+    public void addReservedItem(ItemEntry itemEntry) {
+        handleAdd(itemsReserved, itemEntry);
+    }
+
+    public void addItemInPossession(ItemEntry itemEntry) {
+        handleAdd(itemsInPossession, itemEntry);
+    }
+
+    public void removeReservedItem(String itemIdentifier, int amount) {
+        handleRemoveItem(itemsReserved, itemIdentifier, amount);
+    }
+
+    public void removeItemsInPossession(String itemIdentifier, int amount) {
+        handleRemoveItem(itemsInPossession, itemIdentifier, amount);
+    }
+
+    /*-------------------------------------------------------------------------------------------*/
+    /* Getters and setters                                                                       */
+    /*-------------------------------------------------------------------------------------------*/
     public String getUserIdentifier() {
         return userIdentifier;
     }
@@ -57,5 +93,43 @@ public class PortfolioEntry {
 
     public void setReservedAmountOfMoney(long reservedAmountOfMoney) {
         this.reservedAmountOfMoney = reservedAmountOfMoney;
+    }
+
+    public Map<String, ItemEntry> getItemsInPossession() {
+        return itemsInPossession;
+    }
+
+    public void setItemsInPossession(Map<String, ItemEntry> itemsInPossession) {
+        this.itemsInPossession = itemsInPossession;
+    }
+
+    public Map<String, ItemEntry> getItemsReserved() {
+        return itemsReserved;
+    }
+
+    public void setItemsReserved(Map<String, ItemEntry> itemsReserved) {
+        this.itemsReserved = itemsReserved;
+    }
+
+    /*-------------------------------------------------------------------------------------------*/
+    /* Private helper methods                                                                    */
+    /*-------------------------------------------------------------------------------------------*/
+    private void handleAdd(Map<String, ItemEntry> items, ItemEntry itemEntry) {
+        if (items.containsKey(itemEntry.getIdentifier())) {
+            ItemEntry foundEntry = items.get(itemEntry.getIdentifier());
+            foundEntry.setAmount(foundEntry.getAmount() + itemEntry.getAmount());
+        } else {
+            items.put(itemEntry.getIdentifier(), itemEntry);
+        }
+    }
+
+    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, int amount) {
+        if (items.containsKey(itemIdentifier)) {
+            ItemEntry foundEntry = items.get(itemIdentifier);
+            foundEntry.setAmount(foundEntry.getAmount() - amount);
+            if (foundEntry.getAmount() <= 0) {
+                items.remove(foundEntry.getIdentifier());
+            }
+        }
     }
 }

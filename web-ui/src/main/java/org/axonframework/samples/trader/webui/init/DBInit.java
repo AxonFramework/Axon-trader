@@ -96,7 +96,7 @@ public class DBInit {
         eventStore.ensureIndexes();
     }
 
-    public void addMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
+    public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
         DepositMoneyToPortfolioCommand command =
                 new DepositMoneyToPortfolioCommand(new UUIDAggregateIdentifier(portfolioIdentifier), amountOfMoney);
         commandBus.dispatch(command);
