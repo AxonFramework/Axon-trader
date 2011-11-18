@@ -20,7 +20,7 @@ import org.axonframework.domain.AggregateIdentifier;
 /**
  * @author Jettro Coenradie
  */
-public class AbstractStartTransactionCommand {
+public abstract class AbstractStartTransactionCommand {
     private AggregateIdentifier orderbookIdentifier;
     private AggregateIdentifier portfolioIdentifier;
     private long tradeCount;

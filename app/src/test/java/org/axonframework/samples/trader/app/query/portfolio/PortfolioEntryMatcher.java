@@ -23,7 +23,7 @@ import org.mockito.ArgumentMatcher;
  */
 public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
     private String problem;
-    private final int itemsInPossession;
+    private int itemsInPossession;
     private String itemIdentifier;
     private int amountOfItemInPossession;
     private int itemsInReservation;

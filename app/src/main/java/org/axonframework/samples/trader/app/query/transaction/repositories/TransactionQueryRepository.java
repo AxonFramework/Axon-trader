@@ -13,11 +13,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.transaction;
+package org.axonframework.samples.trader.app.query.transaction.repositories;
+
+import org.axonframework.samples.trader.app.query.transaction.TransactionEntry;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
-
+public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String> {
+    TransactionEntry findByUserIdentifier(String userIdentifier);
 }

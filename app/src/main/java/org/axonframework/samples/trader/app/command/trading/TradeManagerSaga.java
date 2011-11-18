@@ -13,11 +13,13 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.transaction;
+package org.axonframework.samples.trader.app.command.trading;
+
+import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
 
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
+public class TradeManagerSaga extends AbstractAnnotatedSaga {
 
 }

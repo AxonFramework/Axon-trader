@@ -45,6 +45,10 @@ public abstract class AbstractTransactionStartedEvent extends DomainEvent {
         return portfolioIdentifier;
     }
 
+    public AggregateIdentifier getTransactionIdentifier() {
+        return this.getAggregateIdentifier();
+    }
+
     public long getPricePerItem() {
         return pricePerItem;
     }

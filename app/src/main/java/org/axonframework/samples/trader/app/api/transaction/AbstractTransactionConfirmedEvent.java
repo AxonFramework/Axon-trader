@@ -15,9 +15,14 @@
 
 package org.axonframework.samples.trader.app.api.transaction;
 
+import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.DomainEvent;
+
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
-
+public abstract class AbstractTransactionConfirmedEvent extends DomainEvent {
+    public AggregateIdentifier getTransactionIdentifier() {
+        return super.getAggregateIdentifier();
+    }
 }

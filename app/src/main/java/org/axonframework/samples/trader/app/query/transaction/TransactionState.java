@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.transaction;
+package org.axonframework.samples.trader.app.query.transaction;
 
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
-
+public enum TransactionState {
+    STARTED, CONFIRMED, CANCELLED, EXECUTED
 }
