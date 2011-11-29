@@ -26,6 +26,6 @@ public class BuyTransactionStartedEvent extends AbstractTransactionStartedEvent 
                                       AggregateIdentifier portfolioIdentifier,
                                       long totalItems,
                                       long pricePerItem) {
-        super(orderbookIdentifier, portfolioIdentifier, totalItems, pricePerItem);
+        super(orderbookIdentifier, portfolioIdentifier, (int) totalItems, pricePerItem);
     }
 }

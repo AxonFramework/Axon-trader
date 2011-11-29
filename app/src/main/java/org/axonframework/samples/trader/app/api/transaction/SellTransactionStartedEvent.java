@@ -22,6 +22,6 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class SellTransactionStartedEvent extends AbstractTransactionStartedEvent {
     public SellTransactionStartedEvent(AggregateIdentifier orderbookIdentifier, AggregateIdentifier portfolioIdentifier, long totalItems, long pricePerItem) {
-        super(orderbookIdentifier, portfolioIdentifier, totalItems, pricePerItem);
+        super(orderbookIdentifier, portfolioIdentifier, (int) totalItems, pricePerItem);
     }
 }

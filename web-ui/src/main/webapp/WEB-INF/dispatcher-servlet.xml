@@ -28,7 +28,6 @@
 
     <mvc:annotation-driven validator="validator"/>
 
-
     <mvc:view-controller path="/index.html" view-name="index"/>
 
     <mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>

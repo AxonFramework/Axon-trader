@@ -44,6 +44,7 @@ public class DashboardController {
         return "dashboard/index";
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setPortfolioRepository(PortfolioQueryRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
