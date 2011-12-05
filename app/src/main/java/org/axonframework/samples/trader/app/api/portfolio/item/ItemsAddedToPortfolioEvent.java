@@ -19,14 +19,16 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 /**
+ * New items have been added to the portfolio for the OrderBook of the provided identifier.
+ *
  * @author Jettro Coenradie
  */
 public class ItemsAddedToPortfolioEvent extends DomainEvent {
-    private AggregateIdentifier itemIdentfier;
+    private AggregateIdentifier orderBookIdentifier;
     private int amountOfItemsAdded;
 
-    public ItemsAddedToPortfolioEvent(AggregateIdentifier itemIdentfier, int amountOfItemsAdded) {
-        this.itemIdentfier = itemIdentfier;
+    public ItemsAddedToPortfolioEvent(AggregateIdentifier orderBookIdentifier, int amountOfItemsAdded) {
+        this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsAdded = amountOfItemsAdded;
     }
 
@@ -34,8 +36,8 @@ public class ItemsAddedToPortfolioEvent extends DomainEvent {
         return amountOfItemsAdded;
     }
 
-    public AggregateIdentifier getItemIdentifier() {
-        return itemIdentfier;
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {

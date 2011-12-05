@@ -45,25 +45,25 @@ public class PortfolioCommandHandler {
     @CommandHandler
     public void handleReserveItemsCommand(ReserveItemsCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveItems(command.getItemIdentifier(), command.getAmountOfItemsToReserve());
+        portfolio.reserveItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToReserve());
     }
 
     @CommandHandler
     public void handleAddItemsToPortfolioCommand(AddItemsToPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addItems(command.getItemIdentfier(), command.getAmountOfItemsToAdd());
+        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToAdd());
     }
 
     @CommandHandler
     public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmReservation(command.getItemIdentifier(), command.getAmountOfItemsToConfirm());
+        portfolio.confirmReservation(command.getOrderBookIdentifier(), command.getAmountOfItemsToConfirm());
     }
 
     @CommandHandler
     public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelReservation(command.getItemIdentifier(), command.getAmountOfItemsToCancel());
+        portfolio.cancelReservation(command.getOrderBookIdentifier(), command.getAmountOfItemsToCancel());
     }
 
     @CommandHandler

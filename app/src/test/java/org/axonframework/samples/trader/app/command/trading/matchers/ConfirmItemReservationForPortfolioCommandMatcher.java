@@ -15,24 +15,24 @@
 
 package org.axonframework.samples.trader.app.command.trading.matchers;
 
-import org.axonframework.samples.trader.app.api.portfolio.item.ReserveItemsCommand;
+import org.axonframework.samples.trader.app.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReservedItemsCommandMatcher extends TradeManagerSagaMatcher<ReserveItemsCommand> {
+public class ConfirmItemReservationForPortfolioCommandMatcher extends TradeManagerSagaMatcher<ConfirmItemReservationForPortfolioCommand> {
     private String itemIdentifier;
     private String portfolioIdentifier;
-    private int amountOfReservedItems;
+    private int amountOfConfirmedItems;
 
-    public ReservedItemsCommandMatcher(String itemIdentifier, String portfolioIdentifier, int amountOfReservedItems) {
+    public ConfirmItemReservationForPortfolioCommandMatcher(String itemIdentifier, String portfolioIdentifier, int amountOfConfirmedItems) {
         this.itemIdentifier = itemIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountOfReservedItems = amountOfReservedItems;
+        this.amountOfConfirmedItems = amountOfConfirmedItems;
     }
 
     @Override
-    public boolean doMatch(ReserveItemsCommand command) {
+    public boolean doMatch(ConfirmItemReservationForPortfolioCommand command) {
         if (!command.getOrderBookIdentifier().asString().equals(itemIdentifier)) {
             problem = String.format("Item identifier is not as expected, required %s but received %s", itemIdentifier, command.getOrderBookIdentifier());
             return false;
@@ -41,8 +41,8 @@ public class ReservedItemsCommandMatcher extends TradeManagerSagaMatcher<Reserve
             problem = String.format("Portfolio identifier is not as expected, required %s but received %s", portfolioIdentifier, command.getPortfolioIdentifier());
             return false;
         }
-        if (amountOfReservedItems != command.getAmountOfItemsToReserve()) {
-            problem = String.format("Wrong amount of reserved items, required %d but received %d", amountOfReservedItems, command.getAmountOfItemsToReserve());
+        if (amountOfConfirmedItems != command.getAmountOfItemsToConfirm()) {
+            problem = String.format("Wrong amount of confirmed items, required %d but received %d", amountOfConfirmedItems, command.getAmountOfItemsToConfirm());
             return false;
         }
         return true;

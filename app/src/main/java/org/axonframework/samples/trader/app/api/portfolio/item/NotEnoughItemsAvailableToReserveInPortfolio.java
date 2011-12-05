@@ -23,12 +23,12 @@ import org.axonframework.domain.DomainEvent;
  */
 public class NotEnoughItemsAvailableToReserveInPortfolio extends DomainEvent {
 
-    private AggregateIdentifier itemIdentifier;
+    private AggregateIdentifier orderBookIdentifier;
     private int availableAmountOfItems;
     private int amountOfItemsToReserve;
 
-    public NotEnoughItemsAvailableToReserveInPortfolio(AggregateIdentifier itemIdentifier, int availableAmountOfItems, int amountOfItemsToReserve) {
-        this.itemIdentifier = itemIdentifier;
+    public NotEnoughItemsAvailableToReserveInPortfolio(AggregateIdentifier orderBookIdentifier, int availableAmountOfItems, int amountOfItemsToReserve) {
+        this.orderBookIdentifier = orderBookIdentifier;
         this.availableAmountOfItems = availableAmountOfItems;
         this.amountOfItemsToReserve = amountOfItemsToReserve;
     }
@@ -41,8 +41,8 @@ public class NotEnoughItemsAvailableToReserveInPortfolio extends DomainEvent {
         return availableAmountOfItems;
     }
 
-    public AggregateIdentifier getItemIdentifier() {
-        return itemIdentifier;
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {

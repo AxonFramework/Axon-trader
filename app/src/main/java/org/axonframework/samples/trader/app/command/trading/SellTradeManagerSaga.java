@@ -55,7 +55,7 @@ public class SellTradeManagerSaga extends AbstractAnnotatedSaga {
     @SagaEventHandler(associationProperty = "portfolioIdentifier")
     public void handle(ItemsReservedEvent event) {
         ConfirmItemReservationForPortfolioCommand command =
-                new ConfirmItemReservationForPortfolioCommand(event.getPortfolioIdentifier(), event.getItemIdentifier(), event.getAmountOfItemsReserved());
+                new ConfirmItemReservationForPortfolioCommand(event.getPortfolioIdentifier(), event.getOrderBookIdentifier(), event.getAmountOfItemsReserved());
         commandBus.dispatch(command);
     }
 

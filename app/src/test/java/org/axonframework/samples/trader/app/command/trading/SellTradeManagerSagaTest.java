@@ -18,7 +18,9 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.portfolio.item.ItemsReservedEvent;
+import org.axonframework.samples.trader.app.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
 import org.axonframework.samples.trader.app.api.transaction.SellTransactionStartedEvent;
+import org.axonframework.samples.trader.app.command.trading.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
 import org.axonframework.samples.trader.app.command.trading.matchers.ReservedItemsCommandMatcher;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.junit.Before;
@@ -29,21 +31,21 @@ import org.junit.Test;
  * @author Jettro Coenradie
  */
 public class SellTradeManagerSagaTest {
-    AggregateIdentifier transaction = new UUIDAggregateIdentifier();
-    AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
-    AggregateIdentifier portfolioIdentifier = new UUIDAggregateIdentifier();
-    AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
+    private AggregateIdentifier transactionIdentifier = new UUIDAggregateIdentifier();
+    private AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
+    private AggregateIdentifier portfolioIdentifier = new UUIDAggregateIdentifier();
+
+    private AnnotatedSagaTestFixture fixture;
 
     @Before
     public void setUp() throws Exception {
-
+        fixture = new AnnotatedSagaTestFixture(SellTradeManagerSaga.class);
     }
 
     @Test
     public void testHandle_SellTransactionStarted() throws Exception {
-        AnnotatedSagaTestFixture fixture = new AnnotatedSagaTestFixture(SellTradeManagerSaga.class);
-        fixture.givenAggregate(transaction).published()
-                .whenAggregate(transaction).publishes(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
+        fixture.givenAggregate(transactionIdentifier).published()
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
                 .expectAssociationWith("orderbookIdentifier", orderbookIdentifier)
                 .expectAssociationWith("portfolioIdentifier", portfolioIdentifier)
                 .expectActiveSagas(1)
@@ -51,13 +53,19 @@ public class SellTradeManagerSagaTest {
     }
 
     @Test
-    @Ignore
     public void testHandle_ItemsReserved() {
-        AnnotatedSagaTestFixture fixture = new AnnotatedSagaTestFixture(SellTradeManagerSaga.class);
-        fixture.givenAggregate(transaction).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
-                .whenAggregate(transaction).publishes(new ItemsReservedEvent(itemIdentifier, 100))
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
+                .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(orderbookIdentifier, 100))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(new ReservedItemsCommandMatcher(orderbookIdentifier.asString(), portfolioIdentifier.asString(), 100));
+                .expectDispatchedCommandsMatching(new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier.asString(), portfolioIdentifier.asString(), 100));
     }
 
+    @Test
+    @Ignore
+    public void testHandle_NotEnoughItemsToReserve() {
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
+                .whenAggregate(portfolioIdentifier).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(orderbookIdentifier, 50, 100))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier.asString(), portfolioIdentifier.asString(), 100));
+    }
 }

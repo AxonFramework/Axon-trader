@@ -18,16 +18,19 @@ package org.axonframework.samples.trader.app.api.portfolio.item;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
+ * of the provided identifier.
+ *
  * @author Jettro Coenradie
  */
 public class CancelItemReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier itemIdentifier;
+    private AggregateIdentifier orderBookIdentifier;
     private int amountOfCancelledItems;
 
-    public CancelItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfCancelledItems) {
+    public CancelItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, int amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.itemIdentifier = itemIdentifier;
+        this.orderBookIdentifier = orderBookIdentifier;
 
         this.amountOfCancelledItems = amountOfCancelledItems;
     }
@@ -36,8 +39,8 @@ public class CancelItemReservationForPortfolioCommand {
         return amountOfCancelledItems;
     }
 
-    public AggregateIdentifier getItemIdentifier() {
-        return itemIdentifier;
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {

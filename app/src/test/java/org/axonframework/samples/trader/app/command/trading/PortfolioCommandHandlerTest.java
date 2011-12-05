@@ -53,75 +53,75 @@ public class PortfolioCommandHandlerTest {
     @Test
     public void testAddItemsToPortfolio() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
 
-        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(portfolioIdentifier, orderbookIdentifier, 100);
+        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(portfolioIdentifier, orderBookIdentifier, 100);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
                 .when(command)
-                .expectEvents(new ItemsAddedToPortfolioEvent(orderbookIdentifier, 100));
+                .expectEvents(new ItemsAddedToPortfolioEvent(orderBookIdentifier, 100));
     }
 
     @Test
     public void testReserveItems_noItemsAvailable() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
 
-        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier, orderbookIdentifier, 200);
+        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier, orderBookIdentifier, 200);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
                 .when(command)
-                .expectEvents(new ItemToReserveNotAvailableInPortfolioEvent(orderbookIdentifier));
+                .expectEvents(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier));
     }
 
     @Test
     public void testReserveItems_notEnoughItemsAvailable() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
 
-        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier, orderbookIdentifier, 200);
+        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier, orderBookIdentifier, 200);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                new ItemsAddedToPortfolioEvent(orderbookIdentifier, 100))
+                new ItemsAddedToPortfolioEvent(orderBookIdentifier, 100))
                 .when(command)
-                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(orderbookIdentifier, 100, 200));
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(orderBookIdentifier, 100, 200));
     }
 
     @Test
     public void testReserveItems() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
 
-        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier, orderbookIdentifier, 200);
+        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier, orderBookIdentifier, 200);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                new ItemsAddedToPortfolioEvent(orderbookIdentifier, 400))
+                new ItemsAddedToPortfolioEvent(orderBookIdentifier, 400))
                 .when(command)
-                .expectEvents(new ItemsReservedEvent(orderbookIdentifier, 200));
+                .expectEvents(new ItemsReservedEvent(orderBookIdentifier, 200));
     }
 
     @Test
     public void testConfirmationOfReservation() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
 
         ConfirmItemReservationForPortfolioCommand command =
-                new ConfirmItemReservationForPortfolioCommand(portfolioIdentifier, itemIdentifier, 100);
+                new ConfirmItemReservationForPortfolioCommand(portfolioIdentifier, orderBookIdentifier, 100);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                new ItemsAddedToPortfolioEvent(itemIdentifier, 400),
-                new ItemsReservedEvent(itemIdentifier, 100))
+                new ItemsAddedToPortfolioEvent(orderBookIdentifier, 400),
+                new ItemsReservedEvent(orderBookIdentifier, 100))
                 .when(command)
-                .expectEvents(new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, 100));
+                .expectEvents(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier, 100));
     }
 
     @Test
     public void testCancellationOfReservation() {
         AggregateIdentifier portfolioIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
 
         CancelItemReservationForPortfolioCommand command =
-                new CancelItemReservationForPortfolioCommand(portfolioIdentifier, itemIdentifier, 100);
+                new CancelItemReservationForPortfolioCommand(portfolioIdentifier, orderBookIdentifier, 100);
         fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                new ItemsAddedToPortfolioEvent(itemIdentifier, 400),
-                new ItemsReservedEvent(itemIdentifier, 100))
+                new ItemsAddedToPortfolioEvent(orderBookIdentifier, 400),
+                new ItemsReservedEvent(orderBookIdentifier, 100))
                 .when(command)
-                .expectEvents(new ItemReservationCancelledForPortfolioEvent(itemIdentifier, 100));
+                .expectEvents(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier, 100));
     }
 
     /* Money related test methods */

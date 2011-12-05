@@ -22,5 +22,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @author Jettro Coenradie
  */
 public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String> {
-    TransactionEntry findByUserIdentifier(String userIdentifier);
+    TransactionEntry findByPortfolioIdentifier(String portfolioIdentifier);
 }

@@ -32,7 +32,11 @@ public abstract class TradeManagerSagaMatcher<T> extends ArgumentMatcher<T> {
     public boolean matches(Object argument) {
         Object singleArgument;
         if (argument instanceof List) {
-            singleArgument = ((List) argument).get(0);
+            List listArgument = (List) argument;
+            if (listArgument.size() == 0) {
+                return false;
+            }
+            singleArgument = listArgument.get(0);
         } else {
             singleArgument = argument;
         }

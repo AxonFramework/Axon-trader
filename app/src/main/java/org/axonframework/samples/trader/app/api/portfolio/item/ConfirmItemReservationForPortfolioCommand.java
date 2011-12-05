@@ -18,16 +18,19 @@ package org.axonframework.samples.trader.app.api.portfolio.item;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
+ * identifier.
+ *
  * @author Jettro Coenradie
  */
 public class ConfirmItemReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier itemIdentifier;
+    private AggregateIdentifier orderBookIdentifier;
     private int amountOfItemsToConfirm;
 
-    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentifier, int amountOfItemsToConfirm) {
+    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, int amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.itemIdentifier = itemIdentifier;
+        this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
@@ -35,8 +38,8 @@ public class ConfirmItemReservationForPortfolioCommand {
         return amountOfItemsToConfirm;
     }
 
-    public AggregateIdentifier getItemIdentifier() {
-        return itemIdentifier;
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {

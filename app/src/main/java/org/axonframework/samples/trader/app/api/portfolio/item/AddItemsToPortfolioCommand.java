@@ -18,16 +18,25 @@ package org.axonframework.samples.trader.app.api.portfolio.item;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * Try to add new items for a specific OrderBook to the portfolio.
+ *
  * @author Jettro Coenradie
  */
 public class AddItemsToPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier itemIdentfier;
+    private AggregateIdentifier orderBookIdentifier;
     private int amountOfItemsToAdd;
 
-    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier itemIdentfier, int amountOfItemsToAdd) {
+    /**
+     * Create a new command.
+     *
+     * @param portfolioIdentifier Identifier of the Portfolio to add items to
+     * @param orderBookIdentifier Identifier of the OrderBook to add items for
+     * @param amountOfItemsToAdd  AMount of items to add
+     */
+    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, int amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.itemIdentfier = itemIdentfier;
+        this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsToAdd = amountOfItemsToAdd;
     }
 
@@ -35,8 +44,8 @@ public class AddItemsToPortfolioCommand {
         return amountOfItemsToAdd;
     }
 
-    public AggregateIdentifier getItemIdentfier() {
-        return itemIdentfier;
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {

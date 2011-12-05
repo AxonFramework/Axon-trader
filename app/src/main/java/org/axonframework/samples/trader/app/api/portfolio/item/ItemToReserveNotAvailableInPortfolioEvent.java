@@ -22,14 +22,14 @@ import org.axonframework.domain.DomainEvent;
  * @author Jettro Coenradie
  */
 public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
-    private AggregateIdentifier itemIdentifier;
+    private AggregateIdentifier orderBookIdentifier;
 
-    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier itemIdentifier) {
-        this.itemIdentifier = itemIdentifier;
+    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier orderBookIdentifier) {
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    public AggregateIdentifier getItemIdentifier() {
-        return itemIdentifier;
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public AggregateIdentifier getPortfolioIdentifier() {
