@@ -26,13 +26,13 @@ public abstract class AbstractOrderPlacedEvent extends DomainEvent {
     private final AggregateIdentifier orderId;
     private final long tradeCount;
     private final int itemPrice;
-    private final AggregateIdentifier userId;
+    private final AggregateIdentifier portfolioId;
 
-    protected AbstractOrderPlacedEvent(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
+    protected AbstractOrderPlacedEvent(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier portfolioId) {
         this.orderId = orderId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
-        this.userId = userId;
+        this.portfolioId = portfolioId;
     }
 
     public AggregateIdentifier orderBookIdentifier() {
@@ -51,8 +51,8 @@ public abstract class AbstractOrderPlacedEvent extends DomainEvent {
         return itemPrice;
     }
 
-    public AggregateIdentifier getUserId() {
-        return userId;
+    public AggregateIdentifier getPortfolioId() {
+        return portfolioId;
     }
 
 }

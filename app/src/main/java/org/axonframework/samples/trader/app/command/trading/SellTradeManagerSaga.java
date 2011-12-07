@@ -20,10 +20,12 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
-import org.axonframework.samples.trader.app.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
 import org.axonframework.samples.trader.app.api.portfolio.item.ItemsReservedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
 import org.axonframework.samples.trader.app.api.portfolio.item.ReserveItemsCommand;
+import org.axonframework.samples.trader.app.api.transaction.ConfirmTransactionCommand;
+import org.axonframework.samples.trader.app.api.transaction.SellTransactionConfirmedEvent;
 import org.axonframework.samples.trader.app.api.transaction.SellTransactionStartedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,28 +36,38 @@ public class SellTradeManagerSaga extends AbstractAnnotatedSaga {
 
     private transient CommandBus commandBus;
     private int totalItems;
-    private long pricePerItem;
+    private int pricePerItem;
+
+    private AggregateIdentifier transactionIdentifier;
+    private AggregateIdentifier orderbookIdentifier;
+    private AggregateIdentifier portfolioIdentifier;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionStartedEvent event) {
-        AggregateIdentifier orderbookIdentifier = event.getOrderbookIdentifier();
-        AggregateIdentifier portfolioIdentifier = event.getPortfolioIdentifier();
+        transactionIdentifier = event.getTransactionIdentifier();
+        orderbookIdentifier = event.getOrderbookIdentifier();
+        portfolioIdentifier = event.getPortfolioIdentifier();
 
         associateWith("orderbookIdentifier", orderbookIdentifier);
         associateWith("portfolioIdentifier", portfolioIdentifier);
 
         ReserveItemsCommand reserveItemsCommand =
                 new ReserveItemsCommand(portfolioIdentifier, orderbookIdentifier, event.getTotalItems());
-        pricePerItem = event.getPricePerItem();
+        pricePerItem = (int) event.getPricePerItem(); // TODO jettro: correct the long and ints
         totalItems = event.getTotalItems();
         commandBus.dispatch(reserveItemsCommand);
     }
 
     @SagaEventHandler(associationProperty = "portfolioIdentifier")
     public void handle(ItemsReservedEvent event) {
-        ConfirmItemReservationForPortfolioCommand command =
-                new ConfirmItemReservationForPortfolioCommand(event.getPortfolioIdentifier(), event.getOrderBookIdentifier(), event.getAmountOfItemsReserved());
+        ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(transactionIdentifier);
+        commandBus.dispatch(confirmTransactionCommand);
+    }
+
+    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    public void handle(SellTransactionConfirmedEvent event) {
+        CreateSellOrderCommand command = new CreateSellOrderCommand(portfolioIdentifier, orderbookIdentifier, totalItems, pricePerItem);
         commandBus.dispatch(command);
     }
 

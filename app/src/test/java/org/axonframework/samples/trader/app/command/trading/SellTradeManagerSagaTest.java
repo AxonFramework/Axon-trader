@@ -19,8 +19,11 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.portfolio.item.ItemsReservedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
+import org.axonframework.samples.trader.app.api.transaction.SellTransactionConfirmedEvent;
 import org.axonframework.samples.trader.app.api.transaction.SellTransactionStartedEvent;
 import org.axonframework.samples.trader.app.command.trading.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
+import org.axonframework.samples.trader.app.command.trading.matchers.ConfirmTransactionCommandMatcher;
+import org.axonframework.samples.trader.app.command.trading.matchers.CreateSellOrderCommandMatcher;
 import org.axonframework.samples.trader.app.command.trading.matchers.ReservedItemsCommandMatcher;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.junit.Before;
@@ -57,8 +60,18 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
                 .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(orderbookIdentifier, 100))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier.asString(), portfolioIdentifier.asString(), 100));
+                .expectDispatchedCommandsMatching(new ConfirmTransactionCommandMatcher(transactionIdentifier));
     }
+
+    @Test
+    public void testHandle_TransactionConfirmed() {
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, 100))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent())
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(new CreateSellOrderCommandMatcher(portfolioIdentifier, orderbookIdentifier, 100, 10));
+    }
+
 
     @Test
     @Ignore

@@ -109,7 +109,7 @@ public class OrderBookListener {
         entry.setIdentifier(event.getOrderId().asString());
         entry.setItemsRemaining(event.getTradeCount());
         entry.setTradeCount(event.getTradeCount());
-        entry.setUserId(event.getUserId().asString());
+        entry.setUserId(event.getPortfolioId().asString());
         entry.setType(type);
         entry.setItemPrice(event.getItemPrice());
 

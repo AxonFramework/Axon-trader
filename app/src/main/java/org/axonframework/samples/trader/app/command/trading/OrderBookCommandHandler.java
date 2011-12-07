@@ -41,7 +41,7 @@ public class OrderBookCommandHandler {
         orderBook.addBuyOrder(command.getOrderId(),
                 command.getTradeCount(),
                 command.getItemPrice(),
-                command.getUserId());
+                command.getPortfolioId());
     }
 
     @CommandHandler
@@ -51,7 +51,7 @@ public class OrderBookCommandHandler {
         orderBook.addSellOrder(command.getOrderId(),
                 command.getTradeCount(),
                 command.getItemPrice(),
-                command.getUserId());
+                command.getPortfolioId());
     }
 
     @CommandHandler

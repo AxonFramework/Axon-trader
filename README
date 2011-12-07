@@ -6,9 +6,8 @@ Initial setup
 - Make sure you have java installed
 http://www.java.com/download/
 
-- Make sure you have maven or gradle installed
+- Make sure you have maven installed
 http://maven.apache.org/download.html#Installation
-http://www.gradle.org/installation.html
 
 - Make sure you have mongodb installed
 http://www.mongodb.org/display/DOCS/Quickstart

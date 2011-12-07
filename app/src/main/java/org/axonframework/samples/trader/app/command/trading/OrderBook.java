@@ -76,12 +76,12 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     protected void onBuyPlaced(BuyOrderPlacedEvent event) {
-        buyOrders.add(new Order(event.getOrderId(), event.getItemPrice(), event.getTradeCount(), event.getUserId()));
+        buyOrders.add(new Order(event.getOrderId(), event.getItemPrice(), event.getTradeCount(), event.getPortfolioId()));
     }
 
     @EventHandler
     protected void onSellPlaced(SellOrderPlacedEvent event) {
-        sellOrders.add(new Order(event.getOrderId(), event.getItemPrice(), event.getTradeCount(), event.getUserId()));
+        sellOrders.add(new Order(event.getOrderId(), event.getItemPrice(), event.getTradeCount(), event.getPortfolioId()));
     }
 
     @EventHandler
