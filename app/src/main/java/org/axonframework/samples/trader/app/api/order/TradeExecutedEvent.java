@@ -24,11 +24,11 @@ import org.axonframework.domain.DomainEvent;
 public class TradeExecutedEvent extends DomainEvent {
 
     private final long tradeCount;
-    private final int tradePrice;
+    private final long tradePrice;
     private final AggregateIdentifier buyOrderId;
     private final AggregateIdentifier sellOrderId;
 
-    public TradeExecutedEvent(long tradeCount, int tradePrice, AggregateIdentifier buyOrderId, AggregateIdentifier sellOrderId) {
+    public TradeExecutedEvent(long tradeCount, long tradePrice, AggregateIdentifier buyOrderId, AggregateIdentifier sellOrderId) {
         this.tradeCount = tradeCount;
         this.tradePrice = tradePrice;
         this.buyOrderId = buyOrderId;
@@ -43,7 +43,7 @@ public class TradeExecutedEvent extends DomainEvent {
         return tradeCount;
     }
 
-    public int getTradePrice() {
+    public long getTradePrice() {
         return tradePrice;
     }
 

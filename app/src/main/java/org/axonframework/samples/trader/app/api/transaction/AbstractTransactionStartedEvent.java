@@ -24,12 +24,12 @@ import org.axonframework.domain.DomainEvent;
 public abstract class AbstractTransactionStartedEvent extends DomainEvent {
     private AggregateIdentifier orderbookIdentifier;
     private AggregateIdentifier portfolioIdentifier;
-    private int totalItems;
+    private long totalItems;
     private long pricePerItem;
 
     public AbstractTransactionStartedEvent(AggregateIdentifier orderbookIdentifier,
                                            AggregateIdentifier portfolioIdentifier,
-                                           int totalItems,
+                                           long totalItems,
                                            long pricePerItem) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
@@ -53,7 +53,7 @@ public abstract class AbstractTransactionStartedEvent extends DomainEvent {
         return pricePerItem;
     }
 
-    public int getTotalItems() {
+    public long getTotalItems() {
         return totalItems;
     }
 

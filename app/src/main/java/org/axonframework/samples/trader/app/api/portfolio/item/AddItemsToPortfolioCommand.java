@@ -25,7 +25,7 @@ import org.axonframework.domain.AggregateIdentifier;
 public class AddItemsToPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier orderBookIdentifier;
-    private int amountOfItemsToAdd;
+    private long amountOfItemsToAdd;
 
     /**
      * Create a new command.
@@ -34,13 +34,13 @@ public class AddItemsToPortfolioCommand {
      * @param orderBookIdentifier Identifier of the OrderBook to add items for
      * @param amountOfItemsToAdd  AMount of items to add
      */
-    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, int amountOfItemsToAdd) {
+    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsToAdd = amountOfItemsToAdd;
     }
 
-    public int getAmountOfItemsToAdd() {
+    public long getAmountOfItemsToAdd() {
         return amountOfItemsToAdd;
     }
 

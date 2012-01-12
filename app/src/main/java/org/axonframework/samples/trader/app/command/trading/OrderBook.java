@@ -46,12 +46,12 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     }
 
 
-    public void addBuyOrder(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
+    public void addBuyOrder(AggregateIdentifier orderId, long tradeCount, long itemPrice, AggregateIdentifier userId) {
         apply(new BuyOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
         executeTrades();
     }
 
-    public void addSellOrder(AggregateIdentifier orderId, long tradeCount, int itemPrice, AggregateIdentifier userId) {
+    public void addSellOrder(AggregateIdentifier orderId, long tradeCount, long itemPrice, AggregateIdentifier userId) {
         apply(new SellOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
         executeTrades();
     }
@@ -63,7 +63,7 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
             Order lowestSeller = sellOrders.first();
             if (highestBuyer.getItemPrice() >= lowestSeller.getItemPrice()) {
                 long matchedTradeCount = Math.min(highestBuyer.getItemsRemaining(), lowestSeller.getItemsRemaining());
-                int matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
+                long matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
                 apply(new TradeExecutedEvent(matchedTradeCount,
                         matchedTradePrice,
                         highestBuyer.getOrderId(),
@@ -106,7 +106,15 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static class OrderComparator implements Comparator<Order> {
 
         public int compare(Order o1, Order o2) {
-            return o1.getItemPrice() - o2.getItemPrice();
+            if (o1.getItemPrice() == o2.getItemPrice()) {
+                return 0;
+            }
+
+            if (o1.getItemPrice() > o2.getItemPrice()) {
+                return 1;
+            } else {
+                return -1;
+            }
         }
     }
 }

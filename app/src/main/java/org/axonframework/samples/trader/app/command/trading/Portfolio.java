@@ -35,8 +35,8 @@ import java.util.Map;
  * @author Jettro Coenradie
  */
 public class Portfolio extends AbstractAnnotatedAggregateRoot {
-    private Map<AggregateIdentifier, Integer> availableItems = new HashMap<AggregateIdentifier, Integer>();
-    private Map<AggregateIdentifier, Integer> reservedItems = new HashMap<AggregateIdentifier, Integer>();
+    private Map<AggregateIdentifier, Long> availableItems = new HashMap<AggregateIdentifier, Long>();
+    private Map<AggregateIdentifier, Long> reservedItems = new HashMap<AggregateIdentifier, Long>();
 
     private long amountOfMoney;
     private long reservedAmountOfMoney;
@@ -50,15 +50,15 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new PortfolioCreatedEvent(userIdentifier));
     }
 
-    public void addItems(AggregateIdentifier orderBookIdentifier, int amountOfItemsToAdd) {
+    public void addItems(AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
         apply(new ItemsAddedToPortfolioEvent(orderBookIdentifier, amountOfItemsToAdd));
     }
 
-    public void reserveItems(AggregateIdentifier orderBookIdentifier, int amountOfItemsToReserve) {
+    public void reserveItems(AggregateIdentifier orderBookIdentifier, long amountOfItemsToReserve) {
         if (!availableItems.containsKey(orderBookIdentifier)) {
             apply(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier));
         } else {
-            Integer availableAmountOfItems = availableItems.get(orderBookIdentifier);
+            Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
             if (availableAmountOfItems < amountOfItemsToReserve) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolio(
                         orderBookIdentifier, availableAmountOfItems, amountOfItemsToReserve));
@@ -68,11 +68,11 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void confirmReservation(AggregateIdentifier orderBookIdentifier, int amountOfItemsToConfirm) {
+    public void confirmReservation(AggregateIdentifier orderBookIdentifier, long amountOfItemsToConfirm) {
         apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier, amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(AggregateIdentifier orderBookIdentifier, int amountOfItemsToCancel) {
+    public void cancelReservation(AggregateIdentifier orderBookIdentifier, long amountOfItemsToCancel) {
         apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier, amountOfItemsToCancel));
     }
 
@@ -118,31 +118,31 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
-        int available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
         availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfItemsAdded());
     }
 
     @EventHandler
     public void onItemsReserved(ItemsReservedEvent event) {
-        int available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
         availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfItemsReserved());
 
-        int reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
+        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
         reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfItemsReserved());
     }
 
     @EventHandler
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
-        int reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
+        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
         reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfConfirmedItems());
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
-        int reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
+        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
         reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfCancelledItems());
 
-        int available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
         availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledItems());
     }
 
@@ -179,16 +179,16 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     /* UTILITY METHODS */
-    private int obtainCurrentAvailableItems(AggregateIdentifier itemIdentifier) {
-        int available = 0;
+    private long obtainCurrentAvailableItems(AggregateIdentifier itemIdentifier) {
+        long available = 0;
         if (availableItems.containsKey(itemIdentifier)) {
             available = availableItems.get(itemIdentifier);
         }
         return available;
     }
 
-    private int obtainCurrentReservedItems(AggregateIdentifier itemIdentifier) {
-        int reserved = 0;
+    private long obtainCurrentReservedItems(AggregateIdentifier itemIdentifier) {
+        long reserved = 0;
         if (reservedItems.containsKey(itemIdentifier)) {
             reserved = reservedItems.get(itemIdentifier);
         }

@@ -26,16 +26,16 @@ import org.axonframework.domain.AggregateIdentifier;
 public class CancelItemReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier orderBookIdentifier;
-    private int amountOfCancelledItems;
+    private long amountOfCancelledItems;
 
-    public CancelItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, int amountOfCancelledItems) {
+    public CancelItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
 
         this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
-    public int getAmountOfItemsToCancel() {
+    public long getAmountOfItemsToCancel() {
         return amountOfCancelledItems;
     }
 

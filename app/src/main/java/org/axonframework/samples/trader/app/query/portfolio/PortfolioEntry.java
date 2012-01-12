@@ -52,11 +52,11 @@ public class PortfolioEntry {
         handleAdd(itemsInPossession, itemEntry);
     }
 
-    public void removeReservedItem(String itemIdentifier, int amount) {
+    public void removeReservedItem(String itemIdentifier, long amount) {
         handleRemoveItem(itemsReserved, itemIdentifier, amount);
     }
 
-    public void removeItemsInPossession(String itemIdentifier, int amount) {
+    public void removeItemsInPossession(String itemIdentifier, long amount) {
         handleRemoveItem(itemsInPossession, itemIdentifier, amount);
     }
 
@@ -123,7 +123,7 @@ public class PortfolioEntry {
         }
     }
 
-    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, int amount) {
+    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, long amount) {
         if (items.containsKey(itemIdentifier)) {
             ItemEntry foundEntry = items.get(itemIdentifier);
             foundEntry.setAmount(foundEntry.getAmount() - amount);

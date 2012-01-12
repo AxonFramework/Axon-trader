@@ -49,7 +49,7 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
             problem = String.format("Amount of item entries in possession should be %d but was %d", itemsInPossession, portfolioEntry.getItemsInPossession().size());
             return false;
         }
-        int foundAmountOfItemsInPossession = portfolioEntry.findItemInPossession(itemIdentifier).getAmount();
+        long foundAmountOfItemsInPossession = portfolioEntry.findItemInPossession(itemIdentifier).getAmount();
         if (foundAmountOfItemsInPossession != amountOfItemInPossession) {
             problem = String.format("The amount of the item in possession should be %d but was %d", amountOfItemInPossession, foundAmountOfItemsInPossession);
             return false;
@@ -59,7 +59,7 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
             return false;
         }
         if (itemsInReservation != 0) {
-            int foundAmountOfItemsInReservation = portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount();
+            long foundAmountOfItemsInReservation = portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount();
             if (foundAmountOfItemsInReservation != amountOfItemInReservation) {
                 problem = String.format("The amount of the reserved items should be %d but was %d", amountOfItemInReservation, foundAmountOfItemsInReservation);
                 return false;

@@ -26,15 +26,15 @@ import org.axonframework.domain.AggregateIdentifier;
 public class ConfirmItemReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier orderBookIdentifier;
-    private int amountOfItemsToConfirm;
+    private long amountOfItemsToConfirm;
 
-    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, int amountOfItemsToConfirm) {
+    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
-    public int getAmountOfItemsToConfirm() {
+    public long getAmountOfItemsToConfirm() {
         return amountOfItemsToConfirm;
     }
 

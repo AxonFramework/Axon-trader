@@ -26,10 +26,10 @@ public abstract class AbstractOrderCommand {
     private AggregateIdentifier portfolioId;
     private AggregateIdentifier orderBookId;
     private long tradeCount;
-    private int itemPrice;
+    private long itemPrice;
     private AggregateIdentifier orderId;
 
-    protected AbstractOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, long tradeCount, int itemPrice) {
+    protected AbstractOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, long tradeCount, long itemPrice) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
@@ -49,7 +49,7 @@ public abstract class AbstractOrderCommand {
         return tradeCount;
     }
 
-    public int getItemPrice() {
+    public long getItemPrice() {
         return itemPrice;
     }
 

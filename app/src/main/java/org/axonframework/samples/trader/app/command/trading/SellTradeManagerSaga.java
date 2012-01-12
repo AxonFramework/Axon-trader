@@ -35,8 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SellTradeManagerSaga extends AbstractAnnotatedSaga {
 
     private transient CommandBus commandBus;
-    private int totalItems;
-    private int pricePerItem;
+    private long totalItems;
+    private long pricePerItem;
 
     private AggregateIdentifier transactionIdentifier;
     private AggregateIdentifier orderbookIdentifier;
@@ -54,7 +54,7 @@ public class SellTradeManagerSaga extends AbstractAnnotatedSaga {
 
         ReserveItemsCommand reserveItemsCommand =
                 new ReserveItemsCommand(portfolioIdentifier, orderbookIdentifier, event.getTotalItems());
-        pricePerItem = (int) event.getPricePerItem(); // TODO jettro: correct the long and ints
+        pricePerItem = event.getPricePerItem(); // TODO jettro: correct the long and ints
         totalItems = event.getTotalItems();
         commandBus.dispatch(reserveItemsCommand);
     }

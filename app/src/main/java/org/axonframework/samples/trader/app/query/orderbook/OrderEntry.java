@@ -22,7 +22,7 @@ public class OrderEntry {
     private String identifier;
     private OrderBookEntry orderBookEntry;
     private long tradeCount;
-    private int itemPrice;
+    private long itemPrice;
     private String userId;
     private long itemsRemaining;
     private String type;
@@ -35,11 +35,11 @@ public class OrderEntry {
         this.identifier = identifier;
     }
 
-    public int getItemPrice() {
+    public long getItemPrice() {
         return itemPrice;
     }
 
-    void setItemPrice(int itemPrice) {
+    void setItemPrice(long itemPrice) {
         this.itemPrice = itemPrice;
     }
 

@@ -23,14 +23,14 @@ import org.axonframework.domain.DomainEvent;
  */
 public class ItemReservationConfirmedForPortfolioEvent extends DomainEvent {
     private AggregateIdentifier orderBookIdentifier;
-    private int amountOfConfirmedItems;
+    private long amountOfConfirmedItems;
 
-    public ItemReservationConfirmedForPortfolioEvent(AggregateIdentifier orderBookIdentifier, int amountOfConfirmedItems) {
+    public ItemReservationConfirmedForPortfolioEvent(AggregateIdentifier orderBookIdentifier, long amountOfConfirmedItems) {
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfConfirmedItems = amountOfConfirmedItems;
     }
 
-    public int getAmountOfConfirmedItems() {
+    public long getAmountOfConfirmedItems() {
         return amountOfConfirmedItems;
     }
 

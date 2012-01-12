@@ -22,18 +22,18 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class ReserveItemsCommand {
     private AggregateIdentifier portfolioIdentifier;
-    private int amountOfItemsToReserve;
+    private long amountOfItemsToReserve;
     private AggregateIdentifier orderBookIdentifier;
 
     public ReserveItemsCommand(AggregateIdentifier portfolioIdentifier,
                                AggregateIdentifier orderBookIdentifier,
-                               int amountOfItemsToReserve) {
+                               long amountOfItemsToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfItemsToReserve = amountOfItemsToReserve;
         this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    public int getAmountOfItemsToReserve() {
+    public long getAmountOfItemsToReserve() {
         return amountOfItemsToReserve;
     }
 

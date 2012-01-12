@@ -80,7 +80,7 @@ public class PortfolioItemEventListener {
         portfolioRepository.save(portfolioEntry);
     }
 
-    private ItemEntry createItemEntry(String identifier, int amount) {
+    private ItemEntry createItemEntry(String identifier, long amount) {
         OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(identifier);
         ItemEntry itemEntry = new ItemEntry();
         itemEntry.setIdentifier(identifier);

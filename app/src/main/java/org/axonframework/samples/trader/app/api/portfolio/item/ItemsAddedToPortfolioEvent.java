@@ -25,14 +25,14 @@ import org.axonframework.domain.DomainEvent;
  */
 public class ItemsAddedToPortfolioEvent extends DomainEvent {
     private AggregateIdentifier orderBookIdentifier;
-    private int amountOfItemsAdded;
+    private long amountOfItemsAdded;
 
-    public ItemsAddedToPortfolioEvent(AggregateIdentifier orderBookIdentifier, int amountOfItemsAdded) {
+    public ItemsAddedToPortfolioEvent(AggregateIdentifier orderBookIdentifier, long amountOfItemsAdded) {
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsAdded = amountOfItemsAdded;
     }
 
-    public int getAmountOfItemsAdded() {
+    public long getAmountOfItemsAdded() {
         return amountOfItemsAdded;
     }
 

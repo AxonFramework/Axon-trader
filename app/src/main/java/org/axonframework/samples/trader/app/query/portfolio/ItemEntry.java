@@ -22,13 +22,13 @@ public class ItemEntry {
     private String identifier;
     private String companyIdentifier;
     private String companyName;
-    private int amount;
+    private long amount;
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 

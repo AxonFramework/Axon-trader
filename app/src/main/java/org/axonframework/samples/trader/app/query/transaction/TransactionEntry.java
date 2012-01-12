@@ -26,13 +26,13 @@ public class TransactionEntry {
     private String portfolioIdentifier;
 
     private String companyName;
-    private int amountOfItems;
-    private int amountOfExecutedItems;
+    private long amountOfItems;
+    private long amountOfExecutedItems;
     private long pricePerItem;
     private TransactionState state;
     private TransactionType type;
 
-    public int getAmountOfExecutedItems() {
+    public long getAmountOfExecutedItems() {
         return amountOfExecutedItems;
     }
 
@@ -40,11 +40,11 @@ public class TransactionEntry {
         this.amountOfExecutedItems = amountOfExecutedItems;
     }
 
-    public int getAmountOfItems() {
+    public long getAmountOfItems() {
         return amountOfItems;
     }
 
-    public void setAmountOfItems(int amountOfItems) {
+    public void setAmountOfItems(long amountOfItems) {
         this.amountOfItems = amountOfItems;
     }
 
