@@ -16,35 +16,42 @@
 package org.axonframework.samples.trader.app.command.trading.matchers;
 
 import org.axonframework.samples.trader.app.api.portfolio.item.ReserveItemsCommand;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReservedItemsCommandMatcher extends TradeManagerSagaMatcher<ReserveItemsCommand> {
-    private String itemIdentifier;
+public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand> {
+    private String orderbookIdentifier;
     private String portfolioIdentifier;
     private int amountOfReservedItems;
 
-    public ReservedItemsCommandMatcher(String itemIdentifier, String portfolioIdentifier, int amountOfReservedItems) {
-        this.itemIdentifier = itemIdentifier;
+    public ReservedItemsCommandMatcher(String orderbookIdentifier, String portfolioIdentifier, int amountOfReservedItems) {
+        this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfReservedItems = amountOfReservedItems;
     }
 
     @Override
-    public boolean doMatch(ReserveItemsCommand command) {
-        if (!command.getOrderBookIdentifier().asString().equals(itemIdentifier)) {
-            problem = String.format("Item identifier is not as expected, required %s but received %s", itemIdentifier, command.getOrderBookIdentifier());
+    public boolean matches(Object o) {
+        if (!(o instanceof ReserveItemsCommand)) {
             return false;
         }
-        if (!command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)) {
-            problem = String.format("Portfolio identifier is not as expected, required %s but received %s", portfolioIdentifier, command.getPortfolioIdentifier());
-            return false;
-        }
-        if (amountOfReservedItems != command.getAmountOfItemsToReserve()) {
-            problem = String.format("Wrong amount of reserved items, required %d but received %d", amountOfReservedItems, command.getAmountOfItemsToReserve());
-            return false;
-        }
-        return true;
+        ReserveItemsCommand command = (ReserveItemsCommand) o;
+        return command.getOrderBookIdentifier().asString().equals(orderbookIdentifier)
+                && command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+                && amountOfReservedItems == command.getAmountOfItemsToReserve();
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("ReserveItemsCommand with amountOfReservedItems [")
+                .appendValue(amountOfReservedItems)
+                .appendText("] for OrderBook with identifier [")
+                .appendValue(orderbookIdentifier)
+                .appendText("] and for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

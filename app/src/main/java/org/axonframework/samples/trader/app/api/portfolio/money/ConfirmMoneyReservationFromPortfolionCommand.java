@@ -37,4 +37,12 @@ public class ConfirmMoneyReservationFromPortfolionCommand {
     public AggregateIdentifier getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
+
+    @Override
+    public String toString() {
+        return "ConfirmMoneyReservationFromPortfolionCommand{" +
+                "amountOfMoneyToConfirmInCents=" + amountOfMoneyToConfirmInCents +
+                ", portfolioIdentifier=" + portfolioIdentifier +
+                '}';
+    }
 }

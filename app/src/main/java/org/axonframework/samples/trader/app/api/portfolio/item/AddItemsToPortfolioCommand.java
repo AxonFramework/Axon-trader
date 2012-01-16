@@ -51,4 +51,13 @@ public class AddItemsToPortfolioCommand {
     public AggregateIdentifier getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
+
+    @Override
+    public String toString() {
+        return "AddItemsToPortfolioCommand{" +
+                "amountOfItemsToAdd=" + amountOfItemsToAdd +
+                ", portfolioIdentifier=" + portfolioIdentifier +
+                ", orderBookIdentifier=" + orderBookIdentifier +
+                '}';
+    }
 }

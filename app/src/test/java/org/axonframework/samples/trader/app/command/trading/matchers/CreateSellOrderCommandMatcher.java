@@ -17,11 +17,13 @@ package org.axonframework.samples.trader.app.command.trading.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class CreateSellOrderCommandMatcher extends TradeManagerSagaMatcher<CreateSellOrderCommand> {
+public class CreateSellOrderCommandMatcher extends BaseMatcher<CreateSellOrderCommand> {
     private String orderbookIdentifier;
     private String portfolioIdentifier;
     private long tradeCount;
@@ -34,24 +36,29 @@ public class CreateSellOrderCommandMatcher extends TradeManagerSagaMatcher<Creat
         this.itemPrice = itemPrice;
     }
 
+
     @Override
-    public boolean doMatch(CreateSellOrderCommand command) {
-        if (!command.getOrderBookId().asString().equals(orderbookIdentifier)) {
-            problem = String.format("Orderbook identifier is not as expected, required %s but received %s", orderbookIdentifier, command.getOrderBookId());
+    public boolean matches(Object object) {
+        if (!(object instanceof CreateSellOrderCommand)) {
             return false;
         }
-        if (!command.getPortfolioId().asString().equals(portfolioIdentifier)) {
-            problem = String.format("Portfolio identifier is not as expected, required %s but received %s", portfolioIdentifier, command.getPortfolioId());
-            return false;
-        }
-        if (tradeCount != command.getTradeCount()) {
-            problem = String.format("The amount of items to trade is not as expected, required %d but received %d", tradeCount, command.getTradeCount());
-            return false;
-        }
-        if (itemPrice != command.getItemPrice()) {
-            problem = String.format("The price of items to trade is not as exepcted, required %d but received %d", itemPrice, command.getItemPrice());
-            return false;
-        }
-        return true;
+        CreateSellOrderCommand command = (CreateSellOrderCommand) object;
+        return command.getOrderBookId().asString().equals(orderbookIdentifier)
+                && command.getPortfolioId().asString().equals(portfolioIdentifier)
+                && tradeCount == command.getTradeCount()
+                && itemPrice == command.getItemPrice();
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("CreateSellOrderCommand with tradeCount [")
+                .appendValue(tradeCount)
+                .appendText("], itemPrice [")
+                .appendValue(itemPrice)
+                .appendText("] for OrderBook with identifier [")
+                .appendValue(orderbookIdentifier)
+                .appendText("] and for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }
