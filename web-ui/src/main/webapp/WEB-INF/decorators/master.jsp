@@ -26,9 +26,9 @@
     <meta name="description" content="Website contaning the Axon sample using a trader application">
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
-    <link rel="stylesheet" href="${ctx}/style/bootstrap-1.3.0.min.css">
+    <link rel="stylesheet" href="${ctx}/style/bootstrap-1.4.0.min.css">
     <link rel="stylesheet" href="${ctx}/style/main.css"/>
     <script type="text/javascript" src="${ctx}/js/jquery-1.6.4.min.js"></script>
 

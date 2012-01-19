@@ -19,11 +19,13 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
-import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.app.api.transaction.StartSellTransactionCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
 import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.app.query.portfolio.PortfolioEntry;
+import org.axonframework.samples.trader.app.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.app.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
@@ -55,6 +57,7 @@ public class CompanyController {
     private OrderBookQueryRepository orderBookRepository;
     private UserQueryRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
+    private PortfolioQueryRepository portfolioQueryRepository;
     private CommandBus commandBus;
 
     @Autowired
@@ -62,12 +65,14 @@ public class CompanyController {
                              CommandBus commandBus,
                              UserQueryRepository userRepository,
                              OrderBookQueryRepository orderBookRepository,
-                             TradeExecutedQueryRepository tradeExecutedRepository) {
+                             TradeExecutedQueryRepository tradeExecutedRepository,
+                             PortfolioQueryRepository portfolioQueryRepository) {
         this.companyRepository = companyRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
         this.orderBookRepository = orderBookRepository;
         this.tradeExecutedRepository = tradeExecutedRepository;
+        this.portfolioQueryRepository = portfolioQueryRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -112,10 +117,10 @@ public class CompanyController {
 
             // TODO: make this work for multiple orderbooks per company
             OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(order.getCompanyId()).get(0);
-
-            CreateSellOrderCommand command = new CreateSellOrderCommand(
-                    new StringAggregateIdentifier(username.getIdentifier()),
+            PortfolioEntry portfolioEntry = portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
+            StartSellTransactionCommand command = new StartSellTransactionCommand(
                     new StringAggregateIdentifier(bookEntry.getIdentifier()),
+                    new StringAggregateIdentifier(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
 

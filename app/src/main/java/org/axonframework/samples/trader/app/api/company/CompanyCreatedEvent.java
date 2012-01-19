@@ -19,6 +19,9 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 /**
+ * <p>A new company is created with a certain value and an amount of shares. Those two values can be used to calculate
+ * the starting point for the value of a share.</p>
+ *
  * @author Jettro Coenradie
  */
 public class CompanyCreatedEvent extends DomainEvent {

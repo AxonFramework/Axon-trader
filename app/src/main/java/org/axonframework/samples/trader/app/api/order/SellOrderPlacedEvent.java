@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.app.api.order;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * <p>A new Sell Order is placed for the current OrderBook. </p>
+ *
  * @author Allard Buijze
  */
 public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {

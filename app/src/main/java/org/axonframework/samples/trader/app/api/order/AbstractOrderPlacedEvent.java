@@ -19,6 +19,8 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 /**
+ * <p>Abstract parent class for all buy and sell order placed events.</p>
+ *
  * @author Allard Buijze
  */
 public abstract class AbstractOrderPlacedEvent extends DomainEvent {

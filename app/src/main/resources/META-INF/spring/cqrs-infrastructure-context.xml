@@ -29,4 +29,17 @@
     <bean id="eventStore" class="org.axonframework.eventstore.mongo.MongoEventStore">
         <constructor-arg ref="mongoTemplate"/>
     </bean>
+
+    <bean id="sagaRepository" class="org.axonframework.saga.repository.mongo.MongoSagaRepository">
+        <constructor-arg ref="mongoSagaTemplate"/>
+    </bean>
+
+    <axon:saga-manager id="sagaManager" saga-repository="sagaRepository" event-bus="eventBus">
+        <axon:types>
+            org.axonframework.samples.trader.app.command.trading.SellTradeManagerSaga,
+            org.axonframework.samples.trader.app.command.trading.BuyTradeManagerSaga
+        </axon:types>
+    </axon:saga-manager>
+
+    <bean id="resourceInjector" class="org.axonframework.saga.spring.SpringResourceInjector"/>
 </beans>

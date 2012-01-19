@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.app.api.order;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * <p>Create a new Buy Order.</p>
+ *
  * @author Allard Buijze
  */
 public class CreateBuyOrderCommand extends AbstractOrderCommand {

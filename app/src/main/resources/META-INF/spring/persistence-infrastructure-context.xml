@@ -34,6 +34,10 @@
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 
+    <bean id="mongoSagaTemplate" class="org.axonframework.samples.trader.app.mongo.CFSagaMongoTemplate">
+        <constructor-arg ref="mongoDbFactory"/>
+    </bean>
+
     <beans profile="default">
         <mongo:db-factory id="mongoDbFactory" dbname="axontrader" host="127.0.0.1" port="27017"/>
     </beans>

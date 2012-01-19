@@ -29,3 +29,10 @@ Running the sample
 Advanced configuration
 ----------------------
 To write when done :-)
+
+
+Note to myself
+----------------------
+Should the ID of the transaction be the same are the ID of the order? Is that possible? There should most probably
+be a relation between the two. Think about this, since that would cross aggregate boundaries, which is not allowed.
+Think more about the domain concepts around this.

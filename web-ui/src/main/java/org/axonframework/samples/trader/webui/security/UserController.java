@@ -19,6 +19,7 @@ import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -40,4 +41,11 @@ public class UserController {
         model.addAttribute("items", userRepository.findAll());
         return "user/list";
     }
+
+    @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
+    public String detail(@PathVariable("identifier") String userIdentifier, Model model) {
+        model.addAttribute("item", userRepository.findByIdentifier(userIdentifier));
+        return "user/detail";
+    }
+
 }

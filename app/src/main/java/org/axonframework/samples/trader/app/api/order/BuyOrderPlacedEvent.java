@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.app.api.order;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * <p>A new Buy Order is placed.</p>
+ *
  * @author Allard Buijze
  */
 public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {

@@ -18,6 +18,9 @@ package org.axonframework.samples.trader.app.api.company;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * <p>Create a new company by proving the name, the estiamted value of the company and the amount of shares that are
+ * available for the company. You also must provide the id of the user that wants to create the company.</p>
+ *
  * @author Jettro Coenradie
  */
 public class CreateCompanyCommand {

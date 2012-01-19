@@ -19,6 +19,9 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 /**
+ * <p>A new trade has been executed. The event contains the amount of items that are traded and the price for the items
+ * that are traded. The event also contains the identifiers for the Buy Order and the Sell order.</p>
+ *
  * @author Allard Buijze
  */
 public class TradeExecutedEvent extends DomainEvent {

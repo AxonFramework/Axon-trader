@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.app.api.order;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * <p>Create a new Sell Order using the amount of items to sell for the provided price.</p>
+ *
  * @author Allard Buijze
  */
 public class CreateSellOrderCommand extends AbstractOrderCommand {

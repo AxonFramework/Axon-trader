@@ -27,6 +27,7 @@ public class PortfolioEntry {
     @Id
     private String identifier;
     private String userIdentifier;
+    private String userName;
     private long amountOfMoney;
     private long reservedAmountOfMoney;
 
@@ -109,6 +110,14 @@ public class PortfolioEntry {
 
     public void setItemsReserved(Map<String, ItemEntry> itemsReserved) {
         this.itemsReserved = itemsReserved;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /*-------------------------------------------------------------------------------------------*/

@@ -19,6 +19,7 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.money.*;
 import org.axonframework.samples.trader.app.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class PortfolioMoneyEventListener {
     private final static Logger logger = LoggerFactory.getLogger(PortfolioMoneyEventListener.class);
 
     private PortfolioQueryRepository portfolioRepository;
+    private UserQueryRepository userQueryRepository;
 
     @EventHandler
     public void handleEvent(PortfolioCreatedEvent event) {
@@ -41,6 +43,7 @@ public class PortfolioMoneyEventListener {
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setIdentifier(event.getPortfolioIdentifier().asString());
         portfolioEntry.setUserIdentifier(event.getUserIdentifier().asString());
+        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserIdentifier().asString()).getFullName());
         portfolioEntry.setAmountOfMoney(0);
         portfolioEntry.setReservedAmountOfMoney(0);
 
@@ -94,5 +97,11 @@ public class PortfolioMoneyEventListener {
     @Autowired
     public void setPortfolioRepository(PortfolioQueryRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setUserQueryRepository(UserQueryRepository userQueryRepository) {
+        this.userQueryRepository = userQueryRepository;
     }
 }

@@ -19,6 +19,8 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
 
 /**
+ * <p>A new OrderBook is created for the company with the provided identifier.</p>
+ *
  * @author Jettro Coenradie
  */
 public class OrderBookCreatedEvent extends DomainEvent {

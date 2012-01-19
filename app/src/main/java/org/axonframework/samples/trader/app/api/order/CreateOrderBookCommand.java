@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.app.api.order;
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
+ * <p>Create a new OrderBook for the Company represented by the provided companyIdentifier.</p>
+ *
  * @author Jettro Coenradie
  */
 public class CreateOrderBookCommand {

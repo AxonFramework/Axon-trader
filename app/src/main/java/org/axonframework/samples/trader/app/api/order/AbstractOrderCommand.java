@@ -19,6 +19,8 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 
 /**
+ * <p>Abstract parent class for all commands that are order related.</p>
+ *
  * @author Allard Buijze
  */
 public abstract class AbstractOrderCommand {

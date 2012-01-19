@@ -34,6 +34,13 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @StartSaga
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionStartedEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("A new sell transaction is started with identifier {}, for portfolio with identifier {} and orderbook with identifier {}",
+                    new Object[]{event.getTransactionIdentifier(), event.getPortfolioIdentifier(), event.getOrderbookIdentifier()});
+            logger.debug("The sell transaction with identifier {} is for selling {} items for the price of {}",
+                    new Object[]{event.getTransactionIdentifier(), event.getTotalItems(), event.getPricePerItem()});
+        }
+
         setTransactionIdentifier(event.getTransactionIdentifier());
         setOrderbookIdentifier(event.getOrderbookIdentifier());
         setPortfolioIdentifier(event.getPortfolioIdentifier());
@@ -50,6 +57,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "portfolioIdentifier")
     public void handle(ItemsReservedEvent event) {
+        logger.debug("Items for transaction {} are reserved", getTransactionIdentifier());
         ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(getTransactionIdentifier());
         getCommandBus().dispatch(confirmTransactionCommand);
     }
@@ -62,6 +70,8 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionConfirmedEvent event) {
+        logger.debug("Sell Transaction {} is approved to make the buy order", event.getTransactionIdentifier());
+
         CreateSellOrderCommand command = new CreateSellOrderCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTotalItems(), getPricePerItem());
         getCommandBus().dispatch(command);
     }
@@ -69,15 +79,19 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionCancelledEvent event) {
-        logger.debug("Saga for Sell Transaction with id {} is cancelled", event.getTransactionIdentifier());
+        long amountOfCancelledItems = event.getTotalAmountOfItems() - event.getAmountOfExecutedItems();
+        logger.debug("Sell Transaction {} is cancelled, amount of money reserved to cancel is {}", event.getTransactionIdentifier(), amountOfCancelledItems);
         CancelItemReservationForPortfolioCommand command =
-                new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), event.getTotalAmountOfItems() - event.getAmountOfExecutedItems());
+                new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), amountOfCancelledItems);
         getCommandBus().dispatch(command);
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionExecutedEvent event) {
+        logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
+                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+
         ConfirmItemReservationForPortfolioCommand confirmCommand =
                 new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), event.getAmountOfItems());
         getCommandBus().dispatch(confirmCommand);
@@ -88,6 +102,9 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionPartiallyExecutedEvent event) {
+        logger.debug("Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
+                new Object[]{event.getTransactionIdentifier(), event.getAmountOfExecutedItems(), event.getItemPrice()});
+
         ConfirmItemReservationForPortfolioCommand confirmCommand =
                 new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), event.getAmountOfExecutedItems());
         getCommandBus().dispatch(confirmCommand);
