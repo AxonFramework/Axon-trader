@@ -16,9 +16,8 @@
 package org.axonframework.samples.trader.webui.companies;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.StringAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.app.api.transaction.StartBuyTransactionCommand;
 import org.axonframework.samples.trader.app.api.transaction.StartSellTransactionCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
 import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
@@ -60,6 +59,7 @@ public class CompanyController {
     private PortfolioQueryRepository portfolioQueryRepository;
     private CommandBus commandBus;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public CompanyController(CompanyQueryRepository companyRepository,
                              CommandBus commandBus,
@@ -124,7 +124,7 @@ public class CompanyController {
                     order.getTradeCount(),
                     order.getItemPrice());
 
-            commandBus.dispatch(command, NoOpCallback.INSTANCE);
+            commandBus.dispatch(command);
 
             return "redirect:/company/" + order.getCompanyId();
         }
@@ -138,13 +138,13 @@ public class CompanyController {
 
             // TODO: make this work for multiple orderbooks per company
             OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(order.getCompanyId()).get(0);
-
-            CreateBuyOrderCommand command = new CreateBuyOrderCommand(
-                    new StringAggregateIdentifier(username.getIdentifier()),
+            PortfolioEntry portfolioEntry = portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
+            StartBuyTransactionCommand command = new StartBuyTransactionCommand(
                     new StringAggregateIdentifier(bookEntry.getIdentifier()),
+                    new StringAggregateIdentifier(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
-            commandBus.dispatch(command, NoOpCallback.INSTANCE);
+            commandBus.dispatch(command);
             return "redirect:/company/" + order.getCompanyId();
         }
 

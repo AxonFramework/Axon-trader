@@ -19,11 +19,15 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.transaction.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jettro Coenradie
  */
 public class Transaction extends AbstractAnnotatedAggregateRoot {
+    private final static Logger logger = LoggerFactory.getLogger(Transaction.class);
+
     private long amountOfItems;
     private long amountOfExecutedItems;
     private TransactionType type;
@@ -107,7 +111,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onTransactionConfirmed(BuyTransactionConfirmedEvent event) {
-        // do nothing for now
+        logger.debug("Buy transaction is confirmed, but we do not have to do anything. (Id of transaction is {}",
+                getIdentifier().asString());
     }
 
     @EventHandler

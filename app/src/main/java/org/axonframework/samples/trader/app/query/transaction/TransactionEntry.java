@@ -16,11 +16,13 @@
 package org.axonframework.samples.trader.app.query.transaction;
 
 import org.axonframework.samples.trader.app.command.trading.TransactionType;
+import org.springframework.data.annotation.Id;
 
 /**
  * @author Jettro Coenradie
  */
 public class TransactionEntry {
+    @Id
     private String identifier;
     private String orderbookIdentifier;
     private String portfolioIdentifier;

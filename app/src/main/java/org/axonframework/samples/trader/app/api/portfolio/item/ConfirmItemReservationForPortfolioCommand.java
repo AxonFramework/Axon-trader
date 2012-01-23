@@ -26,11 +26,16 @@ import org.axonframework.domain.AggregateIdentifier;
 public class ConfirmItemReservationForPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier orderBookIdentifier;
+    private AggregateIdentifier transactionIdentifier;
     private long amountOfItemsToConfirm;
 
-    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfItemsToConfirm) {
+    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier,
+                                                     AggregateIdentifier orderBookIdentifier,
+                                                     AggregateIdentifier transactionIdentifier,
+                                                     long amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
@@ -44,5 +49,9 @@ public class ConfirmItemReservationForPortfolioCommand {
 
     public AggregateIdentifier getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

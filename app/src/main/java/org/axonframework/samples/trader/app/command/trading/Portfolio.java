@@ -54,26 +54,26 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new ItemsAddedToPortfolioEvent(orderBookIdentifier, amountOfItemsToAdd));
     }
 
-    public void reserveItems(AggregateIdentifier orderBookIdentifier, long amountOfItemsToReserve) {
+    public void reserveItems(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier, long amountOfItemsToReserve) {
         if (!availableItems.containsKey(orderBookIdentifier)) {
-            apply(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier));
+            apply(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier, transactionIdentifier));
         } else {
             Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
             if (availableAmountOfItems < amountOfItemsToReserve) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolio(
-                        orderBookIdentifier, availableAmountOfItems, amountOfItemsToReserve));
+                        orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
             } else {
-                apply(new ItemsReservedEvent(orderBookIdentifier, amountOfItemsToReserve));
+                apply(new ItemsReservedEvent(orderBookIdentifier, transactionIdentifier, amountOfItemsToReserve));
             }
         }
     }
 
-    public void confirmReservation(AggregateIdentifier orderBookIdentifier, long amountOfItemsToConfirm) {
-        apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier, amountOfItemsToConfirm));
+    public void confirmReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier, long amountOfItemsToConfirm) {
+        apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier, transactionIdentifier, amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(AggregateIdentifier orderBookIdentifier, long amountOfItemsToCancel) {
-        apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier, amountOfItemsToCancel));
+    public void cancelReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier, long amountOfItemsToCancel) {
+        apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier, transactionIdentifier, amountOfItemsToCancel));
     }
 
     public void addMoney(long moneyToAddInCents) {
@@ -84,20 +84,20 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new MoneyWithdrawnFromPortfolioEvent(amountToPayInCents));
     }
 
-    public void reserveMoney(long amountToReserve) {
+    public void reserveMoney(AggregateIdentifier transactionIdentifier, long amountToReserve) {
         if (amountOfMoney >= amountToReserve) {
-            apply(new MoneyReservedFromPortfolioEvent(amountToReserve));
+            apply(new MoneyReservedFromPortfolioEvent(transactionIdentifier, amountToReserve));
         } else {
-            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(amountToReserve));
+            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(transactionIdentifier, amountToReserve));
         }
     }
 
-    public void cancelMoneyReservation(long amountOfMoneyToCancel) {
-        apply(new MoneyReservationCancelledFromPortfolioEvent(amountOfMoneyToCancel));
+    public void cancelMoneyReservation(AggregateIdentifier transactionIdentifier, long amountOfMoneyToCancel) {
+        apply(new MoneyReservationCancelledFromPortfolioEvent(transactionIdentifier, amountOfMoneyToCancel));
     }
 
-    public void confirmMoneyReservation(long amountOfMoneyToConfirm) {
-        apply(new MoneyReservationConfirmedFromPortfolioEvent(amountOfMoneyToConfirm));
+    public void confirmMoneyReservation(AggregateIdentifier transactionIdentifier, long amountOfMoneyToConfirm) {
+        apply(new MoneyReservationConfirmedFromPortfolioEvent(transactionIdentifier, amountOfMoneyToConfirm));
     }
 
     /* EVENT HANDLING */

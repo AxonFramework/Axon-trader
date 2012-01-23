@@ -22,11 +22,13 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class ConfirmMoneyReservationFromPortfolionCommand {
     private AggregateIdentifier portfolioIdentifier;
+    private AggregateIdentifier transactionIdentifier;
     private long amountOfMoneyToConfirmInCents;
 
 
-    public ConfirmMoneyReservationFromPortfolionCommand(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToConfirmInCents) {
+    public ConfirmMoneyReservationFromPortfolionCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier transactionIdentifier, long amountOfMoneyToConfirmInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToConfirmInCents = amountOfMoneyToConfirmInCents;
     }
 
@@ -38,11 +40,16 @@ public class ConfirmMoneyReservationFromPortfolionCommand {
         return portfolioIdentifier;
     }
 
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
+    }
+
     @Override
     public String toString() {
         return "ConfirmMoneyReservationFromPortfolionCommand{" +
                 "amountOfMoneyToConfirmInCents=" + amountOfMoneyToConfirmInCents +
                 ", portfolioIdentifier=" + portfolioIdentifier +
+                ", transactionIdentifier=" + transactionIdentifier +
                 '}';
     }
 }

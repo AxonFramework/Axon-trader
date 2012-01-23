@@ -92,7 +92,8 @@ public class OrderBookListenerIntegrationTest {
 
         AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
         AggregateIdentifier orderId = new UUIDAggregateIdentifier();
-        BuyOrderPlacedEvent event = new BuyOrderPlacedEvent(orderId, 300, 100, userIdentifier);
+        AggregateIdentifier transactionId = new UUIDAggregateIdentifier();
+        BuyOrderPlacedEvent event = new BuyOrderPlacedEvent(orderId, transactionId, 300, 100, userIdentifier);
         DomainEventUtils.setAggregateIdentifier(event, new UUIDAggregateIdentifier(orderBook.getIdentifier()));
 
         orderBookListener.handleBuyOrderPlaced(event);
@@ -111,7 +112,8 @@ public class OrderBookListenerIntegrationTest {
 
         AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
         AggregateIdentifier orderId = new UUIDAggregateIdentifier();
-        SellOrderPlacedEvent event = new SellOrderPlacedEvent(orderId, 300, 100, userIdentifier);
+        AggregateIdentifier transactionId = new UUIDAggregateIdentifier();
+        SellOrderPlacedEvent event = new SellOrderPlacedEvent(orderId, transactionId, 300, 100, userIdentifier);
         DomainEventUtils.setAggregateIdentifier(event, new UUIDAggregateIdentifier(orderBook.getIdentifier()));
 
         orderBookListener.handleSellOrderPlaced(event);
@@ -130,13 +132,15 @@ public class OrderBookListenerIntegrationTest {
 
         AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
         AggregateIdentifier sellOrderId = new UUIDAggregateIdentifier();
-        SellOrderPlacedEvent sellOrderPlacedEvent = new SellOrderPlacedEvent(sellOrderId, 300, 100, userIdentifier);
+        AggregateIdentifier sellTransactionId = new UUIDAggregateIdentifier();
+        SellOrderPlacedEvent sellOrderPlacedEvent = new SellOrderPlacedEvent(sellOrderId, sellTransactionId, 300, 100, userIdentifier);
         DomainEventUtils.setAggregateIdentifier(sellOrderPlacedEvent, new UUIDAggregateIdentifier(orderBook.getIdentifier()));
 
         orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
 
         AggregateIdentifier buyOrderId = new UUIDAggregateIdentifier();
-        BuyOrderPlacedEvent buyOrderPlacedEvent = new BuyOrderPlacedEvent(buyOrderId, 300, 150, userIdentifier);
+        AggregateIdentifier buyTransactionId = new UUIDAggregateIdentifier();
+        BuyOrderPlacedEvent buyOrderPlacedEvent = new BuyOrderPlacedEvent(buyOrderId, buyTransactionId, 300, 150, userIdentifier);
         DomainEventUtils.setAggregateIdentifier(buyOrderPlacedEvent, new UUIDAggregateIdentifier(orderBook.getIdentifier()));
 
         orderBookListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
@@ -149,7 +153,7 @@ public class OrderBookListenerIntegrationTest {
         assertEquals(1, orderBookEntry.buyOrders().size());
 
 
-        TradeExecutedEvent event = new TradeExecutedEvent(300, 125, buyOrderId, sellOrderId);
+        TradeExecutedEvent event = new TradeExecutedEvent(300, 125, buyOrderId, sellOrderId, buyTransactionId, sellTransactionId);
         DomainEventUtils.setAggregateIdentifier(event, new UUIDAggregateIdentifier(orderBook.getIdentifier()));
         orderBookListener.handleTradeExecuted(event);
 

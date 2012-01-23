@@ -23,10 +23,14 @@ import org.axonframework.domain.DomainEvent;
  */
 public class ItemsReservedEvent extends DomainEvent {
     private AggregateIdentifier orderBookIdentifier;
+    private AggregateIdentifier transactionIdentifier;
     private long amountOfItemsReserved;
 
-    public ItemsReservedEvent(AggregateIdentifier orderBookIdentifier, long amountOfItemsReserved) {
+    public ItemsReservedEvent(AggregateIdentifier orderBookIdentifier,
+                              AggregateIdentifier transactionIdentifier,
+                              long amountOfItemsReserved) {
         this.orderBookIdentifier = orderBookIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemsReserved = amountOfItemsReserved;
     }
 
@@ -40,5 +44,9 @@ public class ItemsReservedEvent extends DomainEvent {
 
     public AggregateIdentifier getPortfolioIdentifier() {
         return getAggregateIdentifier();
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

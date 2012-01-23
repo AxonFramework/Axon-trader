@@ -43,6 +43,7 @@ public class PortfolioItemEventListenerTest {
     final AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
     final AggregateIdentifier portfolioIdentifier = new UUIDAggregateIdentifier();
     final AggregateIdentifier companyIdentifier = new UUIDAggregateIdentifier();
+    final AggregateIdentifier transactionIdentifier = new UUIDAggregateIdentifier();
 
     @Before
     public void setUp() throws Exception {
@@ -79,7 +80,7 @@ public class PortfolioItemEventListenerTest {
     @Test
     public void testHandleEventCancelItemReservation() throws Exception {
         ItemReservationCancelledForPortfolioEvent event =
-                new ItemReservationCancelledForPortfolioEvent(itemIdentifier, DEFAULT_AMOUNT_ITEMS);
+                new ItemReservationCancelledForPortfolioEvent(itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
         DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
         listener.handleEvent(event);
 
@@ -93,7 +94,7 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleEventConfirmItemReservation() {
-        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, 50);
+        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, transactionIdentifier, 50);
         DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
 
         listener.handleEvent(event);
@@ -108,7 +109,7 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleItemReservedEvent() {
-        ItemsReservedEvent event = new ItemsReservedEvent(itemIdentifier, DEFAULT_AMOUNT_ITEMS);
+        ItemsReservedEvent event = new ItemsReservedEvent(itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
         DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
         listener.handleEvent(event);
 

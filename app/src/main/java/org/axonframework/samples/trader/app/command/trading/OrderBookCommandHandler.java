@@ -35,10 +35,10 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
-        // TODO add validation here
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
 
         orderBook.addBuyOrder(command.getOrderId(),
+                command.getTransactionId(),
                 command.getTradeCount(),
                 command.getItemPrice(),
                 command.getPortfolioId());
@@ -46,9 +46,9 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
-        // TODO add validation here
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
+                command.getTransactionId(),
                 command.getTradeCount(),
                 command.getItemPrice(),
                 command.getPortfolioId());

@@ -22,9 +22,12 @@ import org.axonframework.domain.DomainEvent;
  * @author Jettro Coenradie
  */
 public class MoneyReservationCancelledFromPortfolioEvent extends DomainEvent {
+    private AggregateIdentifier transactionIdentifier;
     private long amountOfMoneyToCancel;
 
-    public MoneyReservationCancelledFromPortfolioEvent(long amountOfMoneyToCancel) {
+    public MoneyReservationCancelledFromPortfolioEvent(AggregateIdentifier transactionIdentifier,
+                                                       long amountOfMoneyToCancel) {
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
@@ -34,5 +37,9 @@ public class MoneyReservationCancelledFromPortfolioEvent extends DomainEvent {
 
     public long getAmountOfMoneyToCancel() {
         return amountOfMoneyToCancel;
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

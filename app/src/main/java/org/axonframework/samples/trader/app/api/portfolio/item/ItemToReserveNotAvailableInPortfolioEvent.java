@@ -23,9 +23,12 @@ import org.axonframework.domain.DomainEvent;
  */
 public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
     private AggregateIdentifier orderBookIdentifier;
+    private AggregateIdentifier transactionIdentifier;
 
-    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier orderBookIdentifier) {
+    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier orderBookIdentifier,
+                                                     AggregateIdentifier transactionIdentifier) {
         this.orderBookIdentifier = orderBookIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
     }
 
     public AggregateIdentifier getOrderBookIdentifier() {
@@ -34,5 +37,9 @@ public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
 
     public AggregateIdentifier getPortfolioIdentifier() {
         return getAggregateIdentifier();
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

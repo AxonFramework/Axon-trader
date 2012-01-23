@@ -46,13 +46,13 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     }
 
 
-    public void addBuyOrder(AggregateIdentifier orderId, long tradeCount, long itemPrice, AggregateIdentifier userId) {
-        apply(new BuyOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
+    public void addBuyOrder(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier userId) {
+        apply(new BuyOrderPlacedEvent(orderId, transactionId, tradeCount, itemPrice, userId));
         executeTrades();
     }
 
-    public void addSellOrder(AggregateIdentifier orderId, long tradeCount, long itemPrice, AggregateIdentifier userId) {
-        apply(new SellOrderPlacedEvent(orderId, tradeCount, itemPrice, userId));
+    public void addSellOrder(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier userId) {
+        apply(new SellOrderPlacedEvent(orderId, transactionId, tradeCount, itemPrice, userId));
         executeTrades();
     }
 
@@ -67,7 +67,9 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
                 apply(new TradeExecutedEvent(matchedTradeCount,
                         matchedTradePrice,
                         highestBuyer.getOrderId(),
-                        lowestSeller.getOrderId()));
+                        lowestSeller.getOrderId(),
+                        highestBuyer.getTransactionId(),
+                        lowestSeller.getTransactionId()));
             } else {
                 tradingDone = true;
             }
@@ -76,12 +78,12 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     protected void onBuyPlaced(BuyOrderPlacedEvent event) {
-        buyOrders.add(new Order(event.getOrderId(), event.getItemPrice(), event.getTradeCount(), event.getPortfolioId()));
+        buyOrders.add(new Order(event.getOrderId(), event.getTransactionIdentifier(), event.getItemPrice(), event.getTradeCount(), event.getPortfolioId()));
     }
 
     @EventHandler
     protected void onSellPlaced(SellOrderPlacedEvent event) {
-        sellOrders.add(new Order(event.getOrderId(), event.getItemPrice(), event.getTradeCount(), event.getPortfolioId()));
+        sellOrders.add(new Order(event.getOrderId(), event.getTransactionIdentifier(), event.getItemPrice(), event.getTradeCount(), event.getPortfolioId()));
     }
 
     @EventHandler

@@ -26,12 +26,14 @@ import org.axonframework.domain.DomainEvent;
 public abstract class AbstractOrderPlacedEvent extends DomainEvent {
 
     private final AggregateIdentifier orderId;
+    private AggregateIdentifier transactionId;
     private final long tradeCount;
     private final long itemPrice;
     private final AggregateIdentifier portfolioId;
 
-    protected AbstractOrderPlacedEvent(AggregateIdentifier orderId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
+    protected AbstractOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
         this.orderId = orderId;
+        this.transactionId = transactionId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
         this.portfolioId = portfolioId;
@@ -39,6 +41,10 @@ public abstract class AbstractOrderPlacedEvent extends DomainEvent {
 
     public AggregateIdentifier orderBookIdentifier() {
         return getAggregateIdentifier();
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionId;
     }
 
     public AggregateIdentifier getOrderId() {

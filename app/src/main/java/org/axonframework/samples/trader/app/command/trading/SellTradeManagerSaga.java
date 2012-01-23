@@ -19,6 +19,7 @@ import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.app.api.order.TradeExecutedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.*;
 import org.axonframework.samples.trader.app.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.transaction.*;
@@ -47,22 +48,19 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         setPricePerItem(event.getPricePerItem());
         setTotalItems(event.getTotalItems());
 
-        associateWith("orderBookIdentifier", getOrderbookIdentifier());
-        associateWith("portfolioIdentifier", getPortfolioIdentifier());
-
         ReserveItemsCommand reserveItemsCommand =
-                new ReserveItemsCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), event.getTotalItems());
+                new ReserveItemsCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTransactionIdentifier(), event.getTotalItems());
         getCommandBus().dispatch(reserveItemsCommand);
     }
 
-    @SagaEventHandler(associationProperty = "portfolioIdentifier")
+    @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(ItemsReservedEvent event) {
         logger.debug("Items for transaction {} are reserved", getTransactionIdentifier());
         ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(getTransactionIdentifier());
         getCommandBus().dispatch(confirmTransactionCommand);
     }
 
-    @SagaEventHandler(associationProperty = "portfolioIdentifier")
+    @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(NotEnoughItemsAvailableToReserveInPortfolio event) {
         logger.debug("Cannot continue with transaction with id {} since the items needed cannot be reserved", getTotalItems());
@@ -72,7 +70,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     public void handle(SellTransactionConfirmedEvent event) {
         logger.debug("Sell Transaction {} is approved to make the buy order", event.getTransactionIdentifier());
 
-        CreateSellOrderCommand command = new CreateSellOrderCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTotalItems(), getPricePerItem());
+        CreateSellOrderCommand command = new CreateSellOrderCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTransactionIdentifier(), getTotalItems(), getPricePerItem());
         getCommandBus().dispatch(command);
     }
 
@@ -82,9 +80,18 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         long amountOfCancelledItems = event.getTotalAmountOfItems() - event.getAmountOfExecutedItems();
         logger.debug("Sell Transaction {} is cancelled, amount of money reserved to cancel is {}", event.getTransactionIdentifier(), amountOfCancelledItems);
         CancelItemReservationForPortfolioCommand command =
-                new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), amountOfCancelledItems);
+                new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTransactionIdentifier(), amountOfCancelledItems);
         getCommandBus().dispatch(command);
     }
+
+    @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
+    public void handle(TradeExecutedEvent event) {
+        logger.debug("Sell Transaction {} is executed, items for transaction are {} for a price of {}",
+                new Object[]{getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice()});
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice());
+        getCommandBus().dispatch(command);
+    }
+
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
@@ -93,7 +100,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                 new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
 
         ConfirmItemReservationForPortfolioCommand confirmCommand =
-                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), event.getAmountOfItems());
+                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTransactionIdentifier(), event.getAmountOfItems());
         getCommandBus().dispatch(confirmCommand);
         DepositMoneyToPortfolioCommand depositCommand =
                 new DepositMoneyToPortfolioCommand(getPortfolioIdentifier(), event.getItemPrice() * event.getAmountOfItems());
@@ -106,7 +113,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                 new Object[]{event.getTransactionIdentifier(), event.getAmountOfExecutedItems(), event.getItemPrice()});
 
         ConfirmItemReservationForPortfolioCommand confirmCommand =
-                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), event.getAmountOfExecutedItems());
+                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTransactionIdentifier(), event.getAmountOfExecutedItems());
         getCommandBus().dispatch(confirmCommand);
         DepositMoneyToPortfolioCommand depositCommand =
                 new DepositMoneyToPortfolioCommand(getPortfolioIdentifier(), event.getItemPrice() * event.getAmountOfExecutedItems());

@@ -24,8 +24,8 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public BuyOrderPlacedEvent(AggregateIdentifier orderId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
-        super(orderId, tradeCount, itemPrice, portfolioId);
+    public BuyOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
+        super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
     }
 
 }

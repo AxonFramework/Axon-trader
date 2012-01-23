@@ -17,11 +17,11 @@ package org.axonframework.samples.trader.webui.init;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
-import org.axonframework.commandhandling.callbacks.NoOpCallback;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
+import org.axonframework.saga.repository.mongo.MongoTemplate;
 import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.portfolio.money.DepositMoneyToPortfolioCommand;
@@ -32,6 +32,7 @@ import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.OrderEntry;
 import org.axonframework.samples.trader.app.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
+import org.axonframework.samples.trader.app.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,18 +52,21 @@ public class DBInit {
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
     private MongoEventStore eventStore;
     private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
+    private MongoTemplate systemAxonSagaMongo;
 
     @Autowired
     public DBInit(CommandBus commandBus,
                   CompanyQueryRepository companyRepository,
                   org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
                   MongoEventStore eventStore,
-                  org.springframework.data.mongodb.core.MongoTemplate mongoTemplate) {
+                  org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
+                  MongoTemplate systemAxonSagaMongo) {
         this.commandBus = commandBus;
         this.companyRepository = companyRepository;
         this.systemAxonMongo = systemMongo;
         this.eventStore = eventStore;
         this.mongoTemplate = mongoTemplate;
+        this.systemAxonSagaMongo = systemAxonSagaMongo;
     }
 
     public String obtainInfo() {
@@ -78,13 +82,17 @@ public class DBInit {
     public void createItems() {
         systemAxonMongo.domainEventCollection().drop();
         systemAxonMongo.snapshotEventCollection().drop();
+
+        systemAxonSagaMongo.sagaCollection().drop();
+        systemAxonSagaMongo.associationsCollection().drop();
+
         mongoTemplate.dropCollection(UserEntry.class);
         mongoTemplate.dropCollection(OrderBookEntry.class);
         mongoTemplate.dropCollection(OrderEntry.class);
         mongoTemplate.dropCollection(CompanyEntry.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
         mongoTemplate.dropCollection(PortfolioEntry.class);
-//        mongoTemplate.dropCollection(TransactionEntry.class);
+        mongoTemplate.dropCollection(TransactionEntry.class);
 
         AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
         createuser("Buyer two", "buyer2");
@@ -127,7 +135,7 @@ public class DBInit {
         for (CompanyEntry companyEntry : companyEntries) {
             CreateOrderBookCommand command = new CreateOrderBookCommand(
                     new StringAggregateIdentifier(companyEntry.getIdentifier()));
-            commandBus.dispatch(command, NoOpCallback.INSTANCE);
+            commandBus.dispatch(command);
         }
     }
 

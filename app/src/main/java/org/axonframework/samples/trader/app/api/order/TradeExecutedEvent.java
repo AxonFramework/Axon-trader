@@ -30,12 +30,21 @@ public class TradeExecutedEvent extends DomainEvent {
     private final long tradePrice;
     private final AggregateIdentifier buyOrderId;
     private final AggregateIdentifier sellOrderId;
+    private final AggregateIdentifier buyTransactionId;
+    private final AggregateIdentifier sellTransactionId;
 
-    public TradeExecutedEvent(long tradeCount, long tradePrice, AggregateIdentifier buyOrderId, AggregateIdentifier sellOrderId) {
+    public TradeExecutedEvent(long tradeCount,
+                              long tradePrice,
+                              AggregateIdentifier buyOrderId,
+                              AggregateIdentifier sellOrderId,
+                              AggregateIdentifier buyTransactionId,
+                              AggregateIdentifier sellTransactionId) {
         this.tradeCount = tradeCount;
         this.tradePrice = tradePrice;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
+        this.sellTransactionId = sellTransactionId;
+        this.buyTransactionId = buyTransactionId;
     }
 
     public AggregateIdentifier getOrderBookIdentifier() {
@@ -56,5 +65,13 @@ public class TradeExecutedEvent extends DomainEvent {
 
     public AggregateIdentifier getSellOrderId() {
         return sellOrderId;
+    }
+
+    public AggregateIdentifier getBuyTransactionId() {
+        return buyTransactionId;
+    }
+
+    public AggregateIdentifier getSellTransactionId() {
+        return sellTransactionId;
     }
 }

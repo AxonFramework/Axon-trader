@@ -22,10 +22,14 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class ReserveMoneyFromPortfolioCommand {
     private AggregateIdentifier portfolioIdentifier;
+    private AggregateIdentifier transactionIdentifier;
     private long amountOfMoneyToReserve;
 
-    public ReserveMoneyFromPortfolioCommand(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToReserve) {
+    public ReserveMoneyFromPortfolioCommand(AggregateIdentifier portfolioIdentifier,
+                                            AggregateIdentifier transactionIdentifier,
+                                            long amountOfMoneyToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToReserve = amountOfMoneyToReserve;
     }
 
@@ -35,5 +39,9 @@ public class ReserveMoneyFromPortfolioCommand {
 
     public AggregateIdentifier getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

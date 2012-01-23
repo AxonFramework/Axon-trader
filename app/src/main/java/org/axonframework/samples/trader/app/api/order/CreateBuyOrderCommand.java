@@ -24,7 +24,7 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class CreateBuyOrderCommand extends AbstractOrderCommand {
 
-    public CreateBuyOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, long tradeCount, long itemPrice) {
-        super(portfolioId, orderBookId, tradeCount, itemPrice);
+    public CreateBuyOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, AggregateIdentifier transactionId, long tradeCount, long itemPrice) {
+        super(portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
     }
 }

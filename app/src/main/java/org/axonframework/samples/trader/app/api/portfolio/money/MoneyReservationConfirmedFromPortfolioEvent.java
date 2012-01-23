@@ -24,7 +24,7 @@ import org.axonframework.domain.DomainEvent;
 public class MoneyReservationConfirmedFromPortfolioEvent extends DomainEvent {
     private long amountOfMoneyConfirmedInCents;
 
-    public MoneyReservationConfirmedFromPortfolioEvent(long amountOfMoneyConfirmedInCents) {
+    public MoneyReservationConfirmedFromPortfolioEvent(AggregateIdentifier transactionIdentifier, long amountOfMoneyConfirmedInCents) {
         this.amountOfMoneyConfirmedInCents = amountOfMoneyConfirmedInCents;
     }
 

@@ -22,14 +22,16 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 class Order {
 
+    private AggregateIdentifier transactionId;
     private final long itemPrice;
     private final long tradeCount;
     private final AggregateIdentifier userId;
     private long itemsRemaining;
     private AggregateIdentifier orderId;
 
-    public Order(AggregateIdentifier orderId, long itemPrice, long tradeCount, AggregateIdentifier userId) {
+    public Order(AggregateIdentifier orderId, AggregateIdentifier transactionId, long itemPrice, long tradeCount, AggregateIdentifier userId) {
         this.orderId = orderId;
+        this.transactionId = transactionId;
         this.itemPrice = itemPrice;
         this.tradeCount = tradeCount;
         this.itemsRemaining = tradeCount;
@@ -58,5 +60,9 @@ class Order {
 
     public void recordTraded(long tradeCount) {
         this.itemsRemaining -= tradeCount;
+    }
+
+    public AggregateIdentifier getTransactionId() {
+        return transactionId;
     }
 }

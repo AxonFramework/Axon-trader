@@ -27,15 +27,17 @@ public abstract class AbstractOrderCommand {
 
     private AggregateIdentifier portfolioId;
     private AggregateIdentifier orderBookId;
+    private AggregateIdentifier transactionId;
     private long tradeCount;
     private long itemPrice;
     private AggregateIdentifier orderId;
 
-    protected AbstractOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, long tradeCount, long itemPrice) {
+    protected AbstractOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, AggregateIdentifier transactionId, long tradeCount, long itemPrice) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
+        this.transactionId = transactionId;
         this.orderId = new UUIDAggregateIdentifier();
     }
 
@@ -45,6 +47,10 @@ public abstract class AbstractOrderCommand {
 
     public AggregateIdentifier getOrderBookId() {
         return orderBookId;
+    }
+
+    public AggregateIdentifier getTransactionId() {
+        return transactionId;
     }
 
     public long getTradeCount() {

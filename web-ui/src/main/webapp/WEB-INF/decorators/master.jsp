@@ -43,6 +43,7 @@
                 <li class="active"><a href="${ctx}/">Home</a></li>
                 <li><a href="${ctx}/company">Companies</a></li>
                 <li><a href="${ctx}/data/collections">Data</a></li>
+                <li><a href="${ctx}/admin/portfolio">Portfolio</a></li>
             </ul>
             <sec:authorize access="isAuthenticated()">
                 <p class="pull-right credentials">

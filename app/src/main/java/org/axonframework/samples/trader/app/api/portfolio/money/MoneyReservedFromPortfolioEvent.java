@@ -22,9 +22,11 @@ import org.axonframework.domain.DomainEvent;
  * @author Jettro Coenradie
  */
 public class MoneyReservedFromPortfolioEvent extends DomainEvent {
+    private AggregateIdentifier transactionIdentifier;
     private long amountToReserve;
 
-    public MoneyReservedFromPortfolioEvent(long amountToReserve) {
+    public MoneyReservedFromPortfolioEvent(AggregateIdentifier transactionIdentifier, long amountToReserve) {
+        this.transactionIdentifier = transactionIdentifier;
         this.amountToReserve = amountToReserve;
     }
 
@@ -34,5 +36,9 @@ public class MoneyReservedFromPortfolioEvent extends DomainEvent {
 
     public long getAmountToReserve() {
         return amountToReserve;
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

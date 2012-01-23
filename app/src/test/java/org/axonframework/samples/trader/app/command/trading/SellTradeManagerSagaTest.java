@@ -48,8 +48,6 @@ public class SellTradeManagerSagaTest {
     public void testHandle_SellTransactionStarted() throws Exception {
         fixture.givenAggregate(transactionIdentifier).published()
                 .whenAggregate(transactionIdentifier).publishes(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
-                .expectAssociationWith("orderBookIdentifier", orderbookIdentifier)
-                .expectAssociationWith("portfolioIdentifier", portfolioIdentifier)
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ReservedItemsCommandMatcher(orderbookIdentifier.asString(), portfolioIdentifier.asString(), 100)));
     }
@@ -57,7 +55,7 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_ItemsReserved() {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
-                .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(orderbookIdentifier, 100))
+                .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(orderbookIdentifier, transactionIdentifier, 100))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ConfirmTransactionCommandMatcher(transactionIdentifier)));
     }
@@ -65,7 +63,7 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_TransactionConfirmed() {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
-                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, 100))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, transactionIdentifier, 100))
                 .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent())
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new CreateSellOrderCommandMatcher(portfolioIdentifier, orderbookIdentifier, 100, 10)));
@@ -75,7 +73,7 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_NotEnoughItemsToReserve() {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 10))
-                .whenAggregate(portfolioIdentifier).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(orderbookIdentifier, 50, 100))
+                .whenAggregate(portfolioIdentifier).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(orderbookIdentifier, transactionIdentifier, 50, 100))
                 .expectActiveSagas(0);
     }
 
@@ -90,10 +88,11 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_TradeExecutedPlaced() {
         AggregateIdentifier buyOrderIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier buyTransactionIdentifier = new UUIDAggregateIdentifier();
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 99))
-                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, 100))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, transactionIdentifier, 100))
                 .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent())
-                .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(100, 102, buyOrderIdentifier, orderbookIdentifier))
+                .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(100, 102, buyOrderIdentifier, orderbookIdentifier, buyTransactionIdentifier, transactionIdentifier))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(100, 102, transactionIdentifier), andNoMore()));
 
@@ -102,10 +101,11 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_SellTransactionExecuted() {
         AggregateIdentifier buyOrderIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier buyTransactionIdentifier = new UUIDAggregateIdentifier();
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 99))
-                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, 100))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, transactionIdentifier, 100))
                 .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent())
-                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(100, 102, buyOrderIdentifier, orderbookIdentifier))
+                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(100, 102, buyOrderIdentifier, orderbookIdentifier, buyTransactionIdentifier, transactionIdentifier))
                 .whenAggregate(transactionIdentifier).publishes(new SellTransactionExecutedEvent(100, 102))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
@@ -117,10 +117,12 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_SellTransactionPartiallyExecuted() {
         AggregateIdentifier buyOrderIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier buyTransactionIdentifier = new UUIDAggregateIdentifier();
+
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, 100, 99))
-                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, 100))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier, transactionIdentifier, 100))
                 .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent())
-                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(100, 102, buyOrderIdentifier, orderbookIdentifier))
+                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(100, 102, buyOrderIdentifier, orderbookIdentifier, buyTransactionIdentifier, transactionIdentifier))
                 .whenAggregate(transactionIdentifier).publishes(new SellTransactionPartiallyExecutedEvent(50, 75, 102))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(

@@ -23,10 +23,14 @@ import org.axonframework.domain.DomainEvent;
  */
 public class ItemReservationCancelledForPortfolioEvent extends DomainEvent {
     private AggregateIdentifier orderBookIdentifier;
+    private AggregateIdentifier transactionIdentifier;
     private long amountOfCancelledItems;
 
-    public ItemReservationCancelledForPortfolioEvent(AggregateIdentifier orderBookIdentifier, long amountOfCancelledItems) {
+    public ItemReservationCancelledForPortfolioEvent(AggregateIdentifier orderBookIdentifier,
+                                                     AggregateIdentifier transactionIdentifier,
+                                                     long amountOfCancelledItems) {
         this.orderBookIdentifier = orderBookIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
@@ -40,5 +44,9 @@ public class ItemReservationCancelledForPortfolioEvent extends DomainEvent {
 
     public AggregateIdentifier getPortfolioIdentifier() {
         return getAggregateIdentifier();
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

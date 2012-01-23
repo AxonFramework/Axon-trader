@@ -45,7 +45,7 @@ public class PortfolioCommandHandler {
     @CommandHandler
     public void handleReserveItemsCommand(ReserveItemsCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToReserve());
+        portfolio.reserveItems(command.getOrderBookIdentifier(), command.getTransactionIdentifier(), command.getAmountOfItemsToReserve());
     }
 
     @CommandHandler
@@ -57,13 +57,13 @@ public class PortfolioCommandHandler {
     @CommandHandler
     public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmReservation(command.getOrderBookIdentifier(), command.getAmountOfItemsToConfirm());
+        portfolio.confirmReservation(command.getOrderBookIdentifier(), command.getTransactionIdentifier(), command.getAmountOfItemsToConfirm());
     }
 
     @CommandHandler
     public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelReservation(command.getOrderBookIdentifier(), command.getAmountOfItemsToCancel());
+        portfolio.cancelReservation(command.getOrderBookIdentifier(), command.getTransactionIdentifier(), command.getAmountOfItemsToCancel());
     }
 
     @CommandHandler
@@ -81,19 +81,19 @@ public class PortfolioCommandHandler {
     @CommandHandler
     public void handleReserveMoneyFromPortfolioCommand(ReserveMoneyFromPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveMoney(command.getAmountOfMoneyToReserve());
+        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
     }
 
     @CommandHandler
     public void handleCancelMoneyReservationFromPortfolioCommand(CancelMoneyReservationFromPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelMoneyReservation(command.getAmountOfMoneyToCancel());
+        portfolio.cancelMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToCancel());
     }
 
     @CommandHandler
     public void handleConfirmMoneyReservationFromPortfolioCommand(ConfirmMoneyReservationFromPortfolionCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmMoneyReservation(command.getAmountOfMoneyToConfirmInCents());
+        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToConfirmInCents());
     }
 
     @Autowired

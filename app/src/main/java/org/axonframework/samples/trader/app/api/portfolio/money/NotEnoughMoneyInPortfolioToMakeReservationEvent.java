@@ -22,9 +22,11 @@ import org.axonframework.domain.DomainEvent;
  * @author Jettro Coenradie
  */
 public class NotEnoughMoneyInPortfolioToMakeReservationEvent extends DomainEvent {
+    private AggregateIdentifier transactionIdentifier;
     private long amountToPayInCents;
 
-    public NotEnoughMoneyInPortfolioToMakeReservationEvent(long amountToPayInCents) {
+    public NotEnoughMoneyInPortfolioToMakeReservationEvent(AggregateIdentifier transactionIdentifier, long amountToPayInCents) {
+        this.transactionIdentifier = transactionIdentifier;
         this.amountToPayInCents = amountToPayInCents;
     }
 
@@ -34,5 +36,9 @@ public class NotEnoughMoneyInPortfolioToMakeReservationEvent extends DomainEvent
 
     public long getAmountToPayInCents() {
         return amountToPayInCents;
+    }
+
+    public AggregateIdentifier getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

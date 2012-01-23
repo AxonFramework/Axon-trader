@@ -18,9 +18,6 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
-import org.axonframework.saga.annotation.SagaEventHandler;
-import org.axonframework.samples.trader.app.api.order.TradeExecutedEvent;
-import org.axonframework.samples.trader.app.api.transaction.ExecutedTransactionCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -33,12 +30,6 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
     private AggregateIdentifier transactionIdentifier;
     private AggregateIdentifier orderbookIdentifier;
     private AggregateIdentifier portfolioIdentifier;
-
-    @SagaEventHandler(associationProperty = "orderBookIdentifier")
-    public void handle(TradeExecutedEvent event) {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionIdentifier, event.getTradeCount(), event.getTradePrice());
-        commandBus.dispatch(command);
-    }
 
     /*-------------------------------------------------------------------------------------------*/
     /* Getters and setters                                                                       */
