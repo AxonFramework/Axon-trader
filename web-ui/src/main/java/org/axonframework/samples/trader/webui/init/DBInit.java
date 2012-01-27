@@ -24,19 +24,23 @@ import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
 import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.app.api.portfolio.item.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
 import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.app.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.app.query.orderbook.OrderEntry;
+import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.app.query.portfolio.PortfolioEntry;
+import org.axonframework.samples.trader.app.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.app.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.app.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,11 +48,14 @@ import java.util.Set;
  *
  * @author Jettro Coenradie
  */
+@SuppressWarnings("SpringJavaAutowiringInspection")
 @Component
 public class DBInit {
 
     private CommandBus commandBus;
     private CompanyQueryRepository companyRepository;
+    private PortfolioQueryRepository portfolioRepository;
+    private OrderBookQueryRepository orderBookRepository;
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
     private MongoEventStore eventStore;
     private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
@@ -60,13 +67,17 @@ public class DBInit {
                   org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
                   MongoEventStore eventStore,
                   org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
-                  MongoTemplate systemAxonSagaMongo) {
+                  MongoTemplate systemAxonSagaMongo,
+                  PortfolioQueryRepository portfolioRepository,
+                  OrderBookQueryRepository orderBookRepository) {
         this.commandBus = commandBus;
         this.companyRepository = companyRepository;
         this.systemAxonMongo = systemMongo;
         this.eventStore = eventStore;
         this.mongoTemplate = mongoTemplate;
         this.systemAxonSagaMongo = systemAxonSagaMongo;
+        this.portfolioRepository = portfolioRepository;
+        this.orderBookRepository = orderBookRepository;
     }
 
     public String obtainInfo() {
@@ -94,14 +105,42 @@ public class DBInit {
         mongoTemplate.dropCollection(PortfolioEntry.class);
         mongoTemplate.dropCollection(TransactionEntry.class);
 
-        AggregateIdentifier userIdentifier = createuser("Buyer One", "buyer1");
-        createuser("Buyer two", "buyer2");
-        createuser("Buyer three", "buyer3");
-        createuser("Admin One", "admin1");
+        AggregateIdentifier buyer1 = createuser("Buyer One", "buyer1");
+        AggregateIdentifier buyer2 = createuser("Buyer two", "buyer2");
+        AggregateIdentifier buyer3 = createuser("Buyer three", "buyer3");
+        AggregateIdentifier admin1 = createuser("Admin One", "admin1");
 
-        createCompanies(userIdentifier);
+        createCompanies(buyer1);
         createOrderBooks();
+        addMoney(buyer1, 100000);
+        addItems(buyer2, "Philips", 1000l);
+
         eventStore.ensureIndexes();
+    }
+
+    private void addItems(AggregateIdentifier user, String companyName, long amount) {
+        PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.asString());
+        OrderBookEntry orderBookEntry = obtainOrderBookByCompanyName(companyName);
+        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
+                new UUIDAggregateIdentifier(portfolioEntry.getIdentifier()), new UUIDAggregateIdentifier(orderBookEntry.getIdentifier()), amount);
+        commandBus.dispatch(command);
+    }
+
+    private OrderBookEntry obtainOrderBookByCompanyName(String companyName) {
+        Iterable<CompanyEntry> companyEntries = companyRepository.findAll();
+        for (CompanyEntry entry : companyEntries) {
+            if (entry.getName().equals(companyName)) {
+                List<OrderBookEntry> orderBookEntries = orderBookRepository.findByCompanyIdentifier(entry.getIdentifier());
+
+                return orderBookEntries.get(0);
+            }
+        }
+        throw new RuntimeException("Problem initializing, could not find company with required name.");
+    }
+
+    private void addMoney(AggregateIdentifier buyer1, long amount) {
+        PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(buyer1.asString());
+        depositMoneyToPortfolio(portfolioEntry.getIdentifier(), amount);
     }
 
     public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
