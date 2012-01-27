@@ -23,28 +23,54 @@ import static org.junit.Assert.assertEquals;
  * @author Jettro Coenradie
  */
 public class PortfolioEntryTest {
+    private static final long AMOUNT_ITEMS = 100;
+    private static final long AMOUNT_RESERVED = 40;
+    private static final int AMOUNT_SELL = 10;
+    private static final String ORDERBOOK_IDENTIFIER = "item1";
+    private static final int AMOUNT_OF_MONEY = 1000;
+    private static final int RESERVED_AMOUNT_OF_MONEY = 200;
+
     @Test
     public void testRemovingItems() {
+        PortfolioEntry portfolio = createDefaultPortfolio();
+
+        portfolio.removeReservedItem(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
+        portfolio.removeItemsInPossession(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
+
+        assertEquals(AMOUNT_RESERVED - AMOUNT_SELL, portfolio.findReservedItemByIdentifier(ORDERBOOK_IDENTIFIER).getAmount());
+        assertEquals(AMOUNT_ITEMS - AMOUNT_SELL, portfolio.findItemInPossession(ORDERBOOK_IDENTIFIER).getAmount());
+    }
+
+    @Test
+    public void testObtainAvailableItems() {
+        PortfolioEntry portfolio = createDefaultPortfolio();
+
+        assertEquals(AMOUNT_ITEMS - AMOUNT_RESERVED, portfolio.obtainAmountOfAvailableItemsFor(ORDERBOOK_IDENTIFIER));
+    }
+
+    @Test
+    public void testObtainBudget() {
+        PortfolioEntry portfolio = createDefaultPortfolio();
+        assertEquals(AMOUNT_OF_MONEY - RESERVED_AMOUNT_OF_MONEY, portfolio.obtainMoneyToSpend());
+    }
+
+    private PortfolioEntry createDefaultPortfolio() {
         PortfolioEntry portfolio = new PortfolioEntry();
+
+        portfolio.addItemInPossession(createItem(AMOUNT_ITEMS));
+        portfolio.addReservedItem(createItem(AMOUNT_RESERVED));
+        portfolio.setAmountOfMoney(AMOUNT_OF_MONEY);
+        portfolio.setReservedAmountOfMoney(RESERVED_AMOUNT_OF_MONEY);
+        return portfolio;
+    }
+
+    private ItemEntry createItem(long amount) {
         ItemEntry item1InPossession = new ItemEntry();
         item1InPossession.setIdentifier("item1");
-        item1InPossession.setAmount(100);
+        item1InPossession.setAmount(amount);
         item1InPossession.setCompanyIdentifier("company1");
         item1InPossession.setCompanyName("Company One");
-        portfolio.addItemInPossession(item1InPossession);
-
-        ItemEntry item1InReservation = new ItemEntry();
-        item1InReservation.setIdentifier("item1");
-        item1InReservation.setAmount(33);
-        item1InReservation.setCompanyIdentifier("company1");
-        item1InReservation.setCompanyName("Company One");
-        portfolio.addReservedItem(item1InReservation);
-
-        portfolio.removeReservedItem("item1", 11);
-        assertEquals(22, portfolio.findReservedItemByIdentifier("item1").getAmount());
-
-        portfolio.removeItemsInPossession("item1", 11);
-        assertEquals(89, portfolio.findItemInPossession("item1").getAmount());
+        return item1InPossession;
     }
 
 

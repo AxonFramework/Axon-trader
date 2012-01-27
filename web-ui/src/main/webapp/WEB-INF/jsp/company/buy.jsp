@@ -27,5 +27,13 @@
         <li class="active">Buy</li>
     </ul>
 </content>
+<div class="row">
+    <div class="span14">
+        <div class="alert-message block-message info">
+            <p><c:out value="${moneyInPossession}"/> Cents available of which <c:out value="${moneyReserved}"/> cents
+                reserved.</p>
+        </div>
+    </div>
+</div>
 
 <jsp:include page="form-include.jsp"/>

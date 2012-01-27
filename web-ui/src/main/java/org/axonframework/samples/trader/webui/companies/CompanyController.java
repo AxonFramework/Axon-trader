@@ -96,6 +96,8 @@ public class CompanyController {
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.GET)
     public String buyForm(@PathVariable String identifier, Model model) {
+        addPortfolioMoneyInfoToModel(model);
+
         BuyOrder order = new BuyOrder();
         prepareInitialOrder(identifier, order);
         model.addAttribute("order", order);
@@ -104,6 +106,8 @@ public class CompanyController {
 
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.GET)
     public String sellForm(@PathVariable String identifier, Model model) {
+        addPortfolioItemInfoToModel(identifier, model);
+
         SellOrder order = new SellOrder();
         prepareInitialOrder(identifier, order);
         model.addAttribute("order", order);
@@ -111,13 +115,17 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.POST)
-    public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult) {
+    public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
-            UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
+            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
+            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            // TODO: make this work for multiple orderbooks per company
-            OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(order.getCompanyId()).get(0);
-            PortfolioEntry portfolioEntry = portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
+                bindingResult.rejectValue("tradeCount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
+                addPortfolioItemInfoToModel(order.getCompanyId(), model);
+                return "company/sell";
+            }
+
             StartSellTransactionCommand command = new StartSellTransactionCommand(
                     new StringAggregateIdentifier(bookEntry.getIdentifier()),
                     new StringAggregateIdentifier(portfolioEntry.getIdentifier()),
@@ -128,17 +136,24 @@ public class CompanyController {
 
             return "redirect:/company/" + order.getCompanyId();
         }
+
+        addPortfolioItemInfoToModel(order.getCompanyId(), model);
         return "company/sell";
     }
 
     @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.POST)
-    public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult) {
+    public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
-            UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
 
-            // TODO: make this work for multiple orderbooks per company
-            OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(order.getCompanyId()).get(0);
-            PortfolioEntry portfolioEntry = portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
+            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
+            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+
+            if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
+                bindingResult.rejectValue("tradeCount", "error.order.buy.notenoughmoney", "Not enough money to spend to buy the items for the price you want");
+                addPortfolioMoneyInfoToModel(portfolioEntry, model);
+                return "company/buy";
+            }
+
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(
                     new StringAggregateIdentifier(bookEntry.getIdentifier()),
                     new StringAggregateIdentifier(portfolioEntry.getIdentifier()),
@@ -148,7 +163,49 @@ public class CompanyController {
             return "redirect:/company/" + order.getCompanyId();
         }
 
+        addPortfolioMoneyInfoToModel(model);
         return "company/buy";
+    }
+
+    private void addPortfolioItemInfoToModel(String identifier, Model model) {
+        PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+        OrderBookEntry orderBookEntry = obtainOrderBookForCompany(identifier);
+        addPortfolioItemInfoToModel(portfolioEntry, orderBookEntry.getIdentifier(), model);
+    }
+
+    private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, Model model) {
+        model.addAttribute("itemsInPossession", entry.obtainAmountOfItemsInPossessionFor(orderBookIdentifier));
+        model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemsFor(orderBookIdentifier));
+    }
+
+    private void addPortfolioMoneyInfoToModel(Model model) {
+        PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+        addPortfolioMoneyInfoToModel(portfolioEntry, model);
+    }
+
+    private void addPortfolioMoneyInfoToModel(PortfolioEntry portfolioEntry, Model model) {
+        model.addAttribute("moneyInPossession", portfolioEntry.getAmountOfMoney());
+        model.addAttribute("moneyReserved", portfolioEntry.getReservedAmountOfMoney());
+    }
+
+    /**
+     * At the moment we handle the first orderBook found for a company.
+     *
+     * @param companyId Identifier for the company to obtain the orderBook for
+     * @return Found OrderBook for the company belonging to the provided identifier
+     */
+    private OrderBookEntry obtainOrderBookForCompany(String companyId) {
+        return orderBookRepository.findByCompanyIdentifier(companyId).get(0);
+    }
+
+    /**
+     * For now we work with only one portfolio per user. This might change in the future.
+     *
+     * @return The found portfolio for the logged in user.
+     */
+    private PortfolioEntry obtainPortfolioForUser() {
+        UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
+        return portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {

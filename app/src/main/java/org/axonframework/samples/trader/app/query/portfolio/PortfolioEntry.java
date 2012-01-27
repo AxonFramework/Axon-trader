@@ -37,6 +37,32 @@ public class PortfolioEntry {
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
+    public long obtainAmountOfAvailableItemsFor(String identifier) {
+        long possession = obtainAmountOfItemsInPossessionFor(identifier);
+        long reserved = obtainAmountOfReservedItemsFor(identifier);
+        return possession - reserved;
+    }
+
+    public long obtainAmountOfReservedItemsFor(String identifier) {
+        ItemEntry item = findReservedItemByIdentifier(identifier);
+        if (null == item) {
+            return 0;
+        }
+        return item.getAmount();
+    }
+
+    public long obtainAmountOfItemsInPossessionFor(String identifier) {
+        ItemEntry item = findItemInPossession(identifier);
+        if (null == item) {
+            return 0;
+        }
+        return item.getAmount();
+    }
+
+    public long obtainMoneyToSpend() {
+        return amountOfMoney - reservedAmountOfMoney;
+    }
+
     public ItemEntry findReservedItemByIdentifier(String identifier) {
         return itemsReserved.get(identifier);
     }
