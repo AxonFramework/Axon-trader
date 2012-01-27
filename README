@@ -24,7 +24,8 @@ Running the sample
 > mvn clean install
 > cd web-ui
 > mvn jetty:run-war
-- Browse to : http://localhost:8080/
+- Browse to : http://localhost:8080/data/init (need to do this once or for a clean start)
+- Browse to http://localhost:8080 and you should see the user account that you can use to login.
 
 Advanced configuration
 ----------------------
