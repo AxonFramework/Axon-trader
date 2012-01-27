@@ -86,20 +86,29 @@ public class OrderBookListener {
         tradeExecutedRepository.save(tradeExecutedEntry);
 
         // TODO find a better solution or maybe pull them apart
+        OrderEntry foundBuyOrder = null;
         for (OrderEntry order : orderBookEntry.buyOrders()) {
             if (order.getIdentifier().equals(buyOrderId.asString())) {
                 long itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining - event.getTradeCount());
+                foundBuyOrder = order;
                 break;
             }
         }
-
+        if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining() == 0) {
+            orderBookEntry.buyOrders().remove(foundBuyOrder);
+        }
+        OrderEntry foundSellOrder = null;
         for (OrderEntry order : orderBookEntry.sellOrders()) {
             if (order.getIdentifier().equals(sellOrderId.asString())) {
                 long itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining - event.getTradeCount());
+                foundSellOrder = order;
                 break;
             }
+        }
+        if (null != foundSellOrder && foundSellOrder.getItemsRemaining() == 0) {
+            orderBookEntry.sellOrders().remove(foundSellOrder);
         }
         orderBookRepository.save(orderBookEntry);
     }
@@ -116,16 +125,19 @@ public class OrderBookListener {
         return entry;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setOrderBookRepository(OrderBookQueryRepository orderBookRepository) {
         this.orderBookRepository = orderBookRepository;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setCompanyRepository(CompanyQueryRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setTradeExecutedRepository(TradeExecutedQueryRepository tradeExecutedRepository) {
         this.tradeExecutedRepository = tradeExecutedRepository;

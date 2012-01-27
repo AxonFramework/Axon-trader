@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
+@SuppressWarnings("SpringJavaAutowiringInspection")
 public class OrderBookListenerIntegrationTest {
 
     private OrderBookListener orderBookListener;
@@ -51,6 +52,7 @@ public class OrderBookListenerIntegrationTest {
 
     @Autowired
     private TradeExecutedQueryRepository tradeExecutedRepository;
+
     @Autowired
     private CompanyQueryRepository companyRepository;
 
@@ -133,7 +135,7 @@ public class OrderBookListenerIntegrationTest {
         AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
         AggregateIdentifier sellOrderId = new UUIDAggregateIdentifier();
         AggregateIdentifier sellTransactionId = new UUIDAggregateIdentifier();
-        SellOrderPlacedEvent sellOrderPlacedEvent = new SellOrderPlacedEvent(sellOrderId, sellTransactionId, 300, 100, userIdentifier);
+        SellOrderPlacedEvent sellOrderPlacedEvent = new SellOrderPlacedEvent(sellOrderId, sellTransactionId, 400, 100, userIdentifier);
         DomainEventUtils.setAggregateIdentifier(sellOrderPlacedEvent, new UUIDAggregateIdentifier(orderBook.getIdentifier()));
 
         orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
@@ -163,6 +165,14 @@ public class OrderBookListenerIntegrationTest {
         assertEquals("Test Company", tradeExecutedEntry.getCompanyName());
         assertEquals(300, tradeExecutedEntry.getTradeCount());
         assertEquals(125, tradeExecutedEntry.getTradePrice());
+
+        all = orderBookRepository.findAll();
+        orderBookEntry = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
+        assertEquals("Test Company", orderBookEntry.getCompanyName());
+        assertEquals(1, orderBookEntry.sellOrders().size());
+        assertEquals(0, orderBookEntry.buyOrders().size());
+
     }
 
 
