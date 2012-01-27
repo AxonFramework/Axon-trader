@@ -141,4 +141,17 @@ public class PortfolioEntry {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "PortfolioEntry{" +
+                "amountOfMoney=" + amountOfMoney +
+                ", identifier='" + identifier + '\'' +
+                ", userIdentifier='" + userIdentifier + '\'' +
+                ", userName='" + userName + '\'' +
+                ", reservedAmountOfMoney=" + reservedAmountOfMoney +
+                ", itemsInPossession=" + itemsInPossession +
+                ", itemsReserved=" + itemsReserved +
+                '}';
+    }
 }

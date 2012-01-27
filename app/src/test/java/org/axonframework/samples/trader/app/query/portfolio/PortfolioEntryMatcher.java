@@ -22,7 +22,6 @@ import org.mockito.ArgumentMatcher;
  * @author Jettro Coenradie
  */
 public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
-    private String problem;
     private int itemsInPossession;
     private String itemIdentifier;
     private int amountOfItemInPossession;
@@ -40,37 +39,28 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
     @Override
     public boolean matches(Object argument) {
         if (!(argument instanceof PortfolioEntry)) {
-            problem = String.format("Wrong argument type, required %s but received %s", PortfolioEntry.class.getName(), argument.getClass().getName());
             return false;
         }
         PortfolioEntry portfolioEntry = (PortfolioEntry) argument;
 
-        if (portfolioEntry.getItemsInPossession().size() != itemsInPossession) {
-            problem = String.format("Amount of item entries in possession should be %d but was %d", itemsInPossession, portfolioEntry.getItemsInPossession().size());
-            return false;
-        }
-        long foundAmountOfItemsInPossession = portfolioEntry.findItemInPossession(itemIdentifier).getAmount();
-        if (foundAmountOfItemsInPossession != amountOfItemInPossession) {
-            problem = String.format("The amount of the item in possession should be %d but was %d", amountOfItemInPossession, foundAmountOfItemsInPossession);
-            return false;
-        }
-        if (portfolioEntry.getItemsReserved().size() != itemsInReservation) {
-            problem = String.format("The amount of reserved item entries should be %d but was %d", itemsInReservation, portfolioEntry.getItemsReserved().size());
-            return false;
-        }
-        if (itemsInReservation != 0) {
-            long foundAmountOfItemsInReservation = portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount();
-            if (foundAmountOfItemsInReservation != amountOfItemInReservation) {
-                problem = String.format("The amount of the reserved items should be %d but was %d", amountOfItemInReservation, foundAmountOfItemsInReservation);
-                return false;
-            }
-        }
+        return portfolioEntry.getItemsInPossession().size() == itemsInPossession
+                && amountOfItemInPossession == portfolioEntry.findItemInPossession(itemIdentifier).getAmount()
+                && portfolioEntry.getItemsReserved().size() == itemsInReservation
+                && !(itemsInReservation != 0 && (amountOfItemInReservation != portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount()));
 
-        return true;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(problem);
+        description.appendText("PortfolioEntry with itemsInPossession [")
+                .appendValue(itemsInPossession)
+                .appendText("] and amountOfItemsInPossession [")
+                .appendValue(amountOfItemInPossession)
+                .appendText("] and amountOfItemsInReservation [")
+                .appendValue(amountOfItemInReservation)
+                .appendText("] and itemsInReservation [")
+                .appendValue(itemsInReservation)
+                .appendText("]");
+
     }
 }

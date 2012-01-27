@@ -68,7 +68,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionConfirmedEvent event) {
-        logger.debug("Sell Transaction {} is approved to make the buy order", event.getTransactionIdentifier());
+        logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionIdentifier());
 
         CreateSellOrderCommand command = new CreateSellOrderCommand(getPortfolioIdentifier(), getOrderbookIdentifier(), getTransactionIdentifier(), getTotalItems(), getPricePerItem());
         getCommandBus().dispatch(command);

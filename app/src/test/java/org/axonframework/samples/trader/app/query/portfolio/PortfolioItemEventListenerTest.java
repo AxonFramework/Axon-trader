@@ -32,6 +32,9 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
 /**
+ * We setup this test with a default portfolio and a default orderBook. The portfolio contains the default amount of
+ * items in Reservation. This means that all available items are reserved.
+ *
  * @author Jettro Coenradie
  */
 public class PortfolioItemEventListenerTest {
@@ -92,6 +95,10 @@ public class PortfolioItemEventListenerTest {
                 0)));
     }
 
+    /**
+     * We are going to confirm 50 of the items in the reservation. Therefore we expect the reservation to become 50
+     * less than the default amount of items.
+     */
     @Test
     public void testHandleEventConfirmItemReservation() {
         ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, transactionIdentifier, 50);
@@ -102,7 +109,7 @@ public class PortfolioItemEventListenerTest {
         verify(portfolioQueryRepository).save(argThat(new PortfolioEntryMatcher(
                 itemIdentifier.asString(),
                 1,
-                DEFAULT_AMOUNT_ITEMS,
+                DEFAULT_AMOUNT_ITEMS - 50,
                 1,
                 DEFAULT_AMOUNT_ITEMS - 50)));
     }

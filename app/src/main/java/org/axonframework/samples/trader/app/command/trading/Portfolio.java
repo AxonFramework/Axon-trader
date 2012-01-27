@@ -135,6 +135,10 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
         long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
         reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfConfirmedItems());
+
+        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfConfirmedItems());
+
     }
 
     @EventHandler

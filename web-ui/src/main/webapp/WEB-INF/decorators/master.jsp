@@ -40,7 +40,8 @@
         <div class="container">
             <a class="brand" href="${ctx}/">Axon Trader</a>
             <ul class="nav">
-                <li class="active"><a href="${ctx}/">Home</a></li>
+                <li><a href="${ctx}/">Home</a></li>
+                <li><a href="${ctx}/dashboard">Dashboard</a></li>
                 <li><a href="${ctx}/company">Companies</a></li>
                 <li><a href="${ctx}/data/collections">Data</a></li>
                 <li><a href="${ctx}/admin/portfolio">Portfolio</a></li>

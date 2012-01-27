@@ -88,7 +88,7 @@ public class TransactionEventListener {
 
     private void partiallyExecuteTransaction(AbstractTransactionPartiallyExecutedEvent event) {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier().asString());
-        transactionEntry.setState(EXECUTED);
+        transactionEntry.setState(PARTIALLYEXECUTED);
         transactionEntry.setAmountOfExecutedItems((int) event.getTotalOfExecutedItems());
         transactionEntry.setPricePerItem(event.getItemPrice());
         transactionQueryRepository.save(transactionEntry);

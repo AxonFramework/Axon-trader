@@ -55,4 +55,14 @@ public class ItemEntry {
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
+
+    @Override
+    public String toString() {
+        return "ItemEntry{" +
+                "amount=" + amount +
+                ", identifier='" + identifier + '\'' +
+                ", companyIdentifier='" + companyIdentifier + '\'' +
+                ", companyName='" + companyName + '\'' +
+                '}';
+    }
 }

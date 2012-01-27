@@ -65,6 +65,7 @@ public class PortfolioItemEventListener {
         logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.removeReservedItem(event.getOrderBookIdentifier().asString(), event.getAmountOfConfirmedItems());
+        portfolioEntry.removeItemsInPossession(event.getOrderBookIdentifier().asString(), event.getAmountOfConfirmedItems());
 
         portfolioRepository.save(portfolioEntry);
     }

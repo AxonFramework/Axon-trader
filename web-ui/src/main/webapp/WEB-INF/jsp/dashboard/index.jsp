@@ -27,18 +27,90 @@
         <p>Here you see what you have and what is reserved.</p>
 
         <div class="row">
-            <div class="span3">Amount of money</div>
+            <div class="span7">
+                <h3>Money</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span3"><strong>Available</strong></div>
             <div class="span4"><c:out value="${portfolio.amountOfMoney}"/></div>
         </div>
         <div class="row">
-            <div class="span3">Reserved money</div>
+            <div class="span3"><strong>Reserved</strong></div>
             <div class="span4"><c:out value="${portfolio.reservedAmountOfMoney}"/></div>
+        </div>
+        <div class="row">
+            <div class="span7">
+                <h3>Trade items</h3>
+                <table class="zebra-striped condensed-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="item" items="${portfolio.itemsInPossession}">
+                        <tr>
+                            <td><c:out value="${item.value.companyName}"/></td>
+                            <td><c:out value="${item.value.amount}"/></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span7">
+                <h3>Trade items reserved</h3>
+                <table class="zebra-striped condensed-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="item" items="${portfolio.itemsReserved}">
+                        <tr>
+                            <td><c:out value="${item.value.companyName}"/></td>
+                            <td><c:out value="${item.value.amount}"/></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="span7">
         <h2>Transactions</h2>
 
         <p>Here you see your current transactions.</p>
+
+        <table class="zebra-striped condensed-table">
+            <thead>
+            <tr>
+                <th>Company</th>
+                <th>Type</th>
+                <th># Items</th>
+                <th>Price</th>
+                <th>Executed</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="item" items="${transactions}">
+                <tr>
+                    <td><c:out value="${item.companyName}"/></td>
+                    <td><c:out value="${item.type}"/></td>
+                    <td><c:out value="${item.amountOfItems}"/></td>
+                    <td><c:out value="${item.pricePerItem}"/></td>
+                    <td><c:out value="${item.amountOfExecutedItems}"/></td>
+                    <td><c:out value="${item.state}"/></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
     </div>
 </div>
 

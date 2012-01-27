@@ -26,6 +26,7 @@
     <context:component-scan base-package="org.axonframework.samples.trader.webui.security"/>
 
     <http pattern="/js/**" security="none"/>
+    <http pattern="/favicon.ico" security="none"/>
     <http pattern="/style/**" security="none"/>
     <http pattern="/login.jsp*" security="none"/>
 

@@ -134,4 +134,21 @@ public class BuyTradeManagerSagaTest {
                                 new AddItemsToPortfolioCommandMatcher(portfolioIdentifier, orderbookIdentifier, 50)));
     }
 
+    @Test
+    public void testHandle_MultipleBuyTransactionPartiallyExecuted() {
+        AggregateIdentifier sellOrderIdentifier = new UUIDAggregateIdentifier();
+        AggregateIdentifier sellTransactionIdentifier = new UUIDAggregateIdentifier();
+
+        fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, TOTAL_ITEMS, PRICE_PER_ITEM))
+                .andThenAggregate(portfolioIdentifier).published(new MoneyReservedFromPortfolioEvent(transactionIdentifier, TOTAL_ITEMS * PRICE_PER_ITEM))
+                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent())
+                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(50, 99, orderbookIdentifier, sellOrderIdentifier, transactionIdentifier, sellTransactionIdentifier))
+                .whenAggregate(transactionIdentifier).publishes(new BuyTransactionPartiallyExecutedEvent(50, 50, 99))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(
+                        exactSequenceOf(
+                                new ConfirmMoneyReservationFromPortfolionCommandMatcher(portfolioIdentifier, 50 * 99),
+                                new AddItemsToPortfolioCommandMatcher(portfolioIdentifier, orderbookIdentifier, 50)));
+    }
+
 }

@@ -117,7 +117,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onTransactionConfirmed(SellTransactionConfirmedEvent event) {
-        // do nothing for now
+        logger.debug("Sell transaction is confirmed, but we do not have to do anything. (Id of transaction is {}",
+                getIdentifier().asString());
     }
 
     @EventHandler

@@ -18,9 +18,11 @@ package org.axonframework.samples.trader.app.query.transaction.repositories;
 import org.axonframework.samples.trader.app.query.transaction.TransactionEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
+
 /**
  * @author Jettro Coenradie
  */
 public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String> {
-    TransactionEntry findByPortfolioIdentifier(String portfolioIdentifier);
+    List<TransactionEntry> findByPortfolioIdentifier(String portfolioIdentifier);
 }
