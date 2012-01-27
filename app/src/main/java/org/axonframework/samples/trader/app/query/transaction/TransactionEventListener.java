@@ -88,17 +88,27 @@ public class TransactionEventListener {
 
     private void partiallyExecuteTransaction(AbstractTransactionPartiallyExecutedEvent event) {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier().asString());
+
+        long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
+        long additionalValue = event.getAmountOfExecutedItems() * event.getItemPrice();
+        long newPrice = (value + additionalValue) / event.getTotalOfExecutedItems();
+
         transactionEntry.setState(PARTIALLYEXECUTED);
-        transactionEntry.setAmountOfExecutedItems((int) event.getTotalOfExecutedItems());
-        transactionEntry.setPricePerItem(event.getItemPrice());
+        transactionEntry.setAmountOfExecutedItems(event.getTotalOfExecutedItems());
+        transactionEntry.setPricePerItem(newPrice);
         transactionQueryRepository.save(transactionEntry);
     }
 
     private void executeTransaction(AbstractTransactionExecutedEvent event) {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier().asString());
+
+        long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
+        long additionalValue = event.getAmountOfItems() * event.getItemPrice();
+        long newPrice = (value + additionalValue) / transactionEntry.getAmountOfItems();
+
         transactionEntry.setState(EXECUTED);
-        transactionEntry.setAmountOfExecutedItems((int) event.getAmountOfItems());
-        transactionEntry.setPricePerItem(event.getItemPrice());
+        transactionEntry.setAmountOfExecutedItems(transactionEntry.getAmountOfItems());
+        transactionEntry.setPricePerItem(newPrice);
         transactionQueryRepository.save(transactionEntry);
     }
 

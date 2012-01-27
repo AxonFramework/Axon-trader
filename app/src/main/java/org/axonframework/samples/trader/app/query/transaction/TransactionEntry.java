@@ -38,7 +38,7 @@ public class TransactionEntry {
         return amountOfExecutedItems;
     }
 
-    public void setAmountOfExecutedItems(int amountOfExecutedItems) {
+    public void setAmountOfExecutedItems(long amountOfExecutedItems) {
         this.amountOfExecutedItems = amountOfExecutedItems;
     }
 

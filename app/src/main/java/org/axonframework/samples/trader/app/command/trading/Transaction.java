@@ -133,12 +133,12 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onTransactionExecuted(BuyTransactionExecutedEvent event) {
-        this.amountOfExecutedItems = event.getAmountOfItems();
+        this.amountOfExecutedItems = this.amountOfItems;
     }
 
     @EventHandler
     public void onTransactionExecuted(SellTransactionExecutedEvent event) {
-        this.amountOfExecutedItems = event.getAmountOfItems();
+        this.amountOfExecutedItems = this.amountOfItems;
     }
 
     @EventHandler
