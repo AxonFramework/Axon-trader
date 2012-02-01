@@ -36,6 +36,8 @@
     <modules>
         <module>app</module>
         <module>web-ui</module>
+        <module>trade-engine-api</module>
+        <module>trade-engine</module>
     </modules>
 
     <build>

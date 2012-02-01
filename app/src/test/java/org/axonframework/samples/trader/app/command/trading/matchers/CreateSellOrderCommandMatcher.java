@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.command.trading.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 

@@ -11,4 +11,11 @@
 
     <artifactId>axon-trader-trade-engine-api</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-core</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+    </dependencies>
 </project>

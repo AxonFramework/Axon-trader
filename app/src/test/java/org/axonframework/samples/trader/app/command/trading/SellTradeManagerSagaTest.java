@@ -17,7 +17,7 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.ItemsReservedEvent;
 import org.axonframework.samples.trader.app.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
 import org.axonframework.samples.trader.app.api.transaction.*;

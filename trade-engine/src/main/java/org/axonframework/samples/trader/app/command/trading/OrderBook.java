@@ -18,10 +18,10 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.samples.trader.app.api.order.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.app.api.order.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.app.api.order.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.app.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 
 import java.util.Comparator;
 import java.util.SortedSet;

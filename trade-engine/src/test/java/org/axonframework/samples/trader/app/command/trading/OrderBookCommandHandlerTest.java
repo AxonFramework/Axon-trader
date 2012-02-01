@@ -17,10 +17,15 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author Allard Buijze

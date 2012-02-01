@@ -23,7 +23,7 @@ import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
 import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
-import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.app.api.portfolio.item.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;

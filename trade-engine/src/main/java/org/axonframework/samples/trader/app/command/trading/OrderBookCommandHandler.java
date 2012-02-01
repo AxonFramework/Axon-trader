@@ -18,17 +18,13 @@ package org.axonframework.samples.trader.app.command.trading;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.app.api.order.CreateBuyOrderCommand;
-import org.axonframework.samples.trader.app.api.order.CreateOrderBookCommand;
-import org.axonframework.samples.trader.app.api.order.CreateSellOrderCommand;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
 
 /**
  * @author Allard Buijze
  */
-@Component
 public class OrderBookCommandHandler {
 
     private Repository<OrderBook> repository;
@@ -60,8 +56,6 @@ public class OrderBookCommandHandler {
         repository.add(orderBook);
     }
 
-    @Autowired
-    @Qualifier("orderBookRepository")
     public void setRepository(Repository<OrderBook> orderBookRepository) {
         this.repository = orderBookRepository;
     }

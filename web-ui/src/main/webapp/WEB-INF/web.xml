@@ -31,6 +31,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:META-INF/spring/command-context.xml,
+            classpath:META-INF/spring/trade-engine-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
             classpath:META-INF/spring/cqrs-infrastructure-context.xml,
             classpath:META-INF/spring/persistence-infrastructure-context.xml,

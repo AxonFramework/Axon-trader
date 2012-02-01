@@ -29,14 +29,6 @@
 
     <context:component-scan base-package="org.axonframework.samples.trader.app"/>
 
-    <axon:event-sourcing-repository id="orderBookRepository"
-                                    aggregate-type="org.axonframework.samples.trader.app.command.trading.OrderBook"
-                                    cache-ref="ehcache"
-                                    event-bus="eventBus"
-                                    event-store="eventStore">
-        <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
-    </axon:event-sourcing-repository>
-
     <axon:event-sourcing-repository id="companyRepository"
                                     aggregate-type="org.axonframework.samples.trader.app.command.trading.Company"
                                     cache-ref="ehcache"

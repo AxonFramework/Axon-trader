@@ -17,7 +17,7 @@ package org.axonframework.samples.trader.app.query.orderbook;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.app.api.order.*;
+import org.axonframework.samples.trader.tradeengine.api.order.*;
 import org.axonframework.samples.trader.app.query.company.CompanyEntry;
 import org.axonframework.samples.trader.app.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.app.query.orderbook.repositories.OrderBookQueryRepository;
