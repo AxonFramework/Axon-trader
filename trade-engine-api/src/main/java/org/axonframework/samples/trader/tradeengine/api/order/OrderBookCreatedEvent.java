@@ -13,19 +13,28 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.order;
+package org.axonframework.samples.trader.tradeengine.api.order;
 
 import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.domain.DomainEvent;
 
 /**
- * <p>A new Buy Order is placed.</p>
+ * <p>A new OrderBook is created for the company with the provided identifier.</p>
  *
- * @author Allard Buijze
+ * @author Jettro Coenradie
  */
-public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {
+public class OrderBookCreatedEvent extends DomainEvent {
+    private AggregateIdentifier companyIdentifier;
 
-    public BuyOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
-        super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
+    public OrderBookCreatedEvent(AggregateIdentifier companyIdentifier) {
+        this.companyIdentifier = companyIdentifier;
     }
 
+    public AggregateIdentifier getCompanyIdentifier() {
+        return companyIdentifier;
+    }
+
+    public AggregateIdentifier getOrderBookIdentifier() {
+        return getAggregateIdentifier();
+    }
 }

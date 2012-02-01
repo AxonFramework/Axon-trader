@@ -13,18 +13,19 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.order;
+package org.axonframework.samples.trader.tradeengine.api.order;
 
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
- * <p>Create a new Buy Order.</p>
+ * <p>A new Buy Order is placed.</p>
  *
  * @author Allard Buijze
  */
-public class CreateBuyOrderCommand extends AbstractOrderCommand {
+public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public CreateBuyOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, AggregateIdentifier transactionId, long tradeCount, long itemPrice) {
-        super(portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
+    public BuyOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
+        super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
     }
+
 }

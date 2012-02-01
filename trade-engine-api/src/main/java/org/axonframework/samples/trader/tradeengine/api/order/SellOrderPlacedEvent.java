@@ -13,23 +13,18 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.order;
+package org.axonframework.samples.trader.tradeengine.api.order;
 
 import org.axonframework.domain.AggregateIdentifier;
 
 /**
- * <p>Create a new OrderBook for the Company represented by the provided companyIdentifier.</p>
+ * <p>A new Sell Order is placed for the current OrderBook. </p>
  *
- * @author Jettro Coenradie
+ * @author Allard Buijze
  */
-public class CreateOrderBookCommand {
-    private AggregateIdentifier companyIdentifier;
+public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public CreateOrderBookCommand(AggregateIdentifier companyIdentifier) {
-        this.companyIdentifier = companyIdentifier;
-    }
-
-    public AggregateIdentifier getCompanyIdentifier() {
-        return companyIdentifier;
+    public SellOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
+        super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
     }
 }
