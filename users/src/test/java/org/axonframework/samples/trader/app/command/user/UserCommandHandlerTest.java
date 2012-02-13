@@ -21,14 +21,12 @@ import org.axonframework.samples.trader.app.api.user.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
 import org.axonframework.samples.trader.app.query.user.UserEntry;
 import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.app.util.DigestUtils;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.axonframework.samples.trader.app.util.DigestUtils.sha1;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.mockito.Mockito;
 
 /**
  * @author Jettro Coenradie
@@ -40,7 +38,7 @@ public class UserCommandHandlerTest {
 
     @Before
     public void setUp() {
-        userQueryRepository = mock(UserQueryRepository.class);
+        userQueryRepository = Mockito.mock(UserQueryRepository.class);
 
         fixture = Fixtures.newGivenWhenThenFixture();
         UserCommandHandler commandHandler = new UserCommandHandler();
@@ -54,7 +52,7 @@ public class UserCommandHandlerTest {
     public void testHandleCreateUser() throws Exception {
         fixture.given()
                 .when(new CreateUserCommand("Buyer 1", "buyer1", "buyer1"))
-                .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1", sha1("buyer1")));
+                .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")));
     }
 
     @Test
@@ -63,9 +61,9 @@ public class UserCommandHandlerTest {
         userEntry.setUsername("buyer1");
         userEntry.setIdentifier(fixture.getAggregateIdentifier().asString());
         userEntry.setName("Buyer One");
-        when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
+        Mockito.when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 
-        fixture.given(new UserCreatedEvent("Buyer 1", "buyer1", sha1("buyer1")))
+        fixture.given(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")))
                 .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
                 .expectEvents(new UserAuthenticatedEvent());
     }

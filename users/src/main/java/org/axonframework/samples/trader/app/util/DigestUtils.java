@@ -96,7 +96,7 @@ public class DigestUtils {
         Assert.state(offset < data.length, "The offset must be lower than the length of the data");
         Assert.state(length >= 0, "The requested length must be positive");
         Assert.state(length <= data.length,
-                     "The requested length must be equal to or lower than the length of the data");
+                "The requested length must be equal to or lower than the length of the data");
 
         StringBuilder buf = new StringBuilder(length * 2);
         for (int i = offset; i < (offset + length); i++) {

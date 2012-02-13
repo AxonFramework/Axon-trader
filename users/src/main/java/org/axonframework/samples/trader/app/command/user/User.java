@@ -20,8 +20,7 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.app.api.user.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
-
-import static org.axonframework.samples.trader.app.util.DigestUtils.sha1;
+import org.axonframework.samples.trader.app.util.DigestUtils;
 
 /**
  * @author Jettro Coenradie
@@ -58,7 +57,7 @@ public class User extends AbstractAnnotatedAggregateRoot {
     }
 
     private String hashOf(char[] password) {
-        return sha1(String.valueOf(password));
+        return DigestUtils.sha1(String.valueOf(password));
     }
 
 }

@@ -34,6 +34,16 @@
             <artifactId>axon-trader-trade-engine-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>axon-trader-users-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>axon-trader-users-query</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -49,7 +59,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.6.5</version>
+            <version>${mongodb.java.version}</version>
         </dependency>
 
         <dependency>
@@ -61,7 +71,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>1.0.0.M4</version>
+            <version>${springdata.mongodb.version}</version>
         </dependency>
 
         <dependency>
@@ -98,7 +108,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <version>${spring.version}</version>
-            </dependency>
+        </dependency>
 
         <!-- test dependencies -->
         <dependency>

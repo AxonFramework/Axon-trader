@@ -56,6 +56,11 @@
             <artifactId>axon-trader-trade-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>axon-trader-users</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- spring dependencies -->
         <dependency>

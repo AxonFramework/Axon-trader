@@ -16,7 +16,6 @@
 
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5">
 
@@ -32,6 +31,7 @@
         <param-value>
             classpath:META-INF/spring/command-context.xml,
             classpath:META-INF/spring/trade-engine-context.xml,
+            classpath:META-INF/spring/users-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
             classpath:META-INF/spring/cqrs-infrastructure-context.xml,
             classpath:META-INF/spring/persistence-infrastructure-context.xml,
