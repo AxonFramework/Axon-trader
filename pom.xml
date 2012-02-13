@@ -40,8 +40,7 @@
     </properties>
 
     <modules>
-        <module>app</module>
-        <module>web-ui</module>
+        <module>orders</module>
         <module>trade-engine-api</module>
         <module>trade-engine</module>
         <module>users-api</module>
@@ -49,6 +48,7 @@
         <module>users-query</module>
         <module>companies-api</module>
         <module>companies</module>
+        <module>web-ui</module>
 
     </modules>
 

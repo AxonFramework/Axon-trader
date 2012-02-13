@@ -48,7 +48,7 @@
         <!-- Internal dependencies -->
         <dependency>
             <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-app</artifactId>
+            <artifactId>axon-trader-orders</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
