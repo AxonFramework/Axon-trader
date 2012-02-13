@@ -47,6 +47,9 @@
         <module>users-api</module>
         <module>users</module>
         <module>users-query</module>
+        <module>companies-api</module>
+        <module>companies</module>
+
     </modules>
 
     <build>

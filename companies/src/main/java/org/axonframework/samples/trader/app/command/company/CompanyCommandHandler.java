@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading;
+package org.axonframework.samples.trader.app.command.company;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.UUIDAggregateIdentifier;
@@ -21,12 +21,10 @@ import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Jettro Coenradie
  */
-@Component
 public class CompanyCommandHandler {
     private Repository<Company> repository;
 
