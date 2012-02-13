@@ -63,7 +63,22 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>axon-trader-users-query</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>axon-trader-companies</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-infrastructure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-query</artifactId>
             <version>${project.version}</version>
         </dependency>
 

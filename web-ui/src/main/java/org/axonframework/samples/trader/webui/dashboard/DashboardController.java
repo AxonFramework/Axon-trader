@@ -15,10 +15,10 @@
 
 package org.axonframework.samples.trader.webui.dashboard;
 
-import org.axonframework.samples.trader.app.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.app.query.portfolio.repositories.PortfolioQueryRepository;
-import org.axonframework.samples.trader.app.query.transaction.TransactionEntry;
-import org.axonframework.samples.trader.app.query.transaction.repositories.TransactionQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.transaction.TransactionEntry;
+import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.samples.trader.webui.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

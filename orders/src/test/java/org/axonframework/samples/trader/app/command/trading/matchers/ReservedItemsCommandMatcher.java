@@ -15,7 +15,7 @@
 
 package org.axonframework.samples.trader.app.command.trading.matchers;
 
-import org.axonframework.samples.trader.app.api.portfolio.item.ReserveItemsCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ReserveItemsCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 

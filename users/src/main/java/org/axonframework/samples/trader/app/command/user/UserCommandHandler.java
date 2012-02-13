@@ -23,7 +23,7 @@ import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
 import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.app.api.user.UserAccount;
-import org.axonframework.samples.trader.app.query.user.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

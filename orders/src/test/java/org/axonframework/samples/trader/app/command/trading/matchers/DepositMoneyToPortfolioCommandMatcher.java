@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.app.command.trading.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.app.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 

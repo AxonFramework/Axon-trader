@@ -17,7 +17,9 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.transaction.*;
+import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.orders.command.trading.Transaction;
+import org.axonframework.samples.trader.orders.command.trading.TransactionCommandHandler;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

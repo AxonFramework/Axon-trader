@@ -17,10 +17,12 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.app.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.app.api.portfolio.item.*;
-import org.axonframework.samples.trader.app.api.portfolio.money.*;
+import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.*;
+import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.orders.command.trading.Portfolio;
+import org.axonframework.samples.trader.orders.command.trading.PortfolioCommandHandler;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

@@ -40,7 +40,10 @@
     </properties>
 
     <modules>
+        <module>infrastructure</module>
+        <module>query</module>
         <module>orders</module>
+        <module>orders-api</module>
         <module>trade-engine-api</module>
         <module>trade-engine</module>
         <module>users-api</module>

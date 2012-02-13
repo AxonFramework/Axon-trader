@@ -17,11 +17,12 @@ package org.axonframework.samples.trader.app.command.trading;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.app.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
-import org.axonframework.samples.trader.app.api.transaction.*;
 import org.axonframework.samples.trader.app.command.trading.matchers.*;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
+import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.orders.command.trading.BuyTradeManagerSaga;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.junit.Before;
 import org.junit.Test;
