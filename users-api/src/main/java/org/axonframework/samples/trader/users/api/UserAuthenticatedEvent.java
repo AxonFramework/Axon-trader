@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.user;
+package org.axonframework.samples.trader.users.api;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.DomainEvent;
@@ -21,30 +21,8 @@ import org.axonframework.domain.DomainEvent;
 /**
  * @author Jettro Coenradie
  */
-public class UserCreatedEvent extends DomainEvent {
-    private String username;
-    private String name;
-    private String password;
-
-    public UserCreatedEvent(String name, String username, String password) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-    }
-
-    public AggregateIdentifier getUserIdentifier() {
+public class UserAuthenticatedEvent extends DomainEvent {
+    public AggregateIdentifier getUserId() {
         return getAggregateIdentifier();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

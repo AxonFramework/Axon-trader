@@ -19,12 +19,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core-1.2.xsd">
 
-    <bean class="org.axonframework.samples.trader.app.command.user.UserCommandHandler">
+    <bean class="org.axonframework.samples.trader.users.command.UserCommandHandler">
         <property name="repository" ref="userRepository"/>
     </bean>
 
     <axon:event-sourcing-repository id="userRepository"
-                                    aggregate-type="org.axonframework.samples.trader.app.command.user.User"
+                                    aggregate-type="org.axonframework.samples.trader.users.command.User"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
                                     event-store="eventStore">

@@ -13,17 +13,31 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.user;
+package org.axonframework.samples.trader.users.api;
 
 /**
- * Object used to obtain information about an available UserAccount
- *
  * @author Jettro Coenradie
  */
-public interface UserAccount {
-    String getUserId();
+public class CreateUserCommand {
+    private String username;
+    private String name;
+    private String password;
 
-    String getUserName();
+    public CreateUserCommand(String name, String username, String password) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+    }
 
-    String getFullName();
+    public String getName() {
+        return name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }

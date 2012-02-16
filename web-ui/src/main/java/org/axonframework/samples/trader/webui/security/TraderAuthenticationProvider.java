@@ -17,8 +17,8 @@ package org.axonframework.samples.trader.webui.security;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
-import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
-import org.axonframework.samples.trader.app.api.user.UserAccount;
+import org.axonframework.samples.trader.users.api.AuthenticateUserCommand;
+import org.axonframework.samples.trader.users.api.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;

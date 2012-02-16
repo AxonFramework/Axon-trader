@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.util;
+package org.axonframework.samples.trader.users.util;
 
 import org.springframework.util.Assert;
 

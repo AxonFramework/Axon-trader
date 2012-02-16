@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.user;
+package org.axonframework.samples.trader.users.command;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.samples.trader.app.api.user.UserAuthenticatedEvent;
-import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
-import org.axonframework.samples.trader.app.util.DigestUtils;
+import org.axonframework.samples.trader.users.api.UserAuthenticatedEvent;
+import org.axonframework.samples.trader.users.api.UserCreatedEvent;
+import org.axonframework.samples.trader.users.util.DigestUtils;
 
 /**
  * @author Jettro Coenradie

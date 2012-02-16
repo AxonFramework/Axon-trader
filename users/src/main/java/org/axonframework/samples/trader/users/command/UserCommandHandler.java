@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.user;
+package org.axonframework.samples.trader.users.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
-import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
-import org.axonframework.samples.trader.app.api.user.UserAccount;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.users.api.AuthenticateUserCommand;
+import org.axonframework.samples.trader.users.api.CreateUserCommand;
+import org.axonframework.samples.trader.users.api.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

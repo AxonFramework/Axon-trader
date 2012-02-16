@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.api.user;
+package org.axonframework.samples.trader.users.api;
 
 /**
  * @author Jettro Coenradie

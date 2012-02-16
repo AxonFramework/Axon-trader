@@ -22,7 +22,6 @@ import org.axonframework.domain.StringAggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
-import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
 import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
 import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
@@ -37,6 +36,7 @@ import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
+import org.axonframework.samples.trader.users.api.CreateUserCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

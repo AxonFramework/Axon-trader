@@ -15,13 +15,15 @@
 
 package org.axonframework.samples.trader.app.command.user;
 
-import org.axonframework.samples.trader.app.api.user.AuthenticateUserCommand;
-import org.axonframework.samples.trader.app.api.user.CreateUserCommand;
-import org.axonframework.samples.trader.app.api.user.UserAuthenticatedEvent;
-import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
-import org.axonframework.samples.trader.app.util.DigestUtils;
 import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.users.api.AuthenticateUserCommand;
+import org.axonframework.samples.trader.users.api.CreateUserCommand;
+import org.axonframework.samples.trader.users.api.UserAuthenticatedEvent;
+import org.axonframework.samples.trader.users.api.UserCreatedEvent;
+import org.axonframework.samples.trader.users.command.User;
+import org.axonframework.samples.trader.users.command.UserCommandHandler;
+import org.axonframework.samples.trader.users.util.DigestUtils;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

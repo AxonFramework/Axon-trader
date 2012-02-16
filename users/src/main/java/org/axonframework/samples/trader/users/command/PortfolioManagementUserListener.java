@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.user;
+package org.axonframework.samples.trader.users.command;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.app.api.user.UserCreatedEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.users.api.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
