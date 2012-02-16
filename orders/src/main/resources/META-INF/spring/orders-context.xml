@@ -44,7 +44,7 @@
     <axon:saga-manager id="sagaManager" saga-repository="sagaRepository" event-bus="eventBus">
         <axon:types>
             org.axonframework.samples.trader.orders.command.SellTradeManagerSaga,
-            org.axonorg.axonframework.samples.trader.orders.command.BuyTradeManagerSaga
+            org.axonframework.samples.trader.orders.command.BuyTradeManagerSaga
         </axon:types>
     </axon:saga-manager>
 
