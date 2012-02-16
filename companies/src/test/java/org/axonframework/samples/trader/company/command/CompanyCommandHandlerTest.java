@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.company;
+package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.api.company.CompanyCreatedEvent;
-import org.axonframework.samples.trader.app.api.company.CreateCompanyCommand;
+import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
+import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

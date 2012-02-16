@@ -16,7 +16,7 @@
 package org.axonframework.samples.trader.query.company;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.app.api.company.CompanyCreatedEvent;
+import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
