@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading;
+package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.UUIDAggregateIdentifier;
