@@ -13,47 +13,45 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading.matchers;
+package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ReserveItemsCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmItemReservationForPortfolioCommandMatcher extends BaseMatcher<ConfirmItemReservationForPortfolioCommand> {
+public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand> {
     private String orderbookIdentifier;
     private String portfolioIdentifier;
-    private int amountOfConfirmedItems;
+    private int amountOfReservedItems;
 
-    public ConfirmItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderbookIdentifier, AggregateIdentifier portfolioIdentifier, int amountOfConfirmedItems) {
-        this.orderbookIdentifier = orderbookIdentifier.asString();
-        this.portfolioIdentifier = portfolioIdentifier.asString();
-        this.amountOfConfirmedItems = amountOfConfirmedItems;
+    public ReservedItemsCommandMatcher(String orderbookIdentifier, String portfolioIdentifier, int amountOfReservedItems) {
+        this.orderbookIdentifier = orderbookIdentifier;
+        this.portfolioIdentifier = portfolioIdentifier;
+        this.amountOfReservedItems = amountOfReservedItems;
     }
 
     @Override
-    public boolean matches(Object object) {
-        if (!(object instanceof ConfirmItemReservationForPortfolioCommand)) {
+    public boolean matches(Object o) {
+        if (!(o instanceof ReserveItemsCommand)) {
             return false;
         }
-        ConfirmItemReservationForPortfolioCommand command = (ConfirmItemReservationForPortfolioCommand) object;
+        ReserveItemsCommand command = (ReserveItemsCommand) o;
         return command.getOrderBookIdentifier().asString().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
-                && amountOfConfirmedItems == command.getAmountOfItemsToConfirm();
+                && amountOfReservedItems == command.getAmountOfItemsToReserve();
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ConfirmItemReservationForPortfolioCommand with amountOfConfirmedItems [")
-                .appendValue(amountOfConfirmedItems)
+        description.appendText("ReserveItemsCommand with amountOfReservedItems [")
+                .appendValue(amountOfReservedItems)
                 .appendText("] for OrderBook with identifier [")
                 .appendValue(orderbookIdentifier)
                 .appendText("] and for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");
-
     }
 }

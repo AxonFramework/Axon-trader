@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading;
+package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
@@ -21,8 +21,6 @@ import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioComm
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.item.*;
 import org.axonframework.samples.trader.orders.api.portfolio.money.*;
-import org.axonframework.samples.trader.orders.command.trading.Portfolio;
-import org.axonframework.samples.trader.orders.command.trading.PortfolioCommandHandler;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

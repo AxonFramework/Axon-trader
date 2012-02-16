@@ -13,40 +13,39 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading.matchers;
+package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMoneyToPortfolioCommand> {
-    private long moneyToAddInCents;
+public class ReserveMoneyFromPortfolioCommandMatcher extends BaseMatcher<ReserveMoneyFromPortfolioCommand> {
     private String portfolioIdentifier;
+    private long amountOfMoneyToReserve;
 
-    public DepositMoneyToPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, long moneyToAddInCents) {
+    public ReserveMoneyFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToReserve) {
+        this.amountOfMoneyToReserve = amountOfMoneyToReserve;
         this.portfolioIdentifier = portfolioIdentifier.asString();
-        this.moneyToAddInCents = moneyToAddInCents;
     }
 
     @Override
     public boolean matches(Object o) {
-        if (!(o instanceof DepositMoneyToPortfolioCommand)) {
+        if (!(o instanceof ReserveMoneyFromPortfolioCommand)) {
             return false;
         }
-        DepositMoneyToPortfolioCommand command = (DepositMoneyToPortfolioCommand) o;
-        return moneyToAddInCents == command.getMoneyToAddInCents()
-                && portfolioIdentifier.equals(command.getPortfolioIdentifier().asString());
-
+        ReserveMoneyFromPortfolioCommand command = (ReserveMoneyFromPortfolioCommand) o;
+        return command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+                && command.getAmountOfMoneyToReserve() == amountOfMoneyToReserve;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("DepositMoneyToPortfolioCommand with moneyToAddInCents [")
-                .appendValue(moneyToAddInCents)
+        description.appendText("ReserveMoneyFromPortfolioCommand with amountOfMoneyToReserve [")
+                .appendValue(amountOfMoneyToReserve)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");

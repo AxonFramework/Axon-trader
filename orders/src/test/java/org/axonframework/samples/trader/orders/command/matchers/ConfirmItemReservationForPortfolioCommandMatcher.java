@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,47 +13,47 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading.matchers;
+package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class AddItemsToPortfolioCommandMatcher extends BaseMatcher<AddItemsToPortfolioCommand> {
-    private String orderBookIdentifier;
+public class ConfirmItemReservationForPortfolioCommandMatcher extends BaseMatcher<ConfirmItemReservationForPortfolioCommand> {
+    private String orderbookIdentifier;
     private String portfolioIdentifier;
-    private long amountOfItemsToAdd;
+    private int amountOfConfirmedItems;
 
-    public AddItemsToPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
-        this.amountOfItemsToAdd = amountOfItemsToAdd;
+    public ConfirmItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderbookIdentifier, AggregateIdentifier portfolioIdentifier, int amountOfConfirmedItems) {
+        this.orderbookIdentifier = orderbookIdentifier.asString();
         this.portfolioIdentifier = portfolioIdentifier.asString();
-        this.orderBookIdentifier = orderBookIdentifier.asString();
+        this.amountOfConfirmedItems = amountOfConfirmedItems;
     }
 
     @Override
     public boolean matches(Object object) {
-        if (!(object instanceof AddItemsToPortfolioCommand)) {
+        if (!(object instanceof ConfirmItemReservationForPortfolioCommand)) {
             return false;
         }
-
-        AddItemsToPortfolioCommand command = (AddItemsToPortfolioCommand) object;
-        return command.getOrderBookIdentifier().asString().equals(orderBookIdentifier)
+        ConfirmItemReservationForPortfolioCommand command = (ConfirmItemReservationForPortfolioCommand) object;
+        return command.getOrderBookIdentifier().asString().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
-                && command.getAmountOfItemsToAdd() == amountOfItemsToAdd;
+                && amountOfConfirmedItems == command.getAmountOfItemsToConfirm();
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("AddItemsToPortfolioCommand with amountOfItemsToAdd [")
-                .appendValue(amountOfItemsToAdd)
+        description.appendText("ConfirmItemReservationForPortfolioCommand with amountOfConfirmedItems [")
+                .appendValue(amountOfConfirmedItems)
                 .appendText("] for OrderBook with identifier [")
-                .appendValue(orderBookIdentifier)
+                .appendValue(orderbookIdentifier)
                 .appendText("] and for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");
+
     }
 }

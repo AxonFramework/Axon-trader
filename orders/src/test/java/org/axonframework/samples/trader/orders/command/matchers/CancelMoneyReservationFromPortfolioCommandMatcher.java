@@ -13,39 +13,40 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading.matchers;
+package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReserveMoneyFromPortfolioCommandMatcher extends BaseMatcher<ReserveMoneyFromPortfolioCommand> {
-    private String portfolioIdentifier;
-    private long amountOfMoneyToReserve;
-
-    public ReserveMoneyFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToReserve) {
-        this.amountOfMoneyToReserve = amountOfMoneyToReserve;
+public class CancelMoneyReservationFromPortfolioCommandMatcher extends BaseMatcher<CancelMoneyReservationFromPortfolioCommand> {
+    public CancelMoneyReservationFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier.asString();
+        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
+
+    private String portfolioIdentifier;
+    private long amountOfMoneyToCancel;
 
     @Override
     public boolean matches(Object o) {
-        if (!(o instanceof ReserveMoneyFromPortfolioCommand)) {
+        if (!(o instanceof CancelMoneyReservationFromPortfolioCommand)) {
             return false;
         }
-        ReserveMoneyFromPortfolioCommand command = (ReserveMoneyFromPortfolioCommand) o;
+        CancelMoneyReservationFromPortfolioCommand command = (CancelMoneyReservationFromPortfolioCommand) o;
+
         return command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
-                && command.getAmountOfMoneyToReserve() == amountOfMoneyToReserve;
+                && command.getAmountOfMoneyToCancel() == amountOfMoneyToCancel;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ReserveMoneyFromPortfolioCommand with amountOfMoneyToReserve [")
-                .appendValue(amountOfMoneyToReserve)
+        description.appendText("CancelMoneyReservationFromPortfolioCommand with amountOfMoneyToCancel [")
+                .appendValue(amountOfMoneyToCancel)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");

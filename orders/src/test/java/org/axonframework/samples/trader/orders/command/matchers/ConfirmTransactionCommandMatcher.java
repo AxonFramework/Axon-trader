@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2011. Gridshore
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,30 +13,30 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading.matchers;
+package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.transaction.CancelTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class CancelTransactionCommandMatcher extends BaseMatcher<CancelTransactionCommand> {
-    private String transactionIdentifier;
+public class ConfirmTransactionCommandMatcher extends BaseMatcher<ConfirmTransactionCommand> {
+    private AggregateIdentifier transactionIdentifier;
 
-    public CancelTransactionCommandMatcher(AggregateIdentifier transactionIdentifier) {
-        this.transactionIdentifier = transactionIdentifier.asString();
+    public ConfirmTransactionCommandMatcher(AggregateIdentifier transactionIdentifier) {
+        this.transactionIdentifier = transactionIdentifier;
     }
 
     @Override
     public boolean matches(Object o) {
-        if (!(o instanceof CancelTransactionCommand)) {
+        if (!(o instanceof ConfirmTransactionCommand)) {
             return false;
         }
-        CancelTransactionCommand command = (CancelTransactionCommand) o;
-        return command.getTransactionIdentifier().asString().equals(transactionIdentifier);
+        ConfirmTransactionCommand command = (ConfirmTransactionCommand) o;
+        return command.getTransactionIdentifier().asString().equals(transactionIdentifier.asString());
     }
 
     @Override

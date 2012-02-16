@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.orders.command.trading;
+package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.saga.annotation.EndSaga;

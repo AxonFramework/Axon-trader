@@ -13,15 +13,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.trading;
+package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.app.command.trading.matchers.*;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
 import org.axonframework.samples.trader.orders.api.transaction.*;
-import org.axonframework.samples.trader.orders.command.trading.SellTradeManagerSaga;
+import org.axonframework.samples.trader.orders.command.matchers.*;
 import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.junit.Before;
