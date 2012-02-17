@@ -16,11 +16,18 @@
 package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventsourcing.AbstractEventSourcedEntity;
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Allard Buijze
  */
-class Order {
+class Order extends AbstractAnnotatedEntity {
 
     private AggregateIdentifier transactionId;
     private final long itemPrice;
@@ -58,11 +65,24 @@ class Order {
         return orderId;
     }
 
-    public void recordTraded(long tradeCount) {
+    private void recordTraded(long tradeCount) {
         this.itemsRemaining -= tradeCount;
     }
 
     public AggregateIdentifier getTransactionId() {
         return transactionId;
+    }
+
+    @EventHandler
+    protected void onTradeExecuted(TradeExecutedEvent event) {
+        if (orderId.equals(event.getBuyOrderId())
+                || orderId.equals(event.getSellOrderId())) {
+            recordTraded(event.getTradeCount());
+        }
+    }
+
+    @Override
+    protected Collection<AbstractEventSourcedEntity> getChildEntities() {
+        return Collections.emptyList();
     }
 }
