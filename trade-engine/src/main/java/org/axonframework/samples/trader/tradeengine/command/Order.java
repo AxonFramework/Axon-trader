@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,7 +37,8 @@ class Order extends AbstractAnnotatedEntity {
     private long itemsRemaining;
     private AggregateIdentifier orderId;
 
-    public Order(AggregateIdentifier orderId, AggregateIdentifier transactionId, long itemPrice, long tradeCount, AggregateIdentifier userId) {
+    public Order(AggregateIdentifier orderId, AggregateIdentifier transactionId, long itemPrice, long tradeCount,
+                 AggregateIdentifier userId) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;

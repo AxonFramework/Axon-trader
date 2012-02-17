@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,6 +37,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardController {
+
     private final static Logger logger = LoggerFactory.getLogger(DashboardController.class);
     private PortfolioQueryRepository portfolioRepository;
     private TransactionQueryRepository transactionRepository;
@@ -48,11 +50,12 @@ public class DashboardController {
         PortfolioEntry portfolio = portfolioRepository.findByUserIdentifier(identifier);
         if (portfolio == null) {
             throw new RuntimeException("You most certainly changed the id of the current logged in user " +
-                    "and the user did not logout.");
+                                               "and the user did not logout.");
         }
         model.addAttribute("portfolio", portfolio);
 
-        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(portfolio.getIdentifier());
+        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(portfolio
+                                                                                                      .getIdentifier());
         model.addAttribute("transactions", transactions);
         return "dashboard/index";
     }

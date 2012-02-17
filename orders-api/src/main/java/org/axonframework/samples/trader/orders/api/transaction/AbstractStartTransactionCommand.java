@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,12 +22,14 @@ import org.axonframework.domain.AggregateIdentifier;
  * @author Jettro Coenradie
  */
 public abstract class AbstractStartTransactionCommand {
+
     private AggregateIdentifier orderbookIdentifier;
     private AggregateIdentifier portfolioIdentifier;
     private long tradeCount;
     private long itemPrice;
 
-    public AbstractStartTransactionCommand(AggregateIdentifier orderbookIdentifier, AggregateIdentifier portfolioIdentifier, long tradeCount, long itemPrice) {
+    public AbstractStartTransactionCommand(AggregateIdentifier orderbookIdentifier,
+                                           AggregateIdentifier portfolioIdentifier, long tradeCount, long itemPrice) {
         this.itemPrice = itemPrice;
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;

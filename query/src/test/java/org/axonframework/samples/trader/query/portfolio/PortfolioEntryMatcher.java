@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,19 +17,21 @@
 package org.axonframework.samples.trader.query.portfolio;
 
 import org.hamcrest.Description;
-import org.mockito.ArgumentMatcher;
+import org.mockito.*;
 
 /**
  * @author Jettro Coenradie
  */
 public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
+
     private int itemsInPossession;
     private String itemIdentifier;
     private int amountOfItemInPossession;
     private int itemsInReservation;
     private int amountOfItemInReservation;
 
-    public PortfolioEntryMatcher(String itemIdentifier, int itemsInPossession, int amountOfItemInPossession, int itemsInReservation, int amountOfItemInReservation) {
+    public PortfolioEntryMatcher(String itemIdentifier, int itemsInPossession, int amountOfItemInPossession,
+                                 int itemsInReservation, int amountOfItemInReservation) {
         this.itemsInPossession = itemsInPossession;
         this.itemIdentifier = itemIdentifier;
         this.amountOfItemInPossession = amountOfItemInPossession;
@@ -46,21 +49,20 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
         return portfolioEntry.getItemsInPossession().size() == itemsInPossession
                 && amountOfItemInPossession == portfolioEntry.findItemInPossession(itemIdentifier).getAmount()
                 && portfolioEntry.getItemsReserved().size() == itemsInReservation
-                && !(itemsInReservation != 0 && (amountOfItemInReservation != portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount()));
-
+                && !(itemsInReservation != 0 && (amountOfItemInReservation != portfolioEntry
+                .findReservedItemByIdentifier(itemIdentifier).getAmount()));
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("PortfolioEntry with itemsInPossession [")
-                .appendValue(itemsInPossession)
-                .appendText("] and amountOfItemsInPossession [")
-                .appendValue(amountOfItemInPossession)
-                .appendText("] and amountOfItemsInReservation [")
-                .appendValue(amountOfItemInReservation)
-                .appendText("] and itemsInReservation [")
-                .appendValue(itemsInReservation)
-                .appendText("]");
-
+                   .appendValue(itemsInPossession)
+                   .appendText("] and amountOfItemsInPossession [")
+                   .appendValue(amountOfItemInPossession)
+                   .appendText("] and amountOfItemsInReservation [")
+                   .appendValue(amountOfItemInReservation)
+                   .appendText("] and itemsInReservation [")
+                   .appendValue(itemsInReservation)
+                   .appendText("]");
     }
 }

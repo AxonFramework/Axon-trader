@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,16 +27,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author Jettro Coenradie
  */
 public class CompanyCommandHandler {
+
     private Repository<Company> repository;
 
     @CommandHandler
     public void handleCreateCompany(CreateCompanyCommand command) {
         Company company = new Company(new UUIDAggregateIdentifier(),
-                command.getCompanyName(),
-                command.getCompanyValue(),
-                command.getAmountOfShares());
+                                      command.getCompanyName(),
+                                      command.getCompanyValue(),
+                                      command.getAmountOfShares());
         repository.add(company);
-
     }
 
     @Autowired
@@ -43,5 +44,4 @@ public class CompanyCommandHandler {
     public void setRepository(Repository<Company> companyRepository) {
         this.repository = companyRepository;
     }
-
 }

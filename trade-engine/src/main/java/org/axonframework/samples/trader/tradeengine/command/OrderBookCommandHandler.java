@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,20 +35,20 @@ public class OrderBookCommandHandler {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
 
         orderBook.addBuyOrder(command.getOrderId(),
-                command.getTransactionId(),
-                command.getTradeCount(),
-                command.getItemPrice(),
-                command.getPortfolioId());
+                              command.getTransactionId(),
+                              command.getTradeCount(),
+                              command.getItemPrice(),
+                              command.getPortfolioId());
     }
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
-                command.getTransactionId(),
-                command.getTradeCount(),
-                command.getItemPrice(),
-                command.getPortfolioId());
+                               command.getTransactionId(),
+                               command.getTradeCount(),
+                               command.getItemPrice(),
+                               command.getPortfolioId());
     }
 
     @CommandHandler

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
     private UserQueryRepository userRepository;
 
     @Autowired
@@ -47,5 +49,4 @@ public class UserController {
         model.addAttribute("item", userRepository.findByIdentifier(userIdentifier));
         return "user/detail";
     }
-
 }

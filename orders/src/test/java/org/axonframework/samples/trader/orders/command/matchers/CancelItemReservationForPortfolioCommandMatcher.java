@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,12 +24,16 @@ import org.hamcrest.Description;
 /**
  * @author Jettro Coenradie
  */
-public class CancelItemReservationForPortfolioCommandMatcher extends BaseMatcher<CancelItemReservationForPortfolioCommand> {
+public class CancelItemReservationForPortfolioCommandMatcher
+        extends BaseMatcher<CancelItemReservationForPortfolioCommand> {
+
     private String orderBookIdentifier;
     private String portfolioIdentifier;
     private long amountOfItemsToCancel;
 
-    public CancelItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderBookIdentifier, AggregateIdentifier portfolioIdentifier, long amountOfItemsToCancel) {
+    public CancelItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderBookIdentifier,
+                                                           AggregateIdentifier portfolioIdentifier,
+                                                           long amountOfItemsToCancel) {
         this.amountOfItemsToCancel = amountOfItemsToCancel;
         this.portfolioIdentifier = portfolioIdentifier.asString();
         this.orderBookIdentifier = orderBookIdentifier.asString();
@@ -48,11 +53,11 @@ public class CancelItemReservationForPortfolioCommandMatcher extends BaseMatcher
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelItemReservationForPortfolioCommand with amountOfItemsToCancel [")
-                .appendValue(amountOfItemsToCancel)
-                .appendText("] for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("] and for OrderBook with identifier [")
-                .appendValue(orderBookIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfItemsToCancel)
+                   .appendText("] for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("] and for OrderBook with identifier [")
+                   .appendValue(orderBookIdentifier)
+                   .appendText("]");
     }
 }

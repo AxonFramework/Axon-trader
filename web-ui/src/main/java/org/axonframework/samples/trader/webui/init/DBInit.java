@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -122,7 +123,9 @@ public class DBInit {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.asString());
         OrderBookEntry orderBookEntry = obtainOrderBookByCompanyName(companyName);
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
-                new UUIDAggregateIdentifier(portfolioEntry.getIdentifier()), new UUIDAggregateIdentifier(orderBookEntry.getIdentifier()), amount);
+                new UUIDAggregateIdentifier(portfolioEntry.getIdentifier()),
+                new UUIDAggregateIdentifier(orderBookEntry.getIdentifier()),
+                amount);
         commandBus.dispatch(command);
     }
 
@@ -130,7 +133,8 @@ public class DBInit {
         Iterable<CompanyEntry> companyEntries = companyRepository.findAll();
         for (CompanyEntry entry : companyEntries) {
             if (entry.getName().equals(companyName)) {
-                List<OrderBookEntry> orderBookEntries = orderBookRepository.findByCompanyIdentifier(entry.getIdentifier());
+                List<OrderBookEntry> orderBookEntries = orderBookRepository
+                        .findByCompanyIdentifier(entry.getIdentifier());
 
                 return orderBookEntries.get(0);
             }

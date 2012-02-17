@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,14 +16,15 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
-import org.junit.Test;
+import org.junit.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * @author Jettro Coenradie
  */
 public class PortfolioEntryTest {
+
     private static final long AMOUNT_ITEMS = 100;
     private static final long AMOUNT_RESERVED = 40;
     private static final int AMOUNT_SELL = 10;
@@ -37,7 +39,8 @@ public class PortfolioEntryTest {
         portfolio.removeReservedItem(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
         portfolio.removeItemsInPossession(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
 
-        assertEquals(AMOUNT_RESERVED - AMOUNT_SELL, portfolio.findReservedItemByIdentifier(ORDERBOOK_IDENTIFIER).getAmount());
+        assertEquals(AMOUNT_RESERVED - AMOUNT_SELL,
+                     portfolio.findReservedItemByIdentifier(ORDERBOOK_IDENTIFIER).getAmount());
         assertEquals(AMOUNT_ITEMS - AMOUNT_SELL, portfolio.findItemInPossession(ORDERBOOK_IDENTIFIER).getAmount());
     }
 
@@ -72,6 +75,4 @@ public class PortfolioEntryTest {
         item1InPossession.setCompanyName("Company One");
         return item1InPossession;
     }
-
-
 }

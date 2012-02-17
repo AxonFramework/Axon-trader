@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,11 +24,13 @@ import org.hamcrest.Description;
  * @author Jettro Coenradie
  */
 public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand> {
+
     private String orderbookIdentifier;
     private String portfolioIdentifier;
     private int amountOfReservedItems;
 
-    public ReservedItemsCommandMatcher(String orderbookIdentifier, String portfolioIdentifier, int amountOfReservedItems) {
+    public ReservedItemsCommandMatcher(String orderbookIdentifier, String portfolioIdentifier,
+                                       int amountOfReservedItems) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfReservedItems = amountOfReservedItems;
@@ -47,11 +50,11 @@ public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand
     @Override
     public void describeTo(Description description) {
         description.appendText("ReserveItemsCommand with amountOfReservedItems [")
-                .appendValue(amountOfReservedItems)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderbookIdentifier)
-                .appendText("] and for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfReservedItems)
+                   .appendText("] for OrderBook with identifier [")
+                   .appendValue(orderbookIdentifier)
+                   .appendText("] and for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

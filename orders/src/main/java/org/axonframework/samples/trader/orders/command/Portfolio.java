@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,8 +20,18 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.*;
-import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationCancelledForPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationConfirmedForPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ItemToReserveNotAvailableInPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsAddedToPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyDepositedToPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationCancelledFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationConfirmedFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +46,7 @@ import java.util.Map;
  * @author Jettro Coenradie
  */
 public class Portfolio extends AbstractAnnotatedAggregateRoot {
+
     private Map<AggregateIdentifier, Long> availableItems = new HashMap<AggregateIdentifier, Long>();
     private Map<AggregateIdentifier, Long> reservedItems = new HashMap<AggregateIdentifier, Long>();
 
@@ -54,7 +66,8 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new ItemsAddedToPortfolioEvent(orderBookIdentifier, amountOfItemsToAdd));
     }
 
-    public void reserveItems(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier, long amountOfItemsToReserve) {
+    public void reserveItems(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
+                             long amountOfItemsToReserve) {
         if (!availableItems.containsKey(orderBookIdentifier)) {
             apply(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier, transactionIdentifier));
         } else {
@@ -68,12 +81,18 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void confirmReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier, long amountOfItemsToConfirm) {
-        apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier, transactionIdentifier, amountOfItemsToConfirm));
+    public void confirmReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
+                                   long amountOfItemsToConfirm) {
+        apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier,
+                                                            transactionIdentifier,
+                                                            amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier, long amountOfItemsToCancel) {
-        apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier, transactionIdentifier, amountOfItemsToCancel));
+    public void cancelReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
+                                  long amountOfItemsToCancel) {
+        apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier,
+                                                            transactionIdentifier,
+                                                            amountOfItemsToCancel));
     }
 
     public void addMoney(long moneyToAddInCents) {
@@ -138,7 +157,6 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
         long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
         availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfConfirmedItems());
-
     }
 
     @EventHandler

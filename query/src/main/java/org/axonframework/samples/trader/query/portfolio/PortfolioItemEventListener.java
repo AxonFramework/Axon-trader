@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,13 +34,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PortfolioItemEventListener {
+
     private final static Logger logger = LoggerFactory.getLogger(PortfolioItemEventListener.class);
     private PortfolioQueryRepository portfolioRepository;
     private OrderBookQueryRepository orderBookQueryRepository;
 
     @EventHandler
     public void handleEvent(ItemsAddedToPortfolioEvent event) {
-        logger.debug("Handle ItemsAddedToPortfolioEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
+        logger.debug("Handle ItemsAddedToPortfolioEvent for orderbook with identifier {}",
+                     event.getOrderBookIdentifier());
         ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().asString(), event.getAmountOfItemsAdded());
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
@@ -50,8 +53,10 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemReservationCancelledForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
-        ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().asString(), event.getAmountOfCancelledItems());
+        logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with identifier {}",
+                     event.getOrderBookIdentifier());
+        ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().asString(),
+                                              event.getAmountOfCancelledItems());
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.removeReservedItem(event.getOrderBookIdentifier().asString(), event.getAmountOfCancelledItems());
@@ -62,10 +67,12 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemReservationConfirmedForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
+        logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with identifier {}",
+                     event.getOrderBookIdentifier());
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.removeReservedItem(event.getOrderBookIdentifier().asString(), event.getAmountOfConfirmedItems());
-        portfolioEntry.removeItemsInPossession(event.getOrderBookIdentifier().asString(), event.getAmountOfConfirmedItems());
+        portfolioEntry.removeItemsInPossession(event.getOrderBookIdentifier().asString(),
+                                               event.getAmountOfConfirmedItems());
 
         portfolioRepository.save(portfolioEntry);
     }
@@ -73,7 +80,8 @@ public class PortfolioItemEventListener {
     @EventHandler
     public void handleEvent(ItemsReservedEvent event) {
         logger.debug("Handle ItemsReservedEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
-        ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().asString(), event.getAmountOfItemsReserved());
+        ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().asString(),
+                                              event.getAmountOfItemsReserved());
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
         portfolioEntry.addReservedItem(itemEntry);

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,6 +27,7 @@ import org.axonframework.samples.trader.users.util.DigestUtils;
  * @author Jettro Coenradie
  */
 public class User extends AbstractAnnotatedAggregateRoot {
+
     private String passwordHash;
 
     public User(AggregateIdentifier identifier, String username, String name, String password) {
@@ -59,5 +61,4 @@ public class User extends AbstractAnnotatedAggregateRoot {
     private String hashOf(char[] password) {
         return DigestUtils.sha1(String.valueOf(password));
     }
-
 }

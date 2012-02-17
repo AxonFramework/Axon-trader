@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,7 +25,8 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class CreateBuyOrderCommand extends AbstractOrderCommand {
 
-    public CreateBuyOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId, AggregateIdentifier transactionId, long tradeCount, long itemPrice) {
+    public CreateBuyOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId,
+                                 AggregateIdentifier transactionId, long tradeCount, long itemPrice) {
         super(portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
     }
 }

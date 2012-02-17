@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +19,17 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionCancelledEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionConfirmedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionPartiallyExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionStartedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionCancelledEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionConfirmedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionPartiallyExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionStartedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +37,7 @@ import org.slf4j.LoggerFactory;
  * @author Jettro Coenradie
  */
 public class Transaction extends AbstractAnnotatedAggregateRoot {
+
     private final static Logger logger = LoggerFactory.getLogger(Transaction.class);
 
     private long amountOfItems;
@@ -43,12 +55,17 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                        long pricePerItem) {
         switch (type) {
             case BUY:
-                apply(new BuyTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, amountOfItems, pricePerItem));
+                apply(new BuyTransactionStartedEvent(orderbookIdentifier,
+                                                     portfolioIdentifier,
+                                                     amountOfItems,
+                                                     pricePerItem));
                 break;
             case SELL:
-                apply(new SellTransactionStartedEvent(orderbookIdentifier, portfolioIdentifier, amountOfItems, pricePerItem));
+                apply(new SellTransactionStartedEvent(orderbookIdentifier,
+                                                      portfolioIdentifier,
+                                                      amountOfItems,
+                                                      pricePerItem));
                 break;
-
         }
     }
 
@@ -78,14 +95,18 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         switch (this.type) {
             case BUY:
                 if (isPartiallyExecuted(amountOfItems)) {
-                    apply(new BuyTransactionPartiallyExecutedEvent(amountOfItems, amountOfItems + amountOfExecutedItems, itemPrice));
+                    apply(new BuyTransactionPartiallyExecutedEvent(amountOfItems,
+                                                                   amountOfItems + amountOfExecutedItems,
+                                                                   itemPrice));
                 } else {
                     apply(new BuyTransactionExecutedEvent(amountOfItems, itemPrice));
                 }
                 break;
             case SELL:
                 if (isPartiallyExecuted(amountOfItems)) {
-                    apply(new SellTransactionPartiallyExecutedEvent(amountOfItems, amountOfItems + amountOfExecutedItems, itemPrice));
+                    apply(new SellTransactionPartiallyExecutedEvent(amountOfItems,
+                                                                    amountOfItems + amountOfExecutedItems,
+                                                                    itemPrice));
                 } else {
                     apply(new SellTransactionExecutedEvent(amountOfItems, itemPrice));
                 }
@@ -112,13 +133,13 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onTransactionConfirmed(BuyTransactionConfirmedEvent event) {
         logger.debug("Buy transaction is confirmed, but we do not have to do anything. (Id of transaction is {}",
-                getIdentifier().asString());
+                     getIdentifier().asString());
     }
 
     @EventHandler
     public void onTransactionConfirmed(SellTransactionConfirmedEvent event) {
         logger.debug("Sell transaction is confirmed, but we do not have to do anything. (Id of transaction is {}",
-                getIdentifier().asString());
+                     getIdentifier().asString());
     }
 
     @EventHandler

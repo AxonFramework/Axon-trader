@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,8 +24,11 @@ import org.hamcrest.Description;
 /**
  * @author Jettro Coenradie
  */
-public class CancelMoneyReservationFromPortfolioCommandMatcher extends BaseMatcher<CancelMoneyReservationFromPortfolioCommand> {
-    public CancelMoneyReservationFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToCancel) {
+public class CancelMoneyReservationFromPortfolioCommandMatcher
+        extends BaseMatcher<CancelMoneyReservationFromPortfolioCommand> {
+
+    public CancelMoneyReservationFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier,
+                                                             long amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier.asString();
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
@@ -46,10 +50,9 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher extends BaseMatch
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelMoneyReservationFromPortfolioCommand with amountOfMoneyToCancel [")
-                .appendValue(amountOfMoneyToCancel)
-                .appendText("] for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
-
+                   .appendValue(amountOfMoneyToCancel)
+                   .appendText("] for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

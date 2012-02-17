@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,8 +18,8 @@ package org.axonframework.samples.trader.query.company.repositories;
 
 import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
+import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,6 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
 public class CompanyRepositoryIntegrationTest {
+
     @Autowired
     private CompanyQueryRepository companyRepository;
 
@@ -41,6 +43,5 @@ public class CompanyRepositoryIntegrationTest {
         companyEntry.setTradeStarted(true);
 
         companyRepository.save(companyEntry);
-
     }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +18,12 @@ package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.orders.api.transaction.CancelTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.ExecutedTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.StartBuyTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.StartSellTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -27,6 +33,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TransactionCommandHandler {
+
     private Repository<Transaction> repository;
 
     @CommandHandler

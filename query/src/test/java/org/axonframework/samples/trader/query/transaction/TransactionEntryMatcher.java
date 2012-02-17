@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,12 +18,13 @@ package org.axonframework.samples.trader.query.transaction;
 
 import org.axonframework.samples.trader.orders.api.transaction.TransactionType;
 import org.hamcrest.Description;
-import org.mockito.ArgumentMatcher;
+import org.mockito.*;
 
 /**
  * @author Jettro Coenradie
  */
 public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
+
     private String problem;
 
     private TransactionState state;
@@ -32,7 +34,8 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
     private int amountOfItemsExecuted;
     private long pricePerItem;
 
-    public TransactionEntryMatcher(int amountOfItems, int amountOfItemsExecuted, String companyName, long pricePerItem, TransactionState state, TransactionType type) {
+    public TransactionEntryMatcher(int amountOfItems, int amountOfItemsExecuted, String companyName, long pricePerItem,
+                                   TransactionState state, TransactionType type) {
         this.amountOfItems = amountOfItems;
         this.amountOfItemsExecuted = amountOfItemsExecuted;
         this.companyName = companyName;
@@ -44,16 +47,22 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
     @Override
     public boolean matches(Object argument) {
         if (!(argument instanceof TransactionEntry)) {
-            problem = String.format("Wrong argument type, required %s but received %s", TransactionEntry.class.getName(), argument.getClass().getName());
+            problem = String.format("Wrong argument type, required %s but received %s",
+                                    TransactionEntry.class.getName(),
+                                    argument.getClass().getName());
             return false;
         }
         TransactionEntry transactionEntry = (TransactionEntry) argument;
         if (amountOfItems != transactionEntry.getAmountOfItems()) {
-            problem = String.format("Amount of items is not %d but %d", amountOfItems, transactionEntry.getAmountOfItems());
+            problem = String.format("Amount of items is not %d but %d",
+                                    amountOfItems,
+                                    transactionEntry.getAmountOfItems());
             return false;
         }
         if (amountOfItemsExecuted != transactionEntry.getAmountOfExecutedItems()) {
-            problem = String.format("Amount of executed items is not %d but %d", amountOfItemsExecuted, transactionEntry.getAmountOfExecutedItems());
+            problem = String.format("Amount of executed items is not %d but %d",
+                                    amountOfItemsExecuted,
+                                    transactionEntry.getAmountOfExecutedItems());
             return false;
         }
         if (!companyName.equals(transactionEntry.getCompanyName())) {
@@ -61,7 +70,9 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
             return false;
         }
         if (pricePerItem != transactionEntry.getPricePerItem()) {
-            problem = String.format("Price per item is not %d but %d", pricePerItem, transactionEntry.getPricePerItem());
+            problem = String.format("Price per item is not %d but %d",
+                                    pricePerItem,
+                                    transactionEntry.getPricePerItem());
             return false;
         }
         if (state != transactionEntry.getState()) {
@@ -78,5 +89,4 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
     public void describeTo(Description description) {
         description.appendText(problem);
     }
-
 }

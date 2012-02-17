@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -42,8 +43,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
 import java.util.List;
+import javax.validation.Valid;
 
 /**
  * @author Jettro Coenradie
@@ -85,7 +86,8 @@ public class CompanyController {
     public String details(@PathVariable String identifier, Model model) {
         CompanyEntry company = companyRepository.findOne(identifier);
         OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
-        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry.getIdentifier());
+        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
+                                                                                                            .getIdentifier());
         model.addAttribute("company", company);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
@@ -121,7 +123,9 @@ public class CompanyController {
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
             if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
-                bindingResult.rejectValue("tradeCount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
+                bindingResult.rejectValue("tradeCount",
+                                          "error.order.sell.tomanyitems",
+                                          "Not enough items available to create sell order.");
                 addPortfolioItemInfoToModel(order.getCompanyId(), model);
                 return "company/sell";
             }
@@ -149,7 +153,9 @@ public class CompanyController {
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
             if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
-                bindingResult.rejectValue("tradeCount", "error.order.buy.notenoughmoney", "Not enough money to spend to buy the items for the price you want");
+                bindingResult.rejectValue("tradeCount",
+                                          "error.order.buy.notenoughmoney",
+                                          "Not enough money to spend to buy the items for the price you want");
                 addPortfolioMoneyInfoToModel(portfolioEntry, model);
                 return "company/buy";
             }
@@ -213,5 +219,4 @@ public class CompanyController {
         order.setCompanyId(identifier);
         order.setCompanyName(company.getName());
     }
-
 }

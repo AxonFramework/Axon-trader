@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,10 +23,8 @@ import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioComm
 import org.axonframework.samples.trader.users.api.UserCreatedEvent;
 import org.axonframework.samples.trader.users.command.PortfolioManagementUserListener;
 import org.axonframework.test.utils.DomainEventUtils;
-import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
+import org.junit.*;
+import org.mockito.*;
 
 /**
  * @author Jettro Coenradie
@@ -48,6 +47,7 @@ public class PortfolioManagementUserListenerTest {
     }
 
     private class UserIdentifierMatcher extends ArgumentMatcher {
+
         private String identifier;
 
         private UserIdentifierMatcher(String identifier) {

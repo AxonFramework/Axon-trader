@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,7 +23,11 @@ import org.axonframework.samples.trader.query.company.repositories.CompanyQueryR
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.axonframework.samples.trader.tradeengine.api.order.*;
+import org.axonframework.samples.trader.tradeengine.api.order.AbstractOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +36,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OrderBookListener {
+
     private static final String BUY = "Buy";
     private static final String SELL = "Sell";
 

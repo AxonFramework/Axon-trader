@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,10 +26,8 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.test.utils.DomainEventUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
+import org.junit.*;
+import org.mockito.*;
 
 /**
  * We setup this test with a default portfolio and a default orderBook. The portfolio contains the default amount of
@@ -37,6 +36,7 @@ import org.mockito.Mockito;
  * @author Jettro Coenradie
  */
 public class PortfolioItemEventListenerTest {
+
     public static final int DEFAULT_AMOUNT_ITEMS = 100;
     private PortfolioQueryRepository portfolioQueryRepository;
     private PortfolioItemEventListener listener;
@@ -62,7 +62,6 @@ public class PortfolioItemEventListenerTest {
 
         PortfolioEntry portfolioEntry = createPortfolioEntry();
         Mockito.when(portfolioQueryRepository.findOne(portfolioIdentifier.asString())).thenReturn(portfolioEntry);
-
     }
 
     @Test
@@ -82,7 +81,9 @@ public class PortfolioItemEventListenerTest {
     @Test
     public void testHandleEventCancelItemReservation() throws Exception {
         ItemReservationCancelledForPortfolioEvent event =
-                new ItemReservationCancelledForPortfolioEvent(itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
+                new ItemReservationCancelledForPortfolioEvent(itemIdentifier,
+                                                              transactionIdentifier,
+                                                              DEFAULT_AMOUNT_ITEMS);
         DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
         listener.handleEvent(event);
 
@@ -100,7 +101,9 @@ public class PortfolioItemEventListenerTest {
      */
     @Test
     public void testHandleEventConfirmItemReservation() {
-        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(itemIdentifier, transactionIdentifier, 50);
+        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(itemIdentifier,
+                                                                                                        transactionIdentifier,
+                                                                                                        50);
         DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
 
         listener.handleEvent(event);

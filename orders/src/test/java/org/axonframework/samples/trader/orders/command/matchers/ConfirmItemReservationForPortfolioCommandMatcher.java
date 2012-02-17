@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,12 +24,16 @@ import org.hamcrest.Description;
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmItemReservationForPortfolioCommandMatcher extends BaseMatcher<ConfirmItemReservationForPortfolioCommand> {
+public class ConfirmItemReservationForPortfolioCommandMatcher
+        extends BaseMatcher<ConfirmItemReservationForPortfolioCommand> {
+
     private String orderbookIdentifier;
     private String portfolioIdentifier;
     private int amountOfConfirmedItems;
 
-    public ConfirmItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderbookIdentifier, AggregateIdentifier portfolioIdentifier, int amountOfConfirmedItems) {
+    public ConfirmItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderbookIdentifier,
+                                                            AggregateIdentifier portfolioIdentifier,
+                                                            int amountOfConfirmedItems) {
         this.orderbookIdentifier = orderbookIdentifier.asString();
         this.portfolioIdentifier = portfolioIdentifier.asString();
         this.amountOfConfirmedItems = amountOfConfirmedItems;
@@ -48,12 +53,11 @@ public class ConfirmItemReservationForPortfolioCommandMatcher extends BaseMatche
     @Override
     public void describeTo(Description description) {
         description.appendText("ConfirmItemReservationForPortfolioCommand with amountOfConfirmedItems [")
-                .appendValue(amountOfConfirmedItems)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderbookIdentifier)
-                .appendText("] and for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
-
+                   .appendValue(amountOfConfirmedItems)
+                   .appendText("] for OrderBook with identifier [")
+                   .appendValue(orderbookIdentifier)
+                   .appendText("] and for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,13 +22,13 @@ import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
 import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author Jettro Coenradie
  */
 public class CompanyCommandHandlerTest {
+
     private FixtureConfiguration fixture;
 
     @Before
@@ -44,7 +45,7 @@ public class CompanyCommandHandlerTest {
         CreateCompanyCommand command = new CreateCompanyCommand(userId, "TestItem", 1000, 10000);
 
         fixture.given()
-                .when(command)
-                .expectEvents(new CompanyCreatedEvent("TestItem", 1000, 10000));
+               .when(command)
+               .expectEvents(new CompanyCreatedEvent("TestItem", 1000, 10000));
     }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,12 +30,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PortfolioManagementUserListener {
+
     private final static Logger logger = LoggerFactory.getLogger(PortfolioManagementUserListener.class);
     private CommandBus commandBus;
 
     @EventHandler
     public void createNewPortfolioWhenUserIsCreated(UserCreatedEvent event) {
-        logger.debug("About to dispatch a new command to create a Portfolio for the new user {}", event.getUserIdentifier());
+        logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
+                     event.getUserIdentifier());
         CreatePortfolioCommand command = new CreatePortfolioCommand(event.getUserIdentifier());
         commandBus.dispatch(command);
     }

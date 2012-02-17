@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,11 +24,14 @@ import org.hamcrest.Description;
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmMoneyReservationFromPortfolionCommandMatcher extends BaseMatcher<ConfirmMoneyReservationFromPortfolionCommand> {
+public class ConfirmMoneyReservationFromPortfolionCommandMatcher
+        extends BaseMatcher<ConfirmMoneyReservationFromPortfolionCommand> {
+
     private String portfolioIdentifier;
     private long amountOfMoneyToconfirm;
 
-    public ConfirmMoneyReservationFromPortfolionCommandMatcher(AggregateIdentifier portfolioIdentifier, long amountOfMoneyToconfirm) {
+    public ConfirmMoneyReservationFromPortfolionCommandMatcher(AggregateIdentifier portfolioIdentifier,
+                                                               long amountOfMoneyToconfirm) {
         this.portfolioIdentifier = portfolioIdentifier.asString();
         this.amountOfMoneyToconfirm = amountOfMoneyToconfirm;
     }
@@ -46,9 +50,9 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher extends BaseMat
     @Override
     public void describeTo(Description description) {
         description.appendText("ConfirmMoneyReservationFromPortfolionCommand with amountOfMoneyToConfirm [")
-                .appendValue(amountOfMoneyToconfirm)
-                .appendText("] for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfMoneyToconfirm)
+                   .appendText("] for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

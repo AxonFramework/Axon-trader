@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +29,7 @@ import java.util.Random;
  * @author Jettro Coenradie
  */
 public class BasicWebDriverTest {
+
     private static final String SERVER = "http://axon-trader.cloudfoundry.com/";
 
     public static void main(String[] args) {
@@ -50,7 +52,8 @@ public class BasicWebDriverTest {
         System.out.println("Total milli seconds : " + (end - start));
     }
 
-    private static void placeOrder(WebDriver driver, CompaniesPage companies, Random randomFactory, String[] orderActions) {
+    private static void placeOrder(WebDriver driver, CompaniesPage companies, Random randomFactory,
+                                   String[] orderActions) {
         long start = new Date().getTime();
         int randomCompany = randomFactory.nextInt(3);
         String randomOrderAction = orderActions[randomFactory.nextInt(2)];
@@ -69,11 +72,12 @@ public class BasicWebDriverTest {
         driver.findElement(By.name("submit")).submit();
         long duration = new Date().getTime() - start;
         System.out.println("order : (" + duration + ") "
-                + randomOrderAction + " " + randomCompany + " " + randomAmount + " " + randomPrice);
+                                   + randomOrderAction + " " + randomCompany + " " + randomAmount + " " + randomPrice);
     }
 
 
     private static class CompaniesPage {
+
         private WebDriver driver;
 
         private CompaniesPage(WebDriver driver) {
@@ -89,6 +93,7 @@ public class BasicWebDriverTest {
     }
 
     private static class LoginPage {
+
         private WebDriver driver;
 
         public LoginPage(WebDriver driver) {

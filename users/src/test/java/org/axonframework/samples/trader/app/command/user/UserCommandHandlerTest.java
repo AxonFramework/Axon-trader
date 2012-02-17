@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,14 +27,14 @@ import org.axonframework.samples.trader.users.command.UserCommandHandler;
 import org.axonframework.samples.trader.users.util.DigestUtils;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.*;
+import org.mockito.*;
 
 /**
  * @author Jettro Coenradie
  */
 public class UserCommandHandlerTest {
+
     private FixtureConfiguration fixture;
 
     private UserQueryRepository userQueryRepository;
@@ -53,8 +54,8 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleCreateUser() throws Exception {
         fixture.given()
-                .when(new CreateUserCommand("Buyer 1", "buyer1", "buyer1"))
-                .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")));
+               .when(new CreateUserCommand("Buyer 1", "buyer1", "buyer1"))
+               .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")));
     }
 
     @Test
@@ -66,7 +67,7 @@ public class UserCommandHandlerTest {
         Mockito.when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 
         fixture.given(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")))
-                .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
-                .expectEvents(new UserAuthenticatedEvent());
+               .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
+               .expectEvents(new UserAuthenticatedEvent());
     }
 }

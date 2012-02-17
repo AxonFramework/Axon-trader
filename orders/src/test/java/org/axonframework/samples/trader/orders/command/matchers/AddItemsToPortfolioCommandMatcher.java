@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,11 +25,13 @@ import org.hamcrest.Description;
  * @author Jettro Coenradie
  */
 public class AddItemsToPortfolioCommandMatcher extends BaseMatcher<AddItemsToPortfolioCommand> {
+
     private String orderBookIdentifier;
     private String portfolioIdentifier;
     private long amountOfItemsToAdd;
 
-    public AddItemsToPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
+    public AddItemsToPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier,
+                                             AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
         this.amountOfItemsToAdd = amountOfItemsToAdd;
         this.portfolioIdentifier = portfolioIdentifier.asString();
         this.orderBookIdentifier = orderBookIdentifier.asString();
@@ -49,11 +52,11 @@ public class AddItemsToPortfolioCommandMatcher extends BaseMatcher<AddItemsToPor
     @Override
     public void describeTo(Description description) {
         description.appendText("AddItemsToPortfolioCommand with amountOfItemsToAdd [")
-                .appendValue(amountOfItemsToAdd)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderBookIdentifier)
-                .appendText("] and for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfItemsToAdd)
+                   .appendText("] for OrderBook with identifier [")
+                   .appendValue(orderBookIdentifier)
+                   .appendText("] and for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

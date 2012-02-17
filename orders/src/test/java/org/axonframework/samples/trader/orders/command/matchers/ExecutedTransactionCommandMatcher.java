@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,11 +25,13 @@ import org.hamcrest.Description;
  * @author Jettro Coenradie
  */
 public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTransactionCommand> {
+
     private String transactionIdentifier;
     private long amountOfItems;
     private long itemPrice;
 
-    public ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice, AggregateIdentifier transactionIdentifier) {
+    public ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice,
+                                             AggregateIdentifier transactionIdentifier) {
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
         this.transactionIdentifier = transactionIdentifier.asString();
@@ -48,11 +51,11 @@ public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTrans
     @Override
     public void describeTo(Description description) {
         description.appendText("ExecutedTransactionCommand with amountOfItems [")
-                .appendValue(amountOfItems)
-                .appendText("], itemPrice [")
-                .appendValue(itemPrice)
-                .appendText("] for Transaction with identifier [")
-                .appendValue(transactionIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfItems)
+                   .appendText("], itemPrice [")
+                   .appendValue(itemPrice)
+                   .appendText("] for Transaction with identifier [")
+                   .appendValue(transactionIdentifier)
+                   .appendText("]");
     }
 }

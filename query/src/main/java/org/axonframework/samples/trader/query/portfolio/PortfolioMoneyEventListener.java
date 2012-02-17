@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +18,11 @@ package org.axonframework.samples.trader.query.portfolio;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyDepositedToPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationCancelledFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationConfirmedFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.slf4j.Logger;
@@ -30,6 +35,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PortfolioMoneyEventListener {
+
     private final static Logger logger = LoggerFactory.getLogger(PortfolioMoneyEventListener.class);
 
     private PortfolioQueryRepository portfolioRepository;
@@ -38,12 +44,13 @@ public class PortfolioMoneyEventListener {
     @EventHandler
     public void handleEvent(PortfolioCreatedEvent event) {
         logger.debug("About to handle the PortfolioCreatedEvent for user with identifier {}",
-                event.getUserIdentifier().asString());
+                     event.getUserIdentifier().asString());
 
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setIdentifier(event.getPortfolioIdentifier().asString());
         portfolioEntry.setUserIdentifier(event.getUserIdentifier().asString());
-        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserIdentifier().asString()).getFullName());
+        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserIdentifier().asString())
+                                                      .getFullName());
         portfolioEntry.setAmountOfMoney(0);
         portfolioEntry.setReservedAmountOfMoney(0);
 
@@ -74,7 +81,8 @@ public class PortfolioMoneyEventListener {
     @EventHandler
     public void handleEvent(MoneyReservationCancelledFromPortfolioEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
-        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney() - event.getAmountOfMoneyToCancel());
+        portfolioEntry.setReservedAmountOfMoney(
+                portfolioEntry.getReservedAmountOfMoney() - event.getAmountOfMoneyToCancel());
         portfolioRepository.save(portfolioEntry);
     }
 

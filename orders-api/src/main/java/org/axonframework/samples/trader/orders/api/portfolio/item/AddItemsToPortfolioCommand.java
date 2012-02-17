@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,6 +24,7 @@ import org.axonframework.domain.AggregateIdentifier;
  * @author Jettro Coenradie
  */
 public class AddItemsToPortfolioCommand {
+
     private AggregateIdentifier portfolioIdentifier;
     private AggregateIdentifier orderBookIdentifier;
     private long amountOfItemsToAdd;
@@ -34,7 +36,8 @@ public class AddItemsToPortfolioCommand {
      * @param orderBookIdentifier Identifier of the OrderBook to add items for
      * @param amountOfItemsToAdd  AMount of items to add
      */
-    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
+    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier,
+                                      long amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsToAdd = amountOfItemsToAdd;

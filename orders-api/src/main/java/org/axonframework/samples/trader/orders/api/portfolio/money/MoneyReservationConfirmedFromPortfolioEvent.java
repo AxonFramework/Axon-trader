@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,9 +23,11 @@ import org.axonframework.domain.DomainEvent;
  * @author Jettro Coenradie
  */
 public class MoneyReservationConfirmedFromPortfolioEvent extends DomainEvent {
+
     private long amountOfMoneyConfirmedInCents;
 
-    public MoneyReservationConfirmedFromPortfolioEvent(AggregateIdentifier transactionIdentifier, long amountOfMoneyConfirmedInCents) {
+    public MoneyReservationConfirmedFromPortfolioEvent(AggregateIdentifier transactionIdentifier,
+                                                       long amountOfMoneyConfirmedInCents) {
         this.amountOfMoneyConfirmedInCents = amountOfMoneyConfirmedInCents;
     }
 

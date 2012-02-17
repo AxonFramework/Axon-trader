@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,10 +25,8 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.test.utils.DomainEventUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
+import org.junit.*;
+import org.mockito.*;
 
 import static org.axonframework.samples.trader.orders.api.transaction.TransactionType.BUY;
 import static org.axonframework.samples.trader.orders.api.transaction.TransactionType.SELL;
@@ -39,6 +38,7 @@ import static org.axonframework.samples.trader.query.transaction.TransactionStat
  * @author Jettro Coenradie
  */
 public class TransactionEventListenerTest {
+
     public static final AggregateIdentifier transactionIdentifier = new UUIDAggregateIdentifier();
     public static final AggregateIdentifier orderBookIdentifier = new UUIDAggregateIdentifier();
     public static final AggregateIdentifier portfolioIdentifier = new UUIDAggregateIdentifier();
@@ -60,12 +60,16 @@ public class TransactionEventListenerTest {
         listener.setTransactionQueryRepository(transactionQueryRepository);
         listener.setOrderBookQueryRepository(orderBookQueryRepository);
 
-        Mockito.when(orderBookQueryRepository.findOne(orderBookIdentifier.asString())).thenReturn(createOrderBookEntry());
+        Mockito.when(orderBookQueryRepository.findOne(orderBookIdentifier.asString()))
+               .thenReturn(createOrderBookEntry());
     }
 
     @Test
     public void handleBuyTransactionStartedEvent() {
-        BuyTransactionStartedEvent event = new BuyTransactionStartedEvent(orderBookIdentifier, portfolioIdentifier, DEFAULT_TOTAL_ITEMS, DEFAULT_ITEM_PRICE);
+        BuyTransactionStartedEvent event = new BuyTransactionStartedEvent(orderBookIdentifier,
+                                                                          portfolioIdentifier,
+                                                                          DEFAULT_TOTAL_ITEMS,
+                                                                          DEFAULT_ITEM_PRICE);
         DomainEventUtils.setAggregateIdentifier(event, transactionIdentifier);
         listener.handleEvent(event);
 
@@ -82,7 +86,10 @@ public class TransactionEventListenerTest {
 
     @Test
     public void handleSellTransactionStartedEvent() {
-        SellTransactionStartedEvent event = new SellTransactionStartedEvent(orderBookIdentifier, portfolioIdentifier, DEFAULT_TOTAL_ITEMS, DEFAULT_ITEM_PRICE);
+        SellTransactionStartedEvent event = new SellTransactionStartedEvent(orderBookIdentifier,
+                                                                            portfolioIdentifier,
+                                                                            DEFAULT_TOTAL_ITEMS,
+                                                                            DEFAULT_ITEM_PRICE);
         DomainEventUtils.setAggregateIdentifier(event, transactionIdentifier);
         listener.handleEvent(event);
 
@@ -111,7 +118,8 @@ public class TransactionEventListenerTest {
         transactionEntry.setType(SELL);
 
         Mockito.when(transactionQueryRepository.findOne(transactionIdentifier.asString())).thenReturn(transactionEntry);
-        SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(DEFAULT_TOTAL_ITEMS, DEFAULT_TOTAL_ITEMS);
+        SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(DEFAULT_TOTAL_ITEMS,
+                                                                                DEFAULT_TOTAL_ITEMS);
         DomainEventUtils.setAggregateIdentifier(event, transactionIdentifier);
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
@@ -123,7 +131,6 @@ public class TransactionEventListenerTest {
                 SELL
 
         )));
-
     }
 
     private OrderBookEntry createOrderBookEntry() {
@@ -133,5 +140,4 @@ public class TransactionEventListenerTest {
         orderBookEntry.setCompanyName(DEFAULT_COMPANY_NAME);
         return orderBookEntry;
     }
-
 }

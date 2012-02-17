@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,7 +25,8 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public SellOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount, long itemPrice, AggregateIdentifier portfolioId) {
+    public SellOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount,
+                                long itemPrice, AggregateIdentifier portfolioId) {
         super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
     }
 }

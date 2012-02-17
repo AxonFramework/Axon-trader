@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,6 +25,7 @@ import org.hamcrest.Description;
  * @author Jettro Coenradie
  */
 public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMoneyToPortfolioCommand> {
+
     private long moneyToAddInCents;
     private String portfolioIdentifier;
 
@@ -40,16 +42,14 @@ public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMo
         DepositMoneyToPortfolioCommand command = (DepositMoneyToPortfolioCommand) o;
         return moneyToAddInCents == command.getMoneyToAddInCents()
                 && portfolioIdentifier.equals(command.getPortfolioIdentifier().asString());
-
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("DepositMoneyToPortfolioCommand with moneyToAddInCents [")
-                .appendValue(moneyToAddInCents)
-                .appendText("] for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
-
+                   .appendValue(moneyToAddInCents)
+                   .appendText("] for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

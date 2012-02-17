@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
  * @author Allard Buijze
  */
 public class DigestUtils {
+
     private static char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     private DigestUtils() {
@@ -96,7 +98,7 @@ public class DigestUtils {
         Assert.state(offset < data.length, "The offset must be lower than the length of the data");
         Assert.state(length >= 0, "The requested length must be positive");
         Assert.state(length <= data.length,
-                "The requested length must be equal to or lower than the length of the data");
+                     "The requested length must be equal to or lower than the length of the data");
 
         StringBuilder buf = new StringBuilder(length * 2);
         for (int i = offset; i < (offset + length); i++) {
@@ -108,5 +110,4 @@ public class DigestUtils {
         }
         return buf.toString();
     }
-
 }

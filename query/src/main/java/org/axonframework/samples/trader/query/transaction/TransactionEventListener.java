@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011. Gridshore
+ * Copyright (c) 2010-2012. Axon Framework
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +17,20 @@
 package org.axonframework.samples.trader.query.transaction;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.orders.api.transaction.AbstractTransactionExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.AbstractTransactionPartiallyExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.AbstractTransactionStartedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionCancelledEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionConfirmedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionPartiallyExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionStartedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionCancelledEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionConfirmedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionPartiallyExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.SellTransactionStartedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.TransactionType;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
@@ -28,6 +42,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TransactionEventListener {
+
     private OrderBookQueryRepository orderBookQueryRepository;
     private TransactionQueryRepository transactionQueryRepository;
 
@@ -82,7 +97,8 @@ public class TransactionEventListener {
     }
 
     private void partiallyExecuteTransaction(AbstractTransactionPartiallyExecutedEvent event) {
-        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier().asString());
+        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
+                                                                                    .asString());
 
         long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
         long additionalValue = event.getAmountOfExecutedItems() * event.getItemPrice();
@@ -95,7 +111,8 @@ public class TransactionEventListener {
     }
 
     private void executeTransaction(AbstractTransactionExecutedEvent event) {
-        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier().asString());
+        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
+                                                                                    .asString());
 
         long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
         long additionalValue = event.getAmountOfItems() * event.getItemPrice();
