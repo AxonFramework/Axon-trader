@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@include file="../include.jsp" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
   ~
@@ -38,7 +39,7 @@
                     <td colspan="3">
                         <input class="btn primary" type="submit" name="submit" value="Place Order"/>
                         <input class="btn" type="reset" name="reset" value="Reset"/>
-                        <a href="/company/<c:out value="${order.companyId}"/>" class="btn">Cancel</a>
+                        <a href="${ctx}/company/${order.companyId}" class="btn">Cancel</a>
                     </td>
                 </tr>
             </table>

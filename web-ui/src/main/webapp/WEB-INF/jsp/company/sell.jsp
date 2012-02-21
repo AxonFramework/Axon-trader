@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<%@include file="../include.jsp" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
   ~
@@ -21,9 +21,9 @@
 <content tag="tagline">Enter items to sell and for how much</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="/company">Companies</a> <span class="divider">/</span></li>
-        <li><a href="/company/<c:out value='${order.companyId}'/>"><c:out value='${order.companyName}'/></a> <span
+        <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/company">Companies</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/company/${order.companyId}"><c:out value='${order.companyName}'/></a> <span
                 class="divider">/</span></li>
         <li class="active">Sell</li>
     </ul>

@@ -29,8 +29,8 @@
 </content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="/company">Companies</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/company">Companies</a> <span class="divider">/</span></li>
         <li class="active"><c:out value='${company.name}'/></li>
     </ul>
 </content>
