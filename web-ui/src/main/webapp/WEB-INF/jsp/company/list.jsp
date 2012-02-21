@@ -32,7 +32,7 @@
 <content tag="tagline">Choose the stock to start trading with</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
         <li class="active">Companies</li>
     </ul>
 </content>

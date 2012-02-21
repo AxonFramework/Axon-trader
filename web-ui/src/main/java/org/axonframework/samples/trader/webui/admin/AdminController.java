@@ -69,7 +69,7 @@ public class AdminController {
         DepositMoneyToPortfolioCommand command =
                 new DepositMoneyToPortfolioCommand(new UUIDAggregateIdentifier(portfolioIdentifier), amountOfMoney);
         commandBus.dispatch(command);
-        return "redirect:/admin/portfolio/" + portfolioIdentifier;
+        return "redirect:/admin/portfolio/{identifier}";
     }
 
     @RequestMapping(value = "/portfolio/{identifier}/item")
@@ -83,7 +83,7 @@ public class AdminController {
                                                                                     orderBookIdentifier),
                                                                             amount);
         commandBus.dispatch(command);
-        return "redirect:/admin/portfolio/" + portfolioIdentifier;
+        return "redirect:/admin/portfolio/{identifier}";
     }
 
     /* Setters */
