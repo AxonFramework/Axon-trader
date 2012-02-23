@@ -1,3 +1,4 @@
+<%@include file="include.jsp" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
   ~

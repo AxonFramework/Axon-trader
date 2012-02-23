@@ -24,7 +24,7 @@
 <content tag="tagline">Available collections in this Mongo instance.</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
         <li class="active">Collections</li>
     </ul>
 </content>
@@ -32,7 +32,7 @@
 <p>The collections</p>
 <ul>
     <c:forEach items="${collections}" var="collection">
-        <li><a href="/data/collection/${collection}">${collection}</a></li>
+        <li><a href="${ctx}/data/collection/${collection}">${collection}</a></li>
     </c:forEach>
 </ul>
 </body>

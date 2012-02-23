@@ -82,9 +82,9 @@ public class CompanyController {
         return "company/list";
     }
 
-    @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
-    public String details(@PathVariable String identifier, Model model) {
-        CompanyEntry company = companyRepository.findOne(identifier);
+    @RequestMapping(value = "/{companyId}", method = RequestMethod.GET)
+    public String details(@PathVariable String companyId, Model model) {
+        CompanyEntry company = companyRepository.findOne(companyId);
         OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                                                                                                             .getIdentifier());
@@ -96,27 +96,27 @@ public class CompanyController {
     }
 
 
-    @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.GET)
-    public String buyForm(@PathVariable String identifier, Model model) {
+    @RequestMapping(value = "/buy/{companyId}", method = RequestMethod.GET)
+    public String buyForm(@PathVariable String companyId, Model model) {
         addPortfolioMoneyInfoToModel(model);
 
         BuyOrder order = new BuyOrder();
-        prepareInitialOrder(identifier, order);
+        prepareInitialOrder(companyId, order);
         model.addAttribute("order", order);
         return "company/buy";
     }
 
-    @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.GET)
-    public String sellForm(@PathVariable String identifier, Model model) {
-        addPortfolioItemInfoToModel(identifier, model);
+    @RequestMapping(value = "/sell/{companyId}", method = RequestMethod.GET)
+    public String sellForm(@PathVariable String companyId, Model model) {
+        addPortfolioItemInfoToModel(companyId, model);
 
         SellOrder order = new SellOrder();
-        prepareInitialOrder(identifier, order);
+        prepareInitialOrder(companyId, order);
         model.addAttribute("order", order);
         return "company/sell";
     }
 
-    @RequestMapping(value = "/sell/{identifier}", method = RequestMethod.POST)
+    @RequestMapping(value = "/sell/{companyId}", method = RequestMethod.POST)
     public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
@@ -138,14 +138,14 @@ public class CompanyController {
 
             commandBus.dispatch(command);
 
-            return "redirect:/company/" + order.getCompanyId();
+            return "redirect:/company/{companyId}";
         }
 
         addPortfolioItemInfoToModel(order.getCompanyId(), model);
         return "company/sell";
     }
 
-    @RequestMapping(value = "/buy/{identifier}", method = RequestMethod.POST)
+    @RequestMapping(value = "/buy/{companyId}", method = RequestMethod.POST)
     public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
 
@@ -166,7 +166,7 @@ public class CompanyController {
                     order.getTradeCount(),
                     order.getItemPrice());
             commandBus.dispatch(command);
-            return "redirect:/company/" + order.getCompanyId();
+            return "redirect:/company/{companyId}";
         }
 
         addPortfolioMoneyInfoToModel(model);

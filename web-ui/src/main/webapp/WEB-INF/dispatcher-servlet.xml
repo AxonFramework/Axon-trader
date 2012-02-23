@@ -25,11 +25,9 @@
 
     <context:component-scan base-package="org.axonframework.samples.trader.webui"/>
 
-    <context:annotation-config/>
-
     <mvc:annotation-driven validator="validator"/>
 
-    <mvc:view-controller path="/index.html" view-name="index"/>
+    <mvc:view-controller path="/index.html"/>
 
     <mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>
     <mvc:resources mapping="/style/**" location="/style/" cache-period="31556926"/>

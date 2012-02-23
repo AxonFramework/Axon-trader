@@ -24,8 +24,8 @@
 <content tag="tagline">Available collections in this Mongo instance.</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="/data/collections">Collections</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/data/collections">Collections</a> <span class="divider">/</span></li>
         <li class="active">${collectionName}</li>
     </ul>
 </content>
