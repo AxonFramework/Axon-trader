@@ -1,5 +1,4 @@
-This is a sample application to demonstrate the possibilities of the Axon framework in a high load environment. We
-have chosen to create a Trader application. All you need to run it is java, mongodb and maven.
+This is a sample application to demonstrate the possibilities of the Axon framework in a high load environment. We have chosen to create a Trader application. All you need to run it is java, mongodb and maven.
 
 Initial setup
 -------------
@@ -16,7 +15,7 @@ When using mongodb in a test environment, it is easiest to just start one instan
 
 Running the sample
 ------------------
-- First you need to download the source code, if you are reading this file you already have downloaded the source code, or you are on the main page of the Github project. In the later case, you can easily find a url to clone the repository or to download a zip with all the sources.
+- First you need to download the source code, if you are reading this file on your local machine you already have downloaded the source code. If you are on the main page of the Github project, you can easily find a url to clone the repository or to download a zip with all the sources.
 
 * Maven
 - Make sure you have your mongo instance running
@@ -27,13 +26,7 @@ Running the sample
 - Browse to http://localhost:8080 and you should see the user accounts that you can use to login.
 (You can always refresh the data by calling /data/init on the application)
 
-Advanced configuration
+More documentation
 ----------------------
-To write when done :-)
-
-
-Note to myself
-----------------------
-Should the ID of the transaction be the same are the ID of the order? Is that possible? There should most probably
-be a relation between the two. Think about this, since that would cross aggregate boundaries, which is not allowed.
-Think more about the domain concepts around this.
+We are documenting the sample on the wiki of the github project.
+https://github.com/AxonFramework/Axon-trader/wiki
