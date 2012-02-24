@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ * <p>Listener that is used to create a new portfolio for each new user that is created.</p>
+ *
  * @author Jettro Coenradie
  */
 @Component
@@ -37,7 +39,7 @@ public class PortfolioManagementUserListener {
     @EventHandler
     public void createNewPortfolioWhenUserIsCreated(UserCreatedEvent event) {
         logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
-                     event.getUserIdentifier());
+                event.getUserIdentifier());
         CreatePortfolioCommand command = new CreatePortfolioCommand(event.getUserIdentifier());
         commandBus.dispatch(command);
     }

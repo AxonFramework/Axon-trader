@@ -17,7 +17,6 @@
 package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
 
@@ -36,8 +35,4 @@ public class Company extends AbstractAnnotatedAggregateRoot {
         super(identifier);
     }
 
-    @EventHandler
-    public void onCompanyCreated(CompanyCreatedEvent event) {
-        // nothing for now
-    }
 }

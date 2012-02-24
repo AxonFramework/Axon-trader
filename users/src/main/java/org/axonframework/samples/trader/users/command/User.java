@@ -53,11 +53,6 @@ public class User extends AbstractAnnotatedAggregateRoot {
         this.passwordHash = event.getPassword();
     }
 
-    @EventHandler
-    public void onUserAuthenticated(UserAuthenticatedEvent event) {
-        // nothing for now
-    }
-
     private String hashOf(char[] password) {
         return DigestUtils.sha1(String.valueOf(password));
     }

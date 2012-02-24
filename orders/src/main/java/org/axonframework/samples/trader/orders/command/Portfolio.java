@@ -20,18 +20,8 @@ import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationCancelledForPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationConfirmedForPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemToReserveNotAvailableInPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsAddedToPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyDepositedToPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationCancelledFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationConfirmedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.item.*;
+import org.axonframework.samples.trader.orders.api.portfolio.money.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,15 +74,15 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     public void confirmReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
                                    long amountOfItemsToConfirm) {
         apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier,
-                                                            transactionIdentifier,
-                                                            amountOfItemsToConfirm));
+                transactionIdentifier,
+                amountOfItemsToConfirm));
     }
 
     public void cancelReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
                                   long amountOfItemsToCancel) {
         apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier,
-                                                            transactionIdentifier,
-                                                            amountOfItemsToCancel));
+                transactionIdentifier,
+                amountOfItemsToCancel));
     }
 
     public void addMoney(long moneyToAddInCents) {
@@ -120,21 +110,6 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     /* EVENT HANDLING */
-    @EventHandler
-    public void onPortfolioCreated(PortfolioCreatedEvent event) {
-        // nothing for now
-    }
-
-    @EventHandler
-    public void onNoItemsAvailableToReserve(ItemToReserveNotAvailableInPortfolioEvent event) {
-        // nothing for now
-    }
-
-    @EventHandler
-    public void onNotEnoughItemsAvailableToReserve(NotEnoughItemsAvailableToReserveInPortfolio event) {
-        // nothing for now
-    }
-
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
         long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
@@ -182,11 +157,6 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     public void onMoneyReservedFromPortfolio(MoneyReservedFromPortfolioEvent event) {
         amountOfMoney -= event.getAmountToReserve();
         reservedAmountOfMoney += event.getAmountToReserve();
-    }
-
-    @EventHandler
-    public void onNotEnoughMoneyToMakeReservation(NotEnoughMoneyInPortfolioToMakeReservationEvent event) {
-        // do nothing
     }
 
     @EventHandler
