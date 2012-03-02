@@ -30,6 +30,7 @@
     <http pattern="/favicon.ico" security="none"/>
     <http pattern="/style/**" security="none"/>
     <http pattern="/login.jsp*" security="none"/>
+    <http pattern="/rest/**" security="none"/>
 
     <http auto-config='true' use-expressions="true">
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>

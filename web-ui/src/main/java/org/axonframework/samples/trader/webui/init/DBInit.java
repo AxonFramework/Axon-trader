@@ -109,12 +109,18 @@ public class DBInit {
         AggregateIdentifier buyer1 = createuser("Buyer One", "buyer1");
         AggregateIdentifier buyer2 = createuser("Buyer two", "buyer2");
         AggregateIdentifier buyer3 = createuser("Buyer three", "buyer3");
-        AggregateIdentifier admin1 = createuser("Admin One", "admin1");
+        AggregateIdentifier buyer4 = createuser("Buyer four", "buyer4");
+        AggregateIdentifier buyer5 = createuser("Buyer four", "buyer5");
+        AggregateIdentifier buyer6 = createuser("Buyer four", "buyer6");
 
         createCompanies(buyer1);
         createOrderBooks();
         addMoney(buyer1, 100000);
-        addItems(buyer2, "Philips", 1000l);
+        addItems(buyer2, "Philips", 10000l);
+        addMoney(buyer3, 100000);
+        addItems(buyer4, "Shell", 10000l);
+        addMoney(buyer5, 100000);
+        addItems(buyer6, "Bp", 10000l);
 
         eventStore.ensureIndexes();
     }
