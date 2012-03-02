@@ -11,3 +11,4 @@ build
 *.iml
 target/
 out/*
+**/rebel.xml
