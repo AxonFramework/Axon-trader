@@ -16,34 +16,18 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.item.CancelItemReservationForPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationCancelledForPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationConfirmedForPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemToReserveNotAvailableInPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsAddedToPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ReserveItemsCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ConfirmMoneyReservationFromPortfolionCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyDepositedToPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationCancelledFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationConfirmedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.WithdrawMoneyFromPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.item.*;
+import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.users.api.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Jettro Coenradie
@@ -51,154 +35,159 @@ import org.junit.*;
 public class PortfolioCommandHandlerTest {
 
     private FixtureConfiguration fixture;
-    private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier orderBookIdentifier;
-    private AggregateIdentifier transactionIdentifier;
+    private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private TransactionId transactionIdentifier;
+    private UserId userIdentifier;
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture();
+        fixture = Fixtures.newGivenWhenThenFixture(Portfolio.class);
         PortfolioCommandHandler commandHandler = new PortfolioCommandHandler();
-        commandHandler.setRepository(fixture.createGenericRepository(Portfolio.class));
+        commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
-        portfolioIdentifier = fixture.getAggregateIdentifier();
-        orderBookIdentifier = new UUIDAggregateIdentifier();
-        transactionIdentifier = new UUIDAggregateIdentifier();
+        portfolioIdentifier = new PortfolioId();
+        orderBookIdentifier = new OrderBookId();
+        transactionIdentifier = new TransactionId();
+        userIdentifier = new UserId();
     }
 
     @Test
     public void testCreatePortfolio() {
-        AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
-        CreatePortfolioCommand command = new CreatePortfolioCommand(userIdentifier);
+
+        CreatePortfolioCommand command = new CreatePortfolioCommand(portfolioIdentifier, userIdentifier);
         fixture.given()
-               .when(command)
-               .expectEvents(new PortfolioCreatedEvent(userIdentifier));
+                .when(command)
+                .expectEvents(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier));
     }
 
     /* Items related test methods */
     @Test
     public void testAddItemsToPortfolio() {
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(portfolioIdentifier,
-                                                                            orderBookIdentifier,
-                                                                            100);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
-               .when(command)
-               .expectEvents(new ItemsAddedToPortfolioEvent(orderBookIdentifier, 100));
+                orderBookIdentifier,
+                100);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
+                .when(command)
+                .expectEvents(new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100));
     }
 
     @Test
     public void testReserveItems_noItemsAvailable() {
         ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
-                                                              orderBookIdentifier,
-                                                              transactionIdentifier,
-                                                              200);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
-               .when(command)
-               .expectEvents(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier, transactionIdentifier));
+                orderBookIdentifier,
+                transactionIdentifier,
+                200);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
+                .when(command)
+                .expectEvents(new ItemToReserveNotAvailableInPortfolioEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier));
     }
 
     @Test
     public void testReserveItems_notEnoughItemsAvailable() {
         ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
-                                                              orderBookIdentifier,
-                                                              transactionIdentifier,
-                                                              200);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                      new ItemsAddedToPortfolioEvent(orderBookIdentifier, 100))
-               .when(command)
-               .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(orderBookIdentifier,
-                                                                             transactionIdentifier,
-                                                                             100,
-                                                                             200));
+                orderBookIdentifier,
+                transactionIdentifier,
+                200);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100))
+                .when(command)
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        100,
+                        200));
     }
 
     @Test
     public void testReserveItems() {
         ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
-                                                              orderBookIdentifier,
-                                                              transactionIdentifier,
-                                                              200);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                      new ItemsAddedToPortfolioEvent(orderBookIdentifier, 400))
-               .when(command)
-               .expectEvents(new ItemsReservedEvent(orderBookIdentifier, transactionIdentifier, 200));
+                orderBookIdentifier,
+                transactionIdentifier,
+                200);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 400))
+                .when(command)
+                .expectEvents(new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 200));
     }
 
     @Test
     public void testConfirmationOfReservation() {
         ConfirmItemReservationForPortfolioCommand command =
                 new ConfirmItemReservationForPortfolioCommand(portfolioIdentifier,
-                                                              orderBookIdentifier,
-                                                              transactionIdentifier,
-                                                              100);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                      new ItemsAddedToPortfolioEvent(orderBookIdentifier, 400),
-                      new ItemsReservedEvent(orderBookIdentifier, transactionIdentifier, 100))
-               .when(command)
-               .expectEvents(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier,
-                                                                           transactionIdentifier,
-                                                                           100));
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        100);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 400),
+                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 100))
+                .when(command)
+                .expectEvents(new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier,
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        100));
     }
 
     @Test
     public void testCancellationOfReservation() {
         CancelItemReservationForPortfolioCommand command =
                 new CancelItemReservationForPortfolioCommand(portfolioIdentifier,
-                                                             orderBookIdentifier,
-                                                             transactionIdentifier,
-                                                             100);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()),
-                      new ItemsAddedToPortfolioEvent(orderBookIdentifier, 400),
-                      new ItemsReservedEvent(orderBookIdentifier, transactionIdentifier, 100))
-               .when(command)
-               .expectEvents(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier,
-                                                                           transactionIdentifier,
-                                                                           100));
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        100);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 400),
+                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 100))
+                .when(command)
+                .expectEvents(new ItemReservationCancelledForPortfolioEvent(portfolioIdentifier,
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        100));
     }
 
     /* Money related test methods */
     @Test
     public void testDepositingMoneyToThePortfolio() {
         DepositMoneyToPortfolioCommand command = new DepositMoneyToPortfolioCommand(portfolioIdentifier, 2000l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()))
-               .when(command)
-               .expectEvents(new MoneyDepositedToPortfolioEvent(2000l));
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
+                .when(command)
+                .expectEvents(new MoneyDepositedToPortfolioEvent(2000l));
     }
 
     @Test
     public void testWithdrawingMoneyFromPortfolio() {
         WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
-               .when(command)
-               .expectEvents(new MoneyWithdrawnFromPortfolioEvent(300l));
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+                .when(command)
+                .expectEvents(new MoneyWithdrawnFromPortfolioEvent(portfolioIdentifier, 300l));
     }
 
     @Test
     public void testWithdrawingMoneyFromPortfolio_withoutEnoughMoney() {
         WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(200))
-               .when(command)
-               .expectEvents(new MoneyWithdrawnFromPortfolioEvent(300l));
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(200))
+                .when(command)
+                .expectEvents(new MoneyWithdrawnFromPortfolioEvent(portfolioIdentifier, 300l));
     }
 
     @Test
     public void testMakingMoneyReservation() {
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier,
-                                                                                        transactionIdentifier,
-                                                                                        300l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
-               .when(command)
-               .expectEvents(new MoneyReservedFromPortfolioEvent(transactionIdentifier, 300l));
+                transactionIdentifier,
+                300l);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+                .when(command)
+                .expectEvents(new MoneyReservedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 300l));
     }
 
     @Test
     public void testMakingMoneyReservation_withoutEnoughMoney() {
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier,
-                                                                                        transactionIdentifier,
-                                                                                        600l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
-               .when(command)
-               .expectEvents(new NotEnoughMoneyInPortfolioToMakeReservationEvent(transactionIdentifier, 600));
+                transactionIdentifier,
+                600l);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+                .when(command)
+                .expectEvents(new NotEnoughMoneyInPortfolioToMakeReservationEvent(portfolioIdentifier, transactionIdentifier, 600));
     }
 
     @Test
@@ -207,9 +196,9 @@ public class PortfolioCommandHandlerTest {
                 portfolioIdentifier,
                 transactionIdentifier,
                 200l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
-               .when(command)
-               .expectEvents(new MoneyReservationCancelledFromPortfolioEvent(transactionIdentifier, 200l));
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+                .when(command)
+                .expectEvents(new MoneyReservationCancelledFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 200l));
     }
 
     @Test
@@ -218,8 +207,8 @@ public class PortfolioCommandHandlerTest {
                 portfolioIdentifier,
                 transactionIdentifier,
                 200l);
-        fixture.given(new PortfolioCreatedEvent(new UUIDAggregateIdentifier()), new MoneyDepositedToPortfolioEvent(400))
-               .when(command)
-               .expectEvents(new MoneyReservationConfirmedFromPortfolioEvent(transactionIdentifier, 200l));
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+                .when(command)
+                .expectEvents(new MoneyReservationConfirmedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 200l));
     }
 }

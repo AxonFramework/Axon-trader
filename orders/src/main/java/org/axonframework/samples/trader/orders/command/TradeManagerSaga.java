@@ -17,8 +17,10 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -29,9 +31,9 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
     private transient CommandBus commandBus;
     private long totalItems;
     private long pricePerItem;
-    private AggregateIdentifier transactionIdentifier;
-    private AggregateIdentifier orderbookIdentifier;
-    private AggregateIdentifier portfolioIdentifier;
+    private TransactionId transactionIdentifier;
+    private OrderBookId orderbookIdentifier;
+    private PortfolioId portfolioIdentifier;
 
     /*-------------------------------------------------------------------------------------------*/
     /* Getters and setters                                                                       */
@@ -45,19 +47,19 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         return commandBus;
     }
 
-    protected AggregateIdentifier getOrderbookIdentifier() {
+    protected OrderBookId getOrderbookIdentifier() {
         return orderbookIdentifier;
     }
 
-    protected void setOrderbookIdentifier(AggregateIdentifier orderbookIdentifier) {
+    protected void setOrderbookIdentifier(OrderBookId orderbookIdentifier) {
         this.orderbookIdentifier = orderbookIdentifier;
     }
 
-    protected AggregateIdentifier getPortfolioIdentifier() {
+    protected PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    protected void setPortfolioIdentifier(AggregateIdentifier portfolioIdentifier) {
+    protected void setPortfolioIdentifier(PortfolioId portfolioIdentifier) {
         this.portfolioIdentifier = portfolioIdentifier;
     }
 
@@ -77,11 +79,11 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.totalItems = totalItems;
     }
 
-    protected AggregateIdentifier getTransactionIdentifier() {
+    protected TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 
-    protected void setTransactionIdentifier(AggregateIdentifier transactionIdentifier) {
+    protected void setTransactionIdentifier(TransactionId transactionIdentifier) {
         this.transactionIdentifier = transactionIdentifier;
     }
 }

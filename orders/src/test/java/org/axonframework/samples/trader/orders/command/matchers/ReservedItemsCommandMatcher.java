@@ -17,6 +17,8 @@
 package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.portfolio.item.ReserveItemsCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -25,11 +27,11 @@ import org.hamcrest.Description;
  */
 public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand> {
 
-    private String orderbookIdentifier;
-    private String portfolioIdentifier;
+    private OrderBookId orderbookIdentifier;
+    private PortfolioId portfolioIdentifier;
     private int amountOfReservedItems;
 
-    public ReservedItemsCommandMatcher(String orderbookIdentifier, String portfolioIdentifier,
+    public ReservedItemsCommandMatcher(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
                                        int amountOfReservedItems) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
@@ -42,19 +44,19 @@ public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand
             return false;
         }
         ReserveItemsCommand command = (ReserveItemsCommand) o;
-        return command.getOrderBookIdentifier().asString().equals(orderbookIdentifier)
-                && command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+        return command.getOrderBookIdentifier().equals(orderbookIdentifier)
+                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && amountOfReservedItems == command.getAmountOfItemsToReserve();
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("ReserveItemsCommand with amountOfReservedItems [")
-                   .appendValue(amountOfReservedItems)
-                   .appendText("] for OrderBook with identifier [")
-                   .appendValue(orderbookIdentifier)
-                   .appendText("] and for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfReservedItems)
+                .appendText("] for OrderBook with identifier [")
+                .appendValue(orderbookIdentifier)
+                .appendText("] and for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

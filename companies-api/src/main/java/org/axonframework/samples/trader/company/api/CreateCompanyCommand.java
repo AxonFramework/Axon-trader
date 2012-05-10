@@ -16,23 +16,24 @@
 
 package org.axonframework.samples.trader.company.api;
 
-import org.axonframework.domain.AggregateIdentifier;
+
+import org.axonframework.samples.trader.users.api.UserId;
 
 /**
- * <p>Create a new company by proving the name, the estiamted value of the company and the amount of shares that are
+ * <p>Create a new company by proving the name, the estimated value of the company and the amount of shares that are
  * available for the company. You also must provide the id of the user that wants to create the company.</p>
  *
  * @author Jettro Coenradie
  */
 public class CreateCompanyCommand {
-
-    private AggregateIdentifier userId;
+    private CompanyId companyId;
+    private UserId userId;
     private String companyName;
     private long companyValue;
     private long amountOfShares;
 
-    public CreateCompanyCommand(AggregateIdentifier userId, String companyName, long companyValue,
-                                long amountOfShares) {
+    public CreateCompanyCommand(CompanyId companyId, UserId userId, String companyName, long companyValue, long amountOfShares) {
+        this.companyId = companyId;
         this.amountOfShares = amountOfShares;
         this.companyName = companyName;
         this.companyValue = companyValue;
@@ -51,7 +52,11 @@ public class CreateCompanyCommand {
         return companyValue;
     }
 
-    public AggregateIdentifier getUserId() {
+    public UserId getUserId() {
         return userId;
+    }
+
+    public CompanyId getCompanyId() {
+        return companyId;
     }
 }

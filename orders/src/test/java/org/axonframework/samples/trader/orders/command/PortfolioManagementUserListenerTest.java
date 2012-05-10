@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.app.command.user;
+package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.users.api.UserCreatedEvent;
-import org.axonframework.samples.trader.users.command.PortfolioManagementUserListener;
-import org.axonframework.test.utils.DomainEventUtils;
-import org.junit.*;
-import org.mockito.*;
+import org.axonframework.samples.trader.users.api.UserId;
+import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 
 /**
  * @author Jettro Coenradie
@@ -37,30 +37,33 @@ public class PortfolioManagementUserListenerTest {
         PortfolioManagementUserListener listener = new PortfolioManagementUserListener();
         listener.setCommandBus(commandBus);
 
-        UserCreatedEvent event = new UserCreatedEvent("Test", "testuser", "testpassword");
-        AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
-        DomainEventUtils.setAggregateIdentifier(event, userIdentifier);
+        UserId userIdentifier = new UserId();
+        UserCreatedEvent event = new UserCreatedEvent(userIdentifier, "Test", "testuser", "testpassword");
 
         listener.createNewPortfolioWhenUserIsCreated(event);
 
-        Mockito.verify(commandBus).dispatch(Matchers.argThat(new UserIdentifierMatcher(userIdentifier.asString())));
+        Mockito.verify(commandBus).dispatch(Matchers.argThat(new GenericCommandMessageMatcher(userIdentifier)));
     }
 
-    private class UserIdentifierMatcher extends ArgumentMatcher {
+    private class GenericCommandMessageMatcher extends ArgumentMatcher<GenericCommandMessage> {
 
-        private String identifier;
+        private UserId userId;
 
-        private UserIdentifierMatcher(String identifier) {
-            this.identifier = identifier;
+        private GenericCommandMessageMatcher(UserId userId) {
+            this.userId = userId;
         }
 
         @Override
         public boolean matches(Object argument) {
-            if (!(argument instanceof CreatePortfolioCommand)) {
+            if (!(argument instanceof GenericCommandMessage)) {
+                return false;
+            }
+            if (!(((GenericCommandMessage) argument).getPayload() instanceof CreatePortfolioCommand)) {
                 return false;
             }
             CreatePortfolioCommand createPortfolioCommand = (CreatePortfolioCommand) argument;
-            return createPortfolioCommand.getUserIdentifier().asString().equals(identifier);
+            return createPortfolioCommand.getUserId().equals(userId);
         }
     }
+
 }

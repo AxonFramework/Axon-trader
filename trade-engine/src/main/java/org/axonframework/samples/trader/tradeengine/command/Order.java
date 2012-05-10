@@ -16,11 +16,13 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.AbstractEventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,21 +32,20 @@ import java.util.Collections;
  */
 class Order extends AbstractAnnotatedEntity {
 
-    private AggregateIdentifier transactionId;
+    private TransactionId transactionId;
     private final long itemPrice;
     private final long tradeCount;
-    private final AggregateIdentifier userId;
+    private final PortfolioId portfolioId;
     private long itemsRemaining;
-    private AggregateIdentifier orderId;
+    private OrderId orderId;
 
-    public Order(AggregateIdentifier orderId, AggregateIdentifier transactionId, long itemPrice, long tradeCount,
-                 AggregateIdentifier userId) {
+    public Order(OrderId orderId, TransactionId transactionId, long itemPrice, long tradeCount, PortfolioId portfolioId) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;
         this.tradeCount = tradeCount;
         this.itemsRemaining = tradeCount;
-        this.userId = userId;
+        this.portfolioId = portfolioId;
     }
 
     public long getItemPrice() {
@@ -55,15 +56,15 @@ class Order extends AbstractAnnotatedEntity {
         return tradeCount;
     }
 
-    public AggregateIdentifier getUserId() {
-        return userId;
+    public PortfolioId getPortfolioId() {
+        return portfolioId;
     }
 
     public long getItemsRemaining() {
         return itemsRemaining;
     }
 
-    public AggregateIdentifier getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
@@ -71,7 +72,7 @@ class Order extends AbstractAnnotatedEntity {
         this.itemsRemaining -= tradeCount;
     }
 
-    public AggregateIdentifier getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 

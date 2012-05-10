@@ -16,23 +16,37 @@
 
 package org.axonframework.samples.trader.company.command;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
+import org.axonframework.samples.trader.company.api.CompanyId;
 
 /**
  * @author Jettro Coenradie
  */
 public class Company extends AbstractAnnotatedAggregateRoot {
+    private static final long serialVersionUID = 8723320580782813954L;
 
-    public Company(AggregateIdentifier identifier, String name, long value, long amountOfShares) {
-        super(identifier);
-        apply(new CompanyCreatedEvent(name, value, amountOfShares));
+    @AggregateIdentifier
+    private CompanyId companyId;
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected Company() {
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    public Company(AggregateIdentifier identifier) {
-        super(identifier);
+    public Company(CompanyId companyId, String name, long value, long amountOfShares) {
+        apply(new CompanyCreatedEvent(companyId, name, value, amountOfShares));
+    }
+
+    @Override
+    public CompanyId getIdentifier() {
+        return this.companyId;
+    }
+
+    @EventHandler
+    public void handle(CompanyCreatedEvent event) {
+        this.companyId = event.getCompanyIdentifier();
     }
 
 }

@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.users.command;
+package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.axonframework.samples.trader.users.api.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +42,8 @@ public class PortfolioManagementUserListener {
     public void createNewPortfolioWhenUserIsCreated(UserCreatedEvent event) {
         logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
                 event.getUserIdentifier());
-        CreatePortfolioCommand command = new CreatePortfolioCommand(event.getUserIdentifier());
-        commandBus.dispatch(command);
+        CreatePortfolioCommand command = new CreatePortfolioCommand(new PortfolioId(), event.getUserIdentifier());
+        commandBus.dispatch(new GenericCommandMessage<CreatePortfolioCommand>(command));
     }
 
     @Autowired

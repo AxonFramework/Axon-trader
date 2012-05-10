@@ -16,23 +16,31 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class MoneyReservationConfirmedFromPortfolioEvent extends DomainEvent {
-
+public class MoneyReservationConfirmedFromPortfolioEvent {
+    private TransactionId transactionIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountOfMoneyConfirmedInCents;
 
-    public MoneyReservationConfirmedFromPortfolioEvent(AggregateIdentifier transactionIdentifier,
+    public MoneyReservationConfirmedFromPortfolioEvent(PortfolioId portfolioIdentifier,
+                                                       TransactionId transactionId,
                                                        long amountOfMoneyConfirmedInCents) {
+        this.portfolioIdentifier = portfolioIdentifier;
+        this.transactionIdentifier = transactionId;
         this.amountOfMoneyConfirmedInCents = amountOfMoneyConfirmedInCents;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return super.getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
+    }
+
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 
     public long getAmountOfMoneyConfirmedInCents() {

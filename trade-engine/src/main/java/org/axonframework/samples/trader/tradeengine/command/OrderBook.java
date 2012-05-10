@@ -16,50 +16,42 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.AbstractEventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Allard Buijze
  */
 class OrderBook extends AbstractAnnotatedAggregateRoot {
+    private static final long serialVersionUID = 6778782949492587631L;
 
+    private OrderBookId orderBookId;
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
-    public OrderBook(AggregateIdentifier identifier, AggregateIdentifier companyIdentifier) {
-        super(identifier);
-        apply(new OrderBookCreatedEvent(companyIdentifier));
+    public OrderBook(OrderBookId identifier) {
+        this.orderBookId = identifier;
+        apply(new OrderBookCreatedEvent(identifier));
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    public OrderBook(AggregateIdentifier identifier) {
-        super(identifier);
+    @Override
+    public OrderBookId getIdentifier() {
+        return orderBookId;
     }
 
-
-    public void addBuyOrder(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount,
-                            long itemPrice, AggregateIdentifier userId) {
-        apply(new BuyOrderPlacedEvent(orderId, transactionId, tradeCount, itemPrice, userId));
+    public void addBuyOrder(OrderId orderId, TransactionId transactionId, long tradeCount,
+                            long itemPrice, PortfolioId portfolioId) {
+        apply(new BuyOrderPlacedEvent(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId));
         executeTrades();
     }
 
-    public void addSellOrder(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount,
-                             long itemPrice, AggregateIdentifier userId) {
-        apply(new SellOrderPlacedEvent(orderId, transactionId, tradeCount, itemPrice, userId));
+    public void addSellOrder(OrderId orderId, TransactionId transactionId, long tradeCount,
+                             long itemPrice, PortfolioId portfolioId) {
+        apply(new SellOrderPlacedEvent(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId));
         executeTrades();
     }
 
@@ -71,12 +63,13 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
             if (highestBuyer.getItemPrice() >= lowestSeller.getItemPrice()) {
                 long matchedTradeCount = Math.min(highestBuyer.getItemsRemaining(), lowestSeller.getItemsRemaining());
                 long matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
-                apply(new TradeExecutedEvent(matchedTradeCount,
-                                             matchedTradePrice,
-                                             highestBuyer.getOrderId(),
-                                             lowestSeller.getOrderId(),
-                                             highestBuyer.getTransactionId(),
-                                             lowestSeller.getTransactionId()));
+                apply(new TradeExecutedEvent(orderBookId,
+                        matchedTradeCount,
+                        matchedTradePrice,
+                        highestBuyer.getOrderId(),
+                        lowestSeller.getOrderId(),
+                        highestBuyer.getTransactionId(),
+                        lowestSeller.getTransactionId()));
             } else {
                 tradingDone = true;
             }
@@ -86,19 +79,19 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     protected void onBuyPlaced(BuyOrderPlacedEvent event) {
         buyOrders.add(new Order(event.getOrderId(),
-                                event.getTransactionIdentifier(),
-                                event.getItemPrice(),
-                                event.getTradeCount(),
-                                event.getPortfolioId()));
+                event.getTransactionIdentifier(),
+                event.getItemPrice(),
+                event.getTradeCount(),
+                event.getPortfolioId()));
     }
 
     @EventHandler
     protected void onSellPlaced(SellOrderPlacedEvent event) {
         sellOrders.add(new Order(event.getOrderId(),
-                                 event.getTransactionIdentifier(),
-                                 event.getItemPrice(),
-                                 event.getTradeCount(),
-                                 event.getPortfolioId()));
+                event.getTransactionIdentifier(),
+                event.getItemPrice(),
+                event.getTradeCount(),
+                event.getPortfolioId()));
     }
 
     @EventHandler

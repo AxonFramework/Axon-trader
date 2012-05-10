@@ -29,6 +29,20 @@
     <artifactId>axon-trader-orders-api</artifactId>
 
     <dependencies>
+        <!-- Internal dependencies -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>axon-trader-trade-engine-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>axon-trader-users-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- External dependencies -->
+
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>

@@ -16,12 +16,14 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+
 /**
  * @author Jettro Coenradie
  */
 public class BuyTransactionCancelledEvent extends AbstractTransactionCancelledEvent {
 
-    public BuyTransactionCancelledEvent(long totalAmountOfItems, long amountOfExecutedItems) {
-        super(totalAmountOfItems, amountOfExecutedItems);
+    public BuyTransactionCancelledEvent(TransactionId transactionIdentifier, long totalAmountOfItems, long amountOfExecutedItems) {
+        super(transactionIdentifier, totalAmountOfItems, amountOfExecutedItems);
     }
 }

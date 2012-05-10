@@ -16,22 +16,14 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionCancelledEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionConfirmedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionExecutedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionPartiallyExecutedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionStartedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.CancelTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.ExecutedTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionStartedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.StartBuyTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.StartSellTransactionCommand;
+import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Jettro Coenradie
@@ -39,111 +31,86 @@ import org.junit.*;
 public class TransactionCommandHandlingTest {
 
     private FixtureConfiguration fixture;
+    OrderBookId orderBook = new OrderBookId();
+    PortfolioId portfolio = new PortfolioId();
+    TransactionId transactionId = new TransactionId();
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture();
+        fixture = Fixtures.newGivenWhenThenFixture(Transaction.class);
         TransactionCommandHandler commandHandler = new TransactionCommandHandler();
-        commandHandler.setRepository(fixture.createGenericRepository(Transaction.class));
+        commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
 
     @Test
     public void testStartBuyTransaction() {
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
         StartBuyTransactionCommand command = new StartBuyTransactionCommand(orderBook, portfolio, 200, 20);
         fixture.given()
-               .when(command)
-               .expectEvents(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20));
+                .when(command)
+                .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
     }
 
     @Test
     public void testStartSellTransaction() {
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
         StartSellTransactionCommand command = new StartSellTransactionCommand(orderBook, portfolio, 200, 20);
         fixture.given()
-               .when(command)
-               .expectEvents(new SellTransactionStartedEvent(orderBook, portfolio, 200, 20));
+                .when(command)
+                .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
     }
 
     @Test
     public void testConfirmTransaction() {
-        AggregateIdentifier transactionIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
-
-        ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionIdentifier);
-        fixture.given(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20))
-               .when(command)
-               .expectEvents(new BuyTransactionConfirmedEvent());
+        ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId);
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20))
+                .when(command)
+                .expectEvents(new BuyTransactionConfirmedEvent(transactionId));
     }
 
     @Test
     public void testCancelTransaction() {
-        AggregateIdentifier transactionIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
-
-        CancelTransactionCommand command = new CancelTransactionCommand(transactionIdentifier);
-        fixture.given(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20))
-               .when(command)
-               .expectEvents(new BuyTransactionCancelledEvent(200, 0));
+        CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20))
+                .when(command)
+                .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 0));
     }
 
     @Test
     public void testCancelTransaction_partiallyExecuted() {
-        AggregateIdentifier transactionIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
-
-        CancelTransactionCommand command = new CancelTransactionCommand(transactionIdentifier);
-        fixture.given(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20),
-                      new BuyTransactionPartiallyExecutedEvent(100, 100, 20))
-               .when(command)
-               .expectEvents(new BuyTransactionCancelledEvent(200, 100));
+        CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+                new BuyTransactionPartiallyExecutedEvent(transactionId, 100, 100, 20))
+                .when(command)
+                .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 100));
     }
 
     @Test
     public void testExecuteTransaction() {
-        AggregateIdentifier transactionIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
-
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionIdentifier, 200, 20);
-        fixture.given(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20),
-                      new BuyTransactionConfirmedEvent())
-               .when(command)
-               .expectEvents(new BuyTransactionExecutedEvent(200, 20));
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 200, 20);
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+                new BuyTransactionConfirmedEvent(transactionId))
+                .when(command)
+                .expectEvents(new BuyTransactionExecutedEvent(transactionId, 200, 20));
     }
 
     @Test
     public void testExecuteTransaction_partiallyExecuted() {
-        AggregateIdentifier transactionIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
-
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionIdentifier, 50, 20);
-        fixture.given(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20),
-                      new BuyTransactionConfirmedEvent())
-               .when(command)
-               .expectEvents(new BuyTransactionPartiallyExecutedEvent(50, 50, 20));
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 50, 20);
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+                new BuyTransactionConfirmedEvent(transactionId))
+                .when(command)
+                .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20));
     }
 
     @Test
     public void testExecuteTransaction_completeAfterPartiallyExecuted() {
-        AggregateIdentifier transactionIdentifier = fixture.getAggregateIdentifier();
-        AggregateIdentifier orderBook = new UUIDAggregateIdentifier();
-        AggregateIdentifier portfolio = new UUIDAggregateIdentifier();
-
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionIdentifier, 150, 20);
-        fixture.given(new BuyTransactionStartedEvent(orderBook, portfolio, 200, 20),
-                      new BuyTransactionConfirmedEvent(),
-                      new BuyTransactionPartiallyExecutedEvent(50, 50, 20)
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 150, 20);
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+                new BuyTransactionConfirmedEvent(transactionId),
+                new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20)
         )
-               .when(command)
-               .expectEvents(new BuyTransactionExecutedEvent(150, 20));
+                .when(command)
+                .expectEvents(new BuyTransactionExecutedEvent(transactionId, 150, 20));
         // TODO moeten we nu ook nog een partially executed event gooien?
     }
 }

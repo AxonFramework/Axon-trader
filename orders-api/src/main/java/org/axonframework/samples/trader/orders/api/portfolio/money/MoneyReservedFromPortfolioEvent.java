@@ -16,32 +16,32 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class MoneyReservedFromPortfolioEvent extends DomainEvent {
-
-    private AggregateIdentifier transactionIdentifier;
+public class MoneyReservedFromPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountToReserve;
 
-    public MoneyReservedFromPortfolioEvent(AggregateIdentifier transactionIdentifier, long amountToReserve) {
+    public MoneyReservedFromPortfolioEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, long amountToReserve) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountToReserve = amountToReserve;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return super
-                .getAggregateIdentifier();    //To change body of overridden methods use File | Settings | File Templates.
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 
     public long getAmountToReserve() {
         return amountToReserve;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

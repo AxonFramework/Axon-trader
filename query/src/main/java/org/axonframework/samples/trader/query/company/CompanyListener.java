@@ -33,7 +33,7 @@ public class CompanyListener {
     @EventHandler
     public void handleCompanyCreatedEvent(CompanyCreatedEvent event) {
         CompanyEntry companyEntry = new CompanyEntry();
-        companyEntry.setIdentifier(event.getCompanyIdentifier().asString());
+        companyEntry.setIdentifier(event.getCompanyIdentifier().toString());
         companyEntry.setValue(event.getCompanyValue());
         companyEntry.setAmountOfShares(event.getAmountOfShares());
         companyEntry.setTradeStarted(true);

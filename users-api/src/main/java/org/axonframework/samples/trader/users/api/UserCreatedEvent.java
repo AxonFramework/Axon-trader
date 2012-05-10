@@ -16,26 +16,27 @@
 
 package org.axonframework.samples.trader.users.api;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
-
 /**
+ * Event to indicate a new user has been created.
+ *
  * @author Jettro Coenradie
  */
-public class UserCreatedEvent extends DomainEvent {
+public class UserCreatedEvent {
 
+    private UserId userId;
     private String username;
     private String name;
     private String password;
 
-    public UserCreatedEvent(String name, String username, String password) {
+    public UserCreatedEvent(UserId userId, String name, String username, String password) {
+        this.userId = userId;
         this.name = name;
         this.username = username;
         this.password = password;
     }
 
-    public AggregateIdentifier getUserIdentifier() {
-        return getAggregateIdentifier();
+    public UserId getUserIdentifier() {
+        return this.userId;
     }
 
     public String getName() {
@@ -48,5 +49,14 @@ public class UserCreatedEvent extends DomainEvent {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCreatedEvent{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

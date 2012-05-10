@@ -17,14 +17,12 @@
 package org.axonframework.samples.trader.users.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.StringAggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.axonframework.samples.trader.users.api.AuthenticateUserCommand;
 import org.axonframework.samples.trader.users.api.CreateUserCommand;
 import org.axonframework.samples.trader.users.api.UserAccount;
+import org.axonframework.samples.trader.users.api.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -40,8 +38,8 @@ public class UserCommandHandler {
     private UserQueryRepository userQueryRepository;
 
     @CommandHandler
-    public AggregateIdentifier handleCreateUser(CreateUserCommand command) {
-        AggregateIdentifier identifier = new UUIDAggregateIdentifier();
+    public UserId handleCreateUser(CreateUserCommand command) {
+        UserId identifier = new UserId();
         User user = new User(identifier, command.getUsername(), command.getName(), command.getPassword());
         repository.add(user);
         return identifier;
@@ -58,7 +56,7 @@ public class UserCommandHandler {
     }
 
     private User onUser(String userId) {
-        return repository.load(new StringAggregateIdentifier(userId), null);
+        return repository.load(new UserId(userId), null);
     }
 
 

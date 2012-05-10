@@ -16,8 +16,9 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -26,15 +27,15 @@ import org.hamcrest.Description;
  */
 public class AddItemsToPortfolioCommandMatcher extends BaseMatcher<AddItemsToPortfolioCommand> {
 
-    private String orderBookIdentifier;
-    private String portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountOfItemsToAdd;
 
-    public AddItemsToPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier,
-                                             AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
+    public AddItemsToPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
+                                             OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
         this.amountOfItemsToAdd = amountOfItemsToAdd;
-        this.portfolioIdentifier = portfolioIdentifier.asString();
-        this.orderBookIdentifier = orderBookIdentifier.asString();
+        this.portfolioIdentifier = portfolioIdentifier;
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
     @Override
@@ -44,19 +45,19 @@ public class AddItemsToPortfolioCommandMatcher extends BaseMatcher<AddItemsToPor
         }
 
         AddItemsToPortfolioCommand command = (AddItemsToPortfolioCommand) object;
-        return command.getOrderBookIdentifier().asString().equals(orderBookIdentifier)
-                && command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+        return command.getOrderBookIdentifier().equals(orderBookIdentifier)
+                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToAdd() == amountOfItemsToAdd;
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("AddItemsToPortfolioCommand with amountOfItemsToAdd [")
-                   .appendValue(amountOfItemsToAdd)
-                   .appendText("] for OrderBook with identifier [")
-                   .appendValue(orderBookIdentifier)
-                   .appendText("] and for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfItemsToAdd)
+                .appendText("] for OrderBook with identifier [")
+                .appendValue(orderBookIdentifier)
+                .appendText("] and for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 
 /**
  * Adding money to your Portfolio through a deposit
@@ -25,10 +25,10 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class DepositMoneyToPortfolioCommand {
 
-    private AggregateIdentifier portfolioIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long moneyToAddInCents;
 
-    public DepositMoneyToPortfolioCommand(AggregateIdentifier portfolioIdentifier, long moneyToAddInCents) {
+    public DepositMoneyToPortfolioCommand(PortfolioId portfolioIdentifier, long moneyToAddInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.moneyToAddInCents = moneyToAddInCents;
     }
@@ -37,7 +37,7 @@ public class DepositMoneyToPortfolioCommand {
         return moneyToAddInCents;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 }

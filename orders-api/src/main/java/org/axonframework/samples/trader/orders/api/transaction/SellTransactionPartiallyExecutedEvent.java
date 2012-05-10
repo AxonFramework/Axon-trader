@@ -16,13 +16,17 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionPartiallyExecutedEvent extends AbstractTransactionPartiallyExecutedEvent {
 
-    public SellTransactionPartiallyExecutedEvent(long amountOfExecutedItems, long totalOfExecutedItems,
+    public SellTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier,
+                                                 long amountOfExecutedItems,
+                                                 long totalOfExecutedItems,
                                                  long itemPrice) {
-        super(amountOfExecutedItems, totalOfExecutedItems, itemPrice);
+        super(transactionIdentifier, amountOfExecutedItems, totalOfExecutedItems, itemPrice);
     }
 }

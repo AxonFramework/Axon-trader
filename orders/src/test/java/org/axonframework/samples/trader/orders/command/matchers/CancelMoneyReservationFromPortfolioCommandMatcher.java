@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -27,13 +27,13 @@ import org.hamcrest.Description;
 public class CancelMoneyReservationFromPortfolioCommandMatcher
         extends BaseMatcher<CancelMoneyReservationFromPortfolioCommand> {
 
-    public CancelMoneyReservationFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier,
+    public CancelMoneyReservationFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
                                                              long amountOfMoneyToCancel) {
-        this.portfolioIdentifier = portfolioIdentifier.asString();
+        this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
-    private String portfolioIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToCancel;
 
     @Override
@@ -43,16 +43,16 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher
         }
         CancelMoneyReservationFromPortfolioCommand command = (CancelMoneyReservationFromPortfolioCommand) o;
 
-        return command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+        return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToCancel() == amountOfMoneyToCancel;
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelMoneyReservationFromPortfolioCommand with amountOfMoneyToCancel [")
-                   .appendValue(amountOfMoneyToCancel)
-                   .appendText("] for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfMoneyToCancel)
+                .appendText("] for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

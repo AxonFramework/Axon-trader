@@ -16,20 +16,21 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class ConfirmMoneyReservationFromPortfolionCommand {
 
-    private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier transactionIdentifier;
+    private PortfolioId portfolioIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountOfMoneyToConfirmInCents;
 
 
-    public ConfirmMoneyReservationFromPortfolionCommand(AggregateIdentifier portfolioIdentifier,
-                                                        AggregateIdentifier transactionIdentifier,
+    public ConfirmMoneyReservationFromPortfolionCommand(PortfolioId portfolioIdentifier,
+                                                        TransactionId transactionIdentifier,
                                                         long amountOfMoneyToConfirmInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
@@ -40,11 +41,11 @@ public class ConfirmMoneyReservationFromPortfolionCommand {
         return amountOfMoneyToConfirmInCents;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 

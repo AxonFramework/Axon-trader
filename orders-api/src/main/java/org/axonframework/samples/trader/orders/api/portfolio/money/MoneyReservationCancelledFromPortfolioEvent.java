@@ -16,32 +16,34 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class MoneyReservationCancelledFromPortfolioEvent extends DomainEvent {
-
-    private AggregateIdentifier transactionIdentifier;
+public class MoneyReservationCancelledFromPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountOfMoneyToCancel;
 
-    public MoneyReservationCancelledFromPortfolioEvent(AggregateIdentifier transactionIdentifier,
+    public MoneyReservationCancelledFromPortfolioEvent(PortfolioId portfolioIdentifier,
+                                                       TransactionId transactionIdentifier,
                                                        long amountOfMoneyToCancel) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return super.getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
+    }
+
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 
     public long getAmountOfMoneyToCancel() {
         return amountOfMoneyToCancel;
-    }
-
-    public AggregateIdentifier getTransactionIdentifier() {
-        return transactionIdentifier;
     }
 }

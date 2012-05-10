@@ -17,22 +17,13 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandCallback;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ConfirmMoneyReservationFromPortfolionCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionCancelledEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionConfirmedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionExecutedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionPartiallyExecutedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionStartedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.ExecutedTransactionCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.orders.api.transaction.*;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.slf4j.Logger;
@@ -43,6 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BuyTradeManagerSaga extends TradeManagerSaga {
 
+    private static final long serialVersionUID = 5948996680443725871L;
     private final static Logger logger = LoggerFactory.getLogger(BuyTradeManagerSaga.class);
 
     @StartSaga
@@ -55,9 +47,9 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                             event.getPortfolioIdentifier(),
                             event.getOrderbookIdentifier()});
             logger.debug("The new buy transaction with identifier {} is for buying {} items for the price of {}",
-                         new Object[]{event.getTransactionIdentifier(),
-                                 event.getTotalItems(),
-                                 event.getPricePerItem()});
+                    new Object[]{event.getTransactionIdentifier(),
+                            event.getTotalItems(),
+                            event.getPricePerItem()});
         }
         setTransactionIdentifier(event.getTransactionIdentifier());
         setOrderbookIdentifier(event.getOrderbookIdentifier());
@@ -66,27 +58,29 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         setTotalItems(event.getTotalItems());
 
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(getPortfolioIdentifier(),
-                                                                                        getTransactionIdentifier(),
-                                                                                        getTotalItems()
-                                                                                                * getPricePerItem());
-        getCommandBus().dispatch(command);
+                getTransactionIdentifier(),
+                getTotalItems()
+                        * getPricePerItem());
+        getCommandBus().dispatch(new GenericCommandMessage<ReserveMoneyFromPortfolioCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(MoneyReservedFromPortfolioEvent event) {
         logger.debug("Money for transaction with identifier {} is reserved", getTransactionIdentifier());
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(getTransactionIdentifier());
-        getCommandBus().dispatch(command, new CommandCallback<Object>() {
-            @Override
-            public void onSuccess(Object result) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmTransactionCommand>(command),
+                new CommandCallback<Object>() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        // TODO jettro : Do we really need this?
+                        logger.debug("Confirm transaction is dispatched successfully!");
+                    }
 
-            @Override
-            public void onFailure(Throwable cause) {
-                logger.error("********* WOW!!!", cause);
-            }
-        });
+                    @Override
+                    public void onFailure(Throwable cause) {
+                        logger.error("********* WOW!!!", cause);
+                    }
+                });
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -103,69 +97,69 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(BuyTransactionConfirmedEvent event) {
         logger.debug("Buy Transaction {} is approved to make the buy order", event.getTransactionIdentifier());
         CreateBuyOrderCommand command = new CreateBuyOrderCommand(getPortfolioIdentifier(),
-                                                                  getOrderbookIdentifier(),
-                                                                  getTransactionIdentifier(),
-                                                                  getTotalItems(),
-                                                                  getPricePerItem());
-        getCommandBus().dispatch(command);
+                getOrderbookIdentifier(),
+                getTransactionIdentifier(),
+                getTotalItems(),
+                getPricePerItem());
+        getCommandBus().dispatch(new GenericCommandMessage<CreateBuyOrderCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionCancelledEvent event) {
         long amountToCancel = (event.getTotalAmountOfItems() - event.getAmountOfExecutedItems()) * getPricePerItem();
         logger.debug("Buy Transaction {} is cancelled, amount of money reserved to cancel is {}",
-                     event.getTransactionIdentifier(),
-                     amountToCancel);
+                event.getTransactionIdentifier(),
+                amountToCancel);
         CancelMoneyReservationFromPortfolioCommand command = new CancelMoneyReservationFromPortfolioCommand(
                 getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 amountToCancel);
-        getCommandBus().dispatch(command);
+        getCommandBus().dispatch(new GenericCommandMessage<CancelMoneyReservationFromPortfolioCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "buyTransactionId", keyName = "transactionIdentifier")
     public void handle(TradeExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, items for transaction are {} for a price of {}",
-                     new Object[]{getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice()});
+                new Object[]{getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice()});
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
-                                                                            event.getTradeCount(),
-                                                                            event.getTradePrice());
-        getCommandBus().dispatch(command);
+                event.getTradeCount(),
+                event.getTradePrice());
+        getCommandBus().dispatch(new GenericCommandMessage<ExecutedTransactionCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(BuyTransactionExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                     new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
         ConfirmMoneyReservationFromPortfolionCommand confirmCommand =
                 new ConfirmMoneyReservationFromPortfolionCommand(getPortfolioIdentifier(),
-                                                                 getTransactionIdentifier(),
-                                                                 event.getAmountOfItems() * event.getItemPrice());
-        getCommandBus().dispatch(confirmCommand);
+                        getTransactionIdentifier(),
+                        event.getAmountOfItems() * event.getItemPrice());
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmMoneyReservationFromPortfolionCommand>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
-                                               getOrderbookIdentifier(),
-                                               event.getAmountOfItems());
-        getCommandBus().dispatch(addItemsCommand);
+                        getOrderbookIdentifier(),
+                        event.getAmountOfItems());
+        getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionPartiallyExecutedEvent event) {
         logger.debug("Buy Transaction {} is partially executed, amount of executed items is {} for a price of {}",
-                     new Object[]{event.getTransactionIdentifier(),
-                             event.getAmountOfExecutedItems(),
-                             event.getItemPrice()});
+                new Object[]{event.getTransactionIdentifier(),
+                        event.getAmountOfExecutedItems(),
+                        event.getItemPrice()});
         ConfirmMoneyReservationFromPortfolionCommand confirmCommand =
                 new ConfirmMoneyReservationFromPortfolionCommand(getPortfolioIdentifier(),
-                                                                 getTransactionIdentifier(),
-                                                                 event.getAmountOfExecutedItems() * event
-                                                                         .getItemPrice());
-        getCommandBus().dispatch(confirmCommand);
+                        getTransactionIdentifier(),
+                        event.getAmountOfExecutedItems() * event
+                                .getItemPrice());
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmMoneyReservationFromPortfolionCommand>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
-                                               getOrderbookIdentifier(),
-                                               event.getAmountOfExecutedItems());
-        getCommandBus().dispatch(addItemsCommand);
+                        getOrderbookIdentifier(),
+                        event.getAmountOfExecutedItems());
+        getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
     }
 }

@@ -18,17 +18,15 @@ package org.axonframework.samples.trader.app.command.user;
 
 import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
-import org.axonframework.samples.trader.users.api.AuthenticateUserCommand;
-import org.axonframework.samples.trader.users.api.CreateUserCommand;
-import org.axonframework.samples.trader.users.api.UserAuthenticatedEvent;
-import org.axonframework.samples.trader.users.api.UserCreatedEvent;
+import org.axonframework.samples.trader.users.api.*;
 import org.axonframework.samples.trader.users.command.User;
 import org.axonframework.samples.trader.users.command.UserCommandHandler;
 import org.axonframework.samples.trader.users.util.DigestUtils;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.*;
-import org.mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author Jettro Coenradie
@@ -43,9 +41,9 @@ public class UserCommandHandlerTest {
     public void setUp() {
         userQueryRepository = Mockito.mock(UserQueryRepository.class);
 
-        fixture = Fixtures.newGivenWhenThenFixture();
+        fixture = Fixtures.newGivenWhenThenFixture(User.class);
         UserCommandHandler commandHandler = new UserCommandHandler();
-        commandHandler.setRepository(fixture.createGenericRepository(User.class));
+        commandHandler.setRepository(fixture.getRepository());
         commandHandler.setUserRepository(userQueryRepository);
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
@@ -53,21 +51,24 @@ public class UserCommandHandlerTest {
 
     @Test
     public void testHandleCreateUser() throws Exception {
+        UserId aggregateIdentifier = new UserId();
         fixture.given()
-               .when(new CreateUserCommand("Buyer 1", "buyer1", "buyer1"))
-               .expectEvents(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")));
+                .when(new CreateUserCommand(aggregateIdentifier, "Buyer 1", "buyer1", "buyer1"))
+                .expectEvents(new UserCreatedEvent(aggregateIdentifier, "Buyer 1", "buyer1", DigestUtils.sha1("buyer1")));
     }
 
     @Test
     public void testHandleAuthenticateUser() throws Exception {
+        UserId aggregateIdentifier = new UserId();
+
         UserEntry userEntry = new UserEntry();
         userEntry.setUsername("buyer1");
-        userEntry.setIdentifier(fixture.getAggregateIdentifier().asString());
+        userEntry.setIdentifier(aggregateIdentifier.toString());
         userEntry.setName("Buyer One");
         Mockito.when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 
-        fixture.given(new UserCreatedEvent("Buyer 1", "buyer1", DigestUtils.sha1("buyer1")))
-               .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
-               .expectEvents(new UserAuthenticatedEvent());
+        fixture.given(new UserCreatedEvent(aggregateIdentifier, "Buyer 1", "buyer1", DigestUtils.sha1("buyer1")))
+                .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
+                .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier));
     }
 }

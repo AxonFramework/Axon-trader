@@ -16,10 +16,10 @@
 
 package org.axonframework.samples.trader.query.company.repositories;
 
-import org.axonframework.domain.UUIDAggregateIdentifier;
+import org.axonframework.samples.trader.company.api.CompanyId;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,7 +37,7 @@ public class CompanyRepositoryIntegrationTest {
     @Test
     public void storeCompanyInRepository() {
         CompanyEntry companyEntry = new CompanyEntry();
-        companyEntry.setIdentifier(new UUIDAggregateIdentifier().asString());
+        companyEntry.setIdentifier(new CompanyId().toString());
         companyEntry.setValue(100000);
         companyEntry.setAmountOfShares(1000);
         companyEntry.setTradeStarted(true);

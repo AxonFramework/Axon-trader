@@ -16,8 +16,9 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.item.CancelItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -27,16 +28,16 @@ import org.hamcrest.Description;
 public class CancelItemReservationForPortfolioCommandMatcher
         extends BaseMatcher<CancelItemReservationForPortfolioCommand> {
 
-    private String orderBookIdentifier;
-    private String portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountOfItemsToCancel;
 
-    public CancelItemReservationForPortfolioCommandMatcher(AggregateIdentifier orderBookIdentifier,
-                                                           AggregateIdentifier portfolioIdentifier,
+    public CancelItemReservationForPortfolioCommandMatcher(OrderBookId orderBookIdentifier,
+                                                           PortfolioId portfolioIdentifier,
                                                            long amountOfItemsToCancel) {
         this.amountOfItemsToCancel = amountOfItemsToCancel;
-        this.portfolioIdentifier = portfolioIdentifier.asString();
-        this.orderBookIdentifier = orderBookIdentifier.asString();
+        this.portfolioIdentifier = portfolioIdentifier;
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
     @Override
@@ -45,19 +46,19 @@ public class CancelItemReservationForPortfolioCommandMatcher
             return false;
         }
         CancelItemReservationForPortfolioCommand command = (CancelItemReservationForPortfolioCommand) o;
-        return command.getOrderBookIdentifier().asString().equals(orderBookIdentifier)
-                && command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+        return command.getOrderBookIdentifier().equals(orderBookIdentifier)
+                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToCancel() == amountOfItemsToCancel;
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelItemReservationForPortfolioCommand with amountOfItemsToCancel [")
-                   .appendValue(amountOfItemsToCancel)
-                   .appendText("] for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("] and for OrderBook with identifier [")
-                   .appendValue(orderBookIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfItemsToCancel)
+                .appendText("] for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("] and for OrderBook with identifier [")
+                .appendValue(orderBookIdentifier)
+                .appendText("]");
     }
 }

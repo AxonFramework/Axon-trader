@@ -16,8 +16,9 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -26,15 +27,14 @@ import org.hamcrest.Description;
  */
 public class CreateSellOrderCommandMatcher extends BaseMatcher<CreateSellOrderCommand> {
 
-    private String orderbookIdentifier;
-    private String portfolioIdentifier;
+    private OrderBookId orderbookIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long tradeCount;
     private int itemPrice;
 
-    public CreateSellOrderCommandMatcher(AggregateIdentifier portfolioIdentifier,
-                                         AggregateIdentifier orderbookIdentifier, long tradeCount, int itemPrice) {
-        this.portfolioIdentifier = portfolioIdentifier.asString();
-        this.orderbookIdentifier = orderbookIdentifier.asString();
+    public CreateSellOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, long tradeCount, int itemPrice) {
+        this.portfolioIdentifier = portfolioId;
+        this.orderbookIdentifier = orderbookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
     }
@@ -46,8 +46,8 @@ public class CreateSellOrderCommandMatcher extends BaseMatcher<CreateSellOrderCo
             return false;
         }
         CreateSellOrderCommand command = (CreateSellOrderCommand) object;
-        return command.getOrderBookId().asString().equals(orderbookIdentifier)
-                && command.getPortfolioId().asString().equals(portfolioIdentifier)
+        return command.getOrderBookId().equals(orderbookIdentifier)
+                && command.getPortfolioId().equals(portfolioIdentifier)
                 && tradeCount == command.getTradeCount()
                 && itemPrice == command.getItemPrice();
     }
@@ -55,13 +55,13 @@ public class CreateSellOrderCommandMatcher extends BaseMatcher<CreateSellOrderCo
     @Override
     public void describeTo(Description description) {
         description.appendText("CreateSellOrderCommand with tradeCount [")
-                   .appendValue(tradeCount)
-                   .appendText("], itemPrice [")
-                   .appendValue(itemPrice)
-                   .appendText("] for OrderBook with identifier [")
-                   .appendValue(orderbookIdentifier)
-                   .appendText("] and for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(tradeCount)
+                .appendText("], itemPrice [")
+                .appendValue(itemPrice)
+                .appendText("] for OrderBook with identifier [")
+                .appendValue(orderbookIdentifier)
+                .appendText("] and for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

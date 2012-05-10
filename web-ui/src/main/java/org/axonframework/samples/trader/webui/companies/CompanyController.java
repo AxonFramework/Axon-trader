@@ -17,7 +17,7 @@
 package org.axonframework.samples.trader.webui.companies;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.domain.StringAggregateIdentifier;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.samples.trader.orders.api.transaction.StartBuyTransactionCommand;
 import org.axonframework.samples.trader.orders.api.transaction.StartSellTransactionCommand;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
@@ -30,6 +30,8 @@ import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
 import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -43,8 +45,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.List;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author Jettro Coenradie
@@ -87,7 +89,7 @@ public class CompanyController {
         CompanyEntry company = companyRepository.findOne(companyId);
         OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
-                                                                                                            .getIdentifier());
+                .getIdentifier());
         model.addAttribute("company", company);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
@@ -124,19 +126,19 @@ public class CompanyController {
 
             if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
                 bindingResult.rejectValue("tradeCount",
-                                          "error.order.sell.tomanyitems",
-                                          "Not enough items available to create sell order.");
+                        "error.order.sell.tomanyitems",
+                        "Not enough items available to create sell order.");
                 addPortfolioItemInfoToModel(order.getCompanyId(), model);
                 return "company/sell";
             }
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(
-                    new StringAggregateIdentifier(bookEntry.getIdentifier()),
-                    new StringAggregateIdentifier(portfolioEntry.getIdentifier()),
+                    new OrderBookId(bookEntry.getIdentifier()),
+                    new PortfolioId(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
 
-            commandBus.dispatch(command);
+            commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
 
             return "redirect:/company/{companyId}";
         }
@@ -154,18 +156,18 @@ public class CompanyController {
 
             if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
                 bindingResult.rejectValue("tradeCount",
-                                          "error.order.buy.notenoughmoney",
-                                          "Not enough money to spend to buy the items for the price you want");
+                        "error.order.buy.notenoughmoney",
+                        "Not enough money to spend to buy the items for the price you want");
                 addPortfolioMoneyInfoToModel(portfolioEntry, model);
                 return "company/buy";
             }
 
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(
-                    new StringAggregateIdentifier(bookEntry.getIdentifier()),
-                    new StringAggregateIdentifier(portfolioEntry.getIdentifier()),
+                    new OrderBookId(bookEntry.getIdentifier()),
+                    new PortfolioId(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
-            commandBus.dispatch(command);
+            commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
             return "redirect:/company/{companyId}";
         }
 

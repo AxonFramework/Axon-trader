@@ -16,29 +16,27 @@
 
 package org.axonframework.samples.trader.company.api;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
-
 /**
  * <p>A new company is created with a certain value and an amount of shares. Those two values can be used to calculate
  * the starting point for the value of a share.</p>
  *
  * @author Jettro Coenradie
  */
-public class CompanyCreatedEvent extends DomainEvent {
-
+public class CompanyCreatedEvent {
+    private CompanyId companyId;
     private String companyName;
     private long companyValue;
     private long amountOfShares;
 
-    public CompanyCreatedEvent(String companyName, long amountOfShares, long companyValue) {
+    public CompanyCreatedEvent(CompanyId companyId, String companyName, long amountOfShares, long companyValue) {
         this.amountOfShares = amountOfShares;
         this.companyName = companyName;
         this.companyValue = companyValue;
+        this.companyId = companyId;
     }
 
-    public AggregateIdentifier getCompanyIdentifier() {
-        return getAggregateIdentifier();
+    public CompanyId getCompanyIdentifier() {
+        return this.companyId;
     }
 
     public long getAmountOfShares() {

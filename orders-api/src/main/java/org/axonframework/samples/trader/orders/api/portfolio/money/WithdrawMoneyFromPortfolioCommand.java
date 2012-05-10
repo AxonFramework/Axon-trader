@@ -16,17 +16,17 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 
 /**
  * @author Jettro Coenradie
  */
 public class WithdrawMoneyFromPortfolioCommand {
 
-    private AggregateIdentifier portfolioIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountToPayInCents;
 
-    public WithdrawMoneyFromPortfolioCommand(AggregateIdentifier portfolioIdentifier, long amountToPayInCents) {
+    public WithdrawMoneyFromPortfolioCommand(PortfolioId portfolioIdentifier, long amountToPayInCents) {
 
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountToPayInCents = amountToPayInCents;
@@ -36,7 +36,7 @@ public class WithdrawMoneyFromPortfolioCommand {
         return amountToPayInCents;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 }

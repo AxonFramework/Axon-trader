@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -26,13 +26,12 @@ import org.hamcrest.Description;
  */
 public class ReserveMoneyFromPortfolioCommandMatcher extends BaseMatcher<ReserveMoneyFromPortfolioCommand> {
 
-    private String portfolioIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToReserve;
 
-    public ReserveMoneyFromPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier,
-                                                   long amountOfMoneyToReserve) {
+    public ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, long amountOfMoneyToReserve) {
         this.amountOfMoneyToReserve = amountOfMoneyToReserve;
-        this.portfolioIdentifier = portfolioIdentifier.asString();
+        this.portfolioIdentifier = portfolioIdentifier;
     }
 
     @Override
@@ -41,16 +40,16 @@ public class ReserveMoneyFromPortfolioCommandMatcher extends BaseMatcher<Reserve
             return false;
         }
         ReserveMoneyFromPortfolioCommand command = (ReserveMoneyFromPortfolioCommand) o;
-        return command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+        return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToReserve() == amountOfMoneyToReserve;
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("ReserveMoneyFromPortfolioCommand with amountOfMoneyToReserve [")
-                   .appendValue(amountOfMoneyToReserve)
-                   .appendText("] for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfMoneyToReserve)
+                .appendText("] for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

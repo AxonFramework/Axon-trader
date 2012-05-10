@@ -17,7 +17,6 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
@@ -25,11 +24,7 @@ import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPort
 import org.axonframework.samples.trader.orders.api.portfolio.item.CancelItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ReserveItemsCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ConfirmMoneyReservationFromPortfolionCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.WithdrawMoneyFromPortfolioCommand;
+import org.axonframework.samples.trader.orders.api.portfolio.money.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -44,7 +39,7 @@ public class PortfolioCommandHandler {
 
     @CommandHandler
     public void handleCreatePortfolio(CreatePortfolioCommand command) {
-        Portfolio portfolio = new Portfolio(new UUIDAggregateIdentifier(), command.getUserIdentifier());
+        Portfolio portfolio = new Portfolio(command.getPortfolioId(), command.getUserId());
         portfolioRepository.add(portfolio);
     }
 
@@ -52,8 +47,8 @@ public class PortfolioCommandHandler {
     public void handleReserveItemsCommand(ReserveItemsCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.reserveItems(command.getOrderBookIdentifier(),
-                               command.getTransactionIdentifier(),
-                               command.getAmountOfItemsToReserve());
+                command.getTransactionIdentifier(),
+                command.getAmountOfItemsToReserve());
     }
 
     @CommandHandler
@@ -66,16 +61,16 @@ public class PortfolioCommandHandler {
     public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmReservation(command.getOrderBookIdentifier(),
-                                     command.getTransactionIdentifier(),
-                                     command.getAmountOfItemsToConfirm());
+                command.getTransactionIdentifier(),
+                command.getAmountOfItemsToConfirm());
     }
 
     @CommandHandler
     public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.cancelReservation(command.getOrderBookIdentifier(),
-                                    command.getTransactionIdentifier(),
-                                    command.getAmountOfItemsToCancel());
+                command.getTransactionIdentifier(),
+                command.getAmountOfItemsToCancel());
     }
 
     @CommandHandler
@@ -107,7 +102,7 @@ public class PortfolioCommandHandler {
             ConfirmMoneyReservationFromPortfolionCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
-                                          command.getAmountOfMoneyToConfirmInCents());
+                command.getAmountOfMoneyToConfirmInCents());
     }
 
     @Autowired

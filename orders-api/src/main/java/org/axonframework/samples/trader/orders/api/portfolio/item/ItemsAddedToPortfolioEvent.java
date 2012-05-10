@@ -16,20 +16,21 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.item;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 
 /**
  * New items have been added to the portfolio for the OrderBook of the provided identifier.
  *
  * @author Jettro Coenradie
  */
-public class ItemsAddedToPortfolioEvent extends DomainEvent {
-
-    private AggregateIdentifier orderBookIdentifier;
+public class ItemsAddedToPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
     private long amountOfItemsAdded;
 
-    public ItemsAddedToPortfolioEvent(AggregateIdentifier orderBookIdentifier, long amountOfItemsAdded) {
+    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier, long amountOfItemsAdded) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsAdded = amountOfItemsAdded;
     }
@@ -38,11 +39,11 @@ public class ItemsAddedToPortfolioEvent extends DomainEvent {
         return amountOfItemsAdded;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
+    public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 }

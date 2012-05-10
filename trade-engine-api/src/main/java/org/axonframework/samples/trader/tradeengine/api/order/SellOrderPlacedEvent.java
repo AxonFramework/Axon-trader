@@ -16,8 +16,6 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-
 /**
  * <p>A new Sell Order is placed for the current OrderBook. </p>
  *
@@ -25,8 +23,8 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public SellOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount,
-                                long itemPrice, AggregateIdentifier portfolioId) {
-        super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
+    public SellOrderPlacedEvent(OrderBookId orderBookId, OrderId orderId, TransactionId transactionId, long tradeCount,
+                                long itemPrice, PortfolioId portfolioId) {
+        super(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId);
     }
 }

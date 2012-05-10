@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.money.ConfirmMoneyReservationFromPortfolionCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -27,12 +27,12 @@ import org.hamcrest.Description;
 public class ConfirmMoneyReservationFromPortfolionCommandMatcher
         extends BaseMatcher<ConfirmMoneyReservationFromPortfolionCommand> {
 
-    private String portfolioIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToconfirm;
 
-    public ConfirmMoneyReservationFromPortfolionCommandMatcher(AggregateIdentifier portfolioIdentifier,
+    public ConfirmMoneyReservationFromPortfolionCommandMatcher(PortfolioId portfolioIdentifier,
                                                                long amountOfMoneyToconfirm) {
-        this.portfolioIdentifier = portfolioIdentifier.asString();
+        this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfMoneyToconfirm = amountOfMoneyToconfirm;
     }
 
@@ -43,16 +43,16 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
         }
         ConfirmMoneyReservationFromPortfolionCommand command = (ConfirmMoneyReservationFromPortfolionCommand) object;
 
-        return command.getPortfolioIdentifier().asString().equals(portfolioIdentifier)
+        return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToConfirmInCents() == amountOfMoneyToconfirm;
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("ConfirmMoneyReservationFromPortfolionCommand with amountOfMoneyToConfirm [")
-                   .appendValue(amountOfMoneyToconfirm)
-                   .appendText("] for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfMoneyToconfirm)
+                .appendText("] for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

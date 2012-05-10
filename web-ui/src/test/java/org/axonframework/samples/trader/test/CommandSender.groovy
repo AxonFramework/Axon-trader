@@ -19,8 +19,8 @@ package org.axonframework.samples.trader.test
 import com.thoughtworks.xstream.XStream
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry
+import org.axonframework.samples.trader.query.portfolio.PortfolioEntry
 
 /**
  * This class serializes the command using xstream and sends it to the server.
@@ -28,7 +28,7 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookEntry
  * @author Jettro Coenradie
  */
 class CommandSender {
-    def http = new HTTPBuilder('http://localhost:8080/')
+    def http = new HTTPBuilder('http://localhost:8080/trader/')
     def requestContentType = ContentType.URLENC
     XStream xStream = new XStream()
 

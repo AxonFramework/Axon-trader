@@ -17,6 +17,7 @@
 package org.axonframework.samples.trader.webui.security;
 
 import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.samples.trader.users.api.AuthenticateUserCommand;
 import org.axonframework.samples.trader.users.api.UserAccount;
@@ -67,7 +68,8 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
         FutureCallback<UserAccount> accountCallback = new FutureCallback<UserAccount>();
-        commandBus.dispatch(new AuthenticateUserCommand(username, password.toCharArray()), accountCallback);
+        AuthenticateUserCommand command = new AuthenticateUserCommand(username, password.toCharArray());
+        commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
         UserAccount account;
         try {
             account = accountCallback.get();

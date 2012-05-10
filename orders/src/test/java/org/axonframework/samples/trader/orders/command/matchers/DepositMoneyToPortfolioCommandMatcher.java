@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -27,10 +27,10 @@ import org.hamcrest.Description;
 public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMoneyToPortfolioCommand> {
 
     private long moneyToAddInCents;
-    private String portfolioIdentifier;
+    private PortfolioId portfolioIdentifier;
 
-    public DepositMoneyToPortfolioCommandMatcher(AggregateIdentifier portfolioIdentifier, long moneyToAddInCents) {
-        this.portfolioIdentifier = portfolioIdentifier.asString();
+    public DepositMoneyToPortfolioCommandMatcher(PortfolioId portfolioIdentifier, long moneyToAddInCents) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.moneyToAddInCents = moneyToAddInCents;
     }
 
@@ -41,15 +41,15 @@ public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMo
         }
         DepositMoneyToPortfolioCommand command = (DepositMoneyToPortfolioCommand) o;
         return moneyToAddInCents == command.getMoneyToAddInCents()
-                && portfolioIdentifier.equals(command.getPortfolioIdentifier().asString());
+                && portfolioIdentifier.equals(command.getPortfolioIdentifier());
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("DepositMoneyToPortfolioCommand with moneyToAddInCents [")
-                   .appendValue(moneyToAddInCents)
-                   .appendText("] for Portfolio with identifier [")
-                   .appendValue(portfolioIdentifier)
-                   .appendText("]");
+                .appendValue(moneyToAddInCents)
+                .appendText("] for Portfolio with identifier [")
+                .appendValue(portfolioIdentifier)
+                .appendText("]");
     }
 }

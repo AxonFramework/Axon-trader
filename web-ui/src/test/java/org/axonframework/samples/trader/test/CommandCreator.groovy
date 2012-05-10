@@ -16,10 +16,11 @@
 
 package org.axonframework.samples.trader.test
 
-import org.axonframework.domain.StringAggregateIdentifier
 import org.axonframework.samples.trader.orders.api.transaction.StartBuyTransactionCommand
 import org.axonframework.samples.trader.orders.api.transaction.StartSellTransactionCommand
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId
 
 /**
  * Class used to create an order based on the provided Profile. If the profile has money we place buy orders, if
@@ -37,20 +38,20 @@ class CommandCreator {
     }
 
     def createCommand(PortfolioEntry portfolio) {
-        if (portfolio.amountOfMoney-portfolio.reservedAmountOfMoney > 10000) {
+        if (portfolio.amountOfMoney - portfolio.reservedAmountOfMoney > 10000) {
             command = new StartBuyTransactionCommand(
-                    new StringAggregateIdentifier(obtainRandomOrderBook()),
-                    new StringAggregateIdentifier(portfolio.identifier),
-                    randomFactory.nextInt(50)+1,
-                    randomFactory.nextInt(10)+1)
+                    new OrderBookId(obtainRandomOrderBook()),
+                    new PortfolioId(portfolio.identifier),
+                    randomFactory.nextInt(50) + 1,
+                    randomFactory.nextInt(10) + 1)
         } else {
             def availableOrderBook = obtainAvailableOrderBook(portfolio)
             if (availableOrderBook) {
                 command = new StartSellTransactionCommand(
-                        new StringAggregateIdentifier(availableOrderBook[0]),
-                        new StringAggregateIdentifier(portfolio.identifier),
+                        new OrderBookId(availableOrderBook[0]),
+                        new PortfolioId(portfolio.identifier),
                         availableOrderBook[1],
-                        randomFactory.nextInt(10)+1)
+                        randomFactory.nextInt(10) + 1)
             }
         }
 
@@ -69,7 +70,7 @@ class CommandCreator {
             def amountAvailable = portfolioEntry.itemsInPossession[identifier].amount
             def reserved = (portfolioEntry.itemsReserved[identifier]) ? portfolioEntry.itemsReserved[identifier].amount : 0
             if (amountAvailable > reserved) {
-                def amountToSell = (amountAvailable - reserved > 50) ? randomFactory.nextInt(50)+1 : amountAvailable - reserved
+                def amountToSell = (amountAvailable - reserved > 50) ? randomFactory.nextInt(50) + 1 : amountAvailable - reserved
                 return [identifier, amountToSell]
             }
             counterOrderBook++

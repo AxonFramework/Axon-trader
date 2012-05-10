@@ -16,32 +16,33 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class NotEnoughMoneyInPortfolioToMakeReservationEvent extends DomainEvent {
-
-    private AggregateIdentifier transactionIdentifier;
+public class NotEnoughMoneyInPortfolioToMakeReservationEvent {
+    private PortfolioId portfolioIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountToPayInCents;
 
-    public NotEnoughMoneyInPortfolioToMakeReservationEvent(AggregateIdentifier transactionIdentifier,
+    public NotEnoughMoneyInPortfolioToMakeReservationEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier,
                                                            long amountToPayInCents) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountToPayInCents = amountToPayInCents;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return this.getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 
     public long getAmountToPayInCents() {
         return amountToPayInCents;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

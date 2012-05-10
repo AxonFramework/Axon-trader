@@ -16,24 +16,24 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractTransactionCancelledEvent extends DomainEvent {
-
+public abstract class AbstractTransactionCancelledEvent {
+    private TransactionId transactionIdentifier;
     private long totalAmountOfItems;
     private long amountOfExecutedItems;
 
-    public AbstractTransactionCancelledEvent(long totalAmountOfItems, long amountOfExecutedItems) {
+    public AbstractTransactionCancelledEvent(TransactionId transactionIdentifier, long totalAmountOfItems, long amountOfExecutedItems) {
+        this.transactionIdentifier = transactionIdentifier;
         this.totalAmountOfItems = totalAmountOfItems;
         this.amountOfExecutedItems = amountOfExecutedItems;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
-        return super.getAggregateIdentifier();
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 
     public long getAmountOfExecutedItems() {

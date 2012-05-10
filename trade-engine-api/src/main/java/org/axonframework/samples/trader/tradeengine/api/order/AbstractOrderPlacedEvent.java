@@ -16,40 +16,39 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
-
 /**
  * <p>Abstract parent class for all buy and sell order placed events.</p>
  *
  * @author Allard Buijze
  */
-public abstract class AbstractOrderPlacedEvent extends DomainEvent {
+public abstract class AbstractOrderPlacedEvent {
 
-    private final AggregateIdentifier orderId;
-    private AggregateIdentifier transactionId;
+    private final OrderBookId orderBookId;
+    private final OrderId orderId;
+    private TransactionId transactionId;
     private final long tradeCount;
     private final long itemPrice;
-    private final AggregateIdentifier portfolioId;
+    private final PortfolioId portfolioId;
 
-    protected AbstractOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount,
-                                       long itemPrice, AggregateIdentifier portfolioId) {
+    protected AbstractOrderPlacedEvent(OrderBookId orderBookId, OrderId orderId, TransactionId transactionId,
+                                       long tradeCount, long itemPrice, PortfolioId portfolioId) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
         this.portfolioId = portfolioId;
+        this.orderBookId = orderBookId;
     }
 
-    public AggregateIdentifier orderBookIdentifier() {
-        return getAggregateIdentifier();
+    public OrderBookId orderBookIdentifier() {
+        return this.orderBookId;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionId;
     }
 
-    public AggregateIdentifier getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
@@ -61,7 +60,7 @@ public abstract class AbstractOrderPlacedEvent extends DomainEvent {
         return itemPrice;
     }
 
-    public AggregateIdentifier getPortfolioId() {
+    public PortfolioId getPortfolioId() {
         return portfolioId;
     }
 }

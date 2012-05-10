@@ -16,17 +16,20 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class BuyTransactionStartedEvent extends AbstractTransactionStartedEvent {
 
-    public BuyTransactionStartedEvent(AggregateIdentifier orderbookIdentifier,
-                                      AggregateIdentifier portfolioIdentifier,
+    public BuyTransactionStartedEvent(TransactionId transactionIdentifier,
+                                      OrderBookId orderBookIdentifier,
+                                      PortfolioId portfolioIdentifier,
                                       long totalItems,
                                       long pricePerItem) {
-        super(orderbookIdentifier, portfolioIdentifier, totalItems, pricePerItem);
+        super(transactionIdentifier, orderBookIdentifier, portfolioIdentifier, totalItems, pricePerItem);
     }
 }

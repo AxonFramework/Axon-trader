@@ -16,32 +16,35 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.item;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemToReserveNotAvailableInPortfolioEvent extends DomainEvent {
+public class ItemToReserveNotAvailableInPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private TransactionId transactionIdentifier;
 
-    private AggregateIdentifier orderBookIdentifier;
-    private AggregateIdentifier transactionIdentifier;
-
-    public ItemToReserveNotAvailableInPortfolioEvent(AggregateIdentifier orderBookIdentifier,
-                                                     AggregateIdentifier transactionIdentifier) {
+    public ItemToReserveNotAvailableInPortfolioEvent(PortfolioId portfolioIdentifier,
+                                                     OrderBookId orderBookIdentifier,
+                                                     TransactionId transactionIdentifier) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
+    public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

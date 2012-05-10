@@ -18,11 +18,7 @@ package org.axonframework.samples.trader.query.portfolio;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyDepositedToPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationCancelledFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservationConfirmedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.MoneyWithdrawnFromPortfolioEvent;
+import org.axonframework.samples.trader.orders.api.portfolio.money.*;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.slf4j.Logger;
@@ -44,13 +40,13 @@ public class PortfolioMoneyEventListener {
     @EventHandler
     public void handleEvent(PortfolioCreatedEvent event) {
         logger.debug("About to handle the PortfolioCreatedEvent for user with identifier {}",
-                     event.getUserIdentifier().asString());
+                event.getUserId().toString());
 
         PortfolioEntry portfolioEntry = new PortfolioEntry();
-        portfolioEntry.setIdentifier(event.getPortfolioIdentifier().asString());
-        portfolioEntry.setUserIdentifier(event.getUserIdentifier().asString());
-        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserIdentifier().asString())
-                                                      .getFullName());
+        portfolioEntry.setIdentifier(event.getPortfolioId().toString());
+        portfolioEntry.setUserIdentifier(event.getUserId().toString());
+        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserId().toString())
+                .getFullName());
         portfolioEntry.setAmountOfMoney(0);
         portfolioEntry.setReservedAmountOfMoney(0);
 
@@ -59,28 +55,28 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(MoneyDepositedToPortfolioEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() + event.getMoneyAddedInCents());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(MoneyWithdrawnFromPortfolioEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() - event.getAmountPaidInCents());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(MoneyReservedFromPortfolioEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney() + event.getAmountToReserve());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(MoneyReservationCancelledFromPortfolioEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setReservedAmountOfMoney(
                 portfolioEntry.getReservedAmountOfMoney() - event.getAmountOfMoneyToCancel());
         portfolioRepository.save(portfolioEntry);
@@ -88,7 +84,7 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(MoneyReservationConfirmedFromPortfolioEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().asString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         long reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
         long amountOfMoneyConfirmed = event.getAmountOfMoneyConfirmedInCents();
         if (amountOfMoneyConfirmed < reservedAmountOfMoney) {

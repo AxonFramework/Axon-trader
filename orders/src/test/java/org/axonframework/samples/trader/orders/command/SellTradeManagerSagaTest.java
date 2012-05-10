@@ -16,25 +16,14 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionCancelledEvent;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionConfirmedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionExecutedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionPartiallyExecutedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionStartedEvent;
-import org.axonframework.samples.trader.orders.command.matchers.CancelItemReservationForPortfolioCommandMatcher;
-import org.axonframework.samples.trader.orders.command.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
-import org.axonframework.samples.trader.orders.command.matchers.ConfirmTransactionCommandMatcher;
-import org.axonframework.samples.trader.orders.command.matchers.CreateSellOrderCommandMatcher;
-import org.axonframework.samples.trader.orders.command.matchers.DepositMoneyToPortfolioCommandMatcher;
-import org.axonframework.samples.trader.orders.command.matchers.ExecutedTransactionCommandMatcher;
-import org.axonframework.samples.trader.orders.command.matchers.ReservedItemsCommandMatcher;
-import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.orders.command.matchers.*;
+import org.axonframework.samples.trader.tradeengine.api.order.*;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
@@ -44,9 +33,9 @@ import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
  */
 public class SellTradeManagerSagaTest {
 
-    private AggregateIdentifier transactionIdentifier = new UUIDAggregateIdentifier();
-    private AggregateIdentifier orderbookIdentifier = new UUIDAggregateIdentifier();
-    private AggregateIdentifier portfolioIdentifier = new UUIDAggregateIdentifier();
+    private TransactionId transactionIdentifier = new TransactionId();
+    private OrderBookId orderbookIdentifier = new OrderBookId();
+    private PortfolioId portfolioIdentifier = new PortfolioId();
 
     private AnnotatedSagaTestFixture fixture;
 
@@ -58,157 +47,170 @@ public class SellTradeManagerSagaTest {
     @Test
     public void testHandle_SellTransactionStarted() throws Exception {
         fixture.givenAggregate(transactionIdentifier).published()
-               .whenAggregate(transactionIdentifier).publishes(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                               portfolioIdentifier,
-                                                                                               100,
-                                                                                               10))
-               .expectActiveSagas(1)
-               .expectDispatchedCommandsMatching(exactSequenceOf(new ReservedItemsCommandMatcher(orderbookIdentifier
-                                                                                                         .asString(),
-                                                                                                 portfolioIdentifier
-                                                                                                         .asString(),
-                                                                                                 100)));
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                10))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(exactSequenceOf(new ReservedItemsCommandMatcher(orderbookIdentifier,
+                        portfolioIdentifier,
+                        100)));
     }
 
     @Test
     public void testHandle_ItemsReserved() {
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                10))
-               .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(orderbookIdentifier,
-                                                                                    transactionIdentifier,
-                                                                                    100))
-               .expectActiveSagas(1)
-               .expectDispatchedCommandsMatching(exactSequenceOf(new ConfirmTransactionCommandMatcher(
-                       transactionIdentifier)));
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                10))
+                .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
+                transactionIdentifier,
+                100))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(exactSequenceOf(new ConfirmTransactionCommandMatcher(
+                        transactionIdentifier)));
     }
 
     @Test
     public void testHandle_TransactionConfirmed() {
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                10))
-               .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier,
-                                                                                       transactionIdentifier,
-                                                                                       100))
-               .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent())
-               .expectActiveSagas(1)
-               .expectDispatchedCommandsMatching(exactSequenceOf(new CreateSellOrderCommandMatcher(portfolioIdentifier,
-                                                                                                   orderbookIdentifier,
-                                                                                                   100,
-                                                                                                   10)));
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                10))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
+                transactionIdentifier,
+                100))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(exactSequenceOf(new CreateSellOrderCommandMatcher(portfolioIdentifier,
+                        orderbookIdentifier,
+                        100,
+                        10)));
     }
 
 
     @Test
     public void testHandle_NotEnoughItemsToReserve() {
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                10))
-               .whenAggregate(portfolioIdentifier).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                10))
+                .whenAggregate(portfolioIdentifier).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(
+                portfolioIdentifier,
                 orderbookIdentifier,
                 transactionIdentifier,
                 50,
                 100))
-               .expectActiveSagas(0);
+                .expectActiveSagas(0);
     }
 
     @Test
     public void testHandle_TransactionCancelled() {
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                10))
-               .whenAggregate(transactionIdentifier).publishes(new SellTransactionCancelledEvent(50, 0))
-               .expectActiveSagas(0)
-               .expectDispatchedCommandsMatching(exactSequenceOf(new CancelItemReservationForPortfolioCommandMatcher(
-                       orderbookIdentifier,
-                       portfolioIdentifier,
-                       50)));
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                10))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionCancelledEvent(transactionIdentifier, 50, 0))
+                .expectActiveSagas(0)
+                .expectDispatchedCommandsMatching(exactSequenceOf(new CancelItemReservationForPortfolioCommandMatcher(
+                        orderbookIdentifier,
+                        portfolioIdentifier,
+                        50)));
     }
 
     @Test
     public void testHandle_TradeExecutedPlaced() {
-        AggregateIdentifier buyOrderIdentifier = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyTransactionIdentifier = new UUIDAggregateIdentifier();
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                99))
-               .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier,
-                                                                                       transactionIdentifier,
-                                                                                       100))
-               .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent())
-               .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(100,
-                                                                                    102,
-                                                                                    buyOrderIdentifier,
-                                                                                    orderbookIdentifier,
-                                                                                    buyTransactionIdentifier,
-                                                                                    transactionIdentifier))
-               .expectActiveSagas(1)
-               .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(100,
-                                                                                                       102,
-                                                                                                       transactionIdentifier),
-                                                                 andNoMore()));
+        OrderId buyOrderIdentifier = new OrderId();
+        OrderId sellOrderIdentifier = new OrderId();
+        TransactionId buyTransactionIdentifier = new TransactionId();
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                99))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
+                transactionIdentifier,
+                100))
+                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(orderbookIdentifier,
+                100,
+                102,
+                buyOrderIdentifier,
+                sellOrderIdentifier,
+                buyTransactionIdentifier,
+                transactionIdentifier))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(100,
+                        102,
+                        transactionIdentifier),
+                        andNoMore()));
     }
 
     @Test
     public void testHandle_SellTransactionExecuted() {
-        AggregateIdentifier buyOrderIdentifier = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyTransactionIdentifier = new UUIDAggregateIdentifier();
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                99))
-               .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier,
-                                                                                       transactionIdentifier,
-                                                                                       100))
-               .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent())
-               .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(100,
-                                                                                       102,
-                                                                                       buyOrderIdentifier,
-                                                                                       orderbookIdentifier,
-                                                                                       buyTransactionIdentifier,
-                                                                                       transactionIdentifier))
-               .whenAggregate(transactionIdentifier).publishes(new SellTransactionExecutedEvent(100, 102))
-               .expectActiveSagas(0)
-               .expectDispatchedCommandsMatching(
-                       exactSequenceOf(
-                               new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
-                                                                                    portfolioIdentifier,
-                                                                                    100),
-                               new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 100 * 102)));
+        OrderId buyOrderIdentifier = new OrderId();
+        OrderId sellOrderIdentifier = new OrderId();
+        TransactionId buyTransactionIdentifier = new TransactionId();
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                99))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
+                transactionIdentifier,
+                100))
+                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
+                100,
+                102,
+                buyOrderIdentifier,
+                sellOrderIdentifier,
+                buyTransactionIdentifier,
+                transactionIdentifier))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionExecutedEvent(transactionIdentifier, 100, 102))
+                .expectActiveSagas(0)
+                .expectDispatchedCommandsMatching(
+                        exactSequenceOf(
+                                new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
+                                        portfolioIdentifier,
+                                        100),
+                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 100 * 102)));
     }
 
     @Test
     public void testHandle_SellTransactionPartiallyExecuted() {
-        AggregateIdentifier buyOrderIdentifier = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyTransactionIdentifier = new UUIDAggregateIdentifier();
+        OrderId buyOrderIdentifier = new OrderId();
+        OrderId sellOrderIdentifier = new OrderId();
+        TransactionId buyTransactionIdentifier = new TransactionId();
 
-        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(orderbookIdentifier,
-                                                                                                portfolioIdentifier,
-                                                                                                100,
-                                                                                                99))
-               .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(orderbookIdentifier,
-                                                                                       transactionIdentifier,
-                                                                                       100))
-               .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent())
-               .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(100,
-                                                                                       102,
-                                                                                       buyOrderIdentifier,
-                                                                                       orderbookIdentifier,
-                                                                                       buyTransactionIdentifier,
-                                                                                       transactionIdentifier))
-               .whenAggregate(transactionIdentifier).publishes(new SellTransactionPartiallyExecutedEvent(50, 75, 102))
-               .expectActiveSagas(1)
-               .expectDispatchedCommandsMatching(
-                       exactSequenceOf(
-                               new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
-                                                                                    portfolioIdentifier,
-                                                                                    50),
-                               new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 50 * 102)));
+        fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
+                orderbookIdentifier,
+                portfolioIdentifier,
+                100,
+                99))
+                .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
+                transactionIdentifier,
+                100))
+                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
+                100,
+                102,
+                buyOrderIdentifier,
+                sellOrderIdentifier,
+                buyTransactionIdentifier,
+                transactionIdentifier))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionPartiallyExecutedEvent(transactionIdentifier, 50, 75, 102))
+                .expectActiveSagas(1)
+                .expectDispatchedCommandsMatching(
+                        exactSequenceOf(
+                                new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
+                                        portfolioIdentifier,
+                                        50),
+                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 50 * 102)));
     }
 }

@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.transaction.CancelTransactionCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -26,10 +26,10 @@ import org.hamcrest.Description;
  */
 public class CancelTransactionCommandMatcher extends BaseMatcher<CancelTransactionCommand> {
 
-    private String transactionIdentifier;
+    private TransactionId transactionIdentifier;
 
-    public CancelTransactionCommandMatcher(AggregateIdentifier transactionIdentifier) {
-        this.transactionIdentifier = transactionIdentifier.asString();
+    public CancelTransactionCommandMatcher(TransactionId transactionIdentifier) {
+        this.transactionIdentifier = transactionIdentifier;
     }
 
     @Override
@@ -38,13 +38,13 @@ public class CancelTransactionCommandMatcher extends BaseMatcher<CancelTransacti
             return false;
         }
         CancelTransactionCommand command = (CancelTransactionCommand) o;
-        return command.getTransactionIdentifier().asString().equals(transactionIdentifier);
+        return command.getTransactionIdentifier().equals(transactionIdentifier);
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelTransactionCommand for Transaction with identifier [")
-                   .appendValue(transactionIdentifier)
-                   .appendText("]");
+                .appendValue(transactionIdentifier)
+                .appendText("]");
     }
 }

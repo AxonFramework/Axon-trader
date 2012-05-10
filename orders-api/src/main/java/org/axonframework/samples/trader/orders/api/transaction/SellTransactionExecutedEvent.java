@@ -16,12 +16,14 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionExecutedEvent extends AbstractTransactionExecutedEvent {
 
-    public SellTransactionExecutedEvent(long amountOfItems, long itemPrice) {
-        super(amountOfItems, itemPrice);
+    public SellTransactionExecutedEvent(TransactionId transactionIdentifier, long amountOfItems, long itemPrice) {
+        super(transactionIdentifier, amountOfItems, itemPrice);
     }
 }

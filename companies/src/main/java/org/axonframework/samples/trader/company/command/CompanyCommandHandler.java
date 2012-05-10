@@ -17,7 +17,6 @@
 package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +31,10 @@ public class CompanyCommandHandler {
 
     @CommandHandler
     public void handleCreateCompany(CreateCompanyCommand command) {
-        Company company = new Company(new UUIDAggregateIdentifier(),
-                                      command.getCompanyName(),
-                                      command.getCompanyValue(),
-                                      command.getAmountOfShares());
+        Company company = new Company(command.getCompanyId(),
+                command.getCompanyName(),
+                command.getCompanyValue(),
+                command.getAmountOfShares());
         repository.add(company);
     }
 

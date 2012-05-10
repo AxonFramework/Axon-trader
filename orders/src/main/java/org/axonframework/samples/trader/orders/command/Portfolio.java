@@ -16,12 +16,16 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.item.*;
 import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.users.api.UserId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,51 +40,54 @@ import java.util.Map;
  * @author Jettro Coenradie
  */
 public class Portfolio extends AbstractAnnotatedAggregateRoot {
+    private static final long serialVersionUID = 996371335141649977L;
 
-    private Map<AggregateIdentifier, Long> availableItems = new HashMap<AggregateIdentifier, Long>();
-    private Map<AggregateIdentifier, Long> reservedItems = new HashMap<AggregateIdentifier, Long>();
+    @AggregateIdentifier
+    private PortfolioId portfolioId;
+    private Map<OrderBookId, Long> availableItems = new HashMap<OrderBookId, Long>();
+    private Map<OrderBookId, Long> reservedItems = new HashMap<OrderBookId, Long>();
 
     private long amountOfMoney;
     private long reservedAmountOfMoney;
 
-    public Portfolio(AggregateIdentifier identifier) {
-        super(identifier);
+    protected Portfolio() {
     }
 
-    public Portfolio(AggregateIdentifier aggregateIdentifier, AggregateIdentifier userIdentifier) {
-        super(aggregateIdentifier);
-        apply(new PortfolioCreatedEvent(userIdentifier));
+    public Portfolio(PortfolioId portfolioId, UserId userIdentifier) {
+        apply(new PortfolioCreatedEvent(portfolioId, userIdentifier));
     }
 
-    public void addItems(AggregateIdentifier orderBookIdentifier, long amountOfItemsToAdd) {
-        apply(new ItemsAddedToPortfolioEvent(orderBookIdentifier, amountOfItemsToAdd));
+    public void addItems(OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
+        apply(new ItemsAddedToPortfolioEvent(portfolioId, orderBookIdentifier, amountOfItemsToAdd));
     }
 
-    public void reserveItems(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
-                             long amountOfItemsToReserve) {
+    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, long amountOfItemsToReserve) {
         if (!availableItems.containsKey(orderBookIdentifier)) {
-            apply(new ItemToReserveNotAvailableInPortfolioEvent(orderBookIdentifier, transactionIdentifier));
+            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, orderBookIdentifier, transactionIdentifier));
         } else {
             Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
             if (availableAmountOfItems < amountOfItemsToReserve) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolio(
-                        orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
+                        portfolioId, orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
             } else {
-                apply(new ItemsReservedEvent(orderBookIdentifier, transactionIdentifier, amountOfItemsToReserve));
+                apply(new ItemsReservedEvent(portfolioId, orderBookIdentifier, transactionIdentifier, amountOfItemsToReserve));
             }
         }
     }
 
-    public void confirmReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
+    public void confirmReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
                                    long amountOfItemsToConfirm) {
-        apply(new ItemReservationConfirmedForPortfolioEvent(orderBookIdentifier,
+        apply(new ItemReservationConfirmedForPortfolioEvent(
+                portfolioId,
+                orderBookIdentifier,
                 transactionIdentifier,
                 amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(AggregateIdentifier orderBookIdentifier, AggregateIdentifier transactionIdentifier,
-                                  long amountOfItemsToCancel) {
-        apply(new ItemReservationCancelledForPortfolioEvent(orderBookIdentifier,
+    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, long amountOfItemsToCancel) {
+        apply(new ItemReservationCancelledForPortfolioEvent(
+                portfolioId,
+                orderBookIdentifier,
                 transactionIdentifier,
                 amountOfItemsToCancel));
     }
@@ -90,26 +97,31 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void makePayment(long amountToPayInCents) {
-        apply(new MoneyWithdrawnFromPortfolioEvent(amountToPayInCents));
+        apply(new MoneyWithdrawnFromPortfolioEvent(portfolioId, amountToPayInCents));
     }
 
-    public void reserveMoney(AggregateIdentifier transactionIdentifier, long amountToReserve) {
+    public void reserveMoney(TransactionId transactionIdentifier, long amountToReserve) {
         if (amountOfMoney >= amountToReserve) {
-            apply(new MoneyReservedFromPortfolioEvent(transactionIdentifier, amountToReserve));
+            apply(new MoneyReservedFromPortfolioEvent(portfolioId, transactionIdentifier, amountToReserve));
         } else {
-            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(transactionIdentifier, amountToReserve));
+            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(portfolioId, transactionIdentifier, amountToReserve));
         }
     }
 
-    public void cancelMoneyReservation(AggregateIdentifier transactionIdentifier, long amountOfMoneyToCancel) {
-        apply(new MoneyReservationCancelledFromPortfolioEvent(transactionIdentifier, amountOfMoneyToCancel));
+    public void cancelMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToCancel) {
+        apply(new MoneyReservationCancelledFromPortfolioEvent(portfolioId, transactionIdentifier, amountOfMoneyToCancel));
     }
 
-    public void confirmMoneyReservation(AggregateIdentifier transactionIdentifier, long amountOfMoneyToConfirm) {
-        apply(new MoneyReservationConfirmedFromPortfolioEvent(transactionIdentifier, amountOfMoneyToConfirm));
+    public void confirmMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToConfirm) {
+        apply(new MoneyReservationConfirmedFromPortfolioEvent(portfolioId, transactionIdentifier, amountOfMoneyToConfirm));
     }
 
     /* EVENT HANDLING */
+    @EventHandler
+    public void onPortfolioCreated(PortfolioCreatedEvent event) {
+        this.portfolioId = event.getPortfolioId();
+    }
+
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
         long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
@@ -171,19 +183,24 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     /* UTILITY METHODS */
-    private long obtainCurrentAvailableItems(AggregateIdentifier itemIdentifier) {
+    private long obtainCurrentAvailableItems(OrderBookId orderBookIdentifier) {
         long available = 0;
-        if (availableItems.containsKey(itemIdentifier)) {
-            available = availableItems.get(itemIdentifier);
+        if (availableItems.containsKey(orderBookIdentifier)) {
+            available = availableItems.get(orderBookIdentifier);
         }
         return available;
     }
 
-    private long obtainCurrentReservedItems(AggregateIdentifier itemIdentifier) {
+    private long obtainCurrentReservedItems(OrderBookId orderBookIdentifier) {
         long reserved = 0;
-        if (reservedItems.containsKey(itemIdentifier)) {
-            reserved = reservedItems.get(itemIdentifier);
+        if (reservedItems.containsKey(orderBookIdentifier)) {
+            reserved = reservedItems.get(orderBookIdentifier);
         }
         return reserved;
+    }
+
+    @Override
+    public PortfolioId getIdentifier() {
+        return portfolioId;
     }
 }

@@ -16,51 +16,38 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class AbstractTransactionPartiallyExecutedEvent extends DomainEvent {
-
+public class AbstractTransactionPartiallyExecutedEvent {
+    private TransactionId transactionIdentifier;
     private long amountOfExecutedItems;
     private long totalOfExecutedItems;
     private long itemPrice;
 
-    public AbstractTransactionPartiallyExecutedEvent(long amountOfExecutedItems, long totalOfExecutedItems,
+    public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier, long amountOfExecutedItems, long totalOfExecutedItems,
                                                      long itemPrice) {
-
+        this.transactionIdentifier = transactionIdentifier;
         this.amountOfExecutedItems = amountOfExecutedItems;
         this.totalOfExecutedItems = totalOfExecutedItems;
         this.itemPrice = itemPrice;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
-        return this.getAggregateIdentifier();
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 
     public long getAmountOfExecutedItems() {
         return amountOfExecutedItems;
     }
 
-    public void setAmountOfExecutedItems(long amountOfExecutedItems) {
-        this.amountOfExecutedItems = amountOfExecutedItems;
-    }
-
     public long getItemPrice() {
         return itemPrice;
     }
 
-    public void setItemPrice(long itemPrice) {
-        this.itemPrice = itemPrice;
-    }
-
     public long getTotalOfExecutedItems() {
         return totalOfExecutedItems;
-    }
-
-    public void setTotalOfExecutedItems(long totalOfExecutedItems) {
-        this.totalOfExecutedItems = totalOfExecutedItems;
     }
 }

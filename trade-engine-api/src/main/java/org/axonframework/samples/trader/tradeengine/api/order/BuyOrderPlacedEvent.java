@@ -16,8 +16,6 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-
 /**
  * <p>A new Buy Order is placed.</p>
  *
@@ -25,8 +23,8 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public BuyOrderPlacedEvent(AggregateIdentifier orderId, AggregateIdentifier transactionId, long tradeCount,
-                               long itemPrice, AggregateIdentifier portfolioId) {
-        super(orderId, transactionId, tradeCount, itemPrice, portfolioId);
+    public BuyOrderPlacedEvent(OrderBookId orderBookId, OrderId orderId, TransactionId transactionId, long tradeCount,
+                               long itemPrice, PortfolioId portfolioId) {
+        super(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId);
     }
 }

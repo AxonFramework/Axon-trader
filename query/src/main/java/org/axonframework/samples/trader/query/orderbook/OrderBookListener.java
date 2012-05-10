@@ -16,18 +16,12 @@
 
 package org.axonframework.samples.trader.query.orderbook;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.axonframework.samples.trader.tradeengine.api.order.AbstractOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,17 +41,18 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
-        CompanyEntry companyEntry = companyRepository.findOne(event.getCompanyIdentifier().asString());
+//        TODO jettro: I must add company info to the order book? Or make some other combination of the two
+//        CompanyEntry companyEntry = companyRepository.findOne(event.getOrderBookIdentifier());
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setCompanyIdentifier(event.getCompanyIdentifier().asString());
-        orderBookEntry.setCompanyName(companyEntry.getName());
-        orderBookEntry.setIdentifier(event.getOrderBookIdentifier().asString());
+//        orderBookEntry.setCompanyIdentifier(event.getCompanyIdentifier().asString());
+//        orderBookEntry.setCompanyName(companyEntry.getName());
+        orderBookEntry.setIdentifier(event.getOrderBookIdentifier().toString());
         orderBookRepository.save(orderBookEntry);
     }
 
     @EventHandler
     public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().asString());
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().toString());
 
         OrderEntry buyOrder = createPlacedOrder(event, BUY);
         orderBook.buyOrders().add(buyOrder);
@@ -67,7 +62,7 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().asString());
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().toString());
 
         OrderEntry sellOrder = createPlacedOrder(event, SELL);
         orderBook.sellOrders().add(sellOrder);
@@ -77,11 +72,11 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleTradeExecuted(TradeExecutedEvent event) {
-        AggregateIdentifier buyOrderId = event.getBuyOrderId();
-        AggregateIdentifier sellOrderId = event.getSellOrderId();
+        OrderId buyOrderId = event.getBuyOrderId();
+        OrderId sellOrderId = event.getSellOrderId();
 
-        AggregateIdentifier orderBookIdentifier = event.getOrderBookIdentifier();
-        OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.asString());
+        OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
+        OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
 
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
         tradeExecutedEntry.setCompanyName(orderBookEntry.getCompanyName());
@@ -94,7 +89,7 @@ public class OrderBookListener {
         // TODO find a better solution or maybe pull them apart
         OrderEntry foundBuyOrder = null;
         for (OrderEntry order : orderBookEntry.buyOrders()) {
-            if (order.getIdentifier().equals(buyOrderId.asString())) {
+            if (order.getIdentifier().equals(buyOrderId.toString())) {
                 long itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining - event.getTradeCount());
                 foundBuyOrder = order;
@@ -106,7 +101,7 @@ public class OrderBookListener {
         }
         OrderEntry foundSellOrder = null;
         for (OrderEntry order : orderBookEntry.sellOrders()) {
-            if (order.getIdentifier().equals(sellOrderId.asString())) {
+            if (order.getIdentifier().equals(sellOrderId.toString())) {
                 long itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining - event.getTradeCount());
                 foundSellOrder = order;
@@ -121,10 +116,10 @@ public class OrderBookListener {
 
     private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
         OrderEntry entry = new OrderEntry();
-        entry.setIdentifier(event.getOrderId().asString());
+        entry.setIdentifier(event.getOrderId().toString());
         entry.setItemsRemaining(event.getTradeCount());
         entry.setTradeCount(event.getTradeCount());
-        entry.setUserId(event.getPortfolioId().asString());
+        entry.setUserId(event.getPortfolioId().toString());
         entry.setType(type);
         entry.setItemPrice(event.getItemPrice());
 

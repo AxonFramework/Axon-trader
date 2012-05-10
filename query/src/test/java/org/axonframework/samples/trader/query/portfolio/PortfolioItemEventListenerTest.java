@@ -16,8 +16,7 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
+import org.axonframework.samples.trader.company.api.CompanyId;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationCancelledForPortfolioEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationConfirmedForPortfolioEvent;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsAddedToPortfolioEvent;
@@ -25,9 +24,14 @@ import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedE
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
-import org.axonframework.test.utils.DomainEventUtils;
-import org.junit.*;
-import org.mockito.*;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.users.api.UserId;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 
 /**
  * We setup this test with a default portfolio and a default orderBook. The portfolio contains the default amount of
@@ -41,11 +45,11 @@ public class PortfolioItemEventListenerTest {
     private PortfolioQueryRepository portfolioQueryRepository;
     private PortfolioItemEventListener listener;
 
-    final AggregateIdentifier userIdentifier = new UUIDAggregateIdentifier();
-    final AggregateIdentifier itemIdentifier = new UUIDAggregateIdentifier();
-    final AggregateIdentifier portfolioIdentifier = new UUIDAggregateIdentifier();
-    final AggregateIdentifier companyIdentifier = new UUIDAggregateIdentifier();
-    final AggregateIdentifier transactionIdentifier = new UUIDAggregateIdentifier();
+    final UserId userIdentifier = new UserId();
+    final OrderBookId itemIdentifier = new OrderBookId();
+    final PortfolioId portfolioIdentifier = new PortfolioId();
+    final CompanyId companyIdentifier = new CompanyId();
+    final TransactionId transactionIdentifier = new TransactionId();
 
     @Before
     public void setUp() throws Exception {
@@ -58,20 +62,19 @@ public class PortfolioItemEventListenerTest {
         listener.setOrderBookQueryRepository(orderBookQueryRepository);
 
         OrderBookEntry orderBookEntry = createOrderBookEntry();
-        Mockito.when(orderBookQueryRepository.findOne(itemIdentifier.asString())).thenReturn(orderBookEntry);
+        Mockito.when(orderBookQueryRepository.findOne(itemIdentifier.toString())).thenReturn(orderBookEntry);
 
         PortfolioEntry portfolioEntry = createPortfolioEntry();
-        Mockito.when(portfolioQueryRepository.findOne(portfolioIdentifier.asString())).thenReturn(portfolioEntry);
+        Mockito.when(portfolioQueryRepository.findOne(portfolioIdentifier.toString())).thenReturn(portfolioEntry);
     }
 
     @Test
     public void testHandleEventAddItems() throws Exception {
-        ItemsAddedToPortfolioEvent event = new ItemsAddedToPortfolioEvent(itemIdentifier, 100);
-        DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
+        ItemsAddedToPortfolioEvent event = new ItemsAddedToPortfolioEvent(portfolioIdentifier, itemIdentifier, 100);
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.asString(),
+                itemIdentifier.toString(),
                 1,
                 2 * DEFAULT_AMOUNT_ITEMS,
                 1,
@@ -81,14 +84,14 @@ public class PortfolioItemEventListenerTest {
     @Test
     public void testHandleEventCancelItemReservation() throws Exception {
         ItemReservationCancelledForPortfolioEvent event =
-                new ItemReservationCancelledForPortfolioEvent(itemIdentifier,
-                                                              transactionIdentifier,
-                                                              DEFAULT_AMOUNT_ITEMS);
-        DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
+                new ItemReservationCancelledForPortfolioEvent(portfolioIdentifier,
+                        itemIdentifier,
+                        transactionIdentifier,
+                        DEFAULT_AMOUNT_ITEMS);
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.asString(),
+                itemIdentifier.toString(),
                 1,
                 2 * DEFAULT_AMOUNT_ITEMS,
                 0,
@@ -101,15 +104,14 @@ public class PortfolioItemEventListenerTest {
      */
     @Test
     public void testHandleEventConfirmItemReservation() {
-        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(itemIdentifier,
-                                                                                                        transactionIdentifier,
-                                                                                                        50);
-        DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
-
+        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier,
+                itemIdentifier,
+                transactionIdentifier,
+                50);
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.asString(),
+                itemIdentifier.toString(),
                 1,
                 DEFAULT_AMOUNT_ITEMS - 50,
                 1,
@@ -118,12 +120,11 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleItemReservedEvent() {
-        ItemsReservedEvent event = new ItemsReservedEvent(itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
-        DomainEventUtils.setAggregateIdentifier(event, portfolioIdentifier);
+        ItemsReservedEvent event = new ItemsReservedEvent(portfolioIdentifier, itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.asString(),
+                itemIdentifier.toString(),
                 1,
                 DEFAULT_AMOUNT_ITEMS,
                 1,
@@ -132,8 +133,8 @@ public class PortfolioItemEventListenerTest {
 
     private PortfolioEntry createPortfolioEntry() {
         PortfolioEntry portfolioEntry = new PortfolioEntry();
-        portfolioEntry.setIdentifier(portfolioIdentifier.asString());
-        portfolioEntry.setUserIdentifier(userIdentifier.asString());
+        portfolioEntry.setIdentifier(portfolioIdentifier.toString());
+        portfolioEntry.setUserIdentifier(userIdentifier.toString());
 
         portfolioEntry.addItemInPossession(createItemEntry(itemIdentifier, companyIdentifier));
         portfolioEntry.addReservedItem(createItemEntry(itemIdentifier, companyIdentifier));
@@ -144,16 +145,16 @@ public class PortfolioItemEventListenerTest {
 
     private OrderBookEntry createOrderBookEntry() {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setIdentifier(itemIdentifier.asString());
-        orderBookEntry.setCompanyIdentifier(companyIdentifier.asString());
+        orderBookEntry.setIdentifier(itemIdentifier.toString());
+        orderBookEntry.setCompanyIdentifier(companyIdentifier.toString());
         orderBookEntry.setCompanyName("Test Company");
         return orderBookEntry;
     }
 
-    private ItemEntry createItemEntry(AggregateIdentifier itemIdentifier, AggregateIdentifier companyIdentifier) {
+    private ItemEntry createItemEntry(OrderBookId itemIdentifier, CompanyId companyIdentifier) {
         ItemEntry itemInPossession = new ItemEntry();
-        itemInPossession.setIdentifier(itemIdentifier.asString());
-        itemInPossession.setCompanyIdentifier(companyIdentifier.asString());
+        itemInPossession.setIdentifier(itemIdentifier.toString());
+        itemInPossession.setCompanyIdentifier(companyIdentifier.toString());
         itemInPossession.setCompanyName("Test company");
         itemInPossession.setAmount(DEFAULT_AMOUNT_ITEMS);
         return itemInPossession;

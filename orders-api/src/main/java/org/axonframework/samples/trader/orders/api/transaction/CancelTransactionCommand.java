@@ -16,20 +16,20 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class CancelTransactionCommand {
 
-    private AggregateIdentifier transactionIdentifier;
+    private TransactionId transactionIdentifier;
 
-    public CancelTransactionCommand(AggregateIdentifier transactionIdentifier) {
+    public CancelTransactionCommand(TransactionId transactionIdentifier) {
         this.transactionIdentifier = transactionIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

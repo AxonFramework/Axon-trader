@@ -16,21 +16,24 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.item;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemReservationCancelledForPortfolioEvent extends DomainEvent {
-
-    private AggregateIdentifier orderBookIdentifier;
-    private AggregateIdentifier transactionIdentifier;
+public class ItemReservationCancelledForPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountOfCancelledItems;
 
-    public ItemReservationCancelledForPortfolioEvent(AggregateIdentifier orderBookIdentifier,
-                                                     AggregateIdentifier transactionIdentifier,
+    public ItemReservationCancelledForPortfolioEvent(PortfolioId portfolioIdentifier,
+                                                     OrderBookId orderBookIdentifier,
+                                                     TransactionId transactionIdentifier,
                                                      long amountOfCancelledItems) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfCancelledItems = amountOfCancelledItems;
@@ -40,15 +43,15 @@ public class ItemReservationCancelledForPortfolioEvent extends DomainEvent {
         return amountOfCancelledItems;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
+    public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

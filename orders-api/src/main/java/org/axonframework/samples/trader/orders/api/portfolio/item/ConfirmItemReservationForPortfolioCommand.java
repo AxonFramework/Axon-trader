@@ -16,7 +16,9 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.item;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
@@ -26,14 +28,14 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class ConfirmItemReservationForPortfolioCommand {
 
-    private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier orderBookIdentifier;
-    private AggregateIdentifier transactionIdentifier;
+    private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountOfItemsToConfirm;
 
-    public ConfirmItemReservationForPortfolioCommand(AggregateIdentifier portfolioIdentifier,
-                                                     AggregateIdentifier orderBookIdentifier,
-                                                     AggregateIdentifier transactionIdentifier,
+    public ConfirmItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
+                                                     OrderBookId orderBookIdentifier,
+                                                     TransactionId transactionIdentifier,
                                                      long amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
@@ -45,15 +47,15 @@ public class ConfirmItemReservationForPortfolioCommand {
         return amountOfItemsToConfirm;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
+    public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

@@ -17,13 +17,15 @@
 package org.axonframework.samples.trader.webui.admin;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.domain.UUIDAggregateIdentifier;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,8 +69,8 @@ public class AdminController {
                            @RequestParam("amount") long amountOfMoney
     ) {
         DepositMoneyToPortfolioCommand command =
-                new DepositMoneyToPortfolioCommand(new UUIDAggregateIdentifier(portfolioIdentifier), amountOfMoney);
-        commandBus.dispatch(command);
+                new DepositMoneyToPortfolioCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
+        commandBus.dispatch(new GenericCommandMessage<DepositMoneyToPortfolioCommand>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
 
@@ -77,12 +79,12 @@ public class AdminController {
                           @RequestParam("orderbook") String orderBookIdentifier,
                           @RequestParam("amount") long amount
     ) {
-        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(new UUIDAggregateIdentifier(
+        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(new PortfolioId(
                 portfolioIdentifier),
-                                                                            new UUIDAggregateIdentifier(
-                                                                                    orderBookIdentifier),
-                                                                            amount);
-        commandBus.dispatch(command);
+                new OrderBookId(
+                        orderBookIdentifier),
+                amount);
+        commandBus.dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
 

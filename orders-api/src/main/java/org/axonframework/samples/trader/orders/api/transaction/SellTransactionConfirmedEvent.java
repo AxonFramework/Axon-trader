@@ -16,14 +16,15 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
 
-    public AggregateIdentifier getTransactionIdentifier() {
-        return super.getAggregateIdentifier();
+    public SellTransactionConfirmedEvent(TransactionId transactionIdentifier) {
+        super(transactionIdentifier);
     }
+
 }

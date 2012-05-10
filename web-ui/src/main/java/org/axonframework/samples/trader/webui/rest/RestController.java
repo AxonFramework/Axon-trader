@@ -18,6 +18,7 @@ package org.axonframework.samples.trader.webui.rest;
 
 import com.thoughtworks.xstream.XStream;
 import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * Very generic controller supporting the sending of commands in an XStream serialized format. This controller also
  * contains a few methods to obtain data in XStream format.
- * 
+ *
  * @author Jettro Coenradie
  */
 @Controller
@@ -65,9 +66,9 @@ public class RestController {
     String mappedCommand(String command) {
         try {
             Object actualCommand = xStream.fromXML(command);
-            commandBus.dispatch(actualCommand);
+            commandBus.dispatch(new GenericCommandMessage<Object>(actualCommand));
         } catch (Exception e) {
-            logger.error("Problem whils deserializing an xml: {}",command, e );
+            logger.error("Problem whils deserializing an xml: {}", command, e);
             return "ERROR - " + e.getMessage();
         }
 
@@ -75,10 +76,12 @@ public class RestController {
     }
 
     @RequestMapping("/portfolio")
-    public @ResponseBody String obtainPortfolios() {
+    public
+    @ResponseBody
+    String obtainPortfolios() {
         Iterable<PortfolioEntry> all = portfolioQueryRepository.findAll();
         List<PortfolioEntry> portfolioEntries = new ArrayList<PortfolioEntry>();
-        for(PortfolioEntry entry: all) {
+        for (PortfolioEntry entry : all) {
             portfolioEntries.add(entry);
         }
 
@@ -86,17 +89,21 @@ public class RestController {
     }
 
     @RequestMapping("/portfolio/{identifier}")
-    public @ResponseBody String obtainPortfolio(@PathVariable String identifier) {
+    public
+    @ResponseBody
+    String obtainPortfolio(@PathVariable String identifier) {
         PortfolioEntry entry = portfolioQueryRepository.findOne(identifier);
 
         return xStream.toXML(entry);
     }
 
     @RequestMapping("/orderbook")
-    public @ResponseBody String obtainOrderBooks() {
+    public
+    @ResponseBody
+    String obtainOrderBooks() {
         Iterable<OrderBookEntry> all = orderBookQueryRepository.findAll();
         List<OrderBookEntry> orderBookEntries = new ArrayList<OrderBookEntry>();
-        for(OrderBookEntry entry: all) {
+        for (OrderBookEntry entry : all) {
             orderBookEntries.add(entry);
         }
 

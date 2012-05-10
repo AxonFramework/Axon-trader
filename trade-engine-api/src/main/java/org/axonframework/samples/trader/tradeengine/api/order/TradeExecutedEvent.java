@@ -16,8 +16,7 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import java.io.Serializable;
 
 /**
  * <p>A new trade has been executed. The event contains the amount of items that are traded and the price for the items
@@ -25,31 +24,35 @@ import org.axonframework.domain.DomainEvent;
  *
  * @author Allard Buijze
  */
-public class TradeExecutedEvent extends DomainEvent {
+public class TradeExecutedEvent implements Serializable {
+    private static final long serialVersionUID = 6292249351659536792L;
 
     private final long tradeCount;
     private final long tradePrice;
-    private final AggregateIdentifier buyOrderId;
-    private final AggregateIdentifier sellOrderId;
-    private final AggregateIdentifier buyTransactionId;
-    private final AggregateIdentifier sellTransactionId;
+    private final OrderId buyOrderId;
+    private final OrderId sellOrderId;
+    private final TransactionId buyTransactionId;
+    private final TransactionId sellTransactionId;
+    private final OrderBookId orderBookId;
 
-    public TradeExecutedEvent(long tradeCount,
+    public TradeExecutedEvent(OrderBookId orderBookId,
+                              long tradeCount,
                               long tradePrice,
-                              AggregateIdentifier buyOrderId,
-                              AggregateIdentifier sellOrderId,
-                              AggregateIdentifier buyTransactionId,
-                              AggregateIdentifier sellTransactionId) {
+                              OrderId buyOrderId,
+                              OrderId sellOrderId,
+                              TransactionId buyTransactionId,
+                              TransactionId sellTransactionId) {
         this.tradeCount = tradeCount;
         this.tradePrice = tradePrice;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
         this.sellTransactionId = sellTransactionId;
         this.buyTransactionId = buyTransactionId;
+        this.orderBookId = orderBookId;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
-        return getAggregateIdentifier();
+    public OrderBookId getOrderBookIdentifier() {
+        return this.orderBookId;
     }
 
     public long getTradeCount() {
@@ -60,19 +63,19 @@ public class TradeExecutedEvent extends DomainEvent {
         return tradePrice;
     }
 
-    public AggregateIdentifier getBuyOrderId() {
+    public OrderId getBuyOrderId() {
         return buyOrderId;
     }
 
-    public AggregateIdentifier getSellOrderId() {
+    public OrderId getSellOrderId() {
         return sellOrderId;
     }
 
-    public AggregateIdentifier getBuyTransactionId() {
+    public TransactionId getBuyTransactionId() {
         return buyTransactionId;
     }
 
-    public AggregateIdentifier getSellTransactionId() {
+    public TransactionId getSellTransactionId() {
         return sellTransactionId;
     }
 }

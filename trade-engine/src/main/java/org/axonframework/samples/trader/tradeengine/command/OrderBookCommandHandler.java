@@ -17,7 +17,6 @@
 package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.UUIDAggregateIdentifier;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
@@ -35,25 +34,25 @@ public class OrderBookCommandHandler {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
 
         orderBook.addBuyOrder(command.getOrderId(),
-                              command.getTransactionId(),
-                              command.getTradeCount(),
-                              command.getItemPrice(),
-                              command.getPortfolioId());
+                command.getTransactionId(),
+                command.getTradeCount(),
+                command.getItemPrice(),
+                command.getPortfolioId());
     }
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
-                               command.getTransactionId(),
-                               command.getTradeCount(),
-                               command.getItemPrice(),
-                               command.getPortfolioId());
+                command.getTransactionId(),
+                command.getTradeCount(),
+                command.getItemPrice(),
+                command.getPortfolioId());
     }
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook = new OrderBook(new UUIDAggregateIdentifier(), command.getCompanyIdentifier());
+        OrderBook orderBook = new OrderBook(command.getOrderBookIdentifier());
         repository.add(orderBook);
     }
 

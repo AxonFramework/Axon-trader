@@ -16,17 +16,11 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
-import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Allard Buijze
@@ -37,83 +31,91 @@ public class OrderBookCommandHandlerTest {
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture();
+        fixture = Fixtures.newGivenWhenThenFixture(OrderBook.class);
         OrderBookCommandHandler commandHandler = new OrderBookCommandHandler();
-        commandHandler.setRepository(fixture.createGenericRepository(OrderBook.class));
+        commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
 
     @Test
     public void testSimpleTradeExecution() {
-        AggregateIdentifier buyOrder = new UUIDAggregateIdentifier();
-        AggregateIdentifier sellingUser = new UUIDAggregateIdentifier();
-        AggregateIdentifier sellingTransaction = new UUIDAggregateIdentifier();
+        OrderId buyOrder = new OrderId();
+        PortfolioId sellingUser = new PortfolioId();
+        TransactionId sellingTransaction = new TransactionId();
+        OrderBookId orderBookId = new OrderBookId();
         CreateSellOrderCommand orderCommand = new CreateSellOrderCommand(sellingUser,
-                                                                         fixture.getAggregateIdentifier(),
-                                                                         sellingTransaction,
-                                                                         100,
-                                                                         100);
-        AggregateIdentifier sellOrder = orderCommand.getOrderId();
-        AggregateIdentifier buyTransactionId = new UUIDAggregateIdentifier();
-        fixture.given(new BuyOrderPlacedEvent(buyOrder, buyTransactionId, 200, 100, new UUIDAggregateIdentifier()))
-               .when(orderCommand)
-               .expectEvents(new SellOrderPlacedEvent(sellOrder, sellingTransaction, 100, 100, sellingUser),
-                             new TradeExecutedEvent(100,
-                                                    100,
-                                                    buyOrder,
-                                                    sellOrder,
-                                                    buyTransactionId,
-                                                    sellingTransaction));
+                orderBookId,
+                sellingTransaction,
+                100,
+                100);
+        OrderId sellOrder = orderCommand.getOrderId();
+        TransactionId buyTransactionId = new TransactionId();
+        fixture.given(new BuyOrderPlacedEvent(orderBookId, buyOrder, buyTransactionId, 200, 100, new PortfolioId()))
+                .when(orderCommand)
+                .expectEvents(new SellOrderPlacedEvent(orderBookId, sellOrder, sellingTransaction, 100, 100, sellingUser),
+                        new TradeExecutedEvent(orderBookId,
+                                100,
+                                100,
+                                buyOrder,
+                                sellOrder,
+                                buyTransactionId,
+                                sellingTransaction));
     }
 
     @Test
     public void testMassiveSellerTradeExecution() {
-        AggregateIdentifier buyOrder1 = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyOrder2 = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyOrder3 = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyTransaction1 = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyTransaction2 = new UUIDAggregateIdentifier();
-        AggregateIdentifier buyTransaction3 = new UUIDAggregateIdentifier();
+        OrderId buyOrder1 = new OrderId();
+        OrderId buyOrder2 = new OrderId();
+        OrderId buyOrder3 = new OrderId();
+        TransactionId buyTransaction1 = new TransactionId();
+        TransactionId buyTransaction2 = new TransactionId();
+        TransactionId buyTransaction3 = new TransactionId();
 
-        AggregateIdentifier sellingUser = new UUIDAggregateIdentifier();
-        AggregateIdentifier sellingTransaction = new UUIDAggregateIdentifier();
+        PortfolioId sellingUser = new PortfolioId();
+        TransactionId sellingTransaction = new TransactionId();
+
+        OrderBookId orderBookId = new OrderBookId();
+
         CreateSellOrderCommand sellOrder = new CreateSellOrderCommand(sellingUser,
-                                                                      fixture.getAggregateIdentifier(),
-                                                                      sellingTransaction,
-                                                                      200,
-                                                                      100);
-        AggregateIdentifier sellOrderId = sellOrder.getOrderId();
-        fixture.given(new BuyOrderPlacedEvent(buyOrder1, buyTransaction1, 100, 100, new UUIDAggregateIdentifier()),
-                      new BuyOrderPlacedEvent(buyOrder2, buyTransaction2, 66, 120, new UUIDAggregateIdentifier()),
-                      new BuyOrderPlacedEvent(buyOrder3, buyTransaction3, 44, 140, new UUIDAggregateIdentifier()))
-               .when(sellOrder)
-               .expectEvents(new SellOrderPlacedEvent(sellOrderId, sellingTransaction, 200, 100, sellingUser),
-                             new TradeExecutedEvent(44,
-                                                    120,
-                                                    buyOrder3,
-                                                    sellOrderId,
-                                                    buyTransaction3,
-                                                    sellingTransaction),
-                             new TradeExecutedEvent(66,
-                                                    110,
-                                                    buyOrder2,
-                                                    sellOrderId,
-                                                    buyTransaction2,
-                                                    sellingTransaction),
-                             new TradeExecutedEvent(90,
-                                                    100,
-                                                    buyOrder1,
-                                                    sellOrderId,
-                                                    buyTransaction1,
-                                                    sellingTransaction));
+                orderBookId,
+                sellingTransaction,
+                200,
+                100);
+        OrderId sellOrderId = sellOrder.getOrderId();
+        fixture.given(new BuyOrderPlacedEvent(orderBookId, buyOrder1, buyTransaction1, 100, 100, new PortfolioId()),
+                new BuyOrderPlacedEvent(orderBookId, buyOrder2, buyTransaction2, 66, 120, new PortfolioId()),
+                new BuyOrderPlacedEvent(orderBookId, buyOrder3, buyTransaction3, 44, 140, new PortfolioId()))
+                .when(sellOrder)
+                .expectEvents(new SellOrderPlacedEvent(orderBookId, sellOrderId, sellingTransaction, 200, 100, sellingUser),
+                        new TradeExecutedEvent(orderBookId,
+                                44,
+                                120,
+                                buyOrder3,
+                                sellOrderId,
+                                buyTransaction3,
+                                sellingTransaction),
+                        new TradeExecutedEvent(orderBookId,
+                                66,
+                                110,
+                                buyOrder2,
+                                sellOrderId,
+                                buyTransaction2,
+                                sellingTransaction),
+                        new TradeExecutedEvent(orderBookId,
+                                90,
+                                100,
+                                buyOrder1,
+                                sellOrderId,
+                                buyTransaction1,
+                                sellingTransaction));
     }
 
     @Test
     public void testCreateOrderBook() {
-        AggregateIdentifier companyIdentifier = new UUIDAggregateIdentifier();
-        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(companyIdentifier);
+        OrderBookId orderBookId = new OrderBookId();
+        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId);
         fixture.given()
-               .when(createOrderBookCommand)
-               .expectEvents(new OrderBookCreatedEvent(companyIdentifier));
+                .when(createOrderBookCommand)
+                .expectEvents(new OrderBookCreatedEvent(orderBookId));
     }
 }

@@ -16,27 +16,20 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
-
 /**
  * <p>A new OrderBook is created for the company with the provided identifier.</p>
  *
  * @author Jettro Coenradie
  */
-public class OrderBookCreatedEvent extends DomainEvent {
+public class OrderBookCreatedEvent {
 
-    private AggregateIdentifier companyIdentifier;
+    private OrderBookId orderBookId;
 
-    public OrderBookCreatedEvent(AggregateIdentifier companyIdentifier) {
-        this.companyIdentifier = companyIdentifier;
+    public OrderBookCreatedEvent(OrderBookId orderBookId) {
+        this.orderBookId = orderBookId;
     }
 
-    public AggregateIdentifier getCompanyIdentifier() {
-        return companyIdentifier;
-    }
-
-    public AggregateIdentifier getOrderBookIdentifier() {
-        return getAggregateIdentifier();
+    public OrderBookId getOrderBookIdentifier() {
+        return this.orderBookId;
     }
 }

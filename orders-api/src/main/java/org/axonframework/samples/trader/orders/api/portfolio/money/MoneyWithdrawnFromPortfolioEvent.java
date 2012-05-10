@@ -16,23 +16,22 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.money;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 
 /**
  * @author Jettro Coenradie
  */
-public class MoneyWithdrawnFromPortfolioEvent extends DomainEvent {
-
+public class MoneyWithdrawnFromPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
     private long amountPaidInCents;
 
-    public MoneyWithdrawnFromPortfolioEvent(long amountPaidInCents) {
-
+    public MoneyWithdrawnFromPortfolioEvent(PortfolioId portfolioIdentifier, long amountPaidInCents) {
+        this.portfolioIdentifier = portfolioIdentifier;
         this.amountPaidInCents = amountPaidInCents;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return this.getAggregateIdentifier();
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 
     public long getAmountPaidInCents() {

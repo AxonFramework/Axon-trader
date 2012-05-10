@@ -16,44 +16,50 @@
 
 package org.axonframework.samples.trader.users.command;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.samples.trader.users.api.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.users.api.UserCreatedEvent;
+import org.axonframework.samples.trader.users.api.UserId;
 import org.axonframework.samples.trader.users.util.DigestUtils;
 
 /**
  * @author Jettro Coenradie
  */
 public class User extends AbstractAnnotatedAggregateRoot {
-
+    private static final long serialVersionUID = 3291411359839192350L;
+    @AggregateIdentifier
+    private UserId userId;
     private String passwordHash;
 
-    public User(AggregateIdentifier identifier, String username, String name, String password) {
-        super(identifier);
-        apply(new UserCreatedEvent(name, username, hashOf(password.toCharArray())));
+    protected User() {
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    public User(AggregateIdentifier identifier) {
-        super(identifier);
+    public User(UserId userId, String username, String name, String password) {
+        apply(new UserCreatedEvent(userId, name, username, hashOf(password.toCharArray())));
     }
 
     public boolean authenticate(char[] password) {
         boolean success = this.passwordHash.equals(hashOf(password));
         if (success) {
-            apply(new UserAuthenticatedEvent());
+            apply(new UserAuthenticatedEvent(userId));
         }
         return success;
     }
 
     @EventHandler
     public void onUserCreated(UserCreatedEvent event) {
+        this.userId = event.getUserIdentifier();
         this.passwordHash = event.getPassword();
     }
 
     private String hashOf(char[] password) {
         return DigestUtils.sha1(String.valueOf(password));
+    }
+
+    @Override
+    public UserId getIdentifier() {
+        return userId;
     }
 }

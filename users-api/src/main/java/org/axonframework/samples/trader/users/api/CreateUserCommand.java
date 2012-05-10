@@ -16,19 +16,33 @@
 
 package org.axonframework.samples.trader.users.api;
 
+import org.axonframework.common.Assert;
+
 /**
+ * Command to create a new user.
+ *
  * @author Jettro Coenradie
  */
 public class CreateUserCommand {
-
+    private UserId userId;
     private String username;
     private String name;
     private String password;
 
-    public CreateUserCommand(String name, String username, String password) {
+    public CreateUserCommand(UserId userId, String name, String username, String password) {
+        Assert.notNull(userId, "The provided userId cannot be null");
+        Assert.notNull(name, "The provided name cannot be null");
+        Assert.notNull(username, "The provided username cannot be null");
+        Assert.notNull(password, "The provided password cannot be null");
+
+        this.userId = userId;
         this.name = name;
         this.username = username;
         this.password = password;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public String getName() {

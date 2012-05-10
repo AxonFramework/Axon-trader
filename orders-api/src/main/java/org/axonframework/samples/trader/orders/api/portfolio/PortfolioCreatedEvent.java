@@ -16,25 +16,27 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.users.api.UserId;
 
 /**
  * @author Jettro Coenradie
  */
-public class PortfolioCreatedEvent extends DomainEvent {
+public class PortfolioCreatedEvent {
 
-    private AggregateIdentifier userIdentifier;
+    private PortfolioId portfolioId;
+    private UserId userId;
 
-    public PortfolioCreatedEvent(AggregateIdentifier userIdentifier) {
-        this.userIdentifier = userIdentifier;
+    public PortfolioCreatedEvent(PortfolioId portfolioId, UserId userId) {
+        this.portfolioId = portfolioId;
+        this.userId = userId;
     }
 
-    public AggregateIdentifier getUserIdentifier() {
-        return this.userIdentifier;
+    public UserId getUserId() {
+        return this.userId;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
-        return getAggregateIdentifier();
+    public PortfolioId getPortfolioId() {
+        return this.portfolioId;
     }
 }

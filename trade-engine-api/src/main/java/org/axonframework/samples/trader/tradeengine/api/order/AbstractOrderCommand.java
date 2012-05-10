@@ -16,9 +16,6 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.UUIDAggregateIdentifier;
-
 /**
  * <p>Abstract parent class for all commands that are order related.</p>
  *
@@ -26,32 +23,32 @@ import org.axonframework.domain.UUIDAggregateIdentifier;
  */
 public abstract class AbstractOrderCommand {
 
-    private AggregateIdentifier portfolioId;
-    private AggregateIdentifier orderBookId;
-    private AggregateIdentifier transactionId;
+    private PortfolioId portfolioId;
+    private OrderBookId orderBookId;
+    private TransactionId transactionId;
     private long tradeCount;
     private long itemPrice;
-    private AggregateIdentifier orderId;
+    private OrderId orderId;
 
-    protected AbstractOrderCommand(AggregateIdentifier portfolioId, AggregateIdentifier orderBookId,
-                                   AggregateIdentifier transactionId, long tradeCount, long itemPrice) {
+    protected AbstractOrderCommand(PortfolioId portfolioId, OrderBookId orderBookId,
+                                   TransactionId transactionId, long tradeCount, long itemPrice) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
         this.transactionId = transactionId;
-        this.orderId = new UUIDAggregateIdentifier();
+        this.orderId = new OrderId();
     }
 
-    public AggregateIdentifier getPortfolioId() {
+    public PortfolioId getPortfolioId() {
         return portfolioId;
     }
 
-    public AggregateIdentifier getOrderBookId() {
+    public OrderBookId getOrderBookId() {
         return orderBookId;
     }
 
-    public AggregateIdentifier getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 
@@ -63,7 +60,7 @@ public abstract class AbstractOrderCommand {
         return itemPrice;
     }
 
-    public AggregateIdentifier getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 }

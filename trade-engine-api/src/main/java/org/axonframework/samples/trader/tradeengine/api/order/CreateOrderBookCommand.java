@@ -16,8 +16,6 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
-import org.axonframework.domain.AggregateIdentifier;
-
 /**
  * <p>Create a new OrderBook for the Company represented by the provided companyIdentifier.</p>
  *
@@ -25,13 +23,14 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class CreateOrderBookCommand {
 
-    private AggregateIdentifier companyIdentifier;
+    private OrderBookId orderBookId;
 
-    public CreateOrderBookCommand(AggregateIdentifier companyIdentifier) {
-        this.companyIdentifier = companyIdentifier;
+    public CreateOrderBookCommand(OrderBookId orderBookId) {
+        this.orderBookId = orderBookId;
     }
 
-    public AggregateIdentifier getCompanyIdentifier() {
-        return companyIdentifier;
+    public OrderBookId getOrderBookIdentifier() {
+        return this.orderBookId;
     }
+
 }

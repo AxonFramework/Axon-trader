@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.domain.AggregateIdentifier;
 import org.axonframework.samples.trader.orders.api.transaction.ExecutedTransactionCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -26,15 +26,14 @@ import org.hamcrest.Description;
  */
 public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTransactionCommand> {
 
-    private String transactionIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountOfItems;
     private long itemPrice;
 
-    public ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice,
-                                             AggregateIdentifier transactionIdentifier) {
+    public ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice, TransactionId transactionIdentifier) {
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
-        this.transactionIdentifier = transactionIdentifier.asString();
+        this.transactionIdentifier = transactionIdentifier;
     }
 
     @Override
@@ -43,7 +42,7 @@ public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTrans
             return false;
         }
         ExecutedTransactionCommand command = (ExecutedTransactionCommand) object;
-        return command.getTransactionIdentifier().asString().equals(transactionIdentifier)
+        return command.getTransactionIdentifier().equals(transactionIdentifier)
                 && command.getAmountOfItems() == amountOfItems
                 && command.getItemPrice() == itemPrice;
     }
@@ -51,11 +50,11 @@ public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTrans
     @Override
     public void describeTo(Description description) {
         description.appendText("ExecutedTransactionCommand with amountOfItems [")
-                   .appendValue(amountOfItems)
-                   .appendText("], itemPrice [")
-                   .appendValue(itemPrice)
-                   .appendText("] for Transaction with identifier [")
-                   .appendValue(transactionIdentifier)
-                   .appendText("]");
+                .appendValue(amountOfItems)
+                .appendText("], itemPrice [")
+                .appendValue(itemPrice)
+                .appendText("] for Transaction with identifier [")
+                .appendValue(transactionIdentifier)
+                .appendText("]");
     }
 }

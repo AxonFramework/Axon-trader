@@ -16,39 +16,42 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
-import org.axonframework.domain.DomainEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractTransactionStartedEvent extends DomainEvent {
-
-    private AggregateIdentifier orderbookIdentifier;
-    private AggregateIdentifier portfolioIdentifier;
+public abstract class AbstractTransactionStartedEvent {
+    private TransactionId transactionIdentifier;
+    private OrderBookId orderbookIdentifier;
+    private PortfolioId portfolioIdentifier;
     private long totalItems;
     private long pricePerItem;
 
-    public AbstractTransactionStartedEvent(AggregateIdentifier orderbookIdentifier,
-                                           AggregateIdentifier portfolioIdentifier,
+    public AbstractTransactionStartedEvent(TransactionId transactionIdentifier,
+                                           OrderBookId orderbookIdentifier,
+                                           PortfolioId portfolioIdentifier,
                                            long totalItems,
                                            long pricePerItem) {
+        this.transactionIdentifier = transactionIdentifier;
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.totalItems = totalItems;
         this.pricePerItem = pricePerItem;
     }
 
-    public AggregateIdentifier getOrderbookIdentifier() {
+    public OrderBookId getOrderbookIdentifier() {
         return orderbookIdentifier;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
-        return this.getAggregateIdentifier();
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 
     public long getPricePerItem() {

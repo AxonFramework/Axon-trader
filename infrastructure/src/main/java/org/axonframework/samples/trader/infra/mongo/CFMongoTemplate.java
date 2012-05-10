@@ -47,7 +47,7 @@ public class CFMongoTemplate implements MongoTemplate {
         return database().getCollection(DEFAULT_SNAPSHOTEVENTS_COLLECTION);
     }
 
-    @Override
+    //    @Override
     public DB database() {
         return mongoDbFactory.getDb();
     }

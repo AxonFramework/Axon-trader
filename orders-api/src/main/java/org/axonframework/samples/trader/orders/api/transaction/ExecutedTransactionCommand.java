@@ -16,18 +16,18 @@
 
 package org.axonframework.samples.trader.orders.api.transaction;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class ExecutedTransactionCommand {
 
-    private AggregateIdentifier transactionIdentifier;
+    private TransactionId transactionIdentifier;
     private long amountOfItems;
     private long itemPrice;
 
-    public ExecutedTransactionCommand(AggregateIdentifier transactionIdentifier, long amountOfItems, long itemPrice) {
+    public ExecutedTransactionCommand(TransactionId transactionIdentifier, long amountOfItems, long itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
@@ -41,7 +41,7 @@ public class ExecutedTransactionCommand {
         return itemPrice;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }

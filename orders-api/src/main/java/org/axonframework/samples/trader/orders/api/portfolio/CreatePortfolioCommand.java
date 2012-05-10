@@ -16,20 +16,27 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.users.api.UserId;
 
 /**
  * @author Jettro Coenradie
  */
 public class CreatePortfolioCommand {
 
-    private AggregateIdentifier userIdentifier;
+    private PortfolioId portfolioId;
+    private UserId userId;
 
-    public CreatePortfolioCommand(AggregateIdentifier userIdentifier) {
-        this.userIdentifier = userIdentifier;
+    public CreatePortfolioCommand(PortfolioId portfolioId, UserId userId) {
+        this.portfolioId = portfolioId;
+        this.userId = userId;
     }
 
-    public AggregateIdentifier getUserIdentifier() {
-        return userIdentifier;
+    public UserId getUserId() {
+        return userId;
+    }
+
+    public PortfolioId getPortfolioId() {
+        return portfolioId;
     }
 }

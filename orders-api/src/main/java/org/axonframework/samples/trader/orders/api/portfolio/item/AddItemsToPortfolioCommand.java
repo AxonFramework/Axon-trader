@@ -16,7 +16,8 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.item;
 
-import org.axonframework.domain.AggregateIdentifier;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 
 /**
  * Try to add new items for a specific OrderBook to the portfolio.
@@ -25,8 +26,8 @@ import org.axonframework.domain.AggregateIdentifier;
  */
 public class AddItemsToPortfolioCommand {
 
-    private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier orderBookIdentifier;
+    private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
     private long amountOfItemsToAdd;
 
     /**
@@ -36,7 +37,7 @@ public class AddItemsToPortfolioCommand {
      * @param orderBookIdentifier Identifier of the OrderBook to add items for
      * @param amountOfItemsToAdd  AMount of items to add
      */
-    public AddItemsToPortfolioCommand(AggregateIdentifier portfolioIdentifier, AggregateIdentifier orderBookIdentifier,
+    public AddItemsToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
                                       long amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
@@ -47,11 +48,11 @@ public class AddItemsToPortfolioCommand {
         return amountOfItemsToAdd;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
+    public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 

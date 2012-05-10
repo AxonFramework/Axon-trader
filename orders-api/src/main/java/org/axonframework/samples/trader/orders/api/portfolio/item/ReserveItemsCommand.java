@@ -16,21 +16,24 @@
 
 package org.axonframework.samples.trader.orders.api.portfolio.item;
 
-import org.axonframework.domain.AggregateIdentifier;
+
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class ReserveItemsCommand {
 
-    private AggregateIdentifier portfolioIdentifier;
-    private AggregateIdentifier transactionIdentifier;
+    private PortfolioId portfolioIdentifier;
+    private TransactionId transactionIdentifier;
+    private OrderBookId orderBookIdentifier;
     private long amountOfItemsToReserve;
-    private AggregateIdentifier orderBookIdentifier;
 
-    public ReserveItemsCommand(AggregateIdentifier portfolioIdentifier,
-                               AggregateIdentifier orderBookIdentifier,
-                               AggregateIdentifier transactionIdentifier,
+    public ReserveItemsCommand(PortfolioId portfolioIdentifier,
+                               OrderBookId orderBookIdentifier,
+                               TransactionId transactionIdentifier,
                                long amountOfItemsToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
@@ -42,15 +45,15 @@ public class ReserveItemsCommand {
         return amountOfItemsToReserve;
     }
 
-    public AggregateIdentifier getPortfolioIdentifier() {
+    public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    public AggregateIdentifier getOrderBookIdentifier() {
+    public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
 
-    public AggregateIdentifier getTransactionIdentifier() {
+    public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
     }
 }
