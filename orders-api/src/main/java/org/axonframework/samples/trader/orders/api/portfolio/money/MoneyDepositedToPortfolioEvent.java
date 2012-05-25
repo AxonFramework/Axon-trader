@@ -25,7 +25,8 @@ public class MoneyDepositedToPortfolioEvent {
     private PortfolioId portfolioId;
     private long moneyAddedInCents;
 
-    public MoneyDepositedToPortfolioEvent(long moneyAddedInCents) {
+    public MoneyDepositedToPortfolioEvent(PortfolioId portfolioId, long moneyAddedInCents) {
+        this.portfolioId = portfolioId;
         this.moneyAddedInCents = moneyAddedInCents;
     }
 

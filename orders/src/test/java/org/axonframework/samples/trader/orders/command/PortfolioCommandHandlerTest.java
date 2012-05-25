@@ -151,13 +151,13 @@ public class PortfolioCommandHandlerTest {
         DepositMoneyToPortfolioCommand command = new DepositMoneyToPortfolioCommand(portfolioIdentifier, 2000l);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
                 .when(command)
-                .expectEvents(new MoneyDepositedToPortfolioEvent(2000l));
+                .expectEvents(new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 2000l));
     }
 
     @Test
     public void testWithdrawingMoneyFromPortfolio() {
         WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
                 .when(command)
                 .expectEvents(new MoneyWithdrawnFromPortfolioEvent(portfolioIdentifier, 300l));
     }
@@ -165,7 +165,7 @@ public class PortfolioCommandHandlerTest {
     @Test
     public void testWithdrawingMoneyFromPortfolio_withoutEnoughMoney() {
         WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(200))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 200))
                 .when(command)
                 .expectEvents(new MoneyWithdrawnFromPortfolioEvent(portfolioIdentifier, 300l));
     }
@@ -175,7 +175,7 @@ public class PortfolioCommandHandlerTest {
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier,
                 transactionIdentifier,
                 300l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
                 .when(command)
                 .expectEvents(new MoneyReservedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 300l));
     }
@@ -185,7 +185,7 @@ public class PortfolioCommandHandlerTest {
         ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier,
                 transactionIdentifier,
                 600l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
                 .when(command)
                 .expectEvents(new NotEnoughMoneyInPortfolioToMakeReservationEvent(portfolioIdentifier, transactionIdentifier, 600));
     }
@@ -196,7 +196,7 @@ public class PortfolioCommandHandlerTest {
                 portfolioIdentifier,
                 transactionIdentifier,
                 200l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
                 .when(command)
                 .expectEvents(new MoneyReservationCancelledFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 200l));
     }
@@ -207,7 +207,7 @@ public class PortfolioCommandHandlerTest {
                 portfolioIdentifier,
                 transactionIdentifier,
                 200l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
                 .when(command)
                 .expectEvents(new MoneyReservationConfirmedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 200l));
     }

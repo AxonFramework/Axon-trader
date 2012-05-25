@@ -93,7 +93,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void addMoney(long moneyToAddInCents) {
-        apply(new MoneyDepositedToPortfolioEvent(moneyToAddInCents));
+        apply(new MoneyDepositedToPortfolioEvent(portfolioId, moneyToAddInCents));
     }
 
     public void makePayment(long amountToPayInCents) {

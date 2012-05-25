@@ -34,7 +34,6 @@ import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQu
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.query.users.UserEntry;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.axonframework.samples.trader.users.api.CreateUserCommand;
@@ -104,7 +103,7 @@ public class DBInit {
         UserId buyer6 = createuser("Buyer four", "buyer6");
 
         createCompanies(buyer1);
-        createOrderBooks();
+
         addMoney(buyer1, 100000);
         addItems(buyer2, "Philips", 10000l);
         addMoney(buyer3, 100000);
@@ -166,16 +165,6 @@ public class DBInit {
 //            commandBus.dispatch(command);
 //        }
 
-    }
-
-    private void createOrderBooks() {
-        Iterable<CompanyEntry> companyEntries = companyRepository.findAll();
-
-        for (CompanyEntry companyEntry : companyEntries) {
-            CreateOrderBookCommand command = new CreateOrderBookCommand(
-                    new OrderBookId(companyEntry.getIdentifier()));
-            commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(command));
-        }
     }
 
     private UserId createuser(String longName, String userName) {
