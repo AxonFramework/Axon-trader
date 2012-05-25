@@ -23,8 +23,8 @@ package org.axonframework.samples.trader.tradeengine.api.order;
  */
 public class CreateBuyOrderCommand extends AbstractOrderCommand {
 
-    public CreateBuyOrderCommand(PortfolioId portfolioId, OrderBookId orderBookId,
+    public CreateBuyOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
                                  TransactionId transactionId, long tradeCount, long itemPrice) {
-        super(portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
+        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
     }
 }

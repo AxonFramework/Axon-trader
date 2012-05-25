@@ -32,6 +32,7 @@ import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
 import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -132,7 +133,7 @@ public class CompanyController {
                 return "company/sell";
             }
 
-            StartSellTransactionCommand command = new StartSellTransactionCommand(
+            StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getIdentifier()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),
@@ -162,7 +163,7 @@ public class CompanyController {
                 return "company/buy";
             }
 
-            StartBuyTransactionCommand command = new StartBuyTransactionCommand(
+            StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getIdentifier()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),

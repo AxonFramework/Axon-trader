@@ -25,6 +25,7 @@ import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPort
 import org.axonframework.samples.trader.orders.api.portfolio.money.*;
 import org.axonframework.samples.trader.orders.api.transaction.*;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderId;
 import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +97,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionConfirmedEvent event) {
         logger.debug("Buy Transaction {} is approved to make the buy order", event.getTransactionIdentifier());
-        CreateBuyOrderCommand command = new CreateBuyOrderCommand(getPortfolioIdentifier(),
+        CreateBuyOrderCommand command = new CreateBuyOrderCommand(new OrderId(), getPortfolioIdentifier(),
                 getOrderbookIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems(),

@@ -30,14 +30,14 @@ public abstract class AbstractOrderCommand {
     private long itemPrice;
     private OrderId orderId;
 
-    protected AbstractOrderCommand(PortfolioId portfolioId, OrderBookId orderBookId,
+    protected AbstractOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
                                    TransactionId transactionId, long tradeCount, long itemPrice) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
         this.transactionId = transactionId;
-        this.orderId = new OrderId();
+        this.orderId = orderId;
     }
 
     public PortfolioId getPortfolioId() {

@@ -32,12 +32,12 @@ import java.util.Collections;
  */
 class Order extends AbstractAnnotatedEntity {
 
+    private OrderId orderId;
     private TransactionId transactionId;
     private final long itemPrice;
     private final long tradeCount;
     private final PortfolioId portfolioId;
     private long itemsRemaining;
-    private OrderId orderId;
 
     public Order(OrderId orderId, TransactionId transactionId, long itemPrice, long tradeCount, PortfolioId portfolioId) {
         this.orderId = orderId;

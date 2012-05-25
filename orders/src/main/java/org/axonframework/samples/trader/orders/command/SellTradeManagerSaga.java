@@ -24,6 +24,7 @@ import org.axonframework.samples.trader.orders.api.portfolio.item.*;
 import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.orders.api.transaction.*;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderId;
 import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,8 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     public void handle(SellTransactionConfirmedEvent event) {
         logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionIdentifier());
 
-        CreateSellOrderCommand command = new CreateSellOrderCommand(getPortfolioIdentifier(),
+        CreateSellOrderCommand command = new CreateSellOrderCommand(new OrderId(),
+                getPortfolioIdentifier(),
                 getOrderbookIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems(),

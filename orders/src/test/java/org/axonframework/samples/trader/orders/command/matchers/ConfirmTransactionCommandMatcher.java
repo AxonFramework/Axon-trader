@@ -18,13 +18,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmTransactionCommandMatcher extends BaseMatcher<ConfirmTransactionCommand> {
+public class ConfirmTransactionCommandMatcher extends BaseCommandMatcher<ConfirmTransactionCommand> {
 
     private TransactionId transactionIdentifier;
 
@@ -33,11 +32,7 @@ public class ConfirmTransactionCommandMatcher extends BaseMatcher<ConfirmTransac
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof ConfirmTransactionCommand)) {
-            return false;
-        }
-        ConfirmTransactionCommand command = (ConfirmTransactionCommand) o;
+    protected boolean doMatches(ConfirmTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier);
     }
 

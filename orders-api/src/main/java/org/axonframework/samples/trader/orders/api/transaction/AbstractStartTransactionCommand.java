@@ -18,19 +18,22 @@ package org.axonframework.samples.trader.orders.api.transaction;
 
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public abstract class AbstractStartTransactionCommand {
 
+    private TransactionId transactionId;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
     private long tradeCount;
     private long itemPrice;
 
-    public AbstractStartTransactionCommand(OrderBookId orderbookIdentifier,
+    public AbstractStartTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier,
                                            PortfolioId portfolioIdentifier, long tradeCount, long itemPrice) {
+        this.transactionId = transactionId;
         this.itemPrice = itemPrice;
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
@@ -47,6 +50,10 @@ public abstract class AbstractStartTransactionCommand {
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public TransactionId getTransactionIdentifier() {
+        return transactionId;
     }
 
     public long getTradeCount() {

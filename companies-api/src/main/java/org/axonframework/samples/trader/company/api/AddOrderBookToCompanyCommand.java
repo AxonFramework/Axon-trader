@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012. Axon Framework
+ * Copyright (c) 2012. Axon Framework
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.orders.api.transaction;
+package org.axonframework.samples.trader.company.api;
 
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
+ * <p>Create the relation between a company and an OrderBook</p>
+ *
  * @author Jettro Coenradie
  */
-public class StartSellTransactionCommand extends AbstractStartTransactionCommand {
+public class AddOrderBookToCompanyCommand {
+    private CompanyId companyId;
+    private OrderBookId orderBookId;
 
-    public StartSellTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, long tradeCount, long itemPrice) {
-        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeCount, itemPrice);
+    public AddOrderBookToCompanyCommand(CompanyId companyId, OrderBookId orderBookId) {
+        this.companyId = companyId;
+        this.orderBookId = orderBookId;
+    }
+
+    public CompanyId getCompanyId() {
+        return companyId;
+    }
+
+    public OrderBookId getOrderBookId() {
+        return orderBookId;
     }
 }

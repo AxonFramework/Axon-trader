@@ -18,13 +18,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.transaction.ExecutedTransactionCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTransactionCommand> {
+public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<ExecutedTransactionCommand> {
 
     private TransactionId transactionIdentifier;
     private long amountOfItems;
@@ -37,11 +36,7 @@ public class ExecutedTransactionCommandMatcher extends BaseMatcher<ExecutedTrans
     }
 
     @Override
-    public boolean matches(Object object) {
-        if (!(object instanceof ExecutedTransactionCommand)) {
-            return false;
-        }
-        ExecutedTransactionCommand command = (ExecutedTransactionCommand) object;
+    protected boolean doMatches(ExecutedTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier)
                 && command.getAmountOfItems() == amountOfItems
                 && command.getItemPrice() == itemPrice;

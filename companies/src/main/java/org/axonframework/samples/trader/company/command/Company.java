@@ -21,6 +21,8 @@ import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
 import org.axonframework.samples.trader.company.api.CompanyId;
+import org.axonframework.samples.trader.company.api.OrderBookAddedToCompanyEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 
 /**
  * @author Jettro Coenradie
@@ -39,6 +41,10 @@ public class Company extends AbstractAnnotatedAggregateRoot {
         apply(new CompanyCreatedEvent(companyId, name, value, amountOfShares));
     }
 
+    public void addOrderBook(OrderBookId orderBookId) {
+        apply(new OrderBookAddedToCompanyEvent(companyId, orderBookId));
+    }
+
     @Override
     public CompanyId getIdentifier() {
         return this.companyId;
@@ -48,5 +54,4 @@ public class Company extends AbstractAnnotatedAggregateRoot {
     public void handle(CompanyCreatedEvent event) {
         this.companyId = event.getCompanyIdentifier();
     }
-
 }

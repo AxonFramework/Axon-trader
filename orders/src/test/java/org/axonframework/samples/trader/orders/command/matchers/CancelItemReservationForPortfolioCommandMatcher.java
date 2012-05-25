@@ -19,14 +19,13 @@ package org.axonframework.samples.trader.orders.command.matchers;
 import org.axonframework.samples.trader.orders.api.portfolio.item.CancelItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
 public class CancelItemReservationForPortfolioCommandMatcher
-        extends BaseMatcher<CancelItemReservationForPortfolioCommand> {
+        extends BaseCommandMatcher<CancelItemReservationForPortfolioCommand> {
 
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -41,11 +40,7 @@ public class CancelItemReservationForPortfolioCommandMatcher
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof CancelItemReservationForPortfolioCommand)) {
-            return false;
-        }
-        CancelItemReservationForPortfolioCommand command = (CancelItemReservationForPortfolioCommand) o;
+    protected boolean doMatches(CancelItemReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderBookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToCancel() == amountOfItemsToCancel;

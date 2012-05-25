@@ -18,14 +18,13 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.portfolio.money.ConfirmMoneyReservationFromPortfolionCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
 public class ConfirmMoneyReservationFromPortfolionCommandMatcher
-        extends BaseMatcher<ConfirmMoneyReservationFromPortfolionCommand> {
+        extends BaseCommandMatcher<ConfirmMoneyReservationFromPortfolionCommand> {
 
     private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToconfirm;
@@ -37,12 +36,7 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
     }
 
     @Override
-    public boolean matches(Object object) {
-        if (!(object instanceof ConfirmMoneyReservationFromPortfolionCommand)) {
-            return false;
-        }
-        ConfirmMoneyReservationFromPortfolionCommand command = (ConfirmMoneyReservationFromPortfolionCommand) object;
-
+    protected boolean doMatches(ConfirmMoneyReservationFromPortfolionCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToConfirmInCents() == amountOfMoneyToconfirm;
     }

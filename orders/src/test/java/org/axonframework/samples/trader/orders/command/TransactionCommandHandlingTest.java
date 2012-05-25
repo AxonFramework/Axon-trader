@@ -45,7 +45,7 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testStartBuyTransaction() {
-        StartBuyTransactionCommand command = new StartBuyTransactionCommand(orderBook, portfolio, 200, 20);
+        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId, orderBook, portfolio, 200, 20);
         fixture.given()
                 .when(command)
                 .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
@@ -53,7 +53,7 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testStartSellTransaction() {
-        StartSellTransactionCommand command = new StartSellTransactionCommand(orderBook, portfolio, 200, 20);
+        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId, orderBook, portfolio, 200, 20);
         fixture.given()
                 .when(command)
                 .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));

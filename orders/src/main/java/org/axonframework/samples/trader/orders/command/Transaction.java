@@ -41,7 +41,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     protected Transaction() {
     }
 
-    public Transaction(TransactionType type,
+    public Transaction(TransactionId transactionId,
+                       TransactionType type,
                        OrderBookId orderbookIdentifier,
                        PortfolioId portfolioIdentifier,
                        long amountOfItems,

@@ -18,13 +18,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.transaction.CancelTransactionCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class CancelTransactionCommandMatcher extends BaseMatcher<CancelTransactionCommand> {
+public class CancelTransactionCommandMatcher extends BaseCommandMatcher<CancelTransactionCommand> {
 
     private TransactionId transactionIdentifier;
 
@@ -33,11 +32,7 @@ public class CancelTransactionCommandMatcher extends BaseMatcher<CancelTransacti
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof CancelTransactionCommand)) {
-            return false;
-        }
-        CancelTransactionCommand command = (CancelTransactionCommand) o;
+    protected boolean doMatches(CancelTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier);
     }
 

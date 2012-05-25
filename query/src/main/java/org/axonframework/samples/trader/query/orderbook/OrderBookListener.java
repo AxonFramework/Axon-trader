@@ -17,6 +17,8 @@
 package org.axonframework.samples.trader.query.orderbook;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.samples.trader.company.api.OrderBookAddedToCompanyEvent;
+import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
@@ -40,13 +42,12 @@ public class OrderBookListener {
 
 
     @EventHandler
-    public void handleOrderBookCreatedEvent(OrderBookCreatedEvent event) {
-//        TODO jettro: I must add company info to the order book? Or make some other combination of the two
-//        CompanyEntry companyEntry = companyRepository.findOne(event.getOrderBookIdentifier());
+    public void handleOrderBookAddedToCompanyEvent(OrderBookAddedToCompanyEvent event) {
+        CompanyEntry companyEntry = companyRepository.findOne(event.getCompanyId().toString());
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-//        orderBookEntry.setCompanyIdentifier(event.getCompanyIdentifier().asString());
-//        orderBookEntry.setCompanyName(companyEntry.getName());
-        orderBookEntry.setIdentifier(event.getOrderBookIdentifier().toString());
+        orderBookEntry.setCompanyIdentifier(event.getCompanyId().toString());
+        orderBookEntry.setCompanyName(companyEntry.getName());
+        orderBookEntry.setIdentifier(event.getOrderBookId().toString());
         orderBookRepository.save(orderBookEntry);
     }
 

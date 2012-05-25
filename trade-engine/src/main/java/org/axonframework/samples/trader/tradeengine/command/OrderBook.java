@@ -19,6 +19,7 @@ package org.axonframework.samples.trader.tradeengine.command;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.AbstractEventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.samples.trader.tradeengine.api.order.*;
 
 import java.util.*;
@@ -29,12 +30,17 @@ import java.util.*;
 class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 6778782949492587631L;
 
+    @AggregateIdentifier
     private OrderBookId orderBookId;
+
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
+    @SuppressWarnings("UnusedDeclaration")
+    protected OrderBook() {
+    }
+
     public OrderBook(OrderBookId identifier) {
-        this.orderBookId = identifier;
         apply(new OrderBookCreatedEvent(identifier));
     }
 
@@ -74,6 +80,11 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradingDone = true;
             }
         }
+    }
+
+    @EventHandler
+    protected void onOrderBookCreated(OrderBookCreatedEvent event) {
+        this.orderBookId = event.getOrderBookIdentifier();
     }
 
     @EventHandler

@@ -16,8 +16,11 @@
 
 package org.axonframework.samples.trader.query.orderbook;
 
+import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
 import org.axonframework.samples.trader.company.api.CompanyId;
+import org.axonframework.samples.trader.company.api.OrderBookAddedToCompanyEvent;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
+import org.axonframework.samples.trader.query.company.CompanyListener;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
@@ -59,12 +62,17 @@ public class OrderBookListenerIntegrationTest {
     PortfolioId portfolioId = new PortfolioId();
     TransactionId transactionId = new TransactionId();
     OrderBookId orderBookId = new OrderBookId();
+    CompanyId companyId = new CompanyId();
 
     @Before
     public void setUp() throws Exception {
         mongoTemplate.dropCollection(OrderBookEntry.class);
         mongoTemplate.dropCollection(CompanyEntry.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
+
+        CompanyListener companyListener = new CompanyListener();
+        companyListener.setCompanyRepository(companyRepository);
+        companyListener.handleCompanyCreatedEvent(new CompanyCreatedEvent(companyId, "Test Company", 100, 100));
 
         orderBookListener = new OrderBookListener();
         orderBookListener.setCompanyRepository(companyRepository);
@@ -74,9 +82,9 @@ public class OrderBookListenerIntegrationTest {
 
     @Test
     public void testHandleOrderBookCreatedEvent() throws Exception {
-        OrderBookCreatedEvent event = new OrderBookCreatedEvent(orderBookId);
+        OrderBookAddedToCompanyEvent event = new OrderBookAddedToCompanyEvent(companyId, orderBookId);
 
-        orderBookListener.handleOrderBookCreatedEvent(event);
+        orderBookListener.handleOrderBookAddedToCompanyEvent(event);
         Iterable<OrderBookEntry> all = orderBookRepository.findAll();
         OrderBookEntry orderBookEntry = all.iterator().next();
         assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
@@ -104,7 +112,7 @@ public class OrderBookListenerIntegrationTest {
         CompanyEntry company = createCompany();
         OrderBookEntry orderBook = createOrderBook(company);
 
-        OrderBookId orderBookId = new OrderBookId();
+        OrderBookId orderBookId = new OrderBookId(orderBook.getIdentifier());
         SellOrderPlacedEvent event = new SellOrderPlacedEvent(orderBookId, orderId, transactionId, 300, 100, portfolioId);
 
         orderBookListener.handleSellOrderPlaced(event);

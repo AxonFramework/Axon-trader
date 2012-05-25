@@ -18,13 +18,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReserveMoneyFromPortfolioCommandMatcher extends BaseMatcher<ReserveMoneyFromPortfolioCommand> {
+public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<ReserveMoneyFromPortfolioCommand> {
 
     private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToReserve;
@@ -35,11 +34,7 @@ public class ReserveMoneyFromPortfolioCommandMatcher extends BaseMatcher<Reserve
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof ReserveMoneyFromPortfolioCommand)) {
-            return false;
-        }
-        ReserveMoneyFromPortfolioCommand command = (ReserveMoneyFromPortfolioCommand) o;
+    protected boolean doMatches(ReserveMoneyFromPortfolioCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToReserve() == amountOfMoneyToReserve;
     }

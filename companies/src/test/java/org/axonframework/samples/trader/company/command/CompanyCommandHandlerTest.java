@@ -38,7 +38,6 @@ public class CompanyCommandHandlerTest {
         CompanyCommandHandler commandHandler = new CompanyCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
-//        fixture.setAggregateIdentifier(new CompanyId());
     }
 
     @Test

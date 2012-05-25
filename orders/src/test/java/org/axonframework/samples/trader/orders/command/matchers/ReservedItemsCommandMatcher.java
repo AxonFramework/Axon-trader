@@ -19,13 +19,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 import org.axonframework.samples.trader.orders.api.portfolio.item.ReserveItemsCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand> {
+public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItemsCommand> {
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -39,11 +38,7 @@ public class ReservedItemsCommandMatcher extends BaseMatcher<ReserveItemsCommand
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof ReserveItemsCommand)) {
-            return false;
-        }
-        ReserveItemsCommand command = (ReserveItemsCommand) o;
+    protected boolean doMatches(ReserveItemsCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && amountOfReservedItems == command.getAmountOfItemsToReserve();

@@ -19,13 +19,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 import org.axonframework.samples.trader.tradeengine.api.order.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class CreateBuyOrderCommandMatcher extends BaseMatcher<CreateBuyOrderCommand> {
+public class CreateBuyOrderCommandMatcher extends BaseCommandMatcher<CreateBuyOrderCommand> {
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -39,13 +38,8 @@ public class CreateBuyOrderCommandMatcher extends BaseMatcher<CreateBuyOrderComm
         this.itemPrice = itemPrice;
     }
 
-
     @Override
-    public boolean matches(Object object) {
-        if (!(object instanceof CreateBuyOrderCommand)) {
-            return false;
-        }
-        CreateBuyOrderCommand command = (CreateBuyOrderCommand) object;
+    protected boolean doMatches(CreateBuyOrderCommand command) {
         return command.getOrderBookId().equals(orderbookIdentifier)
                 && command.getPortfolioId().equals(portfolioIdentifier)
                 && tradeCount == command.getTradeCount()

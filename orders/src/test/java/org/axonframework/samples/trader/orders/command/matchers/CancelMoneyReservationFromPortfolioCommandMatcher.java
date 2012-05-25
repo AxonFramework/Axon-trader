@@ -18,14 +18,13 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
 public class CancelMoneyReservationFromPortfolioCommandMatcher
-        extends BaseMatcher<CancelMoneyReservationFromPortfolioCommand> {
+        extends BaseCommandMatcher<CancelMoneyReservationFromPortfolioCommand> {
 
     public CancelMoneyReservationFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
                                                              long amountOfMoneyToCancel) {
@@ -37,12 +36,7 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher
     private long amountOfMoneyToCancel;
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof CancelMoneyReservationFromPortfolioCommand)) {
-            return false;
-        }
-        CancelMoneyReservationFromPortfolioCommand command = (CancelMoneyReservationFromPortfolioCommand) o;
-
+    protected boolean doMatches(CancelMoneyReservationFromPortfolioCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToCancel() == amountOfMoneyToCancel;
     }

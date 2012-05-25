@@ -18,13 +18,14 @@ package org.axonframework.samples.trader.orders.api.transaction;
 
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
 public class StartBuyTransactionCommand extends AbstractStartTransactionCommand {
 
-    public StartBuyTransactionCommand(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, long tradeCount, long itemPrice) {
-        super(orderbookIdentifier, portfolioIdentifier, tradeCount, itemPrice);
+    public StartBuyTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, long tradeCount, long itemPrice) {
+        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeCount, itemPrice);
     }
 }

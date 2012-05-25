@@ -18,12 +18,7 @@ package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.orders.api.transaction.CancelTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.ExecutedTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.StartBuyTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.StartSellTransactionCommand;
-import org.axonframework.samples.trader.orders.api.transaction.TransactionType;
+import org.axonframework.samples.trader.orders.api.transaction.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -39,6 +34,7 @@ public class TransactionCommandHandler {
     @CommandHandler
     public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) {
         Transaction transaction = new Transaction(
+                command.getTransactionIdentifier(),
                 TransactionType.BUY,
                 command.getOrderbookIdentifier(),
                 command.getPortfolioIdentifier(),
@@ -50,6 +46,7 @@ public class TransactionCommandHandler {
     @CommandHandler
     public void handleStartSellTransactionCommand(StartSellTransactionCommand command) {
         Transaction transaction = new Transaction(
+                command.getTransactionIdentifier(),
                 TransactionType.SELL,
                 command.getOrderbookIdentifier(),
                 command.getPortfolioIdentifier(),

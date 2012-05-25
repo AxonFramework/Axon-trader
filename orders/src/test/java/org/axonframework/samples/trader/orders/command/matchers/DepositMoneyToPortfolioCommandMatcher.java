@@ -18,13 +18,12 @@ package org.axonframework.samples.trader.orders.command.matchers;
 
 import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMoneyToPortfolioCommand> {
+public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<DepositMoneyToPortfolioCommand> {
 
     private long moneyToAddInCents;
     private PortfolioId portfolioIdentifier;
@@ -35,11 +34,7 @@ public class DepositMoneyToPortfolioCommandMatcher extends BaseMatcher<DepositMo
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (!(o instanceof DepositMoneyToPortfolioCommand)) {
-            return false;
-        }
-        DepositMoneyToPortfolioCommand command = (DepositMoneyToPortfolioCommand) o;
+    protected boolean doMatches(DepositMoneyToPortfolioCommand command) {
         return moneyToAddInCents == command.getMoneyToAddInCents()
                 && portfolioIdentifier.equals(command.getPortfolioIdentifier());
     }

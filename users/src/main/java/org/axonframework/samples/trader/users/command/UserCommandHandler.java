@@ -39,7 +39,7 @@ public class UserCommandHandler {
 
     @CommandHandler
     public UserId handleCreateUser(CreateUserCommand command) {
-        UserId identifier = new UserId();
+        UserId identifier = command.getUserId();
         User user = new User(identifier, command.getUsername(), command.getName(), command.getPassword());
         repository.add(user);
         return identifier;

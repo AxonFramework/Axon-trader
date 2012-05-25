@@ -61,7 +61,7 @@ public class PortfolioManagementUserListenerTest {
             if (!(((GenericCommandMessage) argument).getPayload() instanceof CreatePortfolioCommand)) {
                 return false;
             }
-            CreatePortfolioCommand createPortfolioCommand = (CreatePortfolioCommand) argument;
+            CreatePortfolioCommand createPortfolioCommand = ((GenericCommandMessage<CreatePortfolioCommand>) argument).getPayload();
             return createPortfolioCommand.getUserId().equals(userId);
         }
     }

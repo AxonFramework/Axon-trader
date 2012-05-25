@@ -18,6 +18,7 @@ package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.axonframework.samples.trader.company.api.AddOrderBookToCompanyCommand;
 import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,6 +37,12 @@ public class CompanyCommandHandler {
                 command.getCompanyValue(),
                 command.getAmountOfShares());
         repository.add(company);
+    }
+
+    @CommandHandler
+    public void handleAddOrderBook(AddOrderBookToCompanyCommand command) {
+        Company company = repository.load(command.getCompanyId());
+        company.addOrderBook(command.getOrderBookId());
     }
 
     @Autowired

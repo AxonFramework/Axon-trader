@@ -39,18 +39,22 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testSimpleTradeExecution() {
-        OrderId buyOrder = new OrderId();
+        OrderId sellOrder = new OrderId();
         PortfolioId sellingUser = new PortfolioId();
         TransactionId sellingTransaction = new TransactionId();
         OrderBookId orderBookId = new OrderBookId();
-        CreateSellOrderCommand orderCommand = new CreateSellOrderCommand(sellingUser,
+        CreateSellOrderCommand orderCommand = new CreateSellOrderCommand(sellOrder,
+                sellingUser,
                 orderBookId,
                 sellingTransaction,
                 100,
                 100);
-        OrderId sellOrder = orderCommand.getOrderId();
+
+        OrderId buyOrder = new OrderId();
         TransactionId buyTransactionId = new TransactionId();
-        fixture.given(new BuyOrderPlacedEvent(orderBookId, buyOrder, buyTransactionId, 200, 100, new PortfolioId()))
+        PortfolioId buyPortfolioId = new PortfolioId();
+        fixture.given(new OrderBookCreatedEvent(orderBookId),
+                new BuyOrderPlacedEvent(orderBookId, buyOrder, buyTransactionId, 200, 100, buyPortfolioId))
                 .when(orderCommand)
                 .expectEvents(new SellOrderPlacedEvent(orderBookId, sellOrder, sellingTransaction, 100, 100, sellingUser),
                         new TradeExecutedEvent(orderBookId,
@@ -64,6 +68,7 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testMassiveSellerTradeExecution() {
+        OrderId sellOrderId = new OrderId();
         OrderId buyOrder1 = new OrderId();
         OrderId buyOrder2 = new OrderId();
         OrderId buyOrder3 = new OrderId();
@@ -76,13 +81,14 @@ public class OrderBookCommandHandlerTest {
 
         OrderBookId orderBookId = new OrderBookId();
 
-        CreateSellOrderCommand sellOrder = new CreateSellOrderCommand(sellingUser,
+        CreateSellOrderCommand sellOrder = new CreateSellOrderCommand(sellOrderId,
+                sellingUser,
                 orderBookId,
                 sellingTransaction,
                 200,
                 100);
-        OrderId sellOrderId = sellOrder.getOrderId();
-        fixture.given(new BuyOrderPlacedEvent(orderBookId, buyOrder1, buyTransaction1, 100, 100, new PortfolioId()),
+        fixture.given(new OrderBookCreatedEvent(orderBookId),
+                new BuyOrderPlacedEvent(orderBookId, buyOrder1, buyTransaction1, 100, 100, new PortfolioId()),
                 new BuyOrderPlacedEvent(orderBookId, buyOrder2, buyTransaction2, 66, 120, new PortfolioId()),
                 new BuyOrderPlacedEvent(orderBookId, buyOrder3, buyTransaction3, 44, 140, new PortfolioId()))
                 .when(sellOrder)
