@@ -99,8 +99,8 @@ public class DBInit {
         UserId buyer2 = createuser("Buyer two", "buyer2");
         UserId buyer3 = createuser("Buyer three", "buyer3");
         UserId buyer4 = createuser("Buyer four", "buyer4");
-        UserId buyer5 = createuser("Buyer four", "buyer5");
-        UserId buyer6 = createuser("Buyer four", "buyer6");
+        UserId buyer5 = createuser("Buyer five", "buyer5");
+        UserId buyer6 = createuser("Buyer six", "buyer6");
 
         createCompanies(buyer1);
 
