@@ -82,6 +82,11 @@
             <artifactId>axon-trader-query</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-external-listeners</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- spring dependencies -->
         <dependency>

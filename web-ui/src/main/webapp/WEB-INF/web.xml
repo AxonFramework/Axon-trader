@@ -39,7 +39,8 @@
             classpath:META-INF/spring/users-context.xml,
             classpath:META-INF/spring/companies-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
-            classpath:META-INF/spring/security-context.xml
+            classpath:META-INF/spring/security-context.xml,
+            classpath:META-INF/spring/external-context.xml
         </param-value>
     </context-param>
 
