@@ -43,7 +43,7 @@ class CommandSender {
 
     def obtainPortfolios() {
         http.get(path: 'rest/portfolio', requestContentType: requestContentType) { resp, reader ->
-            def xmlData = reader.text
+            String xmlData = reader.text
             List<PortfolioEntry> portfolios = xStream.fromXML(xmlData)
             return portfolios
         }
@@ -51,7 +51,7 @@ class CommandSender {
 
     def obtainOrderBooks() {
         http.get(path: 'rest/orderbook', requestContentType: requestContentType) { resp, reader ->
-            def xmlData = reader.text
+            String xmlData = reader.text
             List<OrderBookEntry> orderBookEntries = xStream.fromXML(xmlData)
             return orderBookEntries
         }
@@ -59,7 +59,7 @@ class CommandSender {
 
     def obtainPortfolio(identifier) {
         http.get(path: 'rest/portfolio/' + identifier, requestContentType: requestContentType) { resp, reader ->
-            def xmlData = reader.text
+            String xmlData = reader.text
             PortfolioEntry entry = xStream.fromXML(xmlData)
             return entry
         }

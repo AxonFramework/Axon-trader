@@ -59,5 +59,8 @@ for (int i = 0; i < 1000; i++) {
     } else {
         numUser = 1
     }
+
+    // Take a breath
+    Thread.sleep(100)
 }
 
