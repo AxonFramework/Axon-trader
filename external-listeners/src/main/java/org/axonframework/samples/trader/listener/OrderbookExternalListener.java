@@ -48,6 +48,7 @@ import java.io.Writer;
  * }
  * </pre>
  * <p>The url to send the request to can be configured.</p>
+ *
  * @author Jettro Coenradie
  */
 @Component
@@ -96,7 +97,7 @@ public class OrderbookExternalListener {
         return writer.toString();
     }
 
-    @Value("#{external.serverUrl}")
+    @Value("#{external.serverUrlExecutedTrades}")
     public void setRemoteServerUri(String remoteServerUri) {
         this.remoteServerUri = remoteServerUri;
     }

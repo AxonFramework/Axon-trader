@@ -72,10 +72,11 @@
         <p><a class="btn primary" href="${ctx}/company">To the items &raquo;</a></p>
     </div>
     <div class="span5">
-        <h2>Administration</h2>
+        <h2>Executed trades</h2>
 
-        <p>We have a few options for creating new companies and new users. This can be found in the admin
-            part of the website.</p>
+        <p>Trace all executed trades using the sockjs connection. Beware, vertx needs to be running as well.</p>
+
+        <p><a class="btn primary" href="${ctx}/orderbook/socket">Executed trades &raquo;</a></p>
     </div>
 </div>
 

@@ -19,8 +19,10 @@ package org.axonframework.samples.trader.webui.order;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class OrderBookController {
 
     private OrderBookQueryRepository repository;
+    private String externalServerUrl;
 
     @Autowired
     public OrderBookController(OrderBookQueryRepository repository) {
@@ -45,10 +48,21 @@ public class OrderBookController {
         return "orderbook/list";
     }
 
+    @RequestMapping(value = "socket", method = RequestMethod.GET)
+    public String getSocket(ModelMap modelMap) {
+        modelMap.addAttribute("externalServerurl", externalServerUrl);
+        return "orderbook/socket";
+    }
+
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String getOrders(@PathVariable String identifier, Model model) {
         OrderBookEntry orderBook = repository.findOne(identifier);
         model.addAttribute("orderBook", orderBook);
         return "orderbook/orders";
+    }
+
+    @Value("#{external.serverUrlEventBus}")
+    public void setExternalServerUrl(String externalServerUrl) {
+        this.externalServerUrl = externalServerUrl;
     }
 }
