@@ -26,6 +26,17 @@ Running the sample
 - Browse to http://localhost:8080 and you should see the user accounts that you can use to login.
 (You can always refresh the data by calling /data/init on the application)
 
+Vertx
+------------------
+We have created a client-server example that enables you to track all trades being made. The server is implemented using
+vertx. Events are send using http to the vertx instance. From the web application you can connect to the vertx server.
+
+If you want to use this functionality you also need to start a vertx server.
+Go to the vertx-ui/trader folder and start with
+# vertx run TradeWatcher.groovy
+
+This runs a service on port 9090 which is configured in the spring application as well.
+
 More documentation
 ----------------------
 We are documenting the sample on the wiki of the github project.
