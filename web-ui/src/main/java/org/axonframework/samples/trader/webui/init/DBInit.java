@@ -85,7 +85,6 @@ public class DBInit {
         systemAxonMongo.snapshotEventCollection().drop();
 
         systemAxonSagaMongo.sagaCollection().drop();
-        systemAxonSagaMongo.associationsCollection().drop();
 
         mongoTemplate.dropCollection(UserEntry.class);
         mongoTemplate.dropCollection(OrderBookEntry.class);

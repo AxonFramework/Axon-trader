@@ -25,8 +25,6 @@ import org.springframework.data.mongodb.MongoDbFactory;
  * @author Jettro Coenradie
  */
 public class CFSagaMongoTemplate implements MongoTemplate {
-
-    static final String SAGA_ASSOCIATIONS = "sagaassociations";
     static final String SAGA_COLLECTION = "sagacollection";
     private MongoDbFactory mongoDbFactory;
 
@@ -37,11 +35,6 @@ public class CFSagaMongoTemplate implements MongoTemplate {
     @Override
     public DBCollection sagaCollection() {
         return database().getCollection(SAGA_COLLECTION);
-    }
-
-    @Override
-    public DBCollection associationsCollection() {
-        return database().getCollection(SAGA_ASSOCIATIONS);
     }
 
     @Override

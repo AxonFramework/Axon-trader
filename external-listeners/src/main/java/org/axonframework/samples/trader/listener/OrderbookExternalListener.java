@@ -28,6 +28,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -35,12 +36,26 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 /**
+ * <p>Creates a JSON object and sends it to the configured server using http post. The structure of the json object is:</p>
+ * <pre>
+ * {
+ *     tradeExecuted :
+ *     {
+ *         orderbookId: ... ,
+ *         count: ... ,
+ *         price: ...
+ *     }
+ * }
+ * </pre>
+ * <p>The url to send the request to can be configured.</p>
  * @author Jettro Coenradie
  */
 @Component
 public class OrderbookExternalListener {
     private static final Logger logger = LoggerFactory.getLogger(OrderbookExternalListener.class);
-    private JsonFactory f = new JsonFactory();
+
+    private JsonFactory jsonFactory = new JsonFactory();
+    private String remoteServerUri;
 
     @EventHandler
     public void handle(TradeExecutedEvent event) {
@@ -54,7 +69,7 @@ public class OrderbookExternalListener {
     private void doHandle(TradeExecutedEvent event) throws IOException {
         String jsonObjectAsString = createJsonInString(event);
 
-        HttpPost post = new HttpPost("http://localhost:9090/executed");
+        HttpPost post = new HttpPost(remoteServerUri);
         post.setEntity(new StringEntity(jsonObjectAsString));
         post.addHeader("Content-Type", "application/json");
 
@@ -70,7 +85,7 @@ public class OrderbookExternalListener {
 
     private String createJsonInString(TradeExecutedEvent event) throws IOException {
         Writer writer = new StringWriter();
-        JsonGenerator g = f.createJsonGenerator(writer);
+        JsonGenerator g = jsonFactory.createJsonGenerator(writer);
         g.writeStartObject();
         g.writeObjectFieldStart("tradeExecuted");
         g.writeStringField("orderbookId", event.getOrderBookIdentifier().toString());
@@ -81,4 +96,8 @@ public class OrderbookExternalListener {
         return writer.toString();
     }
 
+    @Value("#{external.serverUrl}")
+    public void setRemoteServerUri(String remoteServerUri) {
+        this.remoteServerUri = remoteServerUri;
+    }
 }
