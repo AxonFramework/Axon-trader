@@ -23,9 +23,3 @@ container.with {
         }
     }
 }
-
-
-
-
-//vertx.setTimer(1000l) {
-//}
