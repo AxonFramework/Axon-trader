@@ -6,14 +6,6 @@ def routeMatcher = new RouteMatcher()
 def slurper = new JsonSlurper()
 def eb = vertx.eventBus
 
-routeMatcher.get("/") { req ->
-    req.response.sendFile("static/socketDemo.html")
-}
-
-routeMatcher.getWithRegEx("^\\/static\\/.*") { req ->
-    req.response.sendFile(req.path.substring(1))
-}
-
 routeMatcher.post("/executed") { request ->
     println "received a trade executed event"
 
