@@ -6,6 +6,8 @@
 build
 # intellij files
 .idea/*
+**/.idea/*
+**/gradle.properties
 *.ipr
 *.iws
 *.iml
