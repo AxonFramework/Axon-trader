@@ -51,16 +51,8 @@
         <module>companies-api</module>
         <module>companies</module>
         <module>web-ui</module>
+        <module>external-listeners</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>with-external</id>
-            <modules>
-                <module>external-listeners</module>
-            </modules>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
