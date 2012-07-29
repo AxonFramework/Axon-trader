@@ -28,7 +28,7 @@ import org.axonframework.samples.trader.query.portfolio.PortfolioEntry
  * @author Jettro Coenradie
  */
 class CommandSender {
-    def http = new HTTPBuilder('http://localhost:8080/trader/')
+    def http = new HTTPBuilder('http://localhost:8080/')
     def requestContentType = ContentType.URLENC
     XStream xStream = new XStream()
 
