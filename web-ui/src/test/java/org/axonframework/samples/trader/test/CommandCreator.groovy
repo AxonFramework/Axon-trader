@@ -21,6 +21,7 @@ import org.axonframework.samples.trader.orders.api.transaction.StartSellTransact
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry
 import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
 /**
  * Class used to create an order based on the provided Profile. If the profile has money we place buy orders, if
@@ -40,6 +41,7 @@ class CommandCreator {
     def createCommand(PortfolioEntry portfolio) {
         if (portfolio.amountOfMoney - portfolio.reservedAmountOfMoney > 10000) {
             command = new StartBuyTransactionCommand(
+					new TransactionId(),
                     new OrderBookId(obtainRandomOrderBook()),
                     new PortfolioId(portfolio.identifier),
                     randomFactory.nextInt(50) + 1,
@@ -48,6 +50,7 @@ class CommandCreator {
             def availableOrderBook = obtainAvailableOrderBook(portfolio)
             if (availableOrderBook) {
                 command = new StartSellTransactionCommand(
+						new TransactionId(),
                         new OrderBookId(availableOrderBook[0]),
                         new PortfolioId(portfolio.identifier),
                         availableOrderBook[1],
