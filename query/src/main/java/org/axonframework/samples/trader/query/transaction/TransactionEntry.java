@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.query.transaction;
 
-import org.axonframework.samples.trader.orders.api.transaction.TransactionType;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionType;
 import org.springframework.data.annotation.Id;
 
 /**

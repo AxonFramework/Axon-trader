@@ -16,9 +16,9 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;
 
 /**

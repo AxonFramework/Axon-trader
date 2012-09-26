@@ -16,12 +16,12 @@
 
 package org.axonframework.samples.trader.test
 
-import org.axonframework.samples.trader.orders.api.transaction.StartBuyTransactionCommand
-import org.axonframework.samples.trader.orders.api.transaction.StartSellTransactionCommand
+import org.axonframework.samples.trader.api.orders.transaction.StartBuyTransactionCommand
+import org.axonframework.samples.trader.api.orders.transaction.StartSellTransactionCommand
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
  * Class used to create an order based on the provided Profile. If the profile has money we place buy orders, if

@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.query.users;
 
-import org.axonframework.samples.trader.users.api.UserAccount;
+import org.axonframework.samples.trader.api.users.UserAccount;
 
 /**
  * @author Jettro Coenradie

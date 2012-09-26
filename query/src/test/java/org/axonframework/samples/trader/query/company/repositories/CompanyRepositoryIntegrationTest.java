@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.query.company.repositories;
 
-import org.axonframework.samples.trader.company.api.CompanyId;
+import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.junit.Test;
 import org.junit.runner.RunWith;

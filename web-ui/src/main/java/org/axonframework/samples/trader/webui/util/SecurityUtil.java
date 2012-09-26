@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.webui.util;
 
-import org.axonframework.samples.trader.users.api.UserAccount;
+import org.axonframework.samples.trader.api.users.UserAccount;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**

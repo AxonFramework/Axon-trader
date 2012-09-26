@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.orders.api.transaction.ConfirmTransactionCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 import org.hamcrest.Description;
 
 /**

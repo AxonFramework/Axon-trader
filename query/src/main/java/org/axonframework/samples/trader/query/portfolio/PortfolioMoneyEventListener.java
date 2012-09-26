@@ -17,8 +17,8 @@
 package org.axonframework.samples.trader.query.portfolio;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.money.*;
+import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.api.portfolio.money.*;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.slf4j.Logger;

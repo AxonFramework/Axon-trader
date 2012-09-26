@@ -16,11 +16,15 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
-import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.api.portfolio.item.ItemsReservedEvent;
+import org.axonframework.samples.trader.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
+import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.OrderId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 import org.axonframework.samples.trader.orders.command.matchers.*;
-import org.axonframework.samples.trader.tradeengine.api.order.*;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.junit.Before;
 import org.junit.Test;

@@ -19,10 +19,10 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.transaction.*;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
  * @author Jettro Coenradie

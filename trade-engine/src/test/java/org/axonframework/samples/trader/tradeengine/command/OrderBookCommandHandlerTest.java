@@ -16,7 +16,16 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.samples.trader.tradeengine.api.order.*;
+import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;
+import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookCreatedEvent;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.OrderId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

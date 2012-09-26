@@ -16,10 +16,10 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.orders.api.transaction.*;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

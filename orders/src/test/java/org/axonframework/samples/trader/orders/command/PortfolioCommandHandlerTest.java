@@ -16,14 +16,14 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.*;
-import org.axonframework.samples.trader.orders.api.portfolio.money.*;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-import org.axonframework.samples.trader.users.api.UserId;
+import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.api.portfolio.item.*;
+import org.axonframework.samples.trader.api.portfolio.money.*;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

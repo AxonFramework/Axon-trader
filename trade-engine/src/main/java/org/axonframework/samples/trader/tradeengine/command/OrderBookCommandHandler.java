@@ -18,9 +18,9 @@ package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateBuyOrderCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateOrderBookCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;
+import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
 
 /**
  * @author Allard Buijze

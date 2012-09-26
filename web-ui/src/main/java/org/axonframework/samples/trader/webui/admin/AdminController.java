@@ -18,14 +18,14 @@ package org.axonframework.samples.trader.webui.admin;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.samples.trader.orders.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.item.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.money.DepositMoneyToPortfolioCommand;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

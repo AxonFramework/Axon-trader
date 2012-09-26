@@ -44,7 +44,7 @@
 
         <dependency>
             <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-trade-engine-api</artifactId>
+            <artifactId>axon-trader-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

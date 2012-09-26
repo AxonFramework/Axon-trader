@@ -17,13 +17,18 @@
 package org.axonframework.samples.trader.query.orderbook;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.company.api.OrderBookAddedToCompanyEvent;
+import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
+import org.axonframework.samples.trader.api.orders.trades.AbstractOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.OrderId;
+import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.axonframework.samples.trader.tradeengine.api.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

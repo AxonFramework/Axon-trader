@@ -18,8 +18,8 @@ package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.company.api.AddOrderBookToCompanyCommand;
-import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
+import org.axonframework.samples.trader.api.company.AddOrderBookToCompanyCommand;
+import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

@@ -20,12 +20,12 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
-import org.axonframework.samples.trader.orders.api.portfolio.item.*;
-import org.axonframework.samples.trader.orders.api.portfolio.money.DepositMoneyToPortfolioCommand;
-import org.axonframework.samples.trader.orders.api.transaction.*;
-import org.axonframework.samples.trader.tradeengine.api.order.CreateSellOrderCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderId;
-import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.api.portfolio.item.*;
+import org.axonframework.samples.trader.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.OrderId;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
