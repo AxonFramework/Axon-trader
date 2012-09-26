@@ -14,29 +14,37 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
- * New items have been added to the portfolio for the OrderBook of the provided identifier.
+ * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
+ * identifier.
  *
  * @author Jettro Coenradie
  */
-public class ItemsAddedToPortfolioEvent {
+public class ConfirmItemReservationForPortfolioCommand {
+
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    private long amountOfItemsAdded;
+    private TransactionId transactionIdentifier;
+    private long amountOfItemsToConfirm;
 
-    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier, long amountOfItemsAdded) {
+    public ConfirmItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
+                                                     OrderBookId orderBookIdentifier,
+                                                     TransactionId transactionIdentifier,
+                                                     long amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
-        this.amountOfItemsAdded = amountOfItemsAdded;
+        this.transactionIdentifier = transactionIdentifier;
+        this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
-    public long getAmountOfItemsAdded() {
-        return amountOfItemsAdded;
+    public long getAmountOfItemsToConfirm() {
+        return amountOfItemsToConfirm;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -45,5 +53,9 @@ public class ItemsAddedToPortfolioEvent {
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

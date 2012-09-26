@@ -22,8 +22,8 @@ import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
-import org.axonframework.samples.trader.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
@@ -142,9 +142,9 @@ public class DBInit {
     }
 
     public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
-        DepositMoneyToPortfolioCommand command =
-                new DepositMoneyToPortfolioCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
-        commandBus.dispatch(new GenericCommandMessage<DepositMoneyToPortfolioCommand>(command));
+        DepositCashCommand command =
+                new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
+        commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
     }
 
 

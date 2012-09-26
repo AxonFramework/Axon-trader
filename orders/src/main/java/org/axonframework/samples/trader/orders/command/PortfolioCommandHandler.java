@@ -20,11 +20,11 @@ import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.item.CancelItemReservationForPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.item.ConfirmItemReservationForPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.item.ReserveItemsCommand;
-import org.axonframework.samples.trader.api.portfolio.money.*;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.CancelItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.ConfirmItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.ReserveItemsCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -74,32 +74,32 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleAddMoneyToPortfolioCommand(DepositMoneyToPortfolioCommand command) {
+    public void handleAddMoneyToPortfolioCommand(DepositCashCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.addMoney(command.getMoneyToAddInCents());
     }
 
     @CommandHandler
-    public void handleMakePaymentFromPortfolioCommand(WithdrawMoneyFromPortfolioCommand command) {
+    public void handleMakePaymentFromPortfolioCommand(WithdrawCashCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.makePayment(command.getAmountToPayInCents());
     }
 
     @CommandHandler
-    public void handleReserveMoneyFromPortfolioCommand(ReserveMoneyFromPortfolioCommand command) {
+    public void handleReserveMoneyFromPortfolioCommand(ReserveCashCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
     }
 
     @CommandHandler
-    public void handleCancelMoneyReservationFromPortfolioCommand(CancelMoneyReservationFromPortfolioCommand command) {
+    public void handleCancelMoneyReservationFromPortfolioCommand(CancelCashReservationCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.cancelMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToCancel());
     }
 
     @CommandHandler
     public void handleConfirmMoneyReservationFromPortfolioCommand(
-            ConfirmMoneyReservationFromPortfolionCommand command) {
+            ConfirmCashReservationCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
                 command.getAmountOfMoneyToConfirmInCents());

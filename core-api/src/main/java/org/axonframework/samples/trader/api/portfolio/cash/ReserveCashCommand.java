@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
@@ -22,17 +22,22 @@ import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 /**
  * @author Jettro Coenradie
  */
-public class MoneyReservationConfirmedFromPortfolioEvent {
-    private TransactionId transactionIdentifier;
-    private PortfolioId portfolioIdentifier;
-    private long amountOfMoneyConfirmedInCents;
+public class ReserveCashCommand {
 
-    public MoneyReservationConfirmedFromPortfolioEvent(PortfolioId portfolioIdentifier,
-                                                       TransactionId transactionId,
-                                                       long amountOfMoneyConfirmedInCents) {
+    private PortfolioId portfolioIdentifier;
+    private TransactionId transactionIdentifier;
+    private long amountOfMoneyToReserve;
+
+    public ReserveCashCommand(PortfolioId portfolioIdentifier,
+                              TransactionId transactionIdentifier,
+                              long amountOfMoneyToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.transactionIdentifier = transactionId;
-        this.amountOfMoneyConfirmedInCents = amountOfMoneyConfirmedInCents;
+        this.transactionIdentifier = transactionIdentifier;
+        this.amountOfMoneyToReserve = amountOfMoneyToReserve;
+    }
+
+    public long getAmountOfMoneyToReserve() {
+        return amountOfMoneyToReserve;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -41,9 +46,5 @@ public class MoneyReservationConfirmedFromPortfolioEvent {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
-    }
-
-    public long getAmountOfMoneyConfirmedInCents() {
-        return amountOfMoneyConfirmedInCents;
     }
 }

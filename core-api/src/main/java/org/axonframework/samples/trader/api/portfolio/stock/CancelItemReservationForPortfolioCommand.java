@@ -14,40 +14,38 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
+ * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
+ * of the provided identifier.
+ *
  * @author Jettro Coenradie
  */
-public class NotEnoughItemsAvailableToReserveInPortfolio {
+public class CancelItemReservationForPortfolioCommand {
+
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long availableAmountOfItems;
-    private long amountOfItemsToReserve;
+    private long amountOfCancelledItems;
 
-    public NotEnoughItemsAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
-                                                       OrderBookId orderBookIdentifier,
-                                                       TransactionId transactionIdentifier,
-                                                       long availableAmountOfItems,
-                                                       long amountOfItemsToReserve) {
+    public CancelItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
+                                                    OrderBookId orderBookIdentifier,
+                                                    TransactionId transactionIdentifier,
+                                                    long amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.availableAmountOfItems = availableAmountOfItems;
-        this.amountOfItemsToReserve = amountOfItemsToReserve;
+
+        this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
-    public long getAmountOfItemsToReserve() {
-        return amountOfItemsToReserve;
-    }
-
-    public long getAvailableAmountOfItems() {
-        return availableAmountOfItems;
+    public long getAmountOfItemsToCancel() {
+        return amountOfCancelledItems;
     }
 
     public OrderBookId getOrderBookIdentifier() {

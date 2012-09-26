@@ -24,8 +24,8 @@ import org.axonframework.samples.trader.api.orders.trades.PortfolioId
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
- * Class used to create an order based on the provided Profile. If the profile has money we place buy orders, if
- * the profile is almost out of money we start selling stuff.
+ * Class used to create an order based on the provided Profile. If the profile has cash we place buy orders, if
+ * the profile is almost out of cash we start selling stuff.
  *
  * @author Jettro Coenradie
  */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;

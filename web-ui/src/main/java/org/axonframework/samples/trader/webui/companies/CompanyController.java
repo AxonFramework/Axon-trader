@@ -158,7 +158,7 @@ public class CompanyController {
             if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
                 bindingResult.rejectValue("tradeCount",
                         "error.order.buy.notenoughmoney",
-                        "Not enough money to spend to buy the items for the price you want");
+                        "Not enough cash to spend to buy the items for the price you want");
                 addPortfolioMoneyInfoToModel(portfolioEntry, model);
                 return "company/buy";
             }

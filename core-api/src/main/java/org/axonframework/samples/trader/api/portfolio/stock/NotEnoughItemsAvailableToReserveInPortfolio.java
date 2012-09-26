@@ -14,30 +14,44 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class CancelMoneyReservationFromPortfolioCommand {
-
+public class NotEnoughItemsAvailableToReserveInPortfolio {
     private PortfolioId portfolioIdentifier;
+    private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfMoneyToCancel;
+    private long availableAmountOfItems;
+    private long amountOfItemsToReserve;
 
-    public CancelMoneyReservationFromPortfolioCommand(PortfolioId portfolioIdentifier,
-                                                      TransactionId transactionIdentifier,
-                                                      long amountOfMoneyToCancel) {
+    public NotEnoughItemsAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
+                                                       OrderBookId orderBookIdentifier,
+                                                       TransactionId transactionIdentifier,
+                                                       long availableAmountOfItems,
+                                                       long amountOfItemsToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
+        this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
+        this.availableAmountOfItems = availableAmountOfItems;
+        this.amountOfItemsToReserve = amountOfItemsToReserve;
     }
 
-    public long getAmountOfMoneyToCancel() {
-        return amountOfMoneyToCancel;
+    public long getAmountOfItemsToReserve() {
+        return amountOfItemsToReserve;
+    }
+
+    public long getAvailableAmountOfItems() {
+        return availableAmountOfItems;
+    }
+
+    public OrderBookId getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public PortfolioId getPortfolioIdentifier() {

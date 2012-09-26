@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
@@ -22,24 +22,26 @@ import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 /**
  * @author Jettro Coenradie
  */
-public class NotEnoughMoneyInPortfolioToMakeReservationEvent {
+public class CancelCashReservationCommand {
+
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountToPayInCents;
+    private long amountOfMoneyToCancel;
 
-    public NotEnoughMoneyInPortfolioToMakeReservationEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier,
-                                                           long amountToPayInCents) {
+    public CancelCashReservationCommand(PortfolioId portfolioIdentifier,
+                                        TransactionId transactionIdentifier,
+                                        long amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountToPayInCents = amountToPayInCents;
+        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
+    }
+
+    public long getAmountOfMoneyToCancel() {
+        return amountOfMoneyToCancel;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
-    }
-
-    public long getAmountToPayInCents() {
-        return amountToPayInCents;
     }
 
     public TransactionId getTransactionIdentifier() {

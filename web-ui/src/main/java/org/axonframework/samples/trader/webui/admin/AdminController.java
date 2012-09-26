@@ -18,8 +18,8 @@ package org.axonframework.samples.trader.webui.admin;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.samples.trader.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -68,9 +68,9 @@ public class AdminController {
     public String addMoney(@PathVariable("identifier") String portfolioIdentifier,
                            @RequestParam("amount") long amountOfMoney
     ) {
-        DepositMoneyToPortfolioCommand command =
-                new DepositMoneyToPortfolioCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
-        commandBus.dispatch(new GenericCommandMessage<DepositMoneyToPortfolioCommand>(command));
+        DepositCashCommand command =
+                new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
+        commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
 

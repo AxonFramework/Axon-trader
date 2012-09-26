@@ -14,26 +14,33 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 
 /**
+ * New items have been added to the portfolio for the OrderBook of the provided identifier.
+ *
  * @author Jettro Coenradie
  */
-public class WithdrawMoneyFromPortfolioCommand {
-
+public class ItemsAddedToPortfolioEvent {
     private PortfolioId portfolioIdentifier;
-    private long amountToPayInCents;
+    private OrderBookId orderBookIdentifier;
+    private long amountOfItemsAdded;
 
-    public WithdrawMoneyFromPortfolioCommand(PortfolioId portfolioIdentifier, long amountToPayInCents) {
-
+    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier, long amountOfItemsAdded) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountToPayInCents = amountToPayInCents;
+        this.orderBookIdentifier = orderBookIdentifier;
+        this.amountOfItemsAdded = amountOfItemsAdded;
     }
 
-    public long getAmountToPayInCents() {
-        return amountToPayInCents;
+    public long getAmountOfItemsAdded() {
+        return amountOfItemsAdded;
+    }
+
+    public OrderBookId getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public PortfolioId getPortfolioIdentifier() {

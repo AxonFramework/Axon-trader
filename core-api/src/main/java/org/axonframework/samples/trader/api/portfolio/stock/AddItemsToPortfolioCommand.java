@@ -14,38 +14,38 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
- * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
- * of the provided identifier.
+ * Try to add new items for a specific OrderBook to the portfolio.
  *
  * @author Jettro Coenradie
  */
-public class CancelItemReservationForPortfolioCommand {
+public class AddItemsToPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    private TransactionId transactionIdentifier;
-    private long amountOfCancelledItems;
+    private long amountOfItemsToAdd;
 
-    public CancelItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
-                                                    OrderBookId orderBookIdentifier,
-                                                    TransactionId transactionIdentifier,
-                                                    long amountOfCancelledItems) {
+    /**
+     * Create a new command.
+     *
+     * @param portfolioIdentifier Identifier of the Portfolio to add items to
+     * @param orderBookIdentifier Identifier of the OrderBook to add items for
+     * @param amountOfItemsToAdd  AMount of items to add
+     */
+    public AddItemsToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
+                                      long amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
-        this.transactionIdentifier = transactionIdentifier;
-
-        this.amountOfCancelledItems = amountOfCancelledItems;
+        this.amountOfItemsToAdd = amountOfItemsToAdd;
     }
 
-    public long getAmountOfItemsToCancel() {
-        return amountOfCancelledItems;
+    public long getAmountOfItemsToAdd() {
+        return amountOfItemsToAdd;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -56,7 +56,12 @@ public class CancelItemReservationForPortfolioCommand {
         return portfolioIdentifier;
     }
 
-    public TransactionId getTransactionIdentifier() {
-        return transactionIdentifier;
+    @Override
+    public String toString() {
+        return "AddItemsToPortfolioCommand{" +
+                "amountOfItemsToAdd=" + amountOfItemsToAdd +
+                ", portfolioIdentifier=" + portfolioIdentifier +
+                ", orderBookIdentifier=" + orderBookIdentifier +
+                '}';
     }
 }

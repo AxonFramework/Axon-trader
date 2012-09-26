@@ -16,14 +16,14 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.money.DepositMoneyToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<DepositMoneyToPortfolioCommand> {
+public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<DepositCashCommand> {
 
     private long moneyToAddInCents;
     private PortfolioId portfolioIdentifier;
@@ -34,14 +34,14 @@ public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<De
     }
 
     @Override
-    protected boolean doMatches(DepositMoneyToPortfolioCommand command) {
+    protected boolean doMatches(DepositCashCommand command) {
         return moneyToAddInCents == command.getMoneyToAddInCents()
                 && portfolioIdentifier.equals(command.getPortfolioIdentifier());
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("DepositMoneyToPortfolioCommand with moneyToAddInCents [")
+        description.appendText("DepositCashCommand with moneyToAddInCents [")
                 .appendValue(moneyToAddInCents)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)

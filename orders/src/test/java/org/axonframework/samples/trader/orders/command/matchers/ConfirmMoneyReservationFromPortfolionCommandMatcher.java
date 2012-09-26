@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.money.ConfirmMoneyReservationFromPortfolionCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.ConfirmCashReservationCommand;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;
 
@@ -24,7 +24,7 @@ import org.hamcrest.Description;
  * @author Jettro Coenradie
  */
 public class ConfirmMoneyReservationFromPortfolionCommandMatcher
-        extends BaseCommandMatcher<ConfirmMoneyReservationFromPortfolionCommand> {
+        extends BaseCommandMatcher<ConfirmCashReservationCommand> {
 
     private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToconfirm;
@@ -36,14 +36,14 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
     }
 
     @Override
-    protected boolean doMatches(ConfirmMoneyReservationFromPortfolionCommand command) {
+    protected boolean doMatches(ConfirmCashReservationCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToConfirmInCents() == amountOfMoneyToconfirm;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ConfirmMoneyReservationFromPortfolionCommand with amountOfMoneyToConfirm [")
+        description.appendText("ConfirmCashReservationCommand with amountOfMoneyToConfirm [")
                 .appendValue(amountOfMoneyToconfirm)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)

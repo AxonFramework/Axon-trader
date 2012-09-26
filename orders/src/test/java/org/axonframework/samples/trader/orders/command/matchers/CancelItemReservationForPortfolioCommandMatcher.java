@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.item.CancelItemReservationForPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.CancelItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;

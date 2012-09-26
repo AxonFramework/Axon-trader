@@ -21,8 +21,8 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
-import org.axonframework.samples.trader.api.portfolio.item.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.money.*;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.orders.trades.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderId;
@@ -58,15 +58,15 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         setPricePerItem(event.getPricePerItem());
         setTotalItems(event.getTotalItems());
 
-        ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(getPortfolioIdentifier(),
+        ReserveCashCommand command = new ReserveCashCommand(getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems()
                         * getPricePerItem());
-        getCommandBus().dispatch(new GenericCommandMessage<ReserveMoneyFromPortfolioCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<ReserveCashCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
-    public void handle(MoneyReservedFromPortfolioEvent event) {
+    public void handle(CashReservedEvent event) {
         logger.debug("Money for transaction with identifier {} is reserved", getTransactionIdentifier());
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(getTransactionIdentifier());
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmTransactionCommand>(command),
@@ -86,9 +86,9 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
-    public void handle(NotEnoughMoneyInPortfolioToMakeReservationEvent event) {
+    public void handle(CashReservationRejectedEvent event) {
         logger.debug(
-                "Not enough money was available to make reservation in transaction {} for portfolio {}. Required: {}",
+                "Not enough cash was available to make reservation in transaction {} for portfolio {}. Required: {}",
                 new Object[]{getTransactionIdentifier(),
                         event.getPortfolioIdentifier(),
                         event.getAmountToPayInCents()});
@@ -108,14 +108,14 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionCancelledEvent event) {
         long amountToCancel = (event.getTotalAmountOfItems() - event.getAmountOfExecutedItems()) * getPricePerItem();
-        logger.debug("Buy Transaction {} is cancelled, amount of money reserved to cancel is {}",
+        logger.debug("Buy Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountToCancel);
-        CancelMoneyReservationFromPortfolioCommand command = new CancelMoneyReservationFromPortfolioCommand(
+        CancelCashReservationCommand command = new CancelCashReservationCommand(
                 getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 amountToCancel);
-        getCommandBus().dispatch(new GenericCommandMessage<CancelMoneyReservationFromPortfolioCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<CancelCashReservationCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "buyTransactionId", keyName = "transactionIdentifier")
@@ -133,11 +133,11 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(BuyTransactionExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
                 new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
-        ConfirmMoneyReservationFromPortfolionCommand confirmCommand =
-                new ConfirmMoneyReservationFromPortfolionCommand(getPortfolioIdentifier(),
+        ConfirmCashReservationCommand confirmCommand =
+                new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
                         event.getAmountOfItems() * event.getItemPrice());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmMoneyReservationFromPortfolionCommand>(confirmCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
@@ -151,12 +151,12 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 new Object[]{event.getTransactionIdentifier(),
                         event.getAmountOfExecutedItems(),
                         event.getItemPrice()});
-        ConfirmMoneyReservationFromPortfolionCommand confirmCommand =
-                new ConfirmMoneyReservationFromPortfolionCommand(getPortfolioIdentifier(),
+        ConfirmCashReservationCommand confirmCommand =
+                new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
                         event.getAmountOfExecutedItems() * event
                                 .getItemPrice());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmMoneyReservationFromPortfolionCommand>(confirmCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),

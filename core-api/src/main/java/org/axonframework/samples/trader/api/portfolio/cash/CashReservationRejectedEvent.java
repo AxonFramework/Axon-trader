@@ -14,41 +14,32 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemsReservedEvent {
+public class CashReservationRejectedEvent {
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfItemsReserved;
+    private long amountToPayInCents;
 
-    public ItemsReservedEvent(PortfolioId portfolioIdentifier,
-                              OrderBookId orderBookIdentifier,
-                              TransactionId transactionIdentifier,
-                              long amountOfItemsReserved) {
+    public CashReservationRejectedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier,
+                                        long amountToPayInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfItemsReserved = amountOfItemsReserved;
-    }
-
-    public long getAmountOfItemsReserved() {
-        return amountOfItemsReserved;
-    }
-
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+        this.amountToPayInCents = amountToPayInCents;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public long getAmountToPayInCents() {
+        return amountToPayInCents;
     }
 
     public TransactionId getTransactionIdentifier() {

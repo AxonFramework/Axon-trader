@@ -17,10 +17,10 @@
 package org.axonframework.samples.trader.query.portfolio;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.samples.trader.api.portfolio.item.ItemReservationCancelledForPortfolioEvent;
-import org.axonframework.samples.trader.api.portfolio.item.ItemReservationConfirmedForPortfolioEvent;
-import org.axonframework.samples.trader.api.portfolio.item.ItemsAddedToPortfolioEvent;
-import org.axonframework.samples.trader.api.portfolio.item.ItemsReservedEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationCancelledForPortfolioEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfolioEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;

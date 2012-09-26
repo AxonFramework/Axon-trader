@@ -16,14 +16,14 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.money.ReserveMoneyFromPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
-public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<ReserveMoneyFromPortfolioCommand> {
+public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<ReserveCashCommand> {
 
     private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToReserve;
@@ -34,14 +34,14 @@ public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<
     }
 
     @Override
-    protected boolean doMatches(ReserveMoneyFromPortfolioCommand command) {
+    protected boolean doMatches(ReserveCashCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToReserve() == amountOfMoneyToReserve;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ReserveMoneyFromPortfolioCommand with amountOfMoneyToReserve [")
+        description.appendText("ReserveCashCommand with amountOfMoneyToReserve [")
                 .appendValue(amountOfMoneyToReserve)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)

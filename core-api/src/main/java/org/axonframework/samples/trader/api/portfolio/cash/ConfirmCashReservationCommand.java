@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
@@ -22,16 +22,16 @@ import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmMoneyReservationFromPortfolionCommand {
+public class ConfirmCashReservationCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private long amountOfMoneyToConfirmInCents;
 
 
-    public ConfirmMoneyReservationFromPortfolionCommand(PortfolioId portfolioIdentifier,
-                                                        TransactionId transactionIdentifier,
-                                                        long amountOfMoneyToConfirmInCents) {
+    public ConfirmCashReservationCommand(PortfolioId portfolioIdentifier,
+                                         TransactionId transactionIdentifier,
+                                         long amountOfMoneyToConfirmInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToConfirmInCents = amountOfMoneyToConfirmInCents;
@@ -51,7 +51,7 @@ public class ConfirmMoneyReservationFromPortfolionCommand {
 
     @Override
     public String toString() {
-        return "ConfirmMoneyReservationFromPortfolionCommand{" +
+        return "ConfirmCashReservationCommand{" +
                 "amountOfMoneyToConfirmInCents=" + amountOfMoneyToConfirmInCents +
                 ", portfolioIdentifier=" + portfolioIdentifier +
                 ", transactionIdentifier=" + transactionIdentifier +

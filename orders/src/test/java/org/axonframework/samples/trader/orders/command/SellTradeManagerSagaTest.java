@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.api.portfolio.item.ItemsReservedEvent;
-import org.axonframework.samples.trader.api.portfolio.item.NotEnoughItemsAvailableToReserveInPortfolio;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolio;
 import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.OrderId;

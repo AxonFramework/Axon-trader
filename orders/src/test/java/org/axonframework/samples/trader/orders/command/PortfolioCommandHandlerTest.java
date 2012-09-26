@@ -18,8 +18,8 @@ package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.api.portfolio.item.*;
-import org.axonframework.samples.trader.api.portfolio.money.*;
+import org.axonframework.samples.trader.api.portfolio.stock.*;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
@@ -148,67 +148,67 @@ public class PortfolioCommandHandlerTest {
     /* Money related test methods */
     @Test
     public void testDepositingMoneyToThePortfolio() {
-        DepositMoneyToPortfolioCommand command = new DepositMoneyToPortfolioCommand(portfolioIdentifier, 2000l);
+        DepositCashCommand command = new DepositCashCommand(portfolioIdentifier, 2000l);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
                 .when(command)
-                .expectEvents(new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 2000l));
+                .expectEvents(new CashDepositedEvent(portfolioIdentifier, 2000l));
     }
 
     @Test
     public void testWithdrawingMoneyFromPortfolio() {
-        WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
+        WithdrawCashCommand command = new WithdrawCashCommand(portfolioIdentifier, 300l);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new CashDepositedEvent(portfolioIdentifier, 400))
                 .when(command)
-                .expectEvents(new MoneyWithdrawnFromPortfolioEvent(portfolioIdentifier, 300l));
+                .expectEvents(new CashWithdrawnEvent(portfolioIdentifier, 300l));
     }
 
     @Test
     public void testWithdrawingMoneyFromPortfolio_withoutEnoughMoney() {
-        WithdrawMoneyFromPortfolioCommand command = new WithdrawMoneyFromPortfolioCommand(portfolioIdentifier, 300l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 200))
+        WithdrawCashCommand command = new WithdrawCashCommand(portfolioIdentifier, 300l);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new CashDepositedEvent(portfolioIdentifier, 200))
                 .when(command)
-                .expectEvents(new MoneyWithdrawnFromPortfolioEvent(portfolioIdentifier, 300l));
+                .expectEvents(new CashWithdrawnEvent(portfolioIdentifier, 300l));
     }
 
     @Test
     public void testMakingMoneyReservation() {
-        ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier,
+        ReserveCashCommand command = new ReserveCashCommand(portfolioIdentifier,
                 transactionIdentifier,
                 300l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new CashDepositedEvent(portfolioIdentifier, 400))
                 .when(command)
-                .expectEvents(new MoneyReservedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 300l));
+                .expectEvents(new CashReservedEvent(portfolioIdentifier, transactionIdentifier, 300l));
     }
 
     @Test
     public void testMakingMoneyReservation_withoutEnoughMoney() {
-        ReserveMoneyFromPortfolioCommand command = new ReserveMoneyFromPortfolioCommand(portfolioIdentifier,
+        ReserveCashCommand command = new ReserveCashCommand(portfolioIdentifier,
                 transactionIdentifier,
                 600l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new CashDepositedEvent(portfolioIdentifier, 400))
                 .when(command)
-                .expectEvents(new NotEnoughMoneyInPortfolioToMakeReservationEvent(portfolioIdentifier, transactionIdentifier, 600));
+                .expectEvents(new CashReservationRejectedEvent(portfolioIdentifier, transactionIdentifier, 600));
     }
 
     @Test
     public void testCancelMoneyReservation() {
-        CancelMoneyReservationFromPortfolioCommand command = new CancelMoneyReservationFromPortfolioCommand(
+        CancelCashReservationCommand command = new CancelCashReservationCommand(
                 portfolioIdentifier,
                 transactionIdentifier,
                 200l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new CashDepositedEvent(portfolioIdentifier, 400))
                 .when(command)
-                .expectEvents(new MoneyReservationCancelledFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 200l));
+                .expectEvents(new CashReservationCancelledEvent(portfolioIdentifier, transactionIdentifier, 200l));
     }
 
     @Test
     public void testConfirmMoneyReservation() {
-        ConfirmMoneyReservationFromPortfolionCommand command = new ConfirmMoneyReservationFromPortfolionCommand(
+        ConfirmCashReservationCommand command = new ConfirmCashReservationCommand(
                 portfolioIdentifier,
                 transactionIdentifier,
                 200l);
-        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new MoneyDepositedToPortfolioEvent(portfolioIdentifier, 400))
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier), new CashDepositedEvent(portfolioIdentifier, 400))
                 .when(command)
-                .expectEvents(new MoneyReservationConfirmedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier, 200l));
+                .expectEvents(new CashReservationConfirmedEvent(portfolioIdentifier, transactionIdentifier, 200l));
     }
 }

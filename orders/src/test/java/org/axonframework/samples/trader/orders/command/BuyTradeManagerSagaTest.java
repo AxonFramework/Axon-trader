@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.api.portfolio.money.MoneyReservedFromPortfolioEvent;
-import org.axonframework.samples.trader.api.portfolio.money.NotEnoughMoneyInPortfolioToMakeReservationEvent;
+import org.axonframework.samples.trader.api.portfolio.cash.CashReservationRejectedEvent;
+import org.axonframework.samples.trader.api.portfolio.cash.CashReservedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.OrderId;
@@ -76,7 +76,7 @@ public class BuyTradeManagerSagaTest {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
                 .whenAggregate(portfolioIdentifier).publishes(
-                new MoneyReservedFromPortfolioEvent(portfolioIdentifier, transactionIdentifier,
+                new CashReservedEvent(portfolioIdentifier, transactionIdentifier,
                         TOTAL_ITEMS
                                 * PRICE_PER_ITEM))
                 .expectActiveSagas(1)
@@ -94,7 +94,7 @@ public class BuyTradeManagerSagaTest {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
                 .whenAggregate(portfolioIdentifier).publishes(
-                new NotEnoughMoneyInPortfolioToMakeReservationEvent(
+                new CashReservationRejectedEvent(
                         portfolioIdentifier, transactionIdentifier, TOTAL_ITEMS * PRICE_PER_ITEM))
                 .expectActiveSagas(0);
     }
@@ -108,7 +108,7 @@ public class BuyTradeManagerSagaTest {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
                 .andThenAggregate(portfolioIdentifier).published(
-                new MoneyReservedFromPortfolioEvent(
+                new CashReservedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_ITEMS * PRICE_PER_ITEM))
@@ -146,7 +146,7 @@ public class BuyTradeManagerSagaTest {
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(new MoneyReservedFromPortfolioEvent(
+                .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
                 .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
@@ -175,7 +175,7 @@ public class BuyTradeManagerSagaTest {
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(new MoneyReservedFromPortfolioEvent(
+                .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
                 .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
@@ -207,7 +207,7 @@ public class BuyTradeManagerSagaTest {
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(new MoneyReservedFromPortfolioEvent(
+                .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
                 .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
@@ -237,7 +237,7 @@ public class BuyTradeManagerSagaTest {
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(new MoneyReservedFromPortfolioEvent(
+                .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
                 .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))

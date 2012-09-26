@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 
 /**
  * @author Jettro Coenradie
  */
-public class MoneyDepositedToPortfolioEvent {
-    private PortfolioId portfolioId;
-    private long moneyAddedInCents;
+public class WithdrawCashCommand {
 
-    public MoneyDepositedToPortfolioEvent(PortfolioId portfolioId, long moneyAddedInCents) {
-        this.portfolioId = portfolioId;
-        this.moneyAddedInCents = moneyAddedInCents;
+    private PortfolioId portfolioIdentifier;
+    private long amountToPayInCents;
+
+    public WithdrawCashCommand(PortfolioId portfolioIdentifier, long amountToPayInCents) {
+
+        this.portfolioIdentifier = portfolioIdentifier;
+        this.amountToPayInCents = amountToPayInCents;
+    }
+
+    public long getAmountToPayInCents() {
+        return amountToPayInCents;
     }
 
     public PortfolioId getPortfolioIdentifier() {
-        return portfolioId;
-    }
-
-    public long getMoneyAddedInCents() {
-        return moneyAddedInCents;
+        return portfolioIdentifier;
     }
 }

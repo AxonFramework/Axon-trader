@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.money;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 
 /**
+ * Adding cash to your Portfolio through a deposit
+ *
  * @author Jettro Coenradie
  */
-public class MoneyWithdrawnFromPortfolioEvent {
-    private PortfolioId portfolioIdentifier;
-    private long amountPaidInCents;
+public class DepositCashCommand {
 
-    public MoneyWithdrawnFromPortfolioEvent(PortfolioId portfolioIdentifier, long amountPaidInCents) {
+    private PortfolioId portfolioIdentifier;
+    private long moneyToAddInCents;
+
+    public DepositCashCommand(PortfolioId portfolioIdentifier, long moneyToAddInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountPaidInCents = amountPaidInCents;
+        this.moneyToAddInCents = moneyToAddInCents;
+    }
+
+    public long getMoneyToAddInCents() {
+        return moneyToAddInCents;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
-    }
-
-    public long getAmountPaidInCents() {
-        return amountPaidInCents;
     }
 }

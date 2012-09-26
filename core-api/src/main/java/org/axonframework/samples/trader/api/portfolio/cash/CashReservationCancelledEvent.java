@@ -14,37 +14,25 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.cash;
 
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemReservationConfirmedForPortfolioEvent {
+public class CashReservationCancelledEvent {
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfConfirmedItems;
+    private long amountOfMoneyToCancel;
 
-    public ItemReservationConfirmedForPortfolioEvent(PortfolioId portfolioIdentifier,
-                                                     OrderBookId orderBookIdentifier,
-                                                     TransactionId transactionIdentifier,
-                                                     long amountOfConfirmedItems) {
+    public CashReservationCancelledEvent(PortfolioId portfolioIdentifier,
+                                         TransactionId transactionIdentifier,
+                                         long amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfConfirmedItems = amountOfConfirmedItems;
-    }
-
-    public long getAmountOfConfirmedItems() {
-        return amountOfConfirmedItems;
-    }
-
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -53,5 +41,9 @@ public class ItemReservationConfirmedForPortfolioEvent {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public long getAmountOfMoneyToCancel() {
+        return amountOfMoneyToCancel;
     }
 }

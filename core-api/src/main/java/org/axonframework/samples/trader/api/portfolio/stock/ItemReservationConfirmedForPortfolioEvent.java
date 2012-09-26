@@ -14,38 +14,33 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.api.portfolio.item;
+package org.axonframework.samples.trader.api.portfolio.stock;
 
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
 /**
- * Try to add new items for a specific OrderBook to the portfolio.
- *
  * @author Jettro Coenradie
  */
-public class AddItemsToPortfolioCommand {
-
+public class ItemReservationConfirmedForPortfolioEvent {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    private long amountOfItemsToAdd;
+    private TransactionId transactionIdentifier;
+    private long amountOfConfirmedItems;
 
-    /**
-     * Create a new command.
-     *
-     * @param portfolioIdentifier Identifier of the Portfolio to add items to
-     * @param orderBookIdentifier Identifier of the OrderBook to add items for
-     * @param amountOfItemsToAdd  AMount of items to add
-     */
-    public AddItemsToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
-                                      long amountOfItemsToAdd) {
+    public ItemReservationConfirmedForPortfolioEvent(PortfolioId portfolioIdentifier,
+                                                     OrderBookId orderBookIdentifier,
+                                                     TransactionId transactionIdentifier,
+                                                     long amountOfConfirmedItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
-        this.amountOfItemsToAdd = amountOfItemsToAdd;
+        this.transactionIdentifier = transactionIdentifier;
+        this.amountOfConfirmedItems = amountOfConfirmedItems;
     }
 
-    public long getAmountOfItemsToAdd() {
-        return amountOfItemsToAdd;
+    public long getAmountOfConfirmedItems() {
+        return amountOfConfirmedItems;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -56,12 +51,7 @@ public class AddItemsToPortfolioCommand {
         return portfolioIdentifier;
     }
 
-    @Override
-    public String toString() {
-        return "AddItemsToPortfolioCommand{" +
-                "amountOfItemsToAdd=" + amountOfItemsToAdd +
-                ", portfolioIdentifier=" + portfolioIdentifier +
-                ", orderBookIdentifier=" + orderBookIdentifier +
-                '}';
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }
