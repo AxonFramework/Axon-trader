@@ -17,12 +17,21 @@
 package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.AbstractEventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.axonframework.samples.trader.tradeengine.api.order.*;
+import org.axonframework.eventsourcing.annotation.EventSourcedMember;
+import org.axonframework.samples.trader.tradeengine.api.order.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookCreatedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.tradeengine.api.order.OrderId;
+import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.tradeengine.api.order.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
+import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author Allard Buijze
@@ -33,7 +42,9 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private OrderBookId orderBookId;
 
+    @EventSourcedMember
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
+    @EventSourcedMember
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
     @SuppressWarnings("UnusedDeclaration")
@@ -42,11 +53,6 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     public OrderBook(OrderBookId identifier) {
         apply(new OrderBookCreatedEvent(identifier));
-    }
-
-    @Override
-    public OrderBookId getIdentifier() {
-        return orderBookId;
     }
 
     public void addBuyOrder(OrderId orderId, TransactionId transactionId, long tradeCount,
@@ -117,27 +123,10 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    @Override
-    protected Collection<AbstractEventSourcedEntity> getChildEntities() {
-        List<AbstractEventSourcedEntity> children = new ArrayList<AbstractEventSourcedEntity>(
-                buyOrders.size() + sellOrders.size());
-        children.addAll(buyOrders);
-        children.addAll(sellOrders);
-        return children;
-    }
-
     private static class OrderComparator implements Comparator<Order> {
 
         public int compare(Order o1, Order o2) {
-            if (o1.getItemPrice() == o2.getItemPrice()) {
-                return 0;
-            }
-
-            if (o1.getItemPrice() > o2.getItemPrice()) {
-                return 1;
-            } else {
-                return -1;
-            }
+            return Long.compare(o1.getItemPrice(), o2.getItemPrice());
         }
     }
 }

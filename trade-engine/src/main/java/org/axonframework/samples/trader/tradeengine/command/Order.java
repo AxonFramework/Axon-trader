@@ -17,15 +17,11 @@
 package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.AbstractEventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
 import org.axonframework.samples.trader.tradeengine.api.order.OrderId;
 import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
 import org.axonframework.samples.trader.tradeengine.api.order.TradeExecutedEvent;
 import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author Allard Buijze
@@ -82,10 +78,5 @@ class Order extends AbstractAnnotatedEntity {
                 || orderId.equals(event.getSellOrderId())) {
             recordTraded(event.getTradeCount());
         }
-    }
-
-    @Override
-    protected Collection<AbstractEventSourcedEntity> getChildEntities() {
-        return Collections.emptyList();
     }
 }

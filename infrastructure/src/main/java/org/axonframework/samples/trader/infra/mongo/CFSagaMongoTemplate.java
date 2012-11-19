@@ -37,8 +37,7 @@ public class CFSagaMongoTemplate implements MongoTemplate {
         return database().getCollection(SAGA_COLLECTION);
     }
 
-    @Override
-    public DB database() {
+    private DB database() {
         return mongoDbFactory.getDb();
     }
 }

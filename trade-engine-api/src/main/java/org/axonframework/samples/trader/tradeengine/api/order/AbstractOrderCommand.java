@@ -16,6 +16,8 @@
 
 package org.axonframework.samples.trader.tradeengine.api.order;
 
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
 /**
  * <p>Abstract parent class for all commands that are order related.</p>
  *
@@ -24,6 +26,7 @@ package org.axonframework.samples.trader.tradeengine.api.order;
 public abstract class AbstractOrderCommand {
 
     private PortfolioId portfolioId;
+    @TargetAggregateIdentifier
     private OrderBookId orderBookId;
     private TransactionId transactionId;
     private long tradeCount;
