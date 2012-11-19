@@ -19,13 +19,13 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.axonframework.samples.trader.orders.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.*;
-import org.axonframework.samples.trader.orders.api.portfolio.money.*;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-import org.axonframework.samples.trader.users.api.UserId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.*;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.users.UserId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ import java.util.Map;
  * Not a lot of checks are available. We will check if you still have item before you reserve them. Other than that
  * we will not do checks. It is possible to give more items than you reserve.
  * <p/>
- * When buying items you need to reserve money. Reservations need to be confirmed or cancelled. It is up to the user
+ * When buying items you need to reserve cash. Reservations need to be confirmed or cancelled. It is up to the user
  * to confirm and cancel the right amounts. The Portfolio does not keep track of it.
  *
  * @author Jettro Coenradie
@@ -93,27 +93,27 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void addMoney(long moneyToAddInCents) {
-        apply(new MoneyDepositedToPortfolioEvent(portfolioId, moneyToAddInCents));
+        apply(new CashDepositedEvent(portfolioId, moneyToAddInCents));
     }
 
     public void makePayment(long amountToPayInCents) {
-        apply(new MoneyWithdrawnFromPortfolioEvent(portfolioId, amountToPayInCents));
+        apply(new CashWithdrawnEvent(portfolioId, amountToPayInCents));
     }
 
     public void reserveMoney(TransactionId transactionIdentifier, long amountToReserve) {
         if (amountOfMoney >= amountToReserve) {
-            apply(new MoneyReservedFromPortfolioEvent(portfolioId, transactionIdentifier, amountToReserve));
+            apply(new CashReservedEvent(portfolioId, transactionIdentifier, amountToReserve));
         } else {
-            apply(new NotEnoughMoneyInPortfolioToMakeReservationEvent(portfolioId, transactionIdentifier, amountToReserve));
+            apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, amountToReserve));
         }
     }
 
     public void cancelMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToCancel) {
-        apply(new MoneyReservationCancelledFromPortfolioEvent(portfolioId, transactionIdentifier, amountOfMoneyToCancel));
+        apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, amountOfMoneyToCancel));
     }
 
     public void confirmMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToConfirm) {
-        apply(new MoneyReservationConfirmedFromPortfolioEvent(portfolioId, transactionIdentifier, amountOfMoneyToConfirm));
+        apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoneyToConfirm));
     }
 
     /* EVENT HANDLING */
@@ -156,29 +156,29 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void onMoneyAddedToPortfolio(MoneyDepositedToPortfolioEvent event) {
+    public void onMoneyAddedToPortfolio(CashDepositedEvent event) {
         amountOfMoney += event.getMoneyAddedInCents();
     }
 
     @EventHandler
-    public void onPaymentMadeFromPortfolio(MoneyWithdrawnFromPortfolioEvent event) {
+    public void onPaymentMadeFromPortfolio(CashWithdrawnEvent event) {
         amountOfMoney -= event.getAmountPaidInCents();
     }
 
     @EventHandler
-    public void onMoneyReservedFromPortfolio(MoneyReservedFromPortfolioEvent event) {
+    public void onMoneyReservedFromPortfolio(CashReservedEvent event) {
         amountOfMoney -= event.getAmountToReserve();
         reservedAmountOfMoney += event.getAmountToReserve();
     }
 
     @EventHandler
-    public void onMoneyReservationCancelled(MoneyReservationCancelledFromPortfolioEvent event) {
+    public void onMoneyReservationCancelled(CashReservationCancelledEvent event) {
         amountOfMoney += event.getAmountOfMoneyToCancel();
         reservedAmountOfMoney -= event.getAmountOfMoneyToCancel();
     }
 
     @EventHandler
-    public void onMoneyReservationConfirmed(MoneyReservationConfirmedFromPortfolioEvent event) {
+    public void onMoneyReservationConfirmed(CashReservationConfirmedEvent event) {
         reservedAmountOfMoney -= event.getAmountOfMoneyConfirmedInCents();
     }
 

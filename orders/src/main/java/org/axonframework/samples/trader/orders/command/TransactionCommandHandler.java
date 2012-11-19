@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.orders.api.transaction.*;
+import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

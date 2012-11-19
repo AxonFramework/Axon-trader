@@ -16,18 +16,18 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
-import org.axonframework.samples.trader.company.api.CompanyId;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationCancelledForPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemReservationConfirmedForPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsAddedToPortfolioEvent;
-import org.axonframework.samples.trader.orders.api.portfolio.item.ItemsReservedEvent;
+import org.axonframework.samples.trader.api.company.CompanyId;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationCancelledForPortfolioEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfolioEvent;
+import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
-import org.axonframework.samples.trader.users.api.UserId;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.users.UserId;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;

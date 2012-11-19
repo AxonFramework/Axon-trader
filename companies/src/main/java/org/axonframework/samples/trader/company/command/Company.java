@@ -19,15 +19,15 @@ package org.axonframework.samples.trader.company.command;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
-import org.axonframework.samples.trader.company.api.CompanyId;
-import org.axonframework.samples.trader.company.api.OrderBookAddedToCompanyEvent;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
+import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
+import org.axonframework.samples.trader.api.company.CompanyId;
+import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 
 /**
  * @author Jettro Coenradie
  */
-public class Company extends AbstractAnnotatedAggregateRoot {
+class Company extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 8723320580782813954L;
 
     @AggregateIdentifier

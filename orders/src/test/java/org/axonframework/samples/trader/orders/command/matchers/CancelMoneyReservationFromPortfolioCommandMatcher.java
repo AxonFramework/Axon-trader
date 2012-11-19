@@ -16,15 +16,15 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.orders.api.portfolio.money.CancelMoneyReservationFromPortfolioCommand;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.cash.CancelCashReservationCommand;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;
 
 /**
  * @author Jettro Coenradie
  */
 public class CancelMoneyReservationFromPortfolioCommandMatcher
-        extends BaseCommandMatcher<CancelMoneyReservationFromPortfolioCommand> {
+        extends BaseCommandMatcher<CancelCashReservationCommand> {
 
     public CancelMoneyReservationFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
                                                              long amountOfMoneyToCancel) {
@@ -36,14 +36,14 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher
     private long amountOfMoneyToCancel;
 
     @Override
-    protected boolean doMatches(CancelMoneyReservationFromPortfolioCommand command) {
+    protected boolean doMatches(CancelCashReservationCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToCancel() == amountOfMoneyToCancel;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("CancelMoneyReservationFromPortfolioCommand with amountOfMoneyToCancel [")
+        description.appendText("CancelCashReservationCommand with amountOfMoneyToCancel [")
                 .appendValue(amountOfMoneyToCancel)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)

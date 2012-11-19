@@ -16,10 +16,10 @@
 
 package org.axonframework.samples.trader.company.command;
 
-import org.axonframework.samples.trader.company.api.CompanyCreatedEvent;
-import org.axonframework.samples.trader.company.api.CompanyId;
-import org.axonframework.samples.trader.company.api.CreateCompanyCommand;
-import org.axonframework.samples.trader.users.api.UserId;
+import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
+import org.axonframework.samples.trader.api.company.CompanyId;
+import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
+import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;

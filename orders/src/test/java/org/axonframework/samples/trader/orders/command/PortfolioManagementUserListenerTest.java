@@ -18,9 +18,9 @@ package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.samples.trader.orders.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.users.api.UserCreatedEvent;
-import org.axonframework.samples.trader.users.api.UserId;
+import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.api.users.UserCreatedEvent;
+import org.axonframework.samples.trader.api.users.UserId;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;

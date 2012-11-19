@@ -16,23 +16,23 @@
 
 package org.axonframework.samples.trader.query.transaction;
 
-import org.axonframework.samples.trader.company.api.CompanyId;
-import org.axonframework.samples.trader.orders.api.transaction.BuyTransactionStartedEvent;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionCancelledEvent;
-import org.axonframework.samples.trader.orders.api.transaction.SellTransactionStartedEvent;
+import org.axonframework.samples.trader.api.company.CompanyId;
+import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionStartedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.SellTransactionCancelledEvent;
+import org.axonframework.samples.trader.api.orders.transaction.SellTransactionStartedEvent;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
-import org.axonframework.samples.trader.tradeengine.api.order.OrderBookId;
-import org.axonframework.samples.trader.tradeengine.api.order.PortfolioId;
-import org.axonframework.samples.trader.tradeengine.api.order.TransactionId;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-import static org.axonframework.samples.trader.orders.api.transaction.TransactionType.BUY;
-import static org.axonframework.samples.trader.orders.api.transaction.TransactionType.SELL;
+import static org.axonframework.samples.trader.api.orders.transaction.TransactionType.BUY;
+import static org.axonframework.samples.trader.api.orders.transaction.TransactionType.SELL;
 import static org.axonframework.samples.trader.query.transaction.TransactionState.CANCELLED;
 import static org.axonframework.samples.trader.query.transaction.TransactionState.STARTED;
 

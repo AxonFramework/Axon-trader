@@ -91,7 +91,7 @@ public class MongoController {
                                       @PathVariable("amount") long amount,
                                       Model model) {
         dbInit.depositMoneyToPortfolio(portfolioIdentifier, amount);
-        model.addAttribute("info", "Added money to the portfolio.");
+        model.addAttribute("info", "Added cash to the portfolio.");
         return "data/info";
     }
 }

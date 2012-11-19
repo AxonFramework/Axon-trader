@@ -5,7 +5,7 @@
 .gradle
 build
 # intellij files
-.idea/*
+.idea/
 **/.idea/*
 **/gradle.properties
 *.ipr
