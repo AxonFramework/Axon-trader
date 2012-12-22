@@ -18,10 +18,12 @@ package org.axonframework.samples.trader.query.users;
 
 import org.axonframework.samples.trader.api.users.UserAccount;
 
+import java.io.Serializable;
+
 /**
  * @author Jettro Coenradie
  */
-public class UserEntry implements UserAccount {
+public class UserEntry implements UserAccount, Serializable {
 
     private String identifier;
     private String name;

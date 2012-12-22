@@ -35,9 +35,10 @@
 
     <bean id="sagaRepository" class="org.axonframework.saga.repository.mongo.MongoSagaRepository">
         <constructor-arg ref="mongoSagaTemplate"/>
+        <property name="resourceInjector">
+            <bean class="org.axonframework.saga.spring.SpringResourceInjector"/>
+        </property>
     </bean>
-
-    <bean id="resourceInjector" class="org.axonframework.saga.spring.SpringResourceInjector"/>
 
     <bean id="snapshotter" class="org.axonframework.eventsourcing.SpringAggregateSnapshotter">
         <property name="eventStore" ref="eventStore"/>
