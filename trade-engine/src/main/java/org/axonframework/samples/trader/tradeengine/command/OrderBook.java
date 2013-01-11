@@ -126,7 +126,10 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static class OrderComparator implements Comparator<Order> {
 
         public int compare(Order o1, Order o2) {
-            return Long.compare(o1.getItemPrice(), o2.getItemPrice());
+            // copied from Java 7 Long.compareTo to support java 6
+            long x = o1.getItemPrice();
+            long y = o2.getItemPrice();
+            return (x < y) ? -1 : ((x == y) ? 0 : 1);
         }
     }
 }
