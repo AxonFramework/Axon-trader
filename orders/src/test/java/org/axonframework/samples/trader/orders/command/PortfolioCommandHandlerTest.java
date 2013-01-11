@@ -34,7 +34,7 @@ import org.junit.Test;
  */
 public class PortfolioCommandHandlerTest {
 
-    private FixtureConfiguration fixture;
+    private FixtureConfiguration<Portfolio> fixture;
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;

@@ -17,14 +17,17 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.repository.Repository;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.CancelCashReservationCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.ConfirmCashReservationCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.WithdrawCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.CancelItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.ConfirmItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.ReserveItemsCommand;
-import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -107,7 +110,7 @@ public class PortfolioCommandHandler {
 
     @Autowired
     @Qualifier("portfolioRepository")
-    public void setRepository(EventSourcingRepository<Portfolio> repository) {
+    public void setRepository(Repository<Portfolio> repository) {
         this.portfolioRepository = repository;
     }
 }
