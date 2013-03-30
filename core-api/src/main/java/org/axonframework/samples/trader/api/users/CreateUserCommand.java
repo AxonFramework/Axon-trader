@@ -18,6 +18,9 @@ package org.axonframework.samples.trader.api.users;
 
 import org.axonframework.common.Assert;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Command to create a new user.
  *
@@ -25,8 +28,12 @@ import org.axonframework.common.Assert;
  */
 public class CreateUserCommand {
     private UserId userId;
+    @NotNull
+    @Size(min = 3)
     private String username;
     private String name;
+    @NotNull
+    @Size(min = 3)
     private String password;
 
     public CreateUserCommand(UserId userId, String name, String username, String password) {

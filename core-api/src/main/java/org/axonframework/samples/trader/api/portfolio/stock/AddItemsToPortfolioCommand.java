@@ -19,6 +19,8 @@ package org.axonframework.samples.trader.api.portfolio.stock;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 
+import javax.validation.constraints.Min;
+
 /**
  * Try to add new items for a specific OrderBook to the portfolio.
  *
@@ -28,6 +30,7 @@ public class AddItemsToPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
+    @Min(0)
     private long amountOfItemsToAdd;
 
     /**

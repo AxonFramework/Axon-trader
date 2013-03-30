@@ -27,7 +27,11 @@
 
     <axon:event-bus id="eventBus"/>
 
-    <axon:command-bus id="commandBus"/>
+    <axon:command-bus id="commandBus">
+        <axon:dispatchInterceptors>
+            <bean class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+        </axon:dispatchInterceptors>
+    </axon:command-bus>
 
     <bean id="eventStore" class="org.axonframework.eventstore.mongo.MongoEventStore">
         <constructor-arg ref="mongoTemplate"/>

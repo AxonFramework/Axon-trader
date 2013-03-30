@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.api.orders.trades;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.validation.constraints.Min;
+
 /**
  * <p>Abstract parent class for all commands that are order related.</p>
  *
@@ -29,7 +31,9 @@ public abstract class AbstractOrderCommand {
     @TargetAggregateIdentifier
     private OrderBookId orderBookId;
     private TransactionId transactionId;
+    @Min(0)
     private long tradeCount;
+    @Min(0)
     private long itemPrice;
     private OrderId orderId;
 

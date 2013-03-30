@@ -16,12 +16,17 @@
 
 package org.axonframework.samples.trader.api.users;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * @author Jettro Coenradie
  */
 public class AuthenticateUserCommand {
 
     private final String userName;
+    @NotNull
+    @Size(min = 3)
     private final char[] password;
 
     public AuthenticateUserCommand(String userName, char[] password) {

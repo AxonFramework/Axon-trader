@@ -18,6 +18,7 @@ package org.axonframework.samples.trader.webui.security;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
 import org.axonframework.samples.trader.api.users.UserAccount;
@@ -69,7 +70,13 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         String password = String.valueOf(token.getCredentials());
         FutureCallback<UserAccount> accountCallback = new FutureCallback<UserAccount>();
         AuthenticateUserCommand command = new AuthenticateUserCommand(username, password.toCharArray());
-        commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
+        try {
+            commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
+            // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before
+            // the command is dispatched.
+        } catch (StructuralCommandValidationFailedException e) {
+            return null;
+        }
         UserAccount account;
         try {
             account = accountCallback.get();

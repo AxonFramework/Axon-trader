@@ -19,6 +19,8 @@ package org.axonframework.samples.trader.api.portfolio.cash;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 
+import javax.validation.constraints.Min;
+
 /**
  * @author Jettro Coenradie
  */
@@ -26,6 +28,7 @@ public class ReserveCashCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
+    @Min(0)
     private long amountOfMoneyToReserve;
 
     public ReserveCashCommand(PortfolioId portfolioIdentifier,

@@ -19,6 +19,7 @@ package org.axonframework.samples.trader.webui.rest;
 import com.thoughtworks.xstream.XStream;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -32,8 +33,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Very generic controller supporting the sending of commands in an XStream serialized format. This controller also
@@ -44,6 +47,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/rest")
 public class RestController {
+
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
     private CommandBus commandBus;
     private PortfolioQueryRepository portfolioQueryRepository;
@@ -53,7 +57,8 @@ public class RestController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public RestController(CommandBus commandBus, PortfolioQueryRepository portfolioQueryRepository, OrderBookQueryRepository orderBookQueryRepository) {
+    public RestController(CommandBus commandBus, PortfolioQueryRepository portfolioQueryRepository,
+                          OrderBookQueryRepository orderBookQueryRepository) {
         this.portfolioQueryRepository = portfolioQueryRepository;
         this.orderBookQueryRepository = orderBookQueryRepository;
         this.xStream = new XStream();
@@ -63,10 +68,12 @@ public class RestController {
     @RequestMapping(value = "/command", method = RequestMethod.POST)
     public
     @ResponseBody
-    String mappedCommand(String command) {
+    String mappedCommand(String command, HttpServletResponse response) throws IOException {
         try {
             Object actualCommand = xStream.fromXML(command);
             commandBus.dispatch(new GenericCommandMessage<Object>(actualCommand));
+        } catch (StructuralCommandValidationFailedException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "This is an invalid request.");
         } catch (Exception e) {
             logger.error("Problem whils deserializing an xml: {}", command, e);
             return "ERROR - " + e.getMessage();
@@ -109,5 +116,4 @@ public class RestController {
 
         return xStream.toXML(orderBookEntries);
     }
-
 }

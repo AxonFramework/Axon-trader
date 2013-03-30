@@ -18,6 +18,8 @@ package org.axonframework.samples.trader.api.portfolio.cash;
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 
+import javax.validation.constraints.Min;
+
 /**
  * Adding cash to your Portfolio through a deposit
  *
@@ -26,6 +28,7 @@ import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 public class DepositCashCommand {
 
     private PortfolioId portfolioIdentifier;
+    @Min(0)
     private long moneyToAddInCents;
 
     public DepositCashCommand(PortfolioId portfolioIdentifier, long moneyToAddInCents) {
