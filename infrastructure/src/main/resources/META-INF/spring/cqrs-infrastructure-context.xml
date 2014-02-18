@@ -55,11 +55,10 @@
         <property name="waitForTasksToCompleteOnShutdown" value="true"/>
     </bean>
 
-    <!-- TODO jettro : come up with a more than default configuration for caching -->
-    <bean id="ehcache" class="net.sf.ehcache.jcache.JCache">
-        <constructor-arg>
-            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
-        </constructor-arg>
+    <bean id="ehcache"  factory-bean="cacheManager" factory-method="getCache">
+        <constructor-arg value="testCache"/>
     </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.jcache.JCacheManagerFactoryBean"/>
 
 </beans>
