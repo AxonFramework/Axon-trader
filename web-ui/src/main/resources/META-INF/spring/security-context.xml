@@ -15,10 +15,10 @@
   ~ limitations under the License.
   -->
 
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:beans="http://www.springframework.org/schema/beans"
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:context="http://www.springframework.org/schema/context"
+             xmlns="http://www.springframework.org/schema/security"
              xsi:schemaLocation="
              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -33,6 +33,7 @@
     <http pattern="/rest/**" security="none"/>
 
     <http auto-config='true' use-expressions="true">
+        <intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
