@@ -15,35 +15,44 @@
   ~ limitations under the License.
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:cloud="http://schema.cloudfoundry.org/spring"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
-		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
     <mongo:repositories base-package="**.query.*.repositories" mongo-template-ref="mongoSpringTemplate"/>
 
     <bean id="mongoSpringTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg ref="mongoDbFactory"/>
+        <constructor-arg name="mongo" ref="mongo"/>
+        <constructor-arg name="databaseName" value="axontrader"/>
     </bean>
 
-    <bean id="mongoTemplate" class="org.axonframework.samples.trader.infra.mongo.CFMongoTemplate">
-        <constructor-arg ref="mongoDbFactory"/>
+    <bean id="mongoTemplate" class="org.axonframework.eventstore.mongo.DefaultMongoTemplate">
+        <constructor-arg index="0" ref="mongo"/>
+        <constructor-arg index="1" value="axontrader"/>
+        <constructor-arg index="2" value="domainevents"/>
+        <constructor-arg index="3" value="snapshotevents"/>
+        <constructor-arg index="4">
+            <null/>
+        </constructor-arg>
+        <constructor-arg index="5">
+            <null/>
+        </constructor-arg>
     </bean>
 
-    <bean id="mongoSagaTemplate" class="org.axonframework.samples.trader.infra.mongo.CFSagaMongoTemplate">
-        <constructor-arg ref="mongoDbFactory"/>
+    <bean id="mongoSagaTemplate" class="org.axonframework.saga.repository.mongo.DefaultMongoTemplate">
+        <constructor-arg index="0" ref="mongo"/>
+        <constructor-arg index="1" value="axontrader"/>
+        <constructor-arg index="2" value="snapshotevents"/>
+        <constructor-arg index="3">
+            <null/>
+        </constructor-arg>
+        <constructor-arg index="4">
+            <null/>
+        </constructor-arg>
     </bean>
 
-    <beans profile="default">
-        <mongo:db-factory id="mongoDbFactory" dbname="axontrader" host="127.0.0.1" port="27017"/>
-    </beans>
-
-    <beans profile="cloud">
-        <cloud:mongo-db-factory id="mongoDbFactory"/>
-    </beans>
-
+    <mongo:mongo id="mongo" host="127.0.0.1" port="27017"/>
 </beans>

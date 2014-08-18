@@ -23,11 +23,6 @@
     <display-name>Axon framework Trader sample</display-name>
 
     <context-param>
-        <param-name>contextInitializerClasses</param-name>
-        <param-value>org.axonframework.samples.trader.webui.init.CloudApplicationContextInitializer</param-value>
-    </context-param>
-
-    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:META-INF/spring/cqrs-infrastructure-context.xml,
