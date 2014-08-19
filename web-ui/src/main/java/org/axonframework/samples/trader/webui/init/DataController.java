@@ -16,10 +16,7 @@
 
 package org.axonframework.samples.trader.webui.init;
 
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,31 +24,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * @author Jettro Coenradie
  */
 @Controller
 @RequestMapping("/data")
-public class MongoController {
+public class DataController {
 
     private DBInit dbInit;
-    private org.springframework.data.mongodb.core.MongoTemplate springTemplate;
 
     @Autowired
-    public MongoController(DBInit dbInit, MongoTemplate springTemplate) {
+    public DataController(DBInit dbInit) {
         this.dbInit = dbInit;
-        this.springTemplate = springTemplate;
     }
 
     @RequestMapping(value = "/collections", method = RequestMethod.GET)
     public String collections(Model model) {
-        Set<String> collectionNames = springTemplate.getCollectionNames();
-        model.addAttribute("collections", collectionNames);
+        model.addAttribute("collections", dbInit.obtainCollectionNames());
         return "data/collections";
     }
 
@@ -60,16 +49,11 @@ public class MongoController {
                              @RequestParam(value = "page", defaultValue = "1") int pageNumber,
                              @RequestParam(value = "itemsperpage", defaultValue = "5") int itemsPerPage,
                              Model model) {
-        DBCursor dbCursor = springTemplate.getCollection(collectionName).find();
-        List<DBObject> dbObjects = dbCursor.skip((pageNumber - 1) * itemsPerPage).limit(itemsPerPage).toArray();
+        DataResults dataResults = dbInit.obtainCollection(collectionName, itemsPerPage, (pageNumber - 1) * itemsPerPage + 1);
 
-        List<Map> items = new ArrayList<Map>(dbCursor.length());
-        for (DBObject dbObject : dbObjects) {
-            items.add(dbObject.toMap());
-        }
-        model.addAttribute("items", items);
+        model.addAttribute("items", dataResults.getItems());
 
-        int totalItems = dbCursor.count();
+        int totalItems = dataResults.getTotalItems();
         int numPages = ((int) Math.floor(totalItems / itemsPerPage)) + 1;
         model.addAttribute("numPages", numPages);
         model.addAttribute("page", pageNumber);
