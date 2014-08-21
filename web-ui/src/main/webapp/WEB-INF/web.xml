@@ -50,9 +50,9 @@
     </context-param>
 
     <context-param>
-        <param-name>spring.profiles.active</param-name>
-        <!-- Choose one the two, hsqldb is the default -->
-        <!--<param-value>mongodb</param-value>-->
+        <param-name>spring.profiles.default</param-name>
+        <!-- You can pass the active profile to overrule the default -->
+        <!-- -Dspring.profiles.active=mongodb -->
         <param-value>hsqldb</param-value>
     </context-param>
 

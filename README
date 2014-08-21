@@ -8,7 +8,7 @@ http://www.java.com/download/
 - Make sure you have maven installed
 http://maven.apache.org/download.html#Installation
 
-- Make sure you have mongodb installed
+- You can use mongodb to run the sample,  if so make sure you have mongodb installed
 http://www.mongodb.org/display/DOCS/Quickstart
 
 When using mongodb in a test environment, it is easiest to just start one instance with the default port on your local machine. If you want another setup, you can find more information in the advanced configuration section.
@@ -18,24 +18,16 @@ Running the sample
 - First you need to download the source code, if you are reading this file on your local machine you already have downloaded the source code. If you are on the main page of the Github project, you can easily find a url to clone the repository or to download a zip with all the sources.
 
 * Maven
-- Make sure you have your mongo instance running
 - Step into the main folder of the project
-> mvn clean install
-> cd web-ui
-> mvn jetty:run-war
+> mvn tomcat7:run
 - Browse to http://localhost:8080 and you should see the user accounts that you can use to login.
 (You can always refresh the data by calling /data/init on the application)
 
-Vertx
-------------------
-We have created a client-server example that enables you to track all trades being made. The server is implemented using
-vertx. Events are send using http to the vertx instance. From the web application you can connect to the vertx server.
-
-If you want to use this functionality you also need to start a vertx server.
-Go to the vertx-ui/trader folder and start with
-# vertx run TradeWatcher.groovy
-
-This runs a service on port 9090 which is configured in the spring application as well.
+Running with MongoDB
+--------------------
+- This is easiest when running within an IDE, but can also be run on a separate tomcat instance
+- Add a system variable to configure the mongodb profile:
+    -Dspring.profiles.active=mongodb
 
 More documentation
 ----------------------
