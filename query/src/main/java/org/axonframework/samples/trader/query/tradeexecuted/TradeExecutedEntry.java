@@ -16,10 +16,18 @@
 
 package org.axonframework.samples.trader.query.tradeexecuted;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class TradeExecutedEntry {
+
+    @javax.persistence.Id
+    @GeneratedValue
+    private Long jpaId;
 
     private long tradeCount;
     private long tradePrice;
@@ -56,5 +64,13 @@ public class TradeExecutedEntry {
 
     public void setOrderBookIdentifier(String orderBookIdentifier) {
         this.orderBookIdentifier = orderBookIdentifier;
+    }
+
+    public Long getJpaId() {
+        return jpaId;
+    }
+
+    public void setJpaId(Long jpaId) {
+        this.jpaId = jpaId;
     }
 }

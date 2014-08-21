@@ -46,7 +46,10 @@
 
         <!-- data store libraries -->
         <mongodb.java.version>2.11.3</mongodb.java.version>
-        <springdata.mongodb.version>1.4.2.RELEASE</springdata.mongodb.version>
+        <springdata.mongodb.version>1.5.2.RELEASE</springdata.mongodb.version>
+        <springdata.jpa.version>1.6.2.RELEASE</springdata.jpa.version>
+        <hibernate.em.version>4.3.6.Final</hibernate.em.version>
+        <hibernate.javax.version>1.0.0.Final</hibernate.javax.version>
 
         <!-- Test libraries-->
         <junit.version>4.11</junit.version>
@@ -148,7 +151,7 @@
 
         <!-- Global logging dependencies -->
         <dependency>
-        <groupId>org.slf4j</groupId>
+            <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
 

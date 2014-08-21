@@ -16,13 +16,21 @@
 
 package org.axonframework.samples.trader.query.orderbook;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class OrderEntry {
 
+    @javax.persistence.Id
+    @GeneratedValue
+    private Long jpaId;
+
     private String identifier;
-    private OrderBookEntry orderBookEntry;
+
     private long tradeCount;
     private long itemPrice;
     private String userId;
@@ -53,14 +61,6 @@ public class OrderEntry {
         this.itemsRemaining = itemsRemaining;
     }
 
-    public OrderBookEntry getOrderBookEntry() {
-        return orderBookEntry;
-    }
-
-    void setOrderBookEntry(OrderBookEntry orderBookEntry) {
-        this.orderBookEntry = orderBookEntry;
-    }
-
     public long getTradeCount() {
         return tradeCount;
     }
@@ -83,5 +83,13 @@ public class OrderEntry {
 
     void setType(String type) {
         this.type = type;
+    }
+
+    public Long getJpaId() {
+        return jpaId;
+    }
+
+    public void setJpaId(Long jpaId) {
+        this.jpaId = jpaId;
     }
 }

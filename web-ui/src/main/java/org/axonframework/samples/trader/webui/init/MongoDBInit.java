@@ -15,6 +15,8 @@ import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQu
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.query.users.UserEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -25,12 +27,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO jettro: Do something with profiles here
+ *
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Component
 @Profile("mongodb")
 public class MongoDBInit extends BaseDBInit {
+    private final static Logger logger = LoggerFactory.getLogger(MongoDBInit.class);
 
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
     private MongoEventStore eventStore;
@@ -73,6 +76,15 @@ public class MongoDBInit extends BaseDBInit {
         int totalItems = dbCursor.count();
 
         return new DataResults(totalItems, items);
+    }
+
+    @Override
+    public void createItemsIfNoUsersExist() {
+        if (!mongoTemplate.collectionExists(UserEntry.class)) {
+            createItems();
+            logger.info("The database has been created and refreshed with some data.");
+        }
+
     }
 
     @Override

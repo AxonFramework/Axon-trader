@@ -16,12 +16,8 @@
 
 package org.axonframework.samples.trader.webui.init;
 
-import org.axonframework.samples.trader.query.users.UserEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,19 +30,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RunDBInitializerWhenNeeded implements ApplicationListener<ContextRefreshedEvent> {
-
-    private static final Logger logger = LoggerFactory.getLogger(RunDBInitializerWhenNeeded.class);
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         DBInit init = event.getApplicationContext().getBean(DBInit.class);
-        MongoTemplate mongoTemplate = event.getApplicationContext().getBean(MongoTemplate.class);
 
         if ("Root WebApplicationContext".equals(event.getApplicationContext().getDisplayName())) {
-            if (!mongoTemplate.collectionExists(UserEntry.class)) {
-                init.createItems();
-                logger.info("The database has been created and refreshed with some data.");
-            }
+            init.createItemsIfNoUsersExist();
         }
     }
 }

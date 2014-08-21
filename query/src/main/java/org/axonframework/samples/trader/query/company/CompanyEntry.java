@@ -18,12 +18,16 @@ package org.axonframework.samples.trader.query.company;
 
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class CompanyEntry {
 
     @Id
+    @javax.persistence.Id
     private String identifier;
     private String name;
     private long value;

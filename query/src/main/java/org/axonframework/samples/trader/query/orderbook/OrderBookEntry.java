@@ -18,19 +18,26 @@ package org.axonframework.samples.trader.query.orderbook;
 
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class OrderBookEntry {
 
     @Id
+    @javax.persistence.Id
     private String identifier;
     private String companyIdentifier;
     private String companyName;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "ORDERENTRY_SELL", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
     private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "ORDERENTRY_BUY", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
     private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
 
     public List<OrderEntry> sellOrders() {

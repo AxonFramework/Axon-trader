@@ -51,8 +51,9 @@
 
     <context-param>
         <param-name>spring.profiles.active</param-name>
-        <param-value>mongodb</param-value>
-        <!--<param-value>hsqldb</param-value>-->
+        <!-- Choose one the two, hsqldb is the default -->
+        <!--<param-value>mongodb</param-value>-->
+        <param-value>hsqldb</param-value>
     </context-param>
 
     <!-- ====================================================================== -->

@@ -32,4 +32,6 @@ public interface DBInit {
     Set<String> obtainCollectionNames();
 
     DataResults obtainCollection(String collectionName, int numItems, int start);
+
+    void createItemsIfNoUsersExist();
 }

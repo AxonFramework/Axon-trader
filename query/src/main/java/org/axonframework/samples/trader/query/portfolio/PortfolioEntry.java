@@ -18,43 +18,50 @@ package org.axonframework.samples.trader.query.portfolio;
 
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class PortfolioEntry {
 
     @Id
+    @javax.persistence.Id
     private String identifier;
     private String userIdentifier;
     private String userName;
     private long amountOfMoney;
     private long reservedAmountOfMoney;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "PORTFOLIO_ITEM_POSSESSION", joinColumns = @JoinColumn(name = "PORTFOLIO_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
     private Map<String, ItemEntry> itemsInPossession = new HashMap<String, ItemEntry>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "PORTFOLIO_ITEM_RESERVED", joinColumns = @JoinColumn(name = "PORTFOLIO_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
     private Map<String, ItemEntry> itemsReserved = new HashMap<String, ItemEntry>();
 
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
-    public long obtainAmountOfAvailableItemsFor(String identifier) {
-        long possession = obtainAmountOfItemsInPossessionFor(identifier);
-        long reserved = obtainAmountOfReservedItemsFor(identifier);
+    public long obtainAmountOfAvailableItemsFor(String orderbookIdentifier) {
+        long possession = obtainAmountOfItemsInPossessionFor(orderbookIdentifier);
+        long reserved = obtainAmountOfReservedItemsFor(orderbookIdentifier);
         return possession - reserved;
     }
 
-    public long obtainAmountOfReservedItemsFor(String identifier) {
-        ItemEntry item = findReservedItemByIdentifier(identifier);
+    public long obtainAmountOfReservedItemsFor(String orderbookIdentifier) {
+        ItemEntry item = findReservedItemByIdentifier(orderbookIdentifier);
         if (null == item) {
             return 0;
         }
         return item.getAmount();
     }
 
-    public long obtainAmountOfItemsInPossessionFor(String identifier) {
-        ItemEntry item = findItemInPossession(identifier);
+    public long obtainAmountOfItemsInPossessionFor(String orderbookIdentifier) {
+        ItemEntry item = findItemInPossession(orderbookIdentifier);
         if (null == item) {
             return 0;
         }
@@ -65,12 +72,12 @@ public class PortfolioEntry {
         return amountOfMoney - reservedAmountOfMoney;
     }
 
-    public ItemEntry findReservedItemByIdentifier(String identifier) {
-        return itemsReserved.get(identifier);
+    public ItemEntry findReservedItemByIdentifier(String orderbookIdentifier) {
+        return itemsReserved.get(orderbookIdentifier);
     }
 
-    public ItemEntry findItemInPossession(String identifier) {
-        return itemsInPossession.get(identifier);
+    public ItemEntry findItemInPossession(String orderbookIdentifier) {
+        return itemsInPossession.get(orderbookIdentifier);
     }
 
     public void addReservedItem(ItemEntry itemEntry) {

@@ -17,14 +17,19 @@
 package org.axonframework.samples.trader.query.users;
 
 import org.axonframework.samples.trader.api.users.UserAccount;
+import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
 import java.io.Serializable;
 
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class UserEntry implements UserAccount, Serializable {
 
+    @Id
+    @javax.persistence.Id
     private String identifier;
     private String name;
     private String username;

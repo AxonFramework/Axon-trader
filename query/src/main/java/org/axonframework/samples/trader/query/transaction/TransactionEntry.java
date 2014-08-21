@@ -19,12 +19,16 @@ package org.axonframework.samples.trader.query.transaction;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionType;
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+
 /**
  * @author Jettro Coenradie
  */
+@Entity
 public class TransactionEntry {
 
     @Id
+    @javax.persistence.Id
     private String identifier;
     private String orderbookIdentifier;
     private String portfolioIdentifier;
