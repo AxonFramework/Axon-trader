@@ -19,12 +19,12 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.api.portfolio.stock.*;
-import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
+import org.axonframework.samples.trader.api.portfolio.stock.*;
 import org.axonframework.samples.trader.api.users.UserId;
 
 import java.util.HashMap;
@@ -141,15 +141,12 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
         long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
         reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfConfirmedItems());
-
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfConfirmedItems());
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
         long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfCancelledItems());
+        reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfCancelledItems());
 
         long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
         availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledItems());

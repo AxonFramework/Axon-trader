@@ -16,13 +16,13 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
-import org.axonframework.samples.trader.api.portfolio.stock.*;
-import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
+import org.axonframework.samples.trader.api.portfolio.stock.*;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -97,6 +97,42 @@ public class PortfolioCommandHandlerTest {
                         transactionIdentifier,
                         100,
                         200));
+    }
+
+    @Test
+    public void testReserveItems_notEnoughItemsAvailableAfterResevation() {
+        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
+                orderBookIdentifier,
+                transactionIdentifier,
+                100);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100),
+                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50),
+                new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50))
+                .when(command)
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        50,
+                        100));
+    }
+
+    @Test
+    public void testReserveItems_notEnoughItemsAvailableAfterResevationConfirmation() {
+        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
+                orderBookIdentifier,
+                transactionIdentifier,
+                75);
+        fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100),
+                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50),
+                new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50))
+                .when(command)
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        50,
+                        75));
     }
 
     @Test
