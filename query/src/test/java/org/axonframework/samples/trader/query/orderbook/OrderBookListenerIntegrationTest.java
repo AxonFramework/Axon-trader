@@ -19,13 +19,7 @@ package org.axonframework.samples.trader.query.orderbook;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
-import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.OrderId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
-import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.orders.trades.*;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.CompanyListener;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
@@ -36,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -46,35 +40,30 @@ import static org.junit.Assert.*;
  * @author Jettro Coenradie
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
+@ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml",
+        "classpath:META-INF/spring/query-context.xml"})
+@ActiveProfiles("hsqldb")
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class OrderBookListenerIntegrationTest {
-
-    private OrderBookListener orderBookListener;
-
-    @Autowired
-    private OrderBookQueryRepository orderBookRepository;
-
-    @Autowired
-    private TradeExecutedQueryRepository tradeExecutedRepository;
-
-    @Autowired
-    private CompanyQueryRepository companyRepository;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     OrderId orderId = new OrderId();
     PortfolioId portfolioId = new PortfolioId();
     TransactionId transactionId = new TransactionId();
     OrderBookId orderBookId = new OrderBookId();
     CompanyId companyId = new CompanyId();
+    private OrderBookListener orderBookListener;
+    @Autowired
+    private OrderBookQueryRepository orderBookRepository;
+    @Autowired
+    private TradeExecutedQueryRepository tradeExecutedRepository;
+    @Autowired
+    private CompanyQueryRepository companyRepository;
 
     @Before
     public void setUp() throws Exception {
-        mongoTemplate.dropCollection(OrderBookEntry.class);
-        mongoTemplate.dropCollection(CompanyEntry.class);
-        mongoTemplate.dropCollection(TradeExecutedEntry.class);
+        orderBookRepository.deleteAll();
+        companyRepository.deleteAll();
+        tradeExecutedRepository.deleteAll();
 
         CompanyListener companyListener = new CompanyListener();
         companyListener.setCompanyRepository(companyRepository);
