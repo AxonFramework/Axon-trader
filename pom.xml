@@ -27,7 +27,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <axon.version>2.3</axon.version>
+        <axon.version>2.4.3</axon.version>
         <slf4j.version>1.7.5</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
 
@@ -59,7 +59,7 @@
         <!-- Maven plugins -->
         <maven.compiler.plugin>3.1</maven.compiler.plugin>
         <maven.enforcer.plugin>1.2</maven.enforcer.plugin>
-        <maven.version.range>[3.0.0,3.2.2]</maven.version.range>
+        <maven.version.range>3.0.0</maven.version.range>
         <java.version>1.7</java.version>
         <maven.tomcat7.version>2.2</maven.tomcat7.version>
     </properties>
