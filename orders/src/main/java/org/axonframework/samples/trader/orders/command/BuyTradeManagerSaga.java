@@ -39,6 +39,7 @@ import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Jettro Coenradie

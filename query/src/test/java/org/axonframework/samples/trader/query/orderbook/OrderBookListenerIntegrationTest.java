@@ -40,8 +40,7 @@ import static org.junit.Assert.*;
  * @author Jettro Coenradie
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml",
-        "classpath:META-INF/spring/query-context.xml"})
+@ContextConfiguration("classpath:META-INF/spring/integration-test-context.xml")
 @ActiveProfiles("hsqldb")
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class OrderBookListenerIntegrationTest {

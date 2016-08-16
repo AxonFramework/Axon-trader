@@ -23,10 +23,14 @@ import org.axonframework.samples.trader.api.users.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.samples.trader.users.util.DigestUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Jettro Coenradie
  */
+@Component
+@Scope("prototype")
 public class User extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 3291411359839192350L;
     @AggregateIdentifier

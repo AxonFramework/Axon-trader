@@ -38,7 +38,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
 
     @SuppressWarnings("UnusedDeclaration")
-    protected Transaction() {
+    public Transaction() {
     }
 
     public Transaction(TransactionId transactionId,

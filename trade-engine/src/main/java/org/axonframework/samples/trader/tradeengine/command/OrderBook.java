@@ -36,7 +36,7 @@ import java.util.TreeSet;
 /**
  * @author Allard Buijze
  */
-class OrderBook extends AbstractAnnotatedAggregateRoot {
+public class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 6778782949492587631L;
 
     @AggregateIdentifier
@@ -48,7 +48,7 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
     @SuppressWarnings("UnusedDeclaration")
-    protected OrderBook() {
+    public OrderBook() {
     }
 
     public OrderBook(OrderBookId identifier) {

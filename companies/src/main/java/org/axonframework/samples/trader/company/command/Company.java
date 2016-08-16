@@ -27,14 +27,14 @@ import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 /**
  * @author Jettro Coenradie
  */
-class Company extends AbstractAnnotatedAggregateRoot {
+public class Company extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 8723320580782813954L;
 
     @AggregateIdentifier
     private CompanyId companyId;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected Company() {
+    public Company() {
     }
 
     public Company(CompanyId companyId, String name, long value, long amountOfShares) {

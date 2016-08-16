@@ -50,7 +50,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     private long amountOfMoney;
     private long reservedAmountOfMoney;
 
-    protected Portfolio() {
+    public Portfolio() {
     }
 
     public Portfolio(PortfolioId portfolioId, UserId userIdentifier) {
