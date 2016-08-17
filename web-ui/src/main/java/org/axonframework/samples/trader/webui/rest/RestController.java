@@ -19,7 +19,7 @@ package org.axonframework.samples.trader.webui.rest;
 import com.thoughtworks.xstream.XStream;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
+import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -72,7 +72,7 @@ public class RestController {
         try {
             Object actualCommand = xStream.fromXML(command);
             commandBus.dispatch(new GenericCommandMessage<Object>(actualCommand));
-        } catch (StructuralCommandValidationFailedException e) {
+        } catch (JSR303ViolationException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "This is an invalid request.");
         } catch (Exception e) {
             logger.error("Problem whils deserializing an xml: {}", command, e);

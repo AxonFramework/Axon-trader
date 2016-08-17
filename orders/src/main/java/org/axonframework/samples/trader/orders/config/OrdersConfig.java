@@ -16,25 +16,29 @@
 
 package org.axonframework.samples.trader.orders.config;
 
-import org.axonframework.cache.Cache;
-import org.axonframework.eventhandling.EventBus;
+import org.axonframework.commandhandling.model.Repository;
+import org.axonframework.common.caching.Cache;
+import org.axonframework.eventhandling.EventProcessor;
+import org.axonframework.eventhandling.SimpleEventHandlerInvoker;
+import org.axonframework.eventhandling.SubscribingEventProcessor;
+import org.axonframework.eventhandling.saga.AbstractSagaManager;
+import org.axonframework.eventhandling.saga.AnnotatedSagaManager;
+import org.axonframework.eventhandling.saga.ResourceInjector;
+import org.axonframework.eventhandling.saga.SagaRepository;
+import org.axonframework.eventhandling.saga.repository.AnnotatedSagaRepository;
+import org.axonframework.eventhandling.saga.repository.SagaStore;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.CachingEventSourcingRepository;
 import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
 import org.axonframework.eventsourcing.Snapshotter;
-import org.axonframework.eventsourcing.SpringPrototypeAggregateFactory;
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.repository.Repository;
-import org.axonframework.saga.GenericSagaFactory;
-import org.axonframework.saga.ResourceInjector;
-import org.axonframework.saga.SagaManager;
-import org.axonframework.saga.SagaRepository;
-import org.axonframework.saga.annotation.AnnotatedSagaManager;
-import org.axonframework.saga.spring.SpringResourceInjector;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.orders.command.BuyTradeManagerSaga;
 import org.axonframework.samples.trader.orders.command.Portfolio;
+import org.axonframework.samples.trader.orders.command.PortfolioManagementUserListener;
 import org.axonframework.samples.trader.orders.command.SellTradeManagerSaga;
 import org.axonframework.samples.trader.orders.command.Transaction;
+import org.axonframework.spring.eventsourcing.SpringPrototypeAggregateFactory;
+import org.axonframework.spring.saga.SpringResourceInjector;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -45,19 +49,19 @@ import org.springframework.context.annotation.Scope;
 public class OrdersConfig {
 
     @Autowired
-    private EventBus eventBus;
-
-    @Autowired
     private EventStore eventStore;
 
     @Autowired
-    private SagaRepository sagaRepository;
+    private SagaStore<Object> sagaStore;
 
     @Autowired
     private Snapshotter snapshotter;
 
     @Autowired
     private Cache cache;
+
+    @Autowired
+    private PortfolioManagementUserListener portfolioManagementUserListener;
 
     @Bean
     public AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator() {
@@ -96,15 +100,14 @@ public class OrdersConfig {
     public Repository<Portfolio> portfolioRepository() {
         CachingEventSourcingRepository<Portfolio> repository = new CachingEventSourcingRepository<>(
                 portfolioAggregateFactory(),
-                eventStore);
+                eventStore,
+                cache);
 
         EventCountSnapshotterTrigger snapshotterTrigger = new EventCountSnapshotterTrigger();
         snapshotterTrigger.setTrigger(50);
         snapshotterTrigger.setSnapshotter(snapshotter);
 
         repository.setSnapshotterTrigger(snapshotterTrigger);
-        repository.setEventBus(eventBus);
-        repository.setCache(cache);
 
         return repository;
     }
@@ -113,15 +116,14 @@ public class OrdersConfig {
     public Repository<Transaction> transactionRepository() {
         CachingEventSourcingRepository<Transaction> repository = new CachingEventSourcingRepository<>(
                 transactionAggregateFactory(),
-                eventStore);
+                eventStore,
+                cache);
 
         EventCountSnapshotterTrigger snapshotterTrigger = new EventCountSnapshotterTrigger();
         snapshotterTrigger.setTrigger(50);
         snapshotterTrigger.setSnapshotter(snapshotter);
 
         repository.setSnapshotterTrigger(snapshotterTrigger);
-        repository.setEventBus(eventBus);
-        repository.setCache(cache);
 
         return repository;
     }
@@ -132,16 +134,61 @@ public class OrdersConfig {
     }
 
     @Bean
-    public SagaManager sagaManager() {
-        GenericSagaFactory genericSagaFactory = new GenericSagaFactory();
-        genericSagaFactory.setResourceInjector(resourceInjector());
+    public AbstractSagaManager<BuyTradeManagerSaga> buyTradeSagaManager() {
+        return new AnnotatedSagaManager<>(
+                BuyTradeManagerSaga.class,
+                buyTradeSagaRepository()
+        );
+    }
 
-        AnnotatedSagaManager annotatedSagaManager = new AnnotatedSagaManager(sagaRepository,
-                                                                             genericSagaFactory,
-                                                                             BuyTradeManagerSaga.class,
-                                                                             SellTradeManagerSaga.class);
-        eventBus.subscribe(annotatedSagaManager);
+    @Bean
+    public AbstractSagaManager<SellTradeManagerSaga> sellTradeSagaManager() {
+        return new AnnotatedSagaManager<>(
+                SellTradeManagerSaga.class,
+                sellTradeSagaRepository()
+        );
+    }
 
-        return annotatedSagaManager;
+    @Bean
+    public SagaRepository<BuyTradeManagerSaga> buyTradeSagaRepository() {
+        return new AnnotatedSagaRepository<>(BuyTradeManagerSaga.class, sagaStore, resourceInjector());
+    }
+
+    @Bean
+    public SagaRepository<SellTradeManagerSaga> sellTradeSagaRepository() {
+        return new AnnotatedSagaRepository<>(SellTradeManagerSaga.class, sagaStore, resourceInjector());
+    }
+
+    @Bean
+    public EventProcessor buyTradeSagaEventProcessor() {
+        SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor(
+                "buyTradeSagaEventProcessor",
+                buyTradeSagaManager(),
+                eventStore);
+        eventProcessor.start();
+
+        return eventProcessor;
+    }
+
+    @Bean
+    public EventProcessor sellTradeSagaEventProcessor() {
+        SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor(
+                "sellTradeSagaEventProcessor",
+                sellTradeSagaManager(),
+                eventStore);
+        eventProcessor.start();
+
+        return eventProcessor;
+    }
+
+    @Bean
+    public EventProcessor ordersEventProcessor() {
+        SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor("ordersEventProcessor",
+                                                                                 new SimpleEventHandlerInvoker(
+                                                                                         portfolioManagementUserListener),
+                                                                                 eventStore);
+        eventProcessor.start();
+
+        return eventProcessor;
     }
 }

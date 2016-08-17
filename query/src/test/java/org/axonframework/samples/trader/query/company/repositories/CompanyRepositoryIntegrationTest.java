@@ -17,13 +17,19 @@
 package org.axonframework.samples.trader.query.company.repositories;
 
 import org.axonframework.samples.trader.api.company.CompanyId;
+import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
+import org.axonframework.samples.trader.query.config.QueryConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.ws.rs.core.Context;
 
 /**
  * @author Jettro Coenradie
@@ -46,4 +52,5 @@ public class CompanyRepositoryIntegrationTest {
 
         companyRepository.save(companyEntry);
     }
+
 }

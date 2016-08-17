@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.listener;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;

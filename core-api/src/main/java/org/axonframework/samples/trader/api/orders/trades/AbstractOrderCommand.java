@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.api.orders.trades;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
 import javax.validation.constraints.Min;
 

@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.query.orderbook;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
 import org.axonframework.samples.trader.api.orders.trades.AbstractOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;

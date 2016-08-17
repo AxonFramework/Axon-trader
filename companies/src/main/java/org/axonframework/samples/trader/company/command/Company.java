@@ -16,18 +16,21 @@
 
 package org.axonframework.samples.trader.company.command;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateRoot;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 
+import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+
 /**
  * @author Jettro Coenradie
  */
-public class Company extends AbstractAnnotatedAggregateRoot {
+@AggregateRoot
+public class Company {
     private static final long serialVersionUID = 8723320580782813954L;
 
     @AggregateIdentifier
@@ -45,7 +48,6 @@ public class Company extends AbstractAnnotatedAggregateRoot {
         apply(new OrderBookAddedToCompanyEvent(companyId, orderBookId));
     }
 
-    @Override
     public CompanyId getIdentifier() {
         return this.companyId;
     }

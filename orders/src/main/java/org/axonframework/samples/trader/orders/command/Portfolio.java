@@ -16,9 +16,9 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateRoot;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
@@ -30,6 +30,8 @@ import org.axonframework.samples.trader.api.users.UserId;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+
 /**
  * Not a lot of checks are available. We will check if you still have item before you reserve them. Other than that
  * we will not do checks. It is possible to give more items than you reserve.
@@ -39,7 +41,8 @@ import java.util.Map;
  *
  * @author Jettro Coenradie
  */
-public class Portfolio extends AbstractAnnotatedAggregateRoot {
+@AggregateRoot
+public class Portfolio {
     private static final long serialVersionUID = 996371335141649977L;
 
     @AggregateIdentifier
@@ -196,7 +199,6 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         return reserved;
     }
 
-    @Override
     public PortfolioId getIdentifier() {
         return portfolioId;
     }

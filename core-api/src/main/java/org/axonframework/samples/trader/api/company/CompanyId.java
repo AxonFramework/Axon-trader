@@ -17,7 +17,7 @@
 package org.axonframework.samples.trader.api.company;
 
 import org.axonframework.common.Assert;
-import org.axonframework.domain.IdentifierFactory;
+import org.axonframework.common.IdentifierFactory;
 
 import java.io.Serializable;
 

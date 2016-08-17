@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.infra.config;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import org.axonframework.eventstore.mongo.DefaultMongoTemplate;
+import org.axonframework.eventsourcing.eventstore.mongo.DefaultMongoTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -54,18 +54,18 @@ public class PersistenceInfrastructureConfig {
 
     @Bean
     @Profile("mongodb")
-    public org.axonframework.eventstore.mongo.MongoTemplate mongoTemplate() throws UnknownHostException {
+    public org.axonframework.eventsourcing.eventstore.mongo.MongoTemplate mongoTemplate() throws UnknownHostException {
         return new DefaultMongoTemplate(mongo(), "axontrader", "domainevents", "snapshotevents", null, null);
     }
 
     @Bean
     @Profile("mongodb")
-    public org.axonframework.saga.repository.mongo.DefaultMongoTemplate mongoSagaTemplate()
+    public org.axonframework.eventhandling.saga.repository.mongo.MongoTemplate mongoSagaTemplate()
             throws UnknownHostException {
-        return new org.axonframework.saga.repository.mongo.DefaultMongoTemplate(mongo(),
-                                                                                "axontrader",
-                                                                                "snapshotevents",
-                                                                                null,
-                                                                                null);
+        return new org.axonframework.eventhandling.saga.repository.mongo.DefaultMongoTemplate(mongo(),
+                                                                                              "axontrader",
+                                                                                              "snapshotevents",
+                                                                                              null,
+                                                                                              null);
     }
 }

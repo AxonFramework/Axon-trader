@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationCancelledForPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfolioEvent;

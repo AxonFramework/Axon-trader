@@ -19,7 +19,10 @@ package org.axonframework.samples.trader.webui.config;
 import org.axonframework.samples.trader.company.config.CompaniesConfig;
 import org.axonframework.samples.trader.infra.config.CQRSInfrastructureConfig;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
+import org.axonframework.samples.trader.listener.config.ExternalListenersConfig;
 import org.axonframework.samples.trader.orders.config.OrdersConfig;
+import org.axonframework.samples.trader.query.config.QueryConfig;
+import org.axonframework.samples.trader.query.users.config.UsersQueryConfig;
 import org.axonframework.samples.trader.tradeengine.config.TradeEngineConfig;
 import org.axonframework.samples.trader.users.config.UsersConfig;
 import org.springframework.context.annotation.Configuration;
@@ -33,14 +36,11 @@ import org.springframework.context.annotation.ImportResource;
         TradeEngineConfig.class,
         CompaniesConfig.class,
         OrdersConfig.class,
-        UsersConfig.class
+        ExternalListenersConfig.class,
+        UsersConfig.class,
+        UsersQueryConfig.class,
+        QueryConfig.class
 })
-@ImportResource({
-        "classpath:META-INF/spring/query-context.xml",
-        "classpath:META-INF/spring/users-query-context.xml",
-        "classpath:META-INF/spring/external-context.xml",
-        "classpath:META-INF/spring/security-context.xml"
-})
+@ImportResource("classpath:META-INF/spring/security-context.xml")
 public class AppConfig {
-
 }

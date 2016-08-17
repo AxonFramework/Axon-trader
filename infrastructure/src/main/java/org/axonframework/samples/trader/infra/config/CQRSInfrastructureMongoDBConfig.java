@@ -16,11 +16,12 @@
 
 package org.axonframework.samples.trader.infra.config;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.mongo.MongoEventStore;
-import org.axonframework.eventstore.mongo.MongoTemplate;
-import org.axonframework.saga.repository.mongo.MongoSagaRepository;
-import org.axonframework.saga.spring.SpringResourceInjector;
+import org.axonframework.eventhandling.saga.repository.mongo.MongoSagaStore;
+import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
+import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
+import org.axonframework.eventsourcing.eventstore.EventStore;
+import org.axonframework.eventsourcing.eventstore.mongo.MongoEventStorageEngine;
+import org.axonframework.eventsourcing.eventstore.mongo.MongoTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,17 +35,22 @@ public class CQRSInfrastructureMongoDBConfig {
     private MongoTemplate eventStoreMongoTemplate;
 
     @Autowired
-    private org.axonframework.saga.repository.mongo.MongoTemplate sagaMongoTemplate;
+    private org.axonframework.eventhandling.saga.repository.mongo.MongoTemplate sagaMongoTemplate;
 
     @Bean
     public EventStore eventStore() {
-        return new MongoEventStore(eventStoreMongoTemplate);
+        return new EmbeddedEventStore(eventStorageEngine());
     }
 
     @Bean
-    public MongoSagaRepository sagaRepository() {
-        MongoSagaRepository mongoSagaRepository = new MongoSagaRepository(sagaMongoTemplate);
-        mongoSagaRepository.setResourceInjector(new SpringResourceInjector());
+    public MongoEventStorageEngine eventStorageEngine() {
+        return new MongoEventStorageEngine(eventStoreMongoTemplate);
+    }
+
+    @Bean
+    public MongoSagaStore sagaRepository() {
+        MongoSagaStore mongoSagaRepository = new MongoSagaStore(sagaMongoTemplate);
+//        mongoSagaRepository.setResourceInjector(new SpringResourceInjector());
 
         return mongoSagaRepository;
     }

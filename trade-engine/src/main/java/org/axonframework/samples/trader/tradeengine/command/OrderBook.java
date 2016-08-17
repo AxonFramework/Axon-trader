@@ -16,10 +16,10 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.axonframework.eventsourcing.annotation.EventSourcedMember;
+import org.axonframework.commandhandling.model.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateMember;
+import org.axonframework.commandhandling.model.AggregateRoot;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookCreatedEvent;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
@@ -33,18 +33,21 @@ import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+
 /**
  * @author Allard Buijze
  */
-public class OrderBook extends AbstractAnnotatedAggregateRoot {
+@AggregateRoot
+public class OrderBook {
     private static final long serialVersionUID = 6778782949492587631L;
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
 
-    @EventSourcedMember
+    @AggregateMember
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
-    @EventSourcedMember
+    @AggregateMember
     private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
 
     @SuppressWarnings("UnusedDeclaration")

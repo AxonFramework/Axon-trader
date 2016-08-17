@@ -16,11 +16,21 @@
 
 package org.axonframework.samples.trader.infra.config;
 
-import org.axonframework.eventstore.jdbc.GenericEventSqlSchema;
-import org.axonframework.eventstore.jdbc.JdbcEventStore;
-import org.axonframework.saga.repository.jdbc.HsqlSagaSqlSchema;
-import org.axonframework.saga.repository.jdbc.JdbcSagaRepository;
-import org.axonframework.saga.repository.jdbc.SagaSqlSchema;
+import org.axonframework.common.jdbc.ConnectionProvider;
+import org.axonframework.common.transaction.NoTransactionManager;
+import org.axonframework.eventhandling.saga.SagaRepository;
+import org.axonframework.eventhandling.saga.repository.SagaStore;
+import org.axonframework.eventhandling.saga.repository.jdbc.HsqlSagaSqlSchema;
+import org.axonframework.eventhandling.saga.repository.jdbc.JdbcSagaStore;
+import org.axonframework.eventhandling.saga.repository.jdbc.SagaSqlSchema;
+import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
+import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
+import org.axonframework.eventsourcing.eventstore.EventStore;
+import org.axonframework.eventsourcing.eventstore.jdbc.EventSchema;
+import org.axonframework.eventsourcing.eventstore.jdbc.EventSchemaFactory;
+import org.axonframework.eventsourcing.eventstore.jdbc.HsqlEventSchemaFactory;
+import org.axonframework.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine;
+import org.axonframework.spring.jdbc.SpringDataSourceConnectionProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -32,13 +42,28 @@ import javax.sql.DataSource;
 public class CQRSInfrastructureHSQLDBConfig {
 
     @Bean
-    public JdbcEventStore eventStore(DataSource dataSource) {
-        return new JdbcEventStore(dataSource);
+    public SpringDataSourceConnectionProvider springDataSourceConnectionProvider(DataSource dataSource) {
+        return new SpringDataSourceConnectionProvider(dataSource);
     }
 
     @Bean
-    public GenericEventSqlSchema eventSqlSchema() {
-        return new GenericEventSqlSchema();
+    public JdbcEventStorageEngine eventStorageEngine(ConnectionProvider connectionProvider) {
+        return new JdbcEventStorageEngine(connectionProvider, NoTransactionManager.INSTANCE);
+    }
+
+    @Bean
+    public EventStore eventStore(ConnectionProvider connectionProvider) {
+        return new EmbeddedEventStore(eventStorageEngine(connectionProvider));
+    }
+
+    @Bean
+    public EventSchemaFactory eventSchemaFactory() {
+        return HsqlEventSchemaFactory.INSTANCE;
+    }
+
+    @Bean
+    public EventSchema eventSchema() {
+        return new EventSchema();
     }
 
     @Bean
@@ -47,7 +72,7 @@ public class CQRSInfrastructureHSQLDBConfig {
     }
 
     @Bean
-    public JdbcSagaRepository sagaRepository(DataSource dataSource) {
-        return new JdbcSagaRepository(dataSource, sagaSqlSchema());
+    public SagaStore<Object> sagaRepository(DataSource dataSource) {
+        return new JdbcSagaStore(dataSource, sagaSqlSchema());
     }
 }

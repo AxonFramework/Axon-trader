@@ -16,9 +16,15 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.repository.Repository;
-import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.model.Aggregate;
+import org.axonframework.commandhandling.model.Repository;
+import org.axonframework.samples.trader.api.orders.transaction.CancelTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.ExecutedTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.StartBuyTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.StartSellTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -32,45 +38,47 @@ public class TransactionCommandHandler {
     private Repository<Transaction> repository;
 
     @CommandHandler
-    public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) {
-        Transaction transaction = new Transaction(
-                command.getTransactionIdentifier(),
-                TransactionType.BUY,
-                command.getOrderbookIdentifier(),
-                command.getPortfolioIdentifier(),
-                command.getTradeCount(),
-                command.getItemPrice());
-        repository.add(transaction);
+    public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) throws Exception {
+        repository.newInstance(() -> {
+            return new Transaction(
+                    command.getTransactionIdentifier(),
+                    TransactionType.BUY,
+                    command.getOrderbookIdentifier(),
+                    command.getPortfolioIdentifier(),
+                    command.getTradeCount(),
+                    command.getItemPrice());
+        });
     }
 
     @CommandHandler
-    public void handleStartSellTransactionCommand(StartSellTransactionCommand command) {
-        Transaction transaction = new Transaction(
-                command.getTransactionIdentifier(),
-                TransactionType.SELL,
-                command.getOrderbookIdentifier(),
-                command.getPortfolioIdentifier(),
-                command.getTradeCount(),
-                command.getItemPrice());
-        repository.add(transaction);
+    public void handleStartSellTransactionCommand(StartSellTransactionCommand command) throws Exception {
+        repository.newInstance(() -> {
+            return new Transaction(
+                    command.getTransactionIdentifier(),
+                    TransactionType.SELL,
+                    command.getOrderbookIdentifier(),
+                    command.getPortfolioIdentifier(),
+                    command.getTradeCount(),
+                    command.getItemPrice());
+        });
     }
 
     @CommandHandler
     public void handleConfirmTransactionCommand(ConfirmTransactionCommand command) {
-        Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.confirm();
+        Aggregate<Transaction> transaction = repository.load(command.getTransactionIdentifier().toString());
+        transaction.execute(aggregateRoot -> aggregateRoot.confirm());
     }
 
     @CommandHandler
     public void handleCancelTransactionCommand(CancelTransactionCommand command) {
-        Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.cancel();
+        Aggregate<Transaction> transaction = repository.load(command.getTransactionIdentifier().toString());
+        transaction.execute(aggregateRoot -> aggregateRoot.cancel());
     }
 
     @CommandHandler
     public void handleExecutedTransactionCommand(ExecutedTransactionCommand command) {
-        Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.execute(command.getAmountOfItems(), command.getItemPrice());
+        Aggregate<Transaction> transaction = repository.load(command.getTransactionIdentifier().toString());
+        transaction.execute(aggregateRoot -> aggregateRoot.execute(command.getAmountOfItems(), command.getItemPrice()));
     }
 
     @Autowired

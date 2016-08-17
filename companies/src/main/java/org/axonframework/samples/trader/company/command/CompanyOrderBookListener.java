@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.AddOrderBookToCompanyCommand;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;

@@ -17,28 +17,22 @@
 package org.axonframework.samples.trader.infra.config;
 
 import net.sf.ehcache.CacheManager;
-import org.axonframework.cache.EhCacheAdapter;
 import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor;
-import org.axonframework.commandhandling.interceptors.BeanValidationInterceptor;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor;
-import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
-import org.axonframework.eventsourcing.Snapshotter;
-import org.axonframework.eventsourcing.SnapshotterTrigger;
-import org.axonframework.eventsourcing.SpringAggregateSnapshotter;
-import org.axonframework.eventstore.SnapshotEventStore;
+import org.axonframework.common.caching.EhCacheAdapter;
+import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
+import org.axonframework.spring.config.CommandHandlerSubscriber;
+import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPostProcessor;
+import org.axonframework.spring.eventsourcing.SpringAggregateSnapshotterFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Arrays;
-import java.util.concurrent.Executor;
+import java.util.List;
 
 @Configuration
 @ComponentScan("org.axonframework.samples.trader")
@@ -46,14 +40,11 @@ import java.util.concurrent.Executor;
 public class CQRSInfrastructureConfig {
 
     @Bean
-    public EventBus eventBus() {
-        return new SimpleEventBus();
-    }
-
-    @Bean
     public CommandBus commandBus() {
         SimpleCommandBus commandBus = new SimpleCommandBus();
-        commandBus.setDispatchInterceptors(Arrays.asList(new BeanValidationInterceptor()));
+        List<BeanValidationInterceptor<CommandMessage<?>>> beanValidationInterceptors =
+                Arrays.asList(new BeanValidationInterceptor<>());
+        commandBus.setDispatchInterceptors(beanValidationInterceptors);
 
         return commandBus;
     }
@@ -64,35 +55,13 @@ public class CQRSInfrastructureConfig {
     }
 
     @Bean
-    public AnnotationEventListenerBeanPostProcessor annotationEventListenerBeanPostProcessor() {
-        return new AnnotationEventListenerBeanPostProcessor();
+    public CommandHandlerSubscriber commandHandlerSubscriber() {
+        return new CommandHandlerSubscriber();
     }
 
     @Bean
-    public Snapshotter snapshotter(SnapshotEventStore eventStore) {
-        SpringAggregateSnapshotter springAggregateSnapshotter = new SpringAggregateSnapshotter();
-        springAggregateSnapshotter.setEventStore(eventStore);
-        springAggregateSnapshotter.setExecutor(taskExecutor());
-
-        return springAggregateSnapshotter;
-    }
-
-    @Bean
-    public SnapshotterTrigger snapshotterTrigger(SnapshotEventStore eventStore) {
-        EventCountSnapshotterTrigger eventCountSnapshotterTrigger = new EventCountSnapshotterTrigger();
-        eventCountSnapshotterTrigger.setSnapshotter(snapshotter(eventStore));
-
-        return eventCountSnapshotterTrigger;
-    }
-
-    @Bean
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        threadPoolTaskExecutor.setCorePoolSize(2);
-        threadPoolTaskExecutor.setMaxPoolSize(5);
-        threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
-
-        return threadPoolTaskExecutor;
+    public SpringAggregateSnapshotterFactoryBean springAggregateSnapshotterFactoryBean() {
+        return new SpringAggregateSnapshotterFactoryBean();
     }
 
     @Bean

@@ -16,8 +16,7 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.orders.trades.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
@@ -26,7 +25,7 @@ import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 /**
  * @author Allard Buijze
  */
-class Order extends AbstractAnnotatedEntity {
+class Order {
 
     private OrderId orderId;
     private TransactionId transactionId;

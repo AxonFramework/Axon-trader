@@ -16,17 +16,20 @@
 
 package org.axonframework.samples.trader.company.config;
 
-import org.axonframework.cache.Cache;
-import org.axonframework.eventhandling.EventBus;
+import org.axonframework.commandhandling.model.Repository;
+import org.axonframework.common.caching.Cache;
+import org.axonframework.eventhandling.EventProcessor;
+import org.axonframework.eventhandling.SimpleEventHandlerInvoker;
+import org.axonframework.eventhandling.SubscribingEventProcessor;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.CachingEventSourcingRepository;
 import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
 import org.axonframework.eventsourcing.Snapshotter;
-import org.axonframework.eventsourcing.SpringPrototypeAggregateFactory;
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.repository.Repository;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.company.command.Company;
 import org.axonframework.samples.trader.company.command.CompanyCommandHandler;
+import org.axonframework.samples.trader.company.command.CompanyOrderBookListener;
+import org.axonframework.spring.eventsourcing.SpringPrototypeAggregateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +39,6 @@ import org.springframework.context.annotation.Scope;
 public class CompaniesConfig {
 
     @Autowired
-    private EventBus eventBus;
-
-    @Autowired
     private EventStore eventStore;
 
     @Autowired
@@ -46,6 +46,9 @@ public class CompaniesConfig {
 
     @Autowired
     private Cache cache;
+
+    @Autowired
+    private CompanyOrderBookListener companyOrderBookListener;
 
     @Bean
     @Scope("prototype")
@@ -57,15 +60,14 @@ public class CompaniesConfig {
     public Repository<Company> companyRepository() {
         CachingEventSourcingRepository<Company> repository = new CachingEventSourcingRepository<>(
                 companyAggregateFactory(),
-                eventStore);
+                eventStore,
+                cache);
 
         EventCountSnapshotterTrigger eventCountSnapshotterTrigger = new EventCountSnapshotterTrigger();
         eventCountSnapshotterTrigger.setSnapshotter(snapshotter);
         eventCountSnapshotterTrigger.setTrigger(50);
 
         repository.setSnapshotterTrigger(eventCountSnapshotterTrigger);
-        repository.setEventBus(eventBus);
-        repository.setCache(cache);
 
         return repository;
     }
@@ -80,9 +82,20 @@ public class CompaniesConfig {
 
     @Bean
     public AggregateFactory<Company> companyAggregateFactory() {
-        SpringPrototypeAggregateFactory springPrototypeAggregateFactory = new SpringPrototypeAggregateFactory();
+        SpringPrototypeAggregateFactory<Company> springPrototypeAggregateFactory = new SpringPrototypeAggregateFactory<>();
         springPrototypeAggregateFactory.setPrototypeBeanName("company");
 
         return springPrototypeAggregateFactory;
+    }
+
+    @Bean
+    public EventProcessor companiesEventProcessor() {
+        SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor("companiesEventProcessor",
+                                                                                 new SimpleEventHandlerInvoker(
+                                                                                         companyOrderBookListener),
+                                                                                 eventStore);
+        eventProcessor.start();
+
+        return eventProcessor;
     }
 }

@@ -17,33 +17,25 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandCallback;
+import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.saga.annotation.EndSaga;
-import org.axonframework.saga.annotation.SagaEventHandler;
-import org.axonframework.saga.annotation.StartSaga;
+import org.axonframework.eventhandling.saga.EndSaga;
+import org.axonframework.eventhandling.saga.SagaEventHandler;
+import org.axonframework.eventhandling.saga.StartSaga;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.*;
+import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.orders.trades.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
-import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionCancelledEvent;
-import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionConfirmedEvent;
-import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionExecutedEvent;
-import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionPartiallyExecutedEvent;
-import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionStartedEvent;
-import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
-import org.axonframework.samples.trader.api.orders.transaction.ExecutedTransactionCommand;
-import org.axonframework.samples.trader.api.portfolio.cash.CancelCashReservationCommand;
-import org.axonframework.samples.trader.api.portfolio.cash.CashReservationRejectedEvent;
-import org.axonframework.samples.trader.api.portfolio.cash.CashReservedEvent;
-import org.axonframework.samples.trader.api.portfolio.cash.ConfirmCashReservationCommand;
-import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
-import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.spring.stereotype.Saga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Jettro Coenradie
  */
+@Saga
 public class BuyTradeManagerSaga extends TradeManagerSaga {
 
     private static final long serialVersionUID = 5948996680443725871L;
@@ -80,16 +72,17 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(CashReservedEvent event) {
         logger.debug("Money for transaction with identifier {} is reserved", getTransactionIdentifier());
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(getTransactionIdentifier());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmTransactionCommand>(command),
-                new CommandCallback<Object>() {
+        getCommandBus().dispatch(new GenericCommandMessage<>(command),
+                new CommandCallback<ConfirmTransactionCommand, Void>() {
+
                     @Override
-                    public void onSuccess(Object result) {
+                    public void onSuccess(CommandMessage commandMessage, Void result) {
                         // TODO jettro : Do we really need this?
                         logger.debug("Confirm transaction is dispatched successfully!");
                     }
 
                     @Override
-                    public void onFailure(Throwable cause) {
+                    public void onFailure(CommandMessage commandMessage, Throwable cause) {
                         logger.error("********* WOW!!!", cause);
                     }
                 });

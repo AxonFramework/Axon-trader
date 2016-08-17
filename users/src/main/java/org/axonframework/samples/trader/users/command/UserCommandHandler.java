@@ -16,8 +16,9 @@
 
 package org.axonframework.samples.trader.users.command;
 
-import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.repository.Repository;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.model.Aggregate;
+import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
 import org.axonframework.samples.trader.api.users.CreateUserCommand;
@@ -38,10 +39,9 @@ public class UserCommandHandler {
     private UserQueryRepository userQueryRepository;
 
     @CommandHandler
-    public UserId handleCreateUser(CreateUserCommand command) {
+    public UserId handleCreateUser(CreateUserCommand command) throws Exception {
         UserId identifier = command.getUserId();
-        User user = new User(identifier, command.getUsername(), command.getName(), command.getPassword());
-        repository.add(user);
+        repository.newInstance(() -> new User(identifier, command.getUsername(), command.getName(), command.getPassword()));
         return identifier;
     }
 
@@ -51,12 +51,12 @@ public class UserCommandHandler {
         if (account == null) {
             return null;
         }
-        boolean success = onUser(account.getUserId()).authenticate(command.getPassword());
+        boolean success = onUser(account.getUserId()).invoke(user -> user.authenticate(command.getPassword()));
         return success ? account : null;
     }
 
-    private User onUser(String userId) {
-        return repository.load(new UserId(userId), null);
+    private Aggregate<User> onUser(String userId) {
+        return repository.load(userId, null);
     }
 
 

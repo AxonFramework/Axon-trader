@@ -16,17 +16,16 @@
 
 package org.axonframework.samples.trader.tradeengine.config;
 
-import org.axonframework.cache.Cache;
-import org.axonframework.eventhandling.EventBus;
+import org.axonframework.commandhandling.model.Repository;
+import org.axonframework.common.caching.Cache;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.CachingEventSourcingRepository;
 import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
 import org.axonframework.eventsourcing.Snapshotter;
-import org.axonframework.eventsourcing.SpringPrototypeAggregateFactory;
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.repository.Repository;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.tradeengine.command.OrderBook;
 import org.axonframework.samples.trader.tradeengine.command.OrderBookCommandHandler;
+import org.axonframework.spring.eventsourcing.SpringPrototypeAggregateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +33,6 @@ import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class TradeEngineConfig {
-
-    @Autowired
-    private EventBus eventBus;
 
     @Autowired
     private EventStore eventStore;
@@ -73,14 +69,14 @@ public class TradeEngineConfig {
     public Repository<OrderBook> orderBookRepository() {
         CachingEventSourcingRepository<OrderBook> repository = new CachingEventSourcingRepository<>(
                 orderBookAggregateFactory(),
-                eventStore);
+                eventStore,
+                cache);
 
         EventCountSnapshotterTrigger eventCountSnapshotterTrigger = new EventCountSnapshotterTrigger();
         eventCountSnapshotterTrigger.setSnapshotter(snapshotter);
         eventCountSnapshotterTrigger.setTrigger(50);
 
         repository.setSnapshotterTrigger(eventCountSnapshotterTrigger);
-        repository.setEventBus(eventBus);
 
         return repository;
     }

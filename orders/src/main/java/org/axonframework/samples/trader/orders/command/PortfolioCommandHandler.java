@@ -16,8 +16,9 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.repository.Repository;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.model.Aggregate;
+import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.cash.CancelCashReservationCommand;
 import org.axonframework.samples.trader.api.portfolio.cash.ConfirmCashReservationCommand;
@@ -41,71 +42,85 @@ public class PortfolioCommandHandler {
     private Repository<Portfolio> portfolioRepository;
 
     @CommandHandler
-    public void handleCreatePortfolio(CreatePortfolioCommand command) {
-        Portfolio portfolio = new Portfolio(command.getPortfolioId(), command.getUserId());
-        portfolioRepository.add(portfolio);
+    public void handleCreatePortfolio(CreatePortfolioCommand command) throws Exception {
+        portfolioRepository.newInstance(() -> new Portfolio(command.getPortfolioId(), command.getUserId()));
     }
 
     @CommandHandler
     public void handleReserveItemsCommand(ReserveItemsCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveItems(command.getOrderBookIdentifier(),
-                command.getTransactionIdentifier(),
-                command.getAmountOfItemsToReserve());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.reserveItems(command.getOrderBookIdentifier(),
+                                       command.getTransactionIdentifier(),
+                                       command.getAmountOfItemsToReserve());
+        });
     }
 
     @CommandHandler
     public void handleAddItemsToPortfolioCommand(AddItemsToPortfolioCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToAdd());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToAdd());
+        });
     }
 
     @CommandHandler
     public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmReservation(command.getOrderBookIdentifier(),
-                command.getTransactionIdentifier(),
-                command.getAmountOfItemsToConfirm());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.confirmReservation(command.getOrderBookIdentifier(),
+                                             command.getTransactionIdentifier(),
+                                             command.getAmountOfItemsToConfirm());
+        });
     }
 
     @CommandHandler
     public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelReservation(command.getOrderBookIdentifier(),
-                command.getTransactionIdentifier(),
-                command.getAmountOfItemsToCancel());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.cancelReservation(command.getOrderBookIdentifier(),
+                                            command.getTransactionIdentifier(),
+                                            command.getAmountOfItemsToCancel());
+        });
     }
 
     @CommandHandler
     public void handleAddMoneyToPortfolioCommand(DepositCashCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addMoney(command.getMoneyToAddInCents());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> aggregateRoot.addMoney(command.getMoneyToAddInCents()));
     }
 
     @CommandHandler
     public void handleMakePaymentFromPortfolioCommand(WithdrawCashCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.makePayment(command.getAmountToPayInCents());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> aggregateRoot.makePayment(command.getAmountToPayInCents()));
     }
 
     @CommandHandler
     public void handleReserveMoneyFromPortfolioCommand(ReserveCashCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
+        });
     }
 
     @CommandHandler
     public void handleCancelMoneyReservationFromPortfolioCommand(CancelCashReservationCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToCancel());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.cancelMoneyReservation(command.getTransactionIdentifier(),
+                                                 command.getAmountOfMoneyToCancel());
+        });
     }
 
     @CommandHandler
     public void handleConfirmMoneyReservationFromPortfolioCommand(
             ConfirmCashReservationCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
-                command.getAmountOfMoneyToConfirmInCents());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        portfolio.execute(aggregateRoot -> {
+            aggregateRoot.confirmMoneyReservation(command.getTransactionIdentifier(),
+                                                  command.getAmountOfMoneyToConfirmInCents());
+        });
     }
 
     @Autowired

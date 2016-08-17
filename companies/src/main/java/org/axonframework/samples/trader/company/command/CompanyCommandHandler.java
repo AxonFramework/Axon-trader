@@ -16,8 +16,9 @@
 
 package org.axonframework.samples.trader.company.command;
 
-import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.repository.Repository;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.model.Aggregate;
+import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.samples.trader.api.company.AddOrderBookToCompanyCommand;
 import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +32,20 @@ public class CompanyCommandHandler {
     private Repository<Company> repository;
 
     @CommandHandler
-    public void handleCreateCompany(CreateCompanyCommand command) {
-        Company company = new Company(command.getCompanyId(),
-                command.getCompanyName(),
-                command.getCompanyValue(),
-                command.getAmountOfShares());
-        repository.add(company);
+    public void handleCreateCompany(CreateCompanyCommand command) throws Exception {
+        repository.newInstance(() -> {
+            return new Company(command.getCompanyId(),
+                        command.getCompanyName(),
+                        command.getCompanyValue(),
+                        command.getAmountOfShares());
+        });
     }
 
     @CommandHandler
-    public void handleAddOrderBook(AddOrderBookToCompanyCommand command) {
-        Company company = repository.load(command.getCompanyId());
-        company.addOrderBook(command.getOrderBookId());
+    public void handleAddOrderBook(final AddOrderBookToCompanyCommand command) {
+        Aggregate<Company> company = repository.load(command.getCompanyId().toString());
+
+        company.execute(aggregateRoot -> aggregateRoot.addOrderBook(command.getOrderBookId()));
     }
 
     @Autowired
