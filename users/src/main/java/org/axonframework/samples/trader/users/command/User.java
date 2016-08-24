@@ -23,8 +23,6 @@ import org.axonframework.samples.trader.api.users.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.samples.trader.users.util.DigestUtils;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 

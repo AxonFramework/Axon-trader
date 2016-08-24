@@ -16,12 +16,11 @@
 
 package org.axonframework.samples.trader.infra.config;
 
-import org.axonframework.eventhandling.saga.repository.mongo.MongoSagaStore;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
-import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.EventStore;
-import org.axonframework.eventsourcing.eventstore.mongo.MongoEventStorageEngine;
-import org.axonframework.eventsourcing.eventstore.mongo.MongoTemplate;
+import org.axonframework.mongo.eventhandling.saga.repository.MongoSagaStore;
+import org.axonframework.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
+import org.axonframework.mongo.eventsourcing.eventstore.MongoTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +34,7 @@ public class CQRSInfrastructureMongoDBConfig {
     private MongoTemplate eventStoreMongoTemplate;
 
     @Autowired
-    private org.axonframework.eventhandling.saga.repository.mongo.MongoTemplate sagaMongoTemplate;
+    private org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate sagaMongoTemplate;
 
     @Bean
     public EventStore eventStore() {
@@ -49,9 +48,6 @@ public class CQRSInfrastructureMongoDBConfig {
 
     @Bean
     public MongoSagaStore sagaRepository() {
-        MongoSagaStore mongoSagaRepository = new MongoSagaStore(sagaMongoTemplate);
-//        mongoSagaRepository.setResourceInjector(new SpringResourceInjector());
-
-        return mongoSagaRepository;
+        return new MongoSagaStore(sagaMongoTemplate);
     }
 }

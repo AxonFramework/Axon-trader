@@ -20,7 +20,7 @@ import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.common.caching.Cache;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.CachingEventSourcingRepository;
-import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.tradeengine.command.OrderBook;
@@ -67,16 +67,15 @@ public class TradeEngineConfig {
 
     @Bean
     public Repository<OrderBook> orderBookRepository() {
+        EventCountSnapshotTriggerDefinition snapshotTriggerDefinition = new EventCountSnapshotTriggerDefinition(
+                snapshotter,
+                50);
+
         CachingEventSourcingRepository<OrderBook> repository = new CachingEventSourcingRepository<>(
                 orderBookAggregateFactory(),
                 eventStore,
-                cache);
-
-        EventCountSnapshotterTrigger eventCountSnapshotterTrigger = new EventCountSnapshotterTrigger();
-        eventCountSnapshotterTrigger.setSnapshotter(snapshotter);
-        eventCountSnapshotterTrigger.setTrigger(50);
-
-        repository.setSnapshotterTrigger(eventCountSnapshotterTrigger);
+                cache,
+                snapshotTriggerDefinition);
 
         return repository;
     }

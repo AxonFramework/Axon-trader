@@ -29,7 +29,7 @@ import org.axonframework.eventhandling.saga.repository.AnnotatedSagaRepository;
 import org.axonframework.eventhandling.saga.repository.SagaStore;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.CachingEventSourcingRepository;
-import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.orders.command.BuyTradeManagerSaga;
@@ -98,32 +98,29 @@ public class OrdersConfig {
 
     @Bean
     public Repository<Portfolio> portfolioRepository() {
+        EventCountSnapshotTriggerDefinition snapshotTriggerDefinition = new EventCountSnapshotTriggerDefinition(
+                snapshotter,
+                50);
+
         CachingEventSourcingRepository<Portfolio> repository = new CachingEventSourcingRepository<>(
                 portfolioAggregateFactory(),
                 eventStore,
-                cache);
+                cache,
+                snapshotTriggerDefinition);
 
-        EventCountSnapshotterTrigger snapshotterTrigger = new EventCountSnapshotterTrigger();
-        snapshotterTrigger.setTrigger(50);
-        snapshotterTrigger.setSnapshotter(snapshotter);
-
-        repository.setSnapshotterTrigger(snapshotterTrigger);
 
         return repository;
     }
 
     @Bean
     public Repository<Transaction> transactionRepository() {
+        EventCountSnapshotTriggerDefinition triggerDefinition = new EventCountSnapshotTriggerDefinition(snapshotter,
+                                                                                                        50);
         CachingEventSourcingRepository<Transaction> repository = new CachingEventSourcingRepository<>(
                 transactionAggregateFactory(),
                 eventStore,
-                cache);
-
-        EventCountSnapshotterTrigger snapshotterTrigger = new EventCountSnapshotterTrigger();
-        snapshotterTrigger.setTrigger(50);
-        snapshotterTrigger.setSnapshotter(snapshotter);
-
-        repository.setSnapshotterTrigger(snapshotterTrigger);
+                cache,
+                triggerDefinition);
 
         return repository;
     }

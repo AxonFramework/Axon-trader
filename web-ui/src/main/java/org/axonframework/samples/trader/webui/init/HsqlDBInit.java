@@ -3,7 +3,7 @@ package org.axonframework.samples.trader.webui.init;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.eventhandling.saga.repository.jdbc.SagaSqlSchema;
 import org.axonframework.eventsourcing.eventstore.jdbc.EventSchema;
-import org.axonframework.eventsourcing.eventstore.jdbc.EventSchemaFactory;
+import org.axonframework.eventsourcing.eventstore.jdbc.EventTableFactory;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
@@ -31,7 +31,7 @@ public class HsqlDBInit extends BaseDBInit {
 
     private final static Logger logger = LoggerFactory.getLogger(HsqlDBInit.class);
 
-    private EventSchemaFactory eventSchemaFactory;
+    private EventTableFactory eventTableFactory;
     private EventSchema eventSchema;
     private SagaSqlSchema sagaSqlSchema;
     private DataSource dataSource;
@@ -47,7 +47,7 @@ public class HsqlDBInit extends BaseDBInit {
                       CompanyQueryRepository companyRepository,
                       PortfolioQueryRepository portfolioRepository,
                       OrderBookQueryRepository orderBookRepository,
-                      EventSchemaFactory eventSchemaFactory,
+                      EventTableFactory eventTableFactory,
                       EventSchema eventSchema,
                       SagaSqlSchema sagaSqlSchema, DataSource dataSource,
                       UserQueryRepository userQueryRepository, CompanyQueryRepository companyQueryRepository,
@@ -56,7 +56,7 @@ public class HsqlDBInit extends BaseDBInit {
                       TradeExecutedQueryRepository tradeExecutedQueryRepository,
                       TransactionQueryRepository transactionQueryRepository) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
-        this.eventSchemaFactory = eventSchemaFactory;
+        this.eventTableFactory = eventTableFactory;
         this.eventSchema = eventSchema;
         this.sagaSqlSchema = sagaSqlSchema;
         this.dataSource = dataSource;
@@ -89,10 +89,10 @@ public class HsqlDBInit extends BaseDBInit {
 
             connection.commit();
 
-            eventSchemaFactory.createDomainEventTable(connection, eventSchema)
-                              .execute();
-            eventSchemaFactory.createSnapshotEventTable(connection, eventSchema)
-                              .execute();
+            eventTableFactory.createDomainEventTable(connection, eventSchema)
+                             .execute();
+            eventTableFactory.createSnapshotEventTable(connection, eventSchema)
+                             .execute();
             sagaSqlSchema.sql_createTableSagaEntry(connection).execute();
             sagaSqlSchema.sql_createTableAssocValueEntry(connection).execute();
 

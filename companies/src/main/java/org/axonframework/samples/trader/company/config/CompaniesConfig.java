@@ -23,7 +23,7 @@ import org.axonframework.eventhandling.SimpleEventHandlerInvoker;
 import org.axonframework.eventhandling.SubscribingEventProcessor;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.CachingEventSourcingRepository;
-import org.axonframework.eventsourcing.EventCountSnapshotterTrigger;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.company.command.Company;
@@ -58,16 +58,15 @@ public class CompaniesConfig {
 
     @Bean
     public Repository<Company> companyRepository() {
+        EventCountSnapshotTriggerDefinition snapshotTriggerDefinition = new EventCountSnapshotTriggerDefinition(
+                snapshotter,
+                50);
+
         CachingEventSourcingRepository<Company> repository = new CachingEventSourcingRepository<>(
                 companyAggregateFactory(),
                 eventStore,
-                cache);
-
-        EventCountSnapshotterTrigger eventCountSnapshotterTrigger = new EventCountSnapshotterTrigger();
-        eventCountSnapshotterTrigger.setSnapshotter(snapshotter);
-        eventCountSnapshotterTrigger.setTrigger(50);
-
-        repository.setSnapshotterTrigger(eventCountSnapshotterTrigger);
+                cache,
+                snapshotTriggerDefinition);
 
         return repository;
     }

@@ -3,9 +3,8 @@ package org.axonframework.samples.trader.webui.init;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.eventsourcing.eventstore.EventStore;
-import org.axonframework.eventsourcing.eventstore.mongo.MongoEventStorageEngine;
-import org.axonframework.eventsourcing.eventstore.mongo.MongoTemplate;
+import org.axonframework.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
+import org.axonframework.mongo.eventsourcing.eventstore.MongoTemplate;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
@@ -39,7 +38,7 @@ public class MongoDBInit extends BaseDBInit {
     private MongoTemplate systemAxonMongo;
     private MongoEventStorageEngine mongoEventStorageEngine;
     private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
-    private MongoTemplate systemAxonSagaMongo;
+    private org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate systemAxonSagaMongo;
     private org.springframework.data.mongodb.core.MongoTemplate springTemplate;
 
     @Autowired
@@ -48,7 +47,7 @@ public class MongoDBInit extends BaseDBInit {
                        MongoTemplate systemMongo,
                        MongoEventStorageEngine mongoEventStorageEngine,
                        org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
-                       MongoTemplate systemAxonSagaMongo,
+                       org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate systemAxonSagaMongo,
                        PortfolioQueryRepository portfolioRepository,
                        OrderBookQueryRepository orderBookRepository, org.springframework.data.mongodb.core.MongoTemplate springTemplate) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
@@ -93,7 +92,7 @@ public class MongoDBInit extends BaseDBInit {
         systemAxonMongo.eventCollection().drop();
         systemAxonMongo.snapshotCollection().drop();
 
-//        systemAxonSagaMongo.sagaCollection.drop();
+        systemAxonSagaMongo.sagaCollection().drop();
 
         mongoTemplate.dropCollection(UserEntry.class);
         mongoTemplate.dropCollection(OrderBookEntry.class);

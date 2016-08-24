@@ -18,17 +18,15 @@ package org.axonframework.samples.trader.infra.config;
 
 import org.axonframework.common.jdbc.ConnectionProvider;
 import org.axonframework.common.transaction.NoTransactionManager;
-import org.axonframework.eventhandling.saga.SagaRepository;
 import org.axonframework.eventhandling.saga.repository.SagaStore;
 import org.axonframework.eventhandling.saga.repository.jdbc.HsqlSagaSqlSchema;
 import org.axonframework.eventhandling.saga.repository.jdbc.JdbcSagaStore;
 import org.axonframework.eventhandling.saga.repository.jdbc.SagaSqlSchema;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
-import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.eventsourcing.eventstore.jdbc.EventSchema;
-import org.axonframework.eventsourcing.eventstore.jdbc.EventSchemaFactory;
-import org.axonframework.eventsourcing.eventstore.jdbc.HsqlEventSchemaFactory;
+import org.axonframework.eventsourcing.eventstore.jdbc.EventTableFactory;
+import org.axonframework.eventsourcing.eventstore.jdbc.HsqlEventTableFactory;
 import org.axonframework.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine;
 import org.axonframework.spring.jdbc.SpringDataSourceConnectionProvider;
 import org.springframework.context.annotation.Bean;
@@ -57,8 +55,8 @@ public class CQRSInfrastructureHSQLDBConfig {
     }
 
     @Bean
-    public EventSchemaFactory eventSchemaFactory() {
-        return HsqlEventSchemaFactory.INSTANCE;
+    public EventTableFactory eventSchemaFactory() {
+        return HsqlEventTableFactory.INSTANCE;
     }
 
     @Bean

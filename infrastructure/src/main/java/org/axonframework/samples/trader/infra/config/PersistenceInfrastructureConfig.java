@@ -16,9 +16,8 @@
 
 package org.axonframework.samples.trader.infra.config;
 
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import org.axonframework.eventsourcing.eventstore.mongo.DefaultMongoTemplate;
+import org.axonframework.mongo.eventsourcing.eventstore.DefaultMongoTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -42,7 +41,7 @@ public class PersistenceInfrastructureConfig {
 
     @Bean
     @Profile("mongodb")
-    public Mongo mongo() throws UnknownHostException {
+    public MongoClient mongo() throws UnknownHostException {
         return new MongoClient("127.0.0.1", 27017);
     }
 
@@ -54,18 +53,16 @@ public class PersistenceInfrastructureConfig {
 
     @Bean
     @Profile("mongodb")
-    public org.axonframework.eventsourcing.eventstore.mongo.MongoTemplate mongoTemplate() throws UnknownHostException {
-        return new DefaultMongoTemplate(mongo(), "axontrader", "domainevents", "snapshotevents", null, null);
+    public org.axonframework.mongo.eventsourcing.eventstore.MongoTemplate mongoTemplate() throws UnknownHostException {
+        return new DefaultMongoTemplate(mongo(), "axontrader", "domainevents", "snapshotevents");
     }
 
     @Bean
     @Profile("mongodb")
-    public org.axonframework.eventhandling.saga.repository.mongo.MongoTemplate mongoSagaTemplate()
+    public org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate mongoSagaTemplate()
             throws UnknownHostException {
-        return new org.axonframework.eventhandling.saga.repository.mongo.DefaultMongoTemplate(mongo(),
+        return new org.axonframework.mongo.eventhandling.saga.repository.DefaultMongoTemplate(mongo(),
                                                                                               "axontrader",
-                                                                                              "snapshotevents",
-                                                                                              null,
-                                                                                              null);
+                                                                                              "snapshotevents");
     }
 }
