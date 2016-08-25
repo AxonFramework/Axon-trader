@@ -21,12 +21,22 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
-import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.api.portfolio.cash.*;
-import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.orders.trades.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionCancelledEvent;
+import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionConfirmedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionExecutedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionPartiallyExecutedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionStartedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.ExecutedTransactionCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.CancelCashReservationCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.CashReservationRejectedEvent;
+import org.axonframework.samples.trader.api.portfolio.cash.CashReservedEvent;
+import org.axonframework.samples.trader.api.portfolio.cash.ConfirmCashReservationCommand;
+import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,6 +143,9 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(BuyTransactionExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
                 new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+
+        returnDifferenceInBidPriceAndExecutedPrice(getPricePerItem(), event.getItemPrice(), event.getAmountOfItems());
+
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
@@ -151,6 +164,11 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 new Object[]{event.getTransactionIdentifier(),
                         event.getAmountOfExecutedItems(),
                         event.getItemPrice()});
+
+        returnDifferenceInBidPriceAndExecutedPrice(getPricePerItem(),
+                                                   event.getItemPrice(),
+                                                   event.getAmountOfExecutedItems());
+
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
@@ -163,4 +181,19 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         event.getAmountOfExecutedItems());
         getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
     }
+
+    private void returnDifferenceInBidPriceAndExecutedPrice(long bidPrice, long executedPrice,
+                                                            long amountOfExecutedItems) {
+        long totalDifferenceInCents = amountOfExecutedItems * bidPrice - amountOfExecutedItems * executedPrice;
+
+        if (totalDifferenceInCents > 0) {
+            CancelCashReservationCommand cancelCashReservationCommand = new CancelCashReservationCommand(
+                    getPortfolioIdentifier(),
+                    getTransactionIdentifier(),
+                    totalDifferenceInCents);
+            getCommandBus().dispatch(new GenericCommandMessage<CancelCashReservationCommand>(
+                    cancelCashReservationCommand));
+        }
+    }
+
 }
