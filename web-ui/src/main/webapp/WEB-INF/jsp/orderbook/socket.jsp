@@ -21,7 +21,6 @@
 
 <head>
     <script type="text/javascript" src="${ctx}/js/sockjs-0.2.1.min.js"></script>
-    <script type="text/javascript" src="${ctx}/js/vertxbus-1.1.0-final.js"></script>
 </head>
 <body>
 
@@ -47,39 +46,36 @@
 
 <%-- The script for sockjs --%>
 <script type="text/javascript">
-    var eb = null;
-
-    function subscribe() {
-        if (eb) {
-            eb.registerHandler("updates.trades", function (msg, replyTo) {
-                var results = msg.tradeExecuted;
-                $('#tradesTable tbody').prepend(
-                        "<tr><td>" + results.companyName +
-                                "</td><td>" + results.count +
-                                "</td><td>" + results.price + "</td></tr>");
-                $('#lastUpdate').text(" " + new Date());
-            });
-        }
-    }
+    var webSocketConnection = null;
 
     function closeConn() {
-        if (eb) {
-            eb.close();
+        if (webSocketConnection) {
+            webSocketConnection.close();
         }
     }
 
     function openConn() {
-        if (!eb) {
-            eb = new vertx.EventBus("${externalServerurl}");
+        if (!webSocketConnection) {
+            webSocketConnection = new SockJS("${externalServerurl}");
 
-            eb.onopen = function () {
-                $("#connectionStatus").text("Connected");
-                subscribe();
+            webSocketConnection.onmessage = function (e) {
+                var message = JSON.parse(e.data);
+
+                var results = message.tradeExecuted;
+                $('#tradesTable tbody').prepend(
+                        "<tr><td>" + results.companyName +
+                        "</td><td>" + results.count +
+                        "</td><td>" + results.price + "</td></tr>");
+                $('#lastUpdate').text(" " + new Date());
             };
 
-            eb.onclose = function () {
+            webSocketConnection.onopen = function () {
+                $("#connectionStatus").text("Connected");
+            };
+
+            webSocketConnection.onclose = function () {
                 $("#connectionStatus").text("Not connected");
-                eb = null;
+                webSocketConnection = null;
             };
         }
     }

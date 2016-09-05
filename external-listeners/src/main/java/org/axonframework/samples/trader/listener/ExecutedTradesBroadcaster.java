@@ -16,19 +16,12 @@
 
 package org.axonframework.samples.trader.listener;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -36,7 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 /**
- * <p>Creates a JSON object and sends it to the configured server using http post. The structure of the json object is:</p>
+ * <p>Creates a JSON object and broadcasts it to every connected WebSocket session. The structure of the json object is:</p>
  * <pre>
  * {
  *     tradeExecuted :
@@ -52,11 +45,10 @@ import java.io.Writer;
  * @author Jettro Coenradie
  */
 @Component
-public class OrderbookExternalListener {
-    private static final Logger logger = LoggerFactory.getLogger(OrderbookExternalListener.class);
+public class ExecutedTradesBroadcaster extends BroadcastingTextWebSocketHandler {
+    private static final Logger logger = LoggerFactory.getLogger(ExecutedTradesBroadcaster.class);
 
     private JsonFactory jsonFactory = new JsonFactory();
-    private String remoteServerUri;
 
     @EventHandler
     public void handle(TradeExecutedEvent event) {
@@ -70,18 +62,7 @@ public class OrderbookExternalListener {
     private void doHandle(TradeExecutedEvent event) throws IOException {
         String jsonObjectAsString = createJsonInString(event);
 
-        HttpPost post = new HttpPost(remoteServerUri);
-        post.setEntity(new StringEntity(jsonObjectAsString));
-        post.addHeader("Content-Type", "application/json");
-
-        HttpClient client = new DefaultHttpClient();
-        HttpResponse response = client.execute(post);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            Writer writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer);
-            logger.warn("Error while sending event to external system: {}", writer.toString());
-        }
-
+        this.broadcast(jsonObjectAsString);
     }
 
     private String createJsonInString(TradeExecutedEvent event) throws IOException {
@@ -95,10 +76,5 @@ public class OrderbookExternalListener {
         g.writeEndObject(); // for trade-executed
         g.close();
         return writer.toString();
-    }
-
-    @Value("#{external.serverUrlExecutedTrades}")
-    public void setRemoteServerUri(String remoteServerUri) {
-        this.remoteServerUri = remoteServerUri;
     }
 }

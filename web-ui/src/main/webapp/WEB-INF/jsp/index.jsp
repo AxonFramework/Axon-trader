@@ -86,7 +86,7 @@
     <div class="span5">
         <h2>Executed trades</h2>
 
-        <p>Trace all executed trades using the sockjs connection. Beware, vertx needs to be running as well.</p>
+        <p>Trace all executed trades using the sockjs connection.</p>
 
         <p><a class="btn primary" href="${ctx}/orderbook/socket">Executed trades &raquo;</a></p>
     </div>

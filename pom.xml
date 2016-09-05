@@ -60,7 +60,7 @@
         <maven.compiler.plugin>3.1</maven.compiler.plugin>
         <maven.enforcer.plugin>1.2</maven.enforcer.plugin>
         <maven.version.range>3.0.0</maven.version.range>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <maven.tomcat7.version>2.2</maven.tomcat7.version>
     </properties>
 
@@ -216,8 +216,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
