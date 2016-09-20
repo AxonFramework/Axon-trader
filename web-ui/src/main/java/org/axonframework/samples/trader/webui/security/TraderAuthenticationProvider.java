@@ -53,7 +53,7 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
     private final static Collection<GrantedAuthority> userAuthorities;
 
     static {
-        userAuthorities = new HashSet<GrantedAuthority>();
+        userAuthorities = new HashSet<>();
         userAuthorities.add(new GrantedAuthorityImpl("ROLE_USER"));
     }
 
@@ -71,7 +71,7 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         FutureCallback<AuthenticateUserCommand, UserAccount> accountCallback = new FutureCallback<>();
         AuthenticateUserCommand command = new AuthenticateUserCommand(username, password.toCharArray());
         try {
-            commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
+            commandBus.dispatch(new GenericCommandMessage<>(command), accountCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before
             // the command is dispatched.
         } catch (JSR303ViolationException e) {

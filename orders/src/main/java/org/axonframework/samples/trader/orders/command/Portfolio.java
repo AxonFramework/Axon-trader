@@ -47,8 +47,8 @@ public class Portfolio {
 
     @AggregateIdentifier
     private PortfolioId portfolioId;
-    private Map<OrderBookId, Long> availableItems = new HashMap<OrderBookId, Long>();
-    private Map<OrderBookId, Long> reservedItems = new HashMap<OrderBookId, Long>();
+    private Map<OrderBookId, Long> availableItems = new HashMap<>();
+    private Map<OrderBookId, Long> reservedItems = new HashMap<>();
 
     private long amountOfMoney;
     private long reservedAmountOfMoney;

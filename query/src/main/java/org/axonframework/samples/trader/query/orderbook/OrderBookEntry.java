@@ -35,10 +35,10 @@ public class OrderBookEntry {
     private String companyName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ORDERENTRY_SELL", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
-    private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
+    private List<OrderEntry> sellOrders = new ArrayList<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ORDERENTRY_BUY", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
-    private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
+    private List<OrderEntry> buyOrders = new ArrayList<>();
 
     public List<OrderEntry> sellOrders() {
         return sellOrders;

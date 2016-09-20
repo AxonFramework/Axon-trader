@@ -71,7 +71,7 @@ public class RestController {
     String mappedCommand(String command, HttpServletResponse response) throws IOException {
         try {
             Object actualCommand = xStream.fromXML(command);
-            commandBus.dispatch(new GenericCommandMessage<Object>(actualCommand));
+            commandBus.dispatch(new GenericCommandMessage<>(actualCommand));
         } catch (JSR303ViolationException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "This is an invalid request.");
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class RestController {
     @ResponseBody
     String obtainPortfolios() {
         Iterable<PortfolioEntry> all = portfolioQueryRepository.findAll();
-        List<PortfolioEntry> portfolioEntries = new ArrayList<PortfolioEntry>();
+        List<PortfolioEntry> portfolioEntries = new ArrayList<>();
         for (PortfolioEntry entry : all) {
             portfolioEntries.add(entry);
         }
@@ -109,7 +109,7 @@ public class RestController {
     @ResponseBody
     String obtainOrderBooks() {
         Iterable<OrderBookEntry> all = orderBookQueryRepository.findAll();
-        List<OrderBookEntry> orderBookEntries = new ArrayList<OrderBookEntry>();
+        List<OrderBookEntry> orderBookEntries = new ArrayList<>();
         for (OrderBookEntry entry : all) {
             orderBookEntries.add(entry);
         }

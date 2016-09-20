@@ -46,9 +46,9 @@ public class OrderBook {
     private OrderBookId orderBookId;
 
     @AggregateMember
-    private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
+    private SortedSet<Order> buyOrders = new TreeSet<>(new OrderComparator());
     @AggregateMember
-    private SortedSet<Order> sellOrders = new TreeSet<Order>(new OrderComparator());
+    private SortedSet<Order> sellOrders = new TreeSet<>(new OrderComparator());
 
     @SuppressWarnings("UnusedDeclaration")
     public OrderBook() {

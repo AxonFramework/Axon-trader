@@ -38,10 +38,10 @@ public class PortfolioEntry {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "PORTFOLIO_ITEM_POSSESSION", joinColumns = @JoinColumn(name = "PORTFOLIO_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
-    private Map<String, ItemEntry> itemsInPossession = new HashMap<String, ItemEntry>();
+    private Map<String, ItemEntry> itemsInPossession = new HashMap<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "PORTFOLIO_ITEM_RESERVED", joinColumns = @JoinColumn(name = "PORTFOLIO_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
-    private Map<String, ItemEntry> itemsReserved = new HashMap<String, ItemEntry>();
+    private Map<String, ItemEntry> itemsReserved = new HashMap<>();
 
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */

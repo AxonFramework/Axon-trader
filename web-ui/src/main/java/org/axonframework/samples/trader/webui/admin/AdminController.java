@@ -70,7 +70,7 @@ public class AdminController {
     ) {
         DepositCashCommand command =
                 new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
-        commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
+        commandBus.dispatch(new GenericCommandMessage<>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
 
@@ -84,7 +84,7 @@ public class AdminController {
                 new OrderBookId(
                         orderBookIdentifier),
                 amount);
-        commandBus.dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(command));
+        commandBus.dispatch(new GenericCommandMessage<>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
 

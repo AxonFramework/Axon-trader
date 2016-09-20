@@ -43,7 +43,7 @@ public class PortfolioManagementUserListener {
         logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
                 event.getUserIdentifier());
         CreatePortfolioCommand command = new CreatePortfolioCommand(new PortfolioId(), event.getUserIdentifier());
-        commandBus.dispatch(new GenericCommandMessage<CreatePortfolioCommand>(command));
+        commandBus.dispatch(new GenericCommandMessage<>(command));
     }
 
     @Autowired

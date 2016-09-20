@@ -45,11 +45,11 @@ public class CompanyOrderBookListener {
 
         OrderBookId orderBookId = new OrderBookId();
         CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId);
-        commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
+        commandBus.dispatch(new GenericCommandMessage<>(createOrderBookCommand));
 
         AddOrderBookToCompanyCommand addOrderBookToCompanyCommand =
                 new AddOrderBookToCompanyCommand(event.getCompanyIdentifier(), orderBookId);
-        commandBus.dispatch(new GenericCommandMessage<AddOrderBookToCompanyCommand>(addOrderBookToCompanyCommand));
+        commandBus.dispatch(new GenericCommandMessage<>(addOrderBookToCompanyCommand));
     }
 
     @Autowired

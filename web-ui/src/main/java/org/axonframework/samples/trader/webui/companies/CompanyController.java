@@ -139,7 +139,7 @@ public class CompanyController {
                     order.getTradeCount(),
                     order.getItemPrice());
 
-            commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
+            commandBus.dispatch(new GenericCommandMessage<>(command));
 
             return "redirect:/company/{companyId}";
         }
@@ -168,7 +168,7 @@ public class CompanyController {
                     new PortfolioId(portfolioEntry.getIdentifier()),
                     order.getTradeCount(),
                     order.getItemPrice());
-            commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
+            commandBus.dispatch(new GenericCommandMessage<>(command));
             return "redirect:/company/{companyId}";
         }
 

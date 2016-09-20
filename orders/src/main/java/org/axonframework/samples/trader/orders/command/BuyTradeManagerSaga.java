@@ -47,13 +47,13 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         if (logger.isDebugEnabled()) {
             logger.debug(
                     "A new buy transaction is started with identifier {}, for portfolio with identifier {} and orderbook with identifier {}",
-                    new Object[]{event.getTransactionIdentifier(),
-                            event.getPortfolioIdentifier(),
-                            event.getOrderbookIdentifier()});
+                    event.getTransactionIdentifier(),
+                    event.getPortfolioIdentifier(),
+                    event.getOrderbookIdentifier());
             logger.debug("The new buy transaction with identifier {} is for buying {} items for the price of {}",
-                    new Object[]{event.getTransactionIdentifier(),
-                            event.getTotalItems(),
-                            event.getPricePerItem()});
+                         event.getTransactionIdentifier(),
+                         event.getTotalItems(),
+                         event.getPricePerItem());
         }
         setTransactionIdentifier(event.getTransactionIdentifier());
         setOrderbookIdentifier(event.getOrderbookIdentifier());
@@ -65,7 +65,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getTransactionIdentifier(),
                 getTotalItems()
                         * getPricePerItem());
-        getCommandBus().dispatch(new GenericCommandMessage<ReserveCashCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -93,9 +93,9 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(CashReservationRejectedEvent event) {
         logger.debug(
                 "Not enough cash was available to make reservation in transaction {} for portfolio {}. Required: {}",
-                new Object[]{getTransactionIdentifier(),
-                        event.getPortfolioIdentifier(),
-                        event.getAmountToPayInCents()});
+                getTransactionIdentifier(),
+                event.getPortfolioIdentifier(),
+                event.getAmountToPayInCents());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -106,7 +106,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getTransactionIdentifier(),
                 getTotalItems(),
                 getPricePerItem());
-        getCommandBus().dispatch(new GenericCommandMessage<CreateBuyOrderCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -119,24 +119,24 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 amountToCancel);
-        getCommandBus().dispatch(new GenericCommandMessage<CancelCashReservationCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<>(command));
     }
 
     @SagaEventHandler(associationProperty = "buyTransactionId", keyName = "transactionIdentifier")
     public void handle(TradeExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, items for transaction are {} for a price of {}",
-                new Object[]{getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice()});
+                     getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice());
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
                 event.getTradeCount(),
                 event.getTradePrice());
-        getCommandBus().dispatch(new GenericCommandMessage<ExecutedTransactionCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(BuyTransactionExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+                     event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice());
 
         returnDifferenceInBidPriceAndExecutedPrice(getPricePerItem(), event.getItemPrice(), event.getAmountOfItems());
 
@@ -144,20 +144,20 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
                         event.getAmountOfItems() * event.getItemPrice());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         event.getAmountOfItems());
-        getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<>(addItemsCommand));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionPartiallyExecutedEvent event) {
         logger.debug("Buy Transaction {} is partially executed, amount of executed items is {} for a price of {}",
-                new Object[]{event.getTransactionIdentifier(),
-                        event.getAmountOfExecutedItems(),
-                        event.getItemPrice()});
+                     event.getTransactionIdentifier(),
+                     event.getAmountOfExecutedItems(),
+                     event.getItemPrice());
 
         returnDifferenceInBidPriceAndExecutedPrice(getPricePerItem(),
                                                    event.getItemPrice(),
@@ -168,12 +168,12 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         event.getAmountOfExecutedItems() * event
                                 .getItemPrice());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         event.getAmountOfExecutedItems());
-        getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<>(addItemsCommand));
     }
 
     private void returnDifferenceInBidPriceAndExecutedPrice(long bidPrice, long executedPrice,
@@ -185,7 +185,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                     getPortfolioIdentifier(),
                     getTransactionIdentifier(),
                     totalDifferenceInCents);
-            getCommandBus().dispatch(new GenericCommandMessage<CancelCashReservationCommand>(
+            getCommandBus().dispatch(new GenericCommandMessage<>(
                     cancelCashReservationCommand));
         }
     }
