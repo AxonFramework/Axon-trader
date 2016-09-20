@@ -63,6 +63,6 @@ public class PersistenceInfrastructureConfig {
             throws UnknownHostException {
         return new org.axonframework.mongo.eventhandling.saga.repository.DefaultMongoTemplate(mongo(),
                                                                                               "axontrader",
-                                                                                              "snapshotevents");
+                                                                                              "sagas");
     }
 }
