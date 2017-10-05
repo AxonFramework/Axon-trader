@@ -28,10 +28,10 @@ import org.axonframework.samples.trader.query.transaction.TransactionEventListen
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Import;
 
 @Configuration
-@ImportResource("classpath:META-INF/spring/query-context.xml")
+@Import({MongoDbConfiguration.class, HsqlDbConfiguration.class})
 public class QueryConfig {
 
     @Autowired
@@ -51,13 +51,13 @@ public class QueryConfig {
     @Bean
     public EventProcessor queryEventProcessor() {
         SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor("queryEventProcessor",
-                                                                                 new SimpleEventHandlerInvoker(
-                                                                                         companyListener,
-                                                                                         orderBookListener,
-                                                                                         portfolioItemEventListener,
-                                                                                         portfolioMoneyEventListener,
-                                                                                         transactionEventListener),
-                                                                                 eventStore);
+                new SimpleEventHandlerInvoker(
+                        companyListener,
+                        orderBookListener,
+                        portfolioItemEventListener,
+                        portfolioMoneyEventListener,
+                        transactionEventListener),
+                eventStore);
         eventProcessor.start();
 
         return eventProcessor;

@@ -23,11 +23,14 @@ import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.listener.ExecutedTradesBroadcaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@ImportResource("classpath:META-INF/spring/external-context.xml")
+@ComponentScan("org.axonframework.samples.trader.listener")
+@PropertySource("classpath:external-config.properties")
 public class ExternalListenersConfig {
 
     @Autowired
@@ -39,12 +42,17 @@ public class ExternalListenersConfig {
     @Bean
     public EventProcessor externalListenersEventProcessor() {
         SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor("externalListenersEventProcessor",
-                                                                                 new SimpleEventHandlerInvoker(
-                                                                                         executedTradesBroadcaster),
-                                                                                 eventStore);
+                new SimpleEventHandlerInvoker(executedTradesBroadcaster),
+                eventStore);
+
         eventProcessor.start();
 
         return eventProcessor;
     }
 
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        return configurer;
+    }
 }

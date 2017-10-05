@@ -61,7 +61,7 @@ public class OrderBookController {
         return "orderbook/orders";
     }
 
-    @Value("#{external.serverUrlEventBus}")
+    @Value("${serverUrlEventBus}")
     public void setExternalServerUrl(String externalServerUrl) {
         this.externalServerUrl = externalServerUrl;
     }
