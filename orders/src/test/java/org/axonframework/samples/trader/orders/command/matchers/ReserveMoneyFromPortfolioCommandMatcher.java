@@ -16,9 +16,10 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.cash.ReserveCashCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -28,9 +29,13 @@ public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<
     private PortfolioId portfolioIdentifier;
     private long amountOfMoneyToReserve;
 
-    public ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, long amountOfMoneyToReserve) {
+    private ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, long amountOfMoneyToReserve) {
         this.amountOfMoneyToReserve = amountOfMoneyToReserve;
         this.portfolioIdentifier = portfolioIdentifier;
+    }
+
+    public static Matcher newInstance(PortfolioId portfolioIdentifier, long amountOfMoneyToReserve) {
+        return new ReserveMoneyFromPortfolioCommandMatcher(portfolioIdentifier, amountOfMoneyToReserve);
     }
 
     @Override

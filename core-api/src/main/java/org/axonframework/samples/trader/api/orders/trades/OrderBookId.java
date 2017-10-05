@@ -34,7 +34,7 @@ public class OrderBookId implements Serializable {
     }
 
     public OrderBookId(String identifier) {
-        Assert.notNull(identifier, "Identifier may not be null");
+        Assert.notNull(identifier, () -> "Identifier may not be null");
         this.identifier = identifier;
     }
 

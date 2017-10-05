@@ -16,10 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.stock.ConfirmItemReservationForPortfolioCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.stock.ConfirmItemReservationForPortfolioCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -36,6 +37,10 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfConfirmedItems = amountOfConfirmedItems;
+    }
+
+    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, int amountOfConfirmedItems) {
+        return new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier, portfolioIdentifier, amountOfConfirmedItems);
     }
 
     @Override

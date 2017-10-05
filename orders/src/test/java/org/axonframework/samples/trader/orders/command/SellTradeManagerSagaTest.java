@@ -16,16 +16,12 @@
 
 package org.axonframework.samples.trader.orders.command;
 
+import org.axonframework.samples.trader.api.orders.trades.*;
+import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolio;
-import org.axonframework.samples.trader.api.orders.transaction.*;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.OrderId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
-import org.axonframework.samples.trader.api.orders.trades.TransactionId;
 import org.axonframework.samples.trader.orders.command.matchers.*;
-import org.axonframework.test.saga.AnnotatedSagaTestFixture;
+import org.axonframework.test.saga.SagaTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,11 +37,11 @@ public class SellTradeManagerSagaTest {
     private OrderBookId orderbookIdentifier = new OrderBookId();
     private PortfolioId portfolioIdentifier = new PortfolioId();
 
-    private AnnotatedSagaTestFixture fixture;
+    private SagaTestFixture<SellTradeManagerSaga> fixture;
 
     @Before
     public void setUp() throws Exception {
-        fixture = new AnnotatedSagaTestFixture(SellTradeManagerSaga.class);
+        fixture = new SagaTestFixture<>(SellTradeManagerSaga.class);
     }
 
     @Test
@@ -57,7 +53,7 @@ public class SellTradeManagerSagaTest {
                 100,
                 10))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(new ReservedItemsCommandMatcher(orderbookIdentifier,
+                .expectDispatchedCommandsMatching(exactSequenceOf(ReservedItemsCommandMatcher.newInstance(orderbookIdentifier,
                         portfolioIdentifier,
                         100)));
     }
@@ -73,7 +69,7 @@ public class SellTradeManagerSagaTest {
                 transactionIdentifier,
                 100))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(new ConfirmTransactionCommandMatcher(
+                .expectDispatchedCommandsMatching(exactSequenceOf(ConfirmTransactionCommandMatcher.newInstance(
                         transactionIdentifier)));
     }
 
@@ -89,7 +85,7 @@ public class SellTradeManagerSagaTest {
                 100))
                 .whenAggregate(transactionIdentifier.toString()).publishes(new SellTransactionConfirmedEvent(transactionIdentifier))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(new CreateSellOrderCommandMatcher(portfolioIdentifier,
+                .expectDispatchedCommandsMatching(exactSequenceOf(CreateSellOrderCommandMatcher.newInstance(portfolioIdentifier,
                         orderbookIdentifier,
                         100,
                         10)));
@@ -121,7 +117,7 @@ public class SellTradeManagerSagaTest {
                 10))
                 .whenAggregate(transactionIdentifier.toString()).publishes(new SellTransactionCancelledEvent(transactionIdentifier, 50, 0))
                 .expectActiveSagas(0)
-                .expectDispatchedCommandsMatching(exactSequenceOf(new CancelItemReservationForPortfolioCommandMatcher(
+                .expectDispatchedCommandsMatching(exactSequenceOf(CancelItemReservationForPortfolioCommandMatcher.newInstance(
                         orderbookIdentifier,
                         portfolioIdentifier,
                         50)));
@@ -149,7 +145,7 @@ public class SellTradeManagerSagaTest {
                 buyTransactionIdentifier,
                 transactionIdentifier))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(100,
+                .expectDispatchedCommandsMatching(exactSequenceOf(ExecutedTransactionCommandMatcher.newInstance(100,
                         102,
                         transactionIdentifier),
                         andNoMore()));
@@ -180,10 +176,10 @@ public class SellTradeManagerSagaTest {
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
-                                new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
+                                ConfirmItemReservationForPortfolioCommandMatcher.newInstance(orderbookIdentifier,
                                         portfolioIdentifier,
                                         100),
-                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 100 * 102)));
+                                DepositMoneyToPortfolioCommandMatcher.newInstance(portfolioIdentifier, 100 * 102)));
     }
 
     @Test
@@ -212,9 +208,9 @@ public class SellTradeManagerSagaTest {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
-                                new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
+                                ConfirmItemReservationForPortfolioCommandMatcher.newInstance(orderbookIdentifier,
                                         portfolioIdentifier,
                                         50),
-                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 50 * 102)));
+                                DepositMoneyToPortfolioCommandMatcher.newInstance(portfolioIdentifier, 50 * 102)));
     }
 }

@@ -16,9 +16,10 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -27,8 +28,12 @@ public class ConfirmTransactionCommandMatcher extends BaseCommandMatcher<Confirm
 
     private TransactionId transactionIdentifier;
 
-    public ConfirmTransactionCommandMatcher(TransactionId transactionIdentifier) {
+    private ConfirmTransactionCommandMatcher(TransactionId transactionIdentifier) {
         this.transactionIdentifier = transactionIdentifier;
+    }
+
+    public static Matcher newInstance(TransactionId transactionIdentifier) {
+        return new ConfirmTransactionCommandMatcher(transactionIdentifier);
     }
 
     @Override

@@ -16,9 +16,10 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.transaction.ExecutedTransactionCommand;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.ExecutedTransactionCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -29,10 +30,14 @@ public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<Execut
     private long amountOfItems;
     private long itemPrice;
 
-    public ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice, TransactionId transactionIdentifier) {
+    private ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice, TransactionId transactionIdentifier) {
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
         this.transactionIdentifier = transactionIdentifier;
+    }
+
+    public static Matcher newInstance(long totalItems, int itemPrice, TransactionId transactionIdentifier) {
+        return new ExecutedTransactionCommandMatcher(totalItems, itemPrice, transactionIdentifier);
     }
 
     @Override
@@ -52,4 +57,5 @@ public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<Execut
                 .appendValue(transactionIdentifier)
                 .appendText("]");
     }
+
 }

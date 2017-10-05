@@ -37,10 +37,9 @@ public class CreateUserCommand {
     private String password;
 
     public CreateUserCommand(UserId userId, String name, String username, String password) {
-        Assert.notNull(userId, "The provided userId cannot be null");
-        Assert.notNull(name, "The provided name cannot be null");
-        Assert.notNull(username, "The provided username cannot be null");
-        Assert.notNull(password, "The provided password cannot be null");
+        Assert.notNull(userId, () -> "The provided userId cannot be null");
+        Assert.notNull(name, () -> "The provided name cannot be null");
+        Assert.notNull(username, () -> "The provided username cannot be null");
 
         this.userId = userId;
         this.name = name;

@@ -20,6 +20,7 @@ import org.axonframework.samples.trader.api.orders.trades.CreateBuyOrderCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -31,11 +32,15 @@ public class CreateBuyOrderCommandMatcher extends BaseCommandMatcher<CreateBuyOr
     private long tradeCount;
     private long itemPrice;
 
-    public CreateBuyOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, long tradeCount, long itemPrice) {
+    private CreateBuyOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, long tradeCount, long itemPrice) {
         this.portfolioIdentifier = portfolioId;
         this.orderbookIdentifier = orderbookId;
         this.tradeCount = tradeCount;
         this.itemPrice = itemPrice;
+    }
+
+    public static Matcher newInstance(PortfolioId portfolioIdentifier, OrderBookId orderbookIdentifier, long totalItems, long pricePerItem) {
+        return new CreateBuyOrderCommandMatcher(portfolioIdentifier, orderbookIdentifier, totalItems, pricePerItem);
     }
 
     @Override

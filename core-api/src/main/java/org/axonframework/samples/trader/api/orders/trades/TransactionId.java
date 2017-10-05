@@ -34,7 +34,7 @@ public class TransactionId implements Serializable {
     }
 
     public TransactionId(String identifier) {
-        Assert.notNull(identifier, "Identifier may not be null");
+        Assert.notNull(identifier, () -> "Identifier may not be null");
         this.identifier = identifier;
     }
 

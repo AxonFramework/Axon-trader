@@ -16,12 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
-import org.axonframework.test.FixtureConfiguration;
-import org.axonframework.test.Fixtures;
+import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,14 +29,14 @@ import org.junit.Test;
  */
 public class TransactionCommandHandlingTest {
 
-    private FixtureConfiguration fixture;
+    private AggregateTestFixture<Transaction> fixture;
     OrderBookId orderBook = new OrderBookId();
     PortfolioId portfolio = new PortfolioId();
     TransactionId transactionId = new TransactionId();
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture(Transaction.class);
+        fixture = new AggregateTestFixture(Transaction.class);
         TransactionCommandHandler commandHandler = new TransactionCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);

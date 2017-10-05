@@ -30,7 +30,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -54,7 +54,7 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
 
     static {
         userAuthorities = new HashSet<>();
-        userAuthorities.add(new GrantedAuthorityImpl("ROLE_USER"));
+        userAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Autowired

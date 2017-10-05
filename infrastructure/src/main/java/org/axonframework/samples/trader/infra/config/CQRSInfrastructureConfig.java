@@ -18,7 +18,6 @@ package org.axonframework.samples.trader.infra.config;
 
 import net.sf.ehcache.CacheManager;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.common.caching.EhCacheAdapter;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
@@ -31,9 +30,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
 @ComponentScan("org.axonframework.samples.trader")
 @Import({CQRSInfrastructureHSQLDBConfig.class, CQRSInfrastructureMongoDBConfig.class})
@@ -42,9 +38,7 @@ public class CQRSInfrastructureConfig {
     @Bean
     public CommandBus commandBus() {
         SimpleCommandBus commandBus = new SimpleCommandBus();
-        List<BeanValidationInterceptor<CommandMessage<?>>> beanValidationInterceptors =
-                Arrays.asList(new BeanValidationInterceptor<>());
-        commandBus.setDispatchInterceptors(beanValidationInterceptors);
+        commandBus.registerDispatchInterceptor(new BeanValidationInterceptor<>());
 
         return commandBus;
     }
