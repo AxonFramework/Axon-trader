@@ -16,9 +16,10 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.transaction.CancelTransactionCommand;
 import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.CancelTransactionCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -27,8 +28,12 @@ public class CancelTransactionCommandMatcher extends BaseCommandMatcher<CancelTr
 
     private TransactionId transactionIdentifier;
 
-    public CancelTransactionCommandMatcher(TransactionId transactionIdentifier) {
+    private CancelTransactionCommandMatcher(TransactionId transactionIdentifier) {
         this.transactionIdentifier = transactionIdentifier;
+    }
+
+    public static Matcher newInstance(TransactionId transactionIdentifier) {
+        return new CancelTransactionCommandMatcher(transactionIdentifier);
     }
 
     @Override

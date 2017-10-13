@@ -16,10 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -30,13 +31,17 @@ public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddIte
     private PortfolioId portfolioIdentifier;
     private long amountOfItemsToAdd;
 
-    public AddItemsToPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
-                                             OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
+    private AddItemsToPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
+                                              OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
         this.amountOfItemsToAdd = amountOfItemsToAdd;
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
     }
 
+    public static Matcher newInstance(PortfolioId portfolioIdentifier,
+                                      OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
+        return new AddItemsToPortfolioCommandMatcher(portfolioIdentifier, orderBookIdentifier, amountOfItemsToAdd);
+    }
     @Override
     protected boolean doMatches(AddItemsToPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderBookIdentifier)

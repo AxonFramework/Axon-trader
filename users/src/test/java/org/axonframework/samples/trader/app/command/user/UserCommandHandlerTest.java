@@ -16,18 +16,13 @@
 
 package org.axonframework.samples.trader.app.command.user;
 
-import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
-import org.axonframework.samples.trader.api.users.CreateUserCommand;
-import org.axonframework.samples.trader.api.users.UserAuthenticatedEvent;
-import org.axonframework.samples.trader.api.users.UserCreatedEvent;
-import org.axonframework.samples.trader.api.users.UserId;
+import org.axonframework.samples.trader.api.users.*;
 import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.axonframework.samples.trader.users.command.User;
 import org.axonframework.samples.trader.users.command.UserCommandHandler;
 import org.axonframework.samples.trader.users.util.DigestUtils;
-import org.axonframework.test.FixtureConfiguration;
-import org.axonframework.test.Fixtures;
+import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -37,7 +32,7 @@ import org.mockito.Mockito;
  */
 public class UserCommandHandlerTest {
 
-    private FixtureConfiguration fixture;
+    private AggregateTestFixture<User> fixture;
 
     private UserQueryRepository userQueryRepository;
 
@@ -45,7 +40,7 @@ public class UserCommandHandlerTest {
     public void setUp() {
         userQueryRepository = Mockito.mock(UserQueryRepository.class);
 
-        fixture = Fixtures.newGivenWhenThenFixture(User.class);
+        fixture = new AggregateTestFixture<>(User.class);
         UserCommandHandler commandHandler = new UserCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         commandHandler.setUserRepository(userQueryRepository);

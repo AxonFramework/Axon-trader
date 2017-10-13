@@ -16,10 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.portfolio.stock.ReserveItemsCommand;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.stock.ReserveItemsCommand;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 /**
  * @author Jettro Coenradie
@@ -30,11 +31,15 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
     private PortfolioId portfolioIdentifier;
     private int amountOfReservedItems;
 
-    public ReservedItemsCommandMatcher(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
-                                       int amountOfReservedItems) {
+    private ReservedItemsCommandMatcher(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
+                                        int amountOfReservedItems) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfReservedItems = amountOfReservedItems;
+    }
+
+    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, int amountOfReservedItems) {
+        return new ReservedItemsCommandMatcher(orderbookIdentifier, portfolioIdentifier, amountOfReservedItems);
     }
 
     @Override

@@ -16,30 +16,21 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;
-import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.OrderId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
-import org.axonframework.samples.trader.api.orders.trades.TransactionId;
-import org.axonframework.test.FixtureConfiguration;
-import org.axonframework.test.Fixtures;
-import org.junit.*;
+import org.axonframework.samples.trader.api.orders.trades.*;
+import org.axonframework.test.aggregate.AggregateTestFixture;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Allard Buijze
  */
 public class OrderBookCommandHandlerTest {
 
-    private FixtureConfiguration fixture;
+    private AggregateTestFixture<OrderBook> fixture;
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture(OrderBook.class);
+        fixture = new AggregateTestFixture<>(OrderBook.class);
         OrderBookCommandHandler commandHandler = new OrderBookCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);

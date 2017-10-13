@@ -20,8 +20,7 @@ import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.api.users.UserId;
-import org.axonframework.test.FixtureConfiguration;
-import org.axonframework.test.Fixtures;
+import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,11 +29,11 @@ import org.junit.Test;
  */
 public class CompanyCommandHandlerTest {
 
-    private FixtureConfiguration fixture;
+    private AggregateTestFixture<Company> fixture;
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture(Company.class);
+        fixture = new AggregateTestFixture(Company.class);
         CompanyCommandHandler commandHandler = new CompanyCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);

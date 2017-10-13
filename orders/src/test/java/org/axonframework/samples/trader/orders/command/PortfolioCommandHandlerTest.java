@@ -24,8 +24,7 @@ import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.portfolio.stock.*;
 import org.axonframework.samples.trader.api.users.UserId;
-import org.axonframework.test.FixtureConfiguration;
-import org.axonframework.test.Fixtures;
+import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ import org.junit.Test;
  */
 public class PortfolioCommandHandlerTest {
 
-    private FixtureConfiguration<Portfolio> fixture;
+    private AggregateTestFixture<Portfolio> fixture;
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
@@ -42,7 +41,7 @@ public class PortfolioCommandHandlerTest {
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture(Portfolio.class);
+        fixture = new AggregateTestFixture(Portfolio.class);
         PortfolioCommandHandler commandHandler = new PortfolioCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
