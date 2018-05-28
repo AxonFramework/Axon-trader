@@ -16,85 +16,58 @@
 
 package org.axonframework.samples.trader.company.config;
 
-import org.axonframework.commandhandling.model.Repository;
-import org.axonframework.common.caching.Cache;
-import org.axonframework.eventhandling.EventProcessor;
-import org.axonframework.eventhandling.SimpleEventHandlerInvoker;
-import org.axonframework.eventhandling.SubscribingEventProcessor;
-import org.axonframework.eventsourcing.AggregateFactory;
-import org.axonframework.eventsourcing.CachingEventSourcingRepository;
-import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.Snapshotter;
-import org.axonframework.eventsourcing.eventstore.EventStore;
-import org.axonframework.samples.trader.company.command.Company;
-import org.axonframework.samples.trader.company.command.CompanyCommandHandler;
-import org.axonframework.samples.trader.company.command.CompanyOrderBookListener;
-import org.axonframework.spring.eventsourcing.SpringPrototypeAggregateFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class CompaniesConfig {
 
-    @Autowired
-    private EventStore eventStore;
-
-    @Autowired
-    private Snapshotter snapshotter;
-
-    @Autowired
-    private Cache cache;
-
-    @Autowired
-    private CompanyOrderBookListener companyOrderBookListener;
-
-    @Bean
-    @Scope("prototype")
-    public Company company() {
-        return new Company();
-    }
-
-    @Bean
-    public Repository<Company> companyRepository() {
-        EventCountSnapshotTriggerDefinition snapshotTriggerDefinition = new EventCountSnapshotTriggerDefinition(
-                snapshotter,
-                50);
-
-        CachingEventSourcingRepository<Company> repository = new CachingEventSourcingRepository<>(
-                companyAggregateFactory(),
-                eventStore,
-                cache,
-                snapshotTriggerDefinition);
-
-        return repository;
-    }
-
-    @Bean
-    public CompanyCommandHandler companyCommandHandler() {
-        CompanyCommandHandler companyCommandHandler = new CompanyCommandHandler();
-        companyCommandHandler.setRepository(companyRepository());
-
-        return companyCommandHandler;
-    }
-
-    @Bean
-    public AggregateFactory<Company> companyAggregateFactory() {
-        SpringPrototypeAggregateFactory<Company> springPrototypeAggregateFactory = new SpringPrototypeAggregateFactory<>();
-        springPrototypeAggregateFactory.setPrototypeBeanName("company");
-
-        return springPrototypeAggregateFactory;
-    }
-
-    @Bean
-    public EventProcessor companiesEventProcessor() {
-        SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor("companiesEventProcessor",
-                                                                                 new SimpleEventHandlerInvoker(
-                                                                                         companyOrderBookListener),
-                                                                                 eventStore);
-        eventProcessor.start();
-
-        return eventProcessor;
-    }
+    //Specify snapshotter for Company Aggregate
+//    private static final int SNAPSHOT_TRESHHOLD = 50;
+//
+//    @Autowired
+//    private EventStore eventStore;
+//
+//    @Autowired
+//    private Snapshotter snapshotter;
+//
+//    @Autowired
+//    private Cache cache;
+//
+//    @Autowired
+//    private CompanyOrderBookListener companyOrderBookListener;
+//
+//
+//    @Bean(name = "companyRepository")
+//    public Repository companyRepository(EventStore eventStore, Cache cache) {
+//
+//        EventCountSnapshotTriggerDefinition snapshotTriggerDefinition = new EventCountSnapshotTriggerDefinition(
+//                new SpringAggregateSnapshotter(),
+//                SNAPSHOT_TRESHHOLD);
+//
+//        AggregateConfigurer<Company> companyAggregateConfigurer = AggregateConfigurer
+//                .defaultConfiguration(Company.class);
+//
+//        CachingEventSourcingRepository<Company> repository = new CachingEventSourcingRepository<>(
+//                companyAggregateConfigurer,
+//                eventStore,
+//                cache,
+//                snapshotTriggerDefinition);
+//
+//        return companyAggregateConfigurer.configureRepository(conf -> repository);
+//    }
+//
+//    @Bean
+//    public Repository<Company> companyRepository() {
+//        EventCountSnapshotTriggerDefinition snapshotTriggerDefinition = new EventCountSnapshotTriggerDefinition(
+//                snapshotter,
+//                50);
+//
+//        CachingEventSourcingRepository<Company> repository = new CachingEventSourcingRepository<>(
+//                companyAggregateFactory(),
+//                eventStore,
+//                cache,
+//                snapshotTriggerDefinition);
+//
+//        return repository;
+//    }
 }
