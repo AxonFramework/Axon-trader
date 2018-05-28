@@ -16,22 +16,16 @@
 
 package org.axonframework.samples.trader.company.command;
 
+import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
-import org.axonframework.commandhandling.model.AggregateRoot;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
-import org.axonframework.samples.trader.api.company.CompanyId;
-import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.samples.trader.api.company.*;
+import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-/**
- * @author Jettro Coenradie
- */
-@AggregateRoot
+@Aggregate
 public class Company {
-    private static final long serialVersionUID = 8723320580782813954L;
 
     @AggregateIdentifier
     private CompanyId companyId;
@@ -40,20 +34,21 @@ public class Company {
     public Company() {
     }
 
-    public Company(CompanyId companyId, String name, long value, long amountOfShares) {
-        apply(new CompanyCreatedEvent(companyId, name, value, amountOfShares));
+    @CommandHandler
+    public Company(CreateCompanyCommand cmd) {
+        apply(new CompanyCreatedEvent(
+                cmd.getCompanyId(), cmd.getCompanyName(), cmd.getCompanyValue(), cmd.getAmountOfShares()
+        ));
     }
 
-    public void addOrderBook(OrderBookId orderBookId) {
-        apply(new OrderBookAddedToCompanyEvent(companyId, orderBookId));
+    @CommandHandler
+    public void addOrderBook(AddOrderBookToCompanyCommand cmd) {
+        apply(new OrderBookAddedToCompanyEvent(companyId, cmd.getOrderBookId()));
     }
 
-    public CompanyId getIdentifier() {
-        return this.companyId;
-    }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(CompanyCreatedEvent event) {
-        this.companyId = event.getCompanyIdentifier();
+        companyId = event.getCompanyId();
     }
 }
