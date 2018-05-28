@@ -24,7 +24,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-@Aggregate
+@Aggregate(repository = "companyRepository")
 public class Company {
 
     @AggregateIdentifier
@@ -32,6 +32,7 @@ public class Company {
 
     @SuppressWarnings("UnusedDeclaration")
     public Company() {
+        // Required by Axon Framework
     }
 
     @CommandHandler
@@ -42,13 +43,13 @@ public class Company {
     }
 
     @CommandHandler
-    public void addOrderBook(AddOrderBookToCompanyCommand cmd) {
+    public void handle(AddOrderBookToCompanyCommand cmd) {
         apply(new OrderBookAddedToCompanyEvent(companyId, cmd.getOrderBookId()));
     }
 
 
     @EventSourcingHandler
-    public void handle(CompanyCreatedEvent event) {
+    public void on(CompanyCreatedEvent event) {
         companyId = event.getCompanyId();
     }
 }
