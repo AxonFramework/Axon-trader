@@ -55,28 +55,28 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashDepositedEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioId().toString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() + event.getMoneyAddedInCents());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashWithdrawnEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioId().toString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney() - event.getAmountPaidInCents());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashReservedEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioId().toString());
         portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney() + event.getAmountToReserve());
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashReservationCancelledEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioId().toString());
         portfolioEntry.setReservedAmountOfMoney(
                 portfolioEntry.getReservedAmountOfMoney() - event.getAmountOfMoneyToCancel());
         portfolioRepository.save(portfolioEntry);
@@ -84,7 +84,7 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashReservationConfirmedEvent event) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
+        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioId().toString());
         long reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
         long amountOfMoneyConfirmed = event.getAmountOfMoneyConfirmedInCents();
         if (amountOfMoneyConfirmed < reservedAmountOfMoney) {

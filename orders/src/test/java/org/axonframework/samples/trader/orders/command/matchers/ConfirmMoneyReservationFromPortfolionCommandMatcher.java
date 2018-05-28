@@ -40,7 +40,7 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
     }
     @Override
     protected boolean doMatches(ConfirmCashReservationCommand command) {
-        return command.getPortfolioIdentifier().equals(portfolioIdentifier)
+        return command.getPortfolioId().equals(portfolioIdentifier)
                 && command.getAmountOfMoneyToConfirmInCents() == amountOfMoneyToconfirm;
     }
 

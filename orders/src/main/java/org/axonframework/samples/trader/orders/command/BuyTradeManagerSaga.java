@@ -94,7 +94,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         logger.debug(
                 "Not enough cash was available to make reservation in transaction {} for portfolio {}. Required: {}",
                 getTransactionIdentifier(),
-                event.getPortfolioIdentifier(),
+                event.getPortfolioId(),
                 event.getAmountToPayInCents());
     }
 
