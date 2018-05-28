@@ -45,22 +45,22 @@ public class TransactionEventListener {
 
     @EventHandler
     public void handleEvent(BuyTransactionCancelledEvent event) {
-        changeStateOfTransaction(event.getTransactionIdentifier().toString(), TransactionState.CANCELLED);
+        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CANCELLED);
     }
 
     @EventHandler
     public void handleEvent(SellTransactionCancelledEvent event) {
-        changeStateOfTransaction(event.getTransactionIdentifier().toString(), TransactionState.CANCELLED);
+        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CANCELLED);
     }
 
     @EventHandler
     public void handleEvent(BuyTransactionConfirmedEvent event) {
-        changeStateOfTransaction(event.getTransactionIdentifier().toString(), TransactionState.CONFIRMED);
+        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CONFIRMED);
     }
 
     @EventHandler
     public void handleEvent(SellTransactionConfirmedEvent event) {
-        changeStateOfTransaction(event.getTransactionIdentifier().toString(), TransactionState.CONFIRMED);
+        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CONFIRMED);
     }
 
     @EventHandler
@@ -84,7 +84,7 @@ public class TransactionEventListener {
     }
 
     private void partiallyExecuteTransaction(AbstractTransactionPartiallyExecutedEvent event) {
-        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
+        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionId()
                 .toString());
 
         long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
@@ -98,7 +98,7 @@ public class TransactionEventListener {
     }
 
     private void executeTransaction(AbstractTransactionExecutedEvent event) {
-        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
+        TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionId()
                 .toString());
 
         long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
@@ -118,15 +118,15 @@ public class TransactionEventListener {
     }
 
     private void startTransaction(AbstractTransactionStartedEvent event, TransactionType type) {
-        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderbookIdentifier().toString());
+        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderBookId().toString());
 
         TransactionEntry entry = new TransactionEntry();
         entry.setAmountOfExecutedItems(0);
         entry.setAmountOfItems((int) event.getTotalItems());
         entry.setPricePerItem(event.getPricePerItem());
-        entry.setIdentifier(event.getTransactionIdentifier().toString());
-        entry.setOrderbookIdentifier(event.getOrderbookIdentifier().toString());
-        entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
+        entry.setIdentifier(event.getTransactionId().toString());
+        entry.setOrderbookIdentifier(event.getOrderBookId().toString());
+        entry.setPortfolioIdentifier(event.getPortfolioId().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);
         entry.setCompanyName(orderBookEntry.getCompanyName());

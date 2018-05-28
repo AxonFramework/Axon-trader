@@ -38,7 +38,7 @@ public class CancelTransactionCommandMatcher extends BaseCommandMatcher<CancelTr
 
     @Override
     protected boolean doMatches(CancelTransactionCommand command) {
-        return command.getTransactionIdentifier().equals(transactionIdentifier);
+        return command.getTransactionId().equals(transactionIdentifier);
     }
 
     @Override

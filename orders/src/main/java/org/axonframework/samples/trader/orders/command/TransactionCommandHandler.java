@@ -41,10 +41,10 @@ public class TransactionCommandHandler {
     public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) throws Exception {
         repository.newInstance(() -> {
             return new Transaction(
-                    command.getTransactionIdentifier(),
+                    command.getTransactionId(),
                     TransactionType.BUY,
-                    command.getOrderbookIdentifier(),
-                    command.getPortfolioIdentifier(),
+                    command.getOrderBookId(),
+                    command.getPortfolioId(),
                     command.getTradeCount(),
                     command.getItemPrice());
         });
@@ -54,10 +54,10 @@ public class TransactionCommandHandler {
     public void handleStartSellTransactionCommand(StartSellTransactionCommand command) throws Exception {
         repository.newInstance(() -> {
             return new Transaction(
-                    command.getTransactionIdentifier(),
+                    command.getTransactionId(),
                     TransactionType.SELL,
-                    command.getOrderbookIdentifier(),
-                    command.getPortfolioIdentifier(),
+                    command.getOrderBookId(),
+                    command.getPortfolioId(),
                     command.getTradeCount(),
                     command.getItemPrice());
         });
@@ -65,19 +65,19 @@ public class TransactionCommandHandler {
 
     @CommandHandler
     public void handleConfirmTransactionCommand(ConfirmTransactionCommand command) {
-        Aggregate<Transaction> transaction = repository.load(command.getTransactionIdentifier().toString());
+        Aggregate<Transaction> transaction = repository.load(command.getTransactionId().toString());
         transaction.execute(aggregateRoot -> aggregateRoot.confirm());
     }
 
     @CommandHandler
     public void handleCancelTransactionCommand(CancelTransactionCommand command) {
-        Aggregate<Transaction> transaction = repository.load(command.getTransactionIdentifier().toString());
+        Aggregate<Transaction> transaction = repository.load(command.getTransactionId().toString());
         transaction.execute(aggregateRoot -> aggregateRoot.cancel());
     }
 
     @CommandHandler
     public void handleExecutedTransactionCommand(ExecutedTransactionCommand command) {
-        Aggregate<Transaction> transaction = repository.load(command.getTransactionIdentifier().toString());
+        Aggregate<Transaction> transaction = repository.load(command.getTransactionId().toString());
         transaction.execute(aggregateRoot -> aggregateRoot.execute(command.getAmountOfItems(), command.getItemPrice()));
     }
 

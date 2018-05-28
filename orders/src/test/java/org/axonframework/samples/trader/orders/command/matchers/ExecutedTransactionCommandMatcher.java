@@ -42,7 +42,7 @@ public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<Execut
 
     @Override
     protected boolean doMatches(ExecutedTransactionCommand command) {
-        return command.getTransactionIdentifier().equals(transactionIdentifier)
+        return command.getTransactionId().equals(transactionIdentifier)
                 && command.getAmountOfItems() == amountOfItems
                 && command.getItemPrice() == itemPrice;
     }

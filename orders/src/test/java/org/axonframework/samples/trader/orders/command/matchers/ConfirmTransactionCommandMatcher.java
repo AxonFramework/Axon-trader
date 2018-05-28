@@ -38,7 +38,7 @@ public class ConfirmTransactionCommandMatcher extends BaseCommandMatcher<Confirm
 
     @Override
     protected boolean doMatches(ConfirmTransactionCommand command) {
-        return command.getTransactionIdentifier().equals(transactionIdentifier);
+        return command.getTransactionId().equals(transactionIdentifier);
     }
 
     @Override

@@ -121,14 +121,14 @@ public class Transaction {
 
     @EventHandler
     public void onBuyTransactionStarted(BuyTransactionStartedEvent event) {
-        this.transactionId = event.getTransactionIdentifier();
+        this.transactionId = event.getTransactionId();
         this.amountOfItems = event.getTotalItems();
         this.type = TransactionType.BUY;
     }
 
     @EventHandler
     public void onSellTransactionStarted(SellTransactionStartedEvent event) {
-        this.transactionId = event.getTransactionIdentifier();
+        this.transactionId = event.getTransactionId();
         this.amountOfItems = event.getTotalItems();
         this.type = TransactionType.SELL;
     }

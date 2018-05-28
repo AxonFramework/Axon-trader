@@ -45,18 +45,18 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         if (logger.isDebugEnabled()) {
             logger.debug(
                     "A new sell transaction is started with identifier {}, for portfolio with identifier {} and orderbook with identifier {}",
-                    event.getTransactionIdentifier(),
-                    event.getPortfolioIdentifier(),
-                    event.getOrderbookIdentifier());
+                    event.getTransactionId(),
+                    event.getPortfolioId(),
+                    event.getOrderBookId());
             logger.debug("The sell transaction with identifier {} is for selling {} items for the price of {}",
-                         event.getTransactionIdentifier(),
+                         event.getTransactionId(),
                          event.getTotalItems(),
                          event.getPricePerItem());
         }
 
-        setTransactionIdentifier(event.getTransactionIdentifier());
-        setOrderbookIdentifier(event.getOrderbookIdentifier());
-        setPortfolioIdentifier(event.getPortfolioIdentifier());
+        setTransactionIdentifier(event.getTransactionId());
+        setOrderbookIdentifier(event.getOrderBookId());
+        setPortfolioIdentifier(event.getPortfolioId());
         setPricePerItem(event.getPricePerItem());
         setTotalItems(event.getTotalItems());
 
@@ -84,7 +84,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionConfirmedEvent event) {
-        logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionIdentifier());
+        logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionId());
 
         CreateSellOrderCommand command = new CreateSellOrderCommand(new OrderId(),
                 getPortfolioIdentifier(),
@@ -100,7 +100,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     public void handle(SellTransactionCancelledEvent event) {
         long amountOfCancelledItems = event.getTotalAmountOfItems() - event.getAmountOfExecutedItems();
         logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
-                event.getTransactionIdentifier(),
+                event.getTransactionId(),
                 amountOfCancelledItems);
         CancelItemReservationForPortfolioCommand command =
                 new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(),
@@ -125,7 +125,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @EndSaga
     public void handle(SellTransactionExecutedEvent event) {
         logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                     event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice());
+                     event.getTransactionId(), event.getAmountOfItems(), event.getItemPrice());
 
         ConfirmItemReservationForPortfolioCommand confirmCommand =
                 new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(),
@@ -142,7 +142,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionPartiallyExecutedEvent event) {
         logger.debug("Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
-                     event.getTransactionIdentifier(),
+                     event.getTransactionId(),
                      event.getAmountOfExecutedItems(),
                      event.getItemPrice());
 
