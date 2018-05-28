@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.company.command;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.AddOrderBookToCompanyCommand;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
@@ -25,35 +25,29 @@ import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
- * <p>This listener is used to create orderbook instances when we have created a new company</p>
- *
- * @author Jettro Coenradie
+ * This listener is used to create order book instances when we have created a new company</p>
  */
-@Component
+@Service
+@ProcessingGroup("companiesEventProcessor")
 public class CompanyOrderBookListener {
-    private final static Logger logger = LoggerFactory.getLogger(CompanyOrderBookListener.class);
-    private CommandBus commandBus;
 
-    @EventHandler
-    public void handleCompanyCreated(CompanyCreatedEvent event) {
-        logger.debug("About to dispatch a new command to create an OrderBook for the company {}",
-                event.getCompanyIdentifier());
+    private static final Logger logger = LoggerFactory.getLogger(CompanyOrderBookListener.class);
 
-        OrderBookId orderBookId = new OrderBookId();
-        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId);
-        commandBus.dispatch(new GenericCommandMessage<>(createOrderBookCommand));
+    private final CommandGateway commandGateway;
 
-        AddOrderBookToCompanyCommand addOrderBookToCompanyCommand =
-                new AddOrderBookToCompanyCommand(event.getCompanyIdentifier(), orderBookId);
-        commandBus.dispatch(new GenericCommandMessage<>(addOrderBookToCompanyCommand));
+    public CompanyOrderBookListener(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 
-    @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
+    @EventHandler
+    public void on(CompanyCreatedEvent event) {
+        logger.debug("About to dispatch a new command to create an OrderBook for the company {}", event.getCompanyId());
+
+        OrderBookId orderBookId = new OrderBookId();
+        commandGateway.send(new CreateOrderBookCommand(orderBookId));
+        commandGateway.send(new AddOrderBookToCompanyCommand(event.getCompanyId(), orderBookId));
     }
 }
