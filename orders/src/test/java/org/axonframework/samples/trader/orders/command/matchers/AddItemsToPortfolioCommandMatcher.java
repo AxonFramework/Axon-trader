@@ -44,8 +44,8 @@ public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddIte
     }
     @Override
     protected boolean doMatches(AddItemsToPortfolioCommand command) {
-        return command.getOrderBookIdentifier().equals(orderBookIdentifier)
-                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
+        return command.getOrderBookId().equals(orderBookIdentifier)
+                && command.getPortfolioId().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToAdd() == amountOfItemsToAdd;
     }
 

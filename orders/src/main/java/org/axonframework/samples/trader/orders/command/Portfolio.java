@@ -70,7 +70,7 @@ public class Portfolio {
         } else {
             Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
             if (availableAmountOfItems < amountOfItemsToReserve) {
-                apply(new NotEnoughItemsAvailableToReserveInPortfolio(
+                apply(new NotEnoughItemsAvailableToReserveInPortfolioEvent(
                         portfolioId, orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
             } else {
                 apply(new ItemsReservedEvent(portfolioId, orderBookIdentifier, transactionIdentifier, amountOfItemsToReserve));
@@ -127,8 +127,8 @@ public class Portfolio {
 
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfItemsAdded());
+        long available = obtainCurrentAvailableItems(event.getOrderBookId());
+        availableItems.put(event.getOrderBookId(), available + event.getAmountOfItemsAdded());
     }
 
     @EventHandler
@@ -142,17 +142,17 @@ public class Portfolio {
 
     @EventHandler
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
-        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfConfirmedItems());
+        long reserved = obtainCurrentReservedItems(event.getOrderBookId());
+        reservedItems.put(event.getOrderBookId(), reserved - event.getAmountOfConfirmedItems());
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
-        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfCancelledItems());
+        long reserved = obtainCurrentReservedItems(event.getOrderBookId());
+        reservedItems.put(event.getOrderBookId(), reserved - event.getAmountOfCancelledItems());
 
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledItems());
+        long available = obtainCurrentAvailableItems(event.getOrderBookId());
+        availableItems.put(event.getOrderBookId(), available + event.getAmountOfCancelledItems());
     }
 
     @EventHandler

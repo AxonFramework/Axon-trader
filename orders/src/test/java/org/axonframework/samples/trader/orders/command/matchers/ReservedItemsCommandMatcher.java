@@ -44,8 +44,8 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
 
     @Override
     protected boolean doMatches(ReserveItemsCommand command) {
-        return command.getOrderBookIdentifier().equals(orderbookIdentifier)
-                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
+        return command.getOrderBookId().equals(orderbookIdentifier)
+                && command.getPortfolioId().equals(portfolioIdentifier)
                 && amountOfReservedItems == command.getAmountOfItemsToReserve();
     }
 

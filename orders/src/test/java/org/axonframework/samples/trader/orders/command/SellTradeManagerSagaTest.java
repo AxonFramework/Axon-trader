@@ -19,7 +19,7 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.samples.trader.api.orders.trades.*;
 import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
-import org.axonframework.samples.trader.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolio;
+import org.axonframework.samples.trader.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolioEvent;
 import org.axonframework.samples.trader.orders.command.matchers.*;
 import org.axonframework.test.saga.SagaTestFixture;
 import org.junit.Before;
@@ -99,7 +99,7 @@ public class SellTradeManagerSagaTest {
                 portfolioIdentifier,
                 100,
                 10))
-                .whenAggregate(portfolioIdentifier.toString()).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(
+                .whenAggregate(portfolioIdentifier.toString()).publishes(new NotEnoughItemsAvailableToReserveInPortfolioEvent(
                 portfolioIdentifier,
                 orderbookIdentifier,
                 transactionIdentifier,

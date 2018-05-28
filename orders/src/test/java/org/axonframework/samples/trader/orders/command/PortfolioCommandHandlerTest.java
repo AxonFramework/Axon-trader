@@ -91,11 +91,11 @@ public class PortfolioCommandHandlerTest {
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100))
                 .when(command)
-                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
-                        orderBookIdentifier,
-                        transactionIdentifier,
-                        100,
-                        200));
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolioEvent(portfolioIdentifier,
+                                                                                   orderBookIdentifier,
+                                                                                   transactionIdentifier,
+                                                                                   100,
+                                                                                   200));
     }
 
     @Test
@@ -109,11 +109,11 @@ public class PortfolioCommandHandlerTest {
                 new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50),
                 new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50))
                 .when(command)
-                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
-                        orderBookIdentifier,
-                        transactionIdentifier,
-                        50,
-                        100));
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolioEvent(portfolioIdentifier,
+                                                                                   orderBookIdentifier,
+                                                                                   transactionIdentifier,
+                                                                                   50,
+                                                                                   100));
     }
 
     @Test
@@ -127,11 +127,11 @@ public class PortfolioCommandHandlerTest {
                 new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50),
                 new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 50))
                 .when(command)
-                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
-                        orderBookIdentifier,
-                        transactionIdentifier,
-                        50,
-                        75));
+                .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolioEvent(portfolioIdentifier,
+                                                                                   orderBookIdentifier,
+                                                                                   transactionIdentifier,
+                                                                                   50,
+                                                                                   75));
     }
 
     @Test

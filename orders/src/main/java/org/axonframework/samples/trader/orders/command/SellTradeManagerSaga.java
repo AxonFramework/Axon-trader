@@ -77,7 +77,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
-    public void handle(NotEnoughItemsAvailableToReserveInPortfolio event) {
+    public void handle(NotEnoughItemsAvailableToReserveInPortfolioEvent event) {
         logger.debug("Cannot continue with transaction with id {} since the items needed cannot be reserved",
                 getTotalItems());
     }

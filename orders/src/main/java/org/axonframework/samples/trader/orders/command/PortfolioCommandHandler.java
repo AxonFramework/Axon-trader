@@ -48,19 +48,19 @@ public class PortfolioCommandHandler {
 
     @CommandHandler
     public void handleReserveItemsCommand(ReserveItemsCommand command) {
-        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioId().toString());
         portfolio.execute(aggregateRoot -> {
-            aggregateRoot.reserveItems(command.getOrderBookIdentifier(),
-                                       command.getTransactionIdentifier(),
+            aggregateRoot.reserveItems(command.getOrderBookId(),
+                                       command.getTransactionId(),
                                        command.getAmountOfItemsToReserve());
         });
     }
 
     @CommandHandler
     public void handleAddItemsToPortfolioCommand(AddItemsToPortfolioCommand command) {
-        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioId().toString());
         portfolio.execute(aggregateRoot -> {
-            aggregateRoot.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToAdd());
+            aggregateRoot.addItems(command.getOrderBookId(), command.getAmountOfItemsToAdd());
         });
     }
 
@@ -69,7 +69,7 @@ public class PortfolioCommandHandler {
         Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
         portfolio.execute(aggregateRoot -> {
             aggregateRoot.confirmReservation(command.getOrderBookIdentifier(),
-                                             command.getTransactionIdentifier(),
+                                             command.getTransactionId(),
                                              command.getAmountOfItemsToConfirm());
         });
     }
@@ -78,8 +78,8 @@ public class PortfolioCommandHandler {
     public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
         Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
         portfolio.execute(aggregateRoot -> {
-            aggregateRoot.cancelReservation(command.getOrderBookIdentifier(),
-                                            command.getTransactionIdentifier(),
+            aggregateRoot.cancelReservation(command.getOrderBookId(),
+                                            command.getTransactionId(),
                                             command.getAmountOfItemsToCancel());
         });
     }

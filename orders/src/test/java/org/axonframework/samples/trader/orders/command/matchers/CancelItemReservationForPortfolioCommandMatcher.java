@@ -46,7 +46,7 @@ public class CancelItemReservationForPortfolioCommandMatcher
 
     @Override
     protected boolean doMatches(CancelItemReservationForPortfolioCommand command) {
-        return command.getOrderBookIdentifier().equals(orderBookIdentifier)
+        return command.getOrderBookId().equals(orderBookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToCancel() == amountOfItemsToCancel;
     }
