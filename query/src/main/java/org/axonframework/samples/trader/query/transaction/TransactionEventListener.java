@@ -17,6 +17,7 @@
 package org.axonframework.samples.trader.query.transaction;
 
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.axonframework.samples.trader.api.orders.transaction.*;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;

@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.query.transaction;
 
-import org.axonframework.samples.trader.api.orders.transaction.TransactionType;
+import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.hamcrest.Description;
 import org.mockito.*;
 

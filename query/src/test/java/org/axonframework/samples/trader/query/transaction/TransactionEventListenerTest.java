@@ -25,14 +25,14 @@ import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQu
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-import static org.axonframework.samples.trader.api.orders.transaction.TransactionType.BUY;
-import static org.axonframework.samples.trader.api.orders.transaction.TransactionType.SELL;
+import static org.axonframework.samples.trader.api.orders.TransactionType.BUY;
+import static org.axonframework.samples.trader.api.orders.TransactionType.SELL;
 import static org.axonframework.samples.trader.query.transaction.TransactionState.CANCELLED;
 import static org.axonframework.samples.trader.query.transaction.TransactionState.STARTED;
 

@@ -1,7 +1,7 @@
 package org.axonframework.samples.trader.api.portfolio.cash
 
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId
-import org.axonframework.samples.trader.api.orders.trades.TransactionId
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId
 
 abstract class PortfolioEvent(open val portfolioId: PortfolioId)
 

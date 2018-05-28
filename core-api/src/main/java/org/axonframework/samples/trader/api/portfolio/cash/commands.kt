@@ -1,8 +1,8 @@
 package org.axonframework.samples.trader.api.portfolio.cash
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId
-import org.axonframework.samples.trader.api.orders.trades.TransactionId
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId
+import org.axonframework.samples.trader.api.portfolio.PortfolioId
 import javax.validation.constraints.Min
 
 abstract class PortfolioCommand(@TargetAggregateIdentifier open val portfolioId: PortfolioId)

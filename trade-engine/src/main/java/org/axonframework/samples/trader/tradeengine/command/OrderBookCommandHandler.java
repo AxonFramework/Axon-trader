@@ -58,7 +58,7 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) throws Exception {
-        repository.newInstance(() -> new OrderBook(command.getOrderBookIdentifier()));
+        repository.newInstance(() -> new OrderBook(command.getOrderBookId()));
     }
 
     public void setRepository(Repository<OrderBook> orderBookRepository) {

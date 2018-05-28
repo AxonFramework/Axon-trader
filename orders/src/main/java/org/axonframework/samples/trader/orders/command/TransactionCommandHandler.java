@@ -24,7 +24,7 @@ import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactio
 import org.axonframework.samples.trader.api.orders.transaction.ExecutedTransactionCommand;
 import org.axonframework.samples.trader.api.orders.transaction.StartBuyTransactionCommand;
 import org.axonframework.samples.trader.api.orders.transaction.StartSellTransactionCommand;
-import org.axonframework.samples.trader.api.orders.transaction.TransactionType;
+import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

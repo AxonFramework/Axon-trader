@@ -17,6 +17,7 @@
 package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.samples.trader.api.orders.trades.*;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;

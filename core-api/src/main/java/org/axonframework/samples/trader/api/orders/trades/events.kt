@@ -1,5 +1,9 @@
 package org.axonframework.samples.trader.api.orders.trades
 
+import org.axonframework.samples.trader.api.orders.OrderBookId
+import org.axonframework.samples.trader.api.orders.OrderId
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId
+import org.axonframework.samples.trader.api.portfolio.PortfolioId
 import java.io.Serializable
 
 abstract class AbstractOrderPlacedEvent(
@@ -29,10 +33,12 @@ data class SellOrderPlacedEvent(
         override val portfolioId: PortfolioId
 ) : AbstractOrderPlacedEvent(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId)
 
-data class OrderBookCreatedEvent(val orderBookId: OrderBookId)
+abstract class OrderBookEvent(open val orderBookId: OrderBookId)
+
+data class OrderBookCreatedEvent(override val orderBookId: OrderBookId) : OrderBookEvent(orderBookId)
 
 data class TradeExecutedEvent(
-        val orderBookIdentifier: OrderBookId,
+        val orderBookId: OrderBookId,
         val tradeCount: Long,
         val tradePrice: Long,
         val buyOrderId: OrderId,

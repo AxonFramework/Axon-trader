@@ -1,6 +1,10 @@
 package org.axonframework.samples.trader.api.orders.trades
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier
+import org.axonframework.samples.trader.api.orders.OrderBookId
+import org.axonframework.samples.trader.api.orders.OrderId
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId
+import org.axonframework.samples.trader.api.portfolio.PortfolioId
 import javax.validation.constraints.Min
 
 abstract class AbstractOrderCommand(
@@ -30,4 +34,6 @@ data class CreateSellOrderCommand(
         override val itemPrice: Long
 ) : AbstractOrderCommand(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice)
 
-data class CreateOrderBookCommand(@TargetAggregateIdentifier val orderBookIdentifier: OrderBookId)
+abstract class OrderBookCommand(@TargetAggregateIdentifier open val orderBookId: OrderBookId)
+
+data class CreateOrderBookCommand(override val orderBookId: OrderBookId) : OrderBookCommand(orderBookId)

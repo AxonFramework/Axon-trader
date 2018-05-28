@@ -81,7 +81,7 @@ public class OrderBookListener {
         OrderId buyOrderId = event.getBuyOrderId();
         OrderId sellOrderId = event.getSellOrderId();
 
-        OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
+        OrderBookId orderBookIdentifier = event.getOrderBookId();
         OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
 
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();

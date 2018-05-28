@@ -70,7 +70,7 @@ public class ExecutedTradesBroadcaster extends BroadcastingTextWebSocketHandler 
         JsonGenerator g = jsonFactory.createJsonGenerator(writer);
         g.writeStartObject();
         g.writeObjectFieldStart("tradeExecuted");
-        g.writeStringField("orderbookId", event.getOrderBookIdentifier().toString());
+        g.writeStringField("orderbookId", event.getOrderBookId().toString());
         g.writeStringField("count", String.valueOf(event.getTradeCount()));
         g.writeStringField("price", String.valueOf(event.getTradePrice()));
         g.writeEndObject(); // for trade-executed

@@ -16,7 +16,7 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.trades.TransactionId;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.orders.transaction.ConfirmTransactionCommand;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
