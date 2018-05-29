@@ -33,7 +33,7 @@ public class UserListener {
     @EventHandler
     public void handleUserCreated(UserCreatedEvent event) {
         UserEntry userEntry = new UserEntry();
-        userEntry.setIdentifier(event.getUserIdentifier().toString());
+        userEntry.setIdentifier(event.getUserId().toString());
         userEntry.setName(event.getName());
         userEntry.setUsername(event.getUsername());
         userEntry.setPassword(event.getPassword());

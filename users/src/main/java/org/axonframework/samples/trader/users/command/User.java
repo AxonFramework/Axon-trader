@@ -53,7 +53,7 @@ public class User {
 
     @EventHandler
     public void onUserCreated(UserCreatedEvent event) {
-        this.userId = event.getUserIdentifier();
+        this.userId = event.getUserId();
         this.passwordHash = event.getPassword();
     }
 
