@@ -16,16 +16,17 @@
 
 package org.axonframework.samples.trader.orders.command;
 
+import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
-import org.axonframework.commandhandling.model.AggregateRoot;
-import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.portfolio.stock.*;
-import org.axonframework.samples.trader.api.users.UserId;
+import org.axonframework.spring.stereotype.Aggregate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,113 +39,125 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
  * <p/>
  * When buying items you need to reserve cash. Reservations need to be confirmed or cancelled. It is up to the user
  * to confirm and cancel the right amounts. The Portfolio does not keep track of it.
- *
- * @author Jettro Coenradie
  */
-@AggregateRoot
+@Aggregate
 public class Portfolio {
 
-    private static final long serialVersionUID = 996371335141649977L;
+    private static final long DEFAULT_ITEM_VALUE = 0L;
 
     @AggregateIdentifier
     private PortfolioId portfolioId;
-    private Map<OrderBookId, Long> availableItems = new HashMap<>();
-    private Map<OrderBookId, Long> reservedItems = new HashMap<>();
-
+    private Map<OrderBookId, Long> availableItems;
+    private Map<OrderBookId, Long> reservedItems;
     private long amountOfMoney;
-    private long reservedAmountOfMoney;
 
+    @SuppressWarnings("UnusedDeclaration")
     public Portfolio() {
+        // Required by Axon Framework
     }
 
-    public Portfolio(PortfolioId portfolioId, UserId userIdentifier) {
-        apply(new PortfolioCreatedEvent(portfolioId, userIdentifier));
+    @CommandHandler
+    public Portfolio(CreatePortfolioCommand cmd) {
+        apply(new PortfolioCreatedEvent(cmd.getPortfolioId(), cmd.getUserId()));
     }
 
-    public void addItems(OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
-        apply(new ItemsAddedToPortfolioEvent(portfolioId, orderBookIdentifier, amountOfItemsToAdd));
+    @CommandHandler
+    public void handle(AddItemsToPortfolioCommand cmd) {
+        apply(new ItemsAddedToPortfolioEvent(portfolioId, cmd.getOrderBookId(), cmd.getAmountOfItemsToAdd()));
     }
 
-    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
-                             long amountOfItemsToReserve) {
-        if (!availableItems.containsKey(orderBookIdentifier)) {
-            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId,
-                                                                orderBookIdentifier,
-                                                                transactionIdentifier));
+    @CommandHandler
+    public void handle(ReserveItemsCommand cmd) {
+        OrderBookId orderBookId = cmd.getOrderBookId();
+        TransactionId transactionId = cmd.getTransactionId();
+        long amountOfItemsToReserve = cmd.getAmountOfItemsToReserve();
+
+        if (!availableItems.containsKey(orderBookId)) {
+            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, orderBookId, transactionId));
         } else {
-            Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
+            Long availableAmountOfItems = availableItems.get(orderBookId);
             if (availableAmountOfItems < amountOfItemsToReserve) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolioEvent(
                         portfolioId,
-                        orderBookIdentifier,
-                        transactionIdentifier,
+                        orderBookId,
+                        transactionId,
                         availableAmountOfItems,
                         amountOfItemsToReserve));
             } else {
                 apply(new ItemsReservedEvent(portfolioId,
-                                             orderBookIdentifier,
-                                             transactionIdentifier,
+                                             orderBookId,
+                                             transactionId,
                                              amountOfItemsToReserve));
             }
         }
     }
 
-    public void confirmReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
-                                   long amountOfItemsToConfirm) {
-        apply(new ItemReservationConfirmedForPortfolioEvent(
-                portfolioId,
-                orderBookIdentifier,
-                transactionIdentifier,
-                amountOfItemsToConfirm));
+    @CommandHandler
+    public void handle(ConfirmItemReservationForPortfolioCommand cmd) {
+        apply(new ItemReservationConfirmedForPortfolioEvent(portfolioId,
+                                                            cmd.getOrderBookId(),
+                                                            cmd.getTransactionId(),
+                                                            cmd.getAmountOfItemsToConfirm()));
     }
 
-    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
-                                  long amountOfItemsToCancel) {
+    @CommandHandler
+    public void handle(CancelItemReservationForPortfolioCommand cmd) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
-                orderBookIdentifier,
-                transactionIdentifier,
-                amountOfItemsToCancel));
+                cmd.getOrderBookId(),
+                cmd.getTransactionId(),
+                cmd.getAmountOfItemsToCancel()));
     }
 
-    public void addMoney(long moneyToAddInCents) {
-        apply(new CashDepositedEvent(portfolioId, moneyToAddInCents));
+    @CommandHandler
+    public void handle(DepositCashCommand cmd) {
+        apply(new CashDepositedEvent(portfolioId, cmd.getMoneyToAddInCents()));
     }
 
-    public void makePayment(long amountToPayInCents) {
-        apply(new CashWithdrawnEvent(portfolioId, amountToPayInCents));
+    @CommandHandler
+    public void handle(WithdrawCashCommand cmd) {
+        apply(new CashWithdrawnEvent(portfolioId, cmd.getAmountToPayInCents()));
     }
 
-    public void reserveMoney(TransactionId transactionIdentifier, long amountToReserve) {
+    @CommandHandler
+    public void handle(ReserveCashCommand cmd) {
+        TransactionId transactionId = cmd.getTransactionId();
+        long amountToReserve = cmd.getAmountOfMoneyToReserve();
+
         if (amountOfMoney >= amountToReserve) {
-            apply(new CashReservedEvent(portfolioId, transactionIdentifier, amountToReserve));
+            apply(new CashReservedEvent(portfolioId, transactionId, amountToReserve));
         } else {
-            apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, amountToReserve));
+            apply(new CashReservationRejectedEvent(portfolioId, transactionId, amountToReserve));
         }
     }
 
-    public void cancelMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToCancel) {
-        apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, amountOfMoneyToCancel));
+    @CommandHandler
+    public void handle(ConfirmCashReservationCommand cmd) {
+        apply(new CashReservationConfirmedEvent(portfolioId,
+                                                cmd.getTransactionId(),
+                                                cmd.getAmountOfMoneyToConfirmInCents()));
     }
 
-    public void confirmMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToConfirm) {
-        apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoneyToConfirm));
+    @CommandHandler
+    public void handle(CancelCashReservationCommand cmd) {
+        apply(new CashReservationCancelledEvent(portfolioId, cmd.getTransactionId(), cmd.getAmountOfMoneyToCancel()));
     }
 
-    /* EVENT HANDLING */
-    @EventHandler
-    public void onPortfolioCreated(PortfolioCreatedEvent event) {
-        this.portfolioId = event.getPortfolioId();
+    @EventSourcingHandler
+    public void on(PortfolioCreatedEvent event) {
+        portfolioId = event.getPortfolioId();
+        availableItems = new HashMap<>();
+        reservedItems = new HashMap<>();
     }
 
-    @EventHandler
-    public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
+    @EventSourcingHandler
+    public void on(ItemsAddedToPortfolioEvent event) {
         long available = obtainCurrentAvailableItems(event.getOrderBookId());
         availableItems.put(event.getOrderBookId(), available + event.getAmountOfItemsAdded());
     }
 
-    @EventHandler
-    public void onItemsReserved(ItemsReservedEvent event) {
+    @EventSourcingHandler
+    public void on(ItemsReservedEvent event) {
         long available = obtainCurrentAvailableItems(event.getOrderBookId());
         availableItems.put(event.getOrderBookId(), available - event.getAmountOfItemsReserved());
 
@@ -152,14 +165,14 @@ public class Portfolio {
         reservedItems.put(event.getOrderBookId(), reserved + event.getAmountOfItemsReserved());
     }
 
-    @EventHandler
-    public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
+    @EventSourcingHandler
+    public void on(ItemReservationConfirmedForPortfolioEvent event) {
         long reserved = obtainCurrentReservedItems(event.getOrderBookId());
         reservedItems.put(event.getOrderBookId(), reserved - event.getAmountOfConfirmedItems());
     }
 
-    @EventHandler
-    public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
+    @EventSourcingHandler
+    public void on(ItemReservationCancelledForPortfolioEvent event) {
         long reserved = obtainCurrentReservedItems(event.getOrderBookId());
         reservedItems.put(event.getOrderBookId(), reserved - event.getAmountOfCancelledItems());
 
@@ -167,51 +180,31 @@ public class Portfolio {
         availableItems.put(event.getOrderBookId(), available + event.getAmountOfCancelledItems());
     }
 
-    @EventHandler
-    public void onMoneyAddedToPortfolio(CashDepositedEvent event) {
+    private long obtainCurrentReservedItems(OrderBookId orderBookId) {
+        return reservedItems.getOrDefault(orderBookId, DEFAULT_ITEM_VALUE);
+    }
+
+    private long obtainCurrentAvailableItems(OrderBookId orderBookId) {
+        return availableItems.getOrDefault(orderBookId, DEFAULT_ITEM_VALUE);
+    }
+
+    @EventSourcingHandler
+    public void on(CashDepositedEvent event) {
         amountOfMoney += event.getMoneyAddedInCents();
     }
 
-    @EventHandler
-    public void onPaymentMadeFromPortfolio(CashWithdrawnEvent event) {
+    @EventSourcingHandler
+    public void on(CashWithdrawnEvent event) {
         amountOfMoney -= event.getAmountPaidInCents();
     }
 
-    @EventHandler
-    public void onMoneyReservedFromPortfolio(CashReservedEvent event) {
+    @EventSourcingHandler
+    public void on(CashReservedEvent event) {
         amountOfMoney -= event.getAmountToReserve();
-        reservedAmountOfMoney += event.getAmountToReserve();
     }
 
-    @EventHandler
-    public void onMoneyReservationCancelled(CashReservationCancelledEvent event) {
+    @EventSourcingHandler
+    public void on(CashReservationCancelledEvent event) {
         amountOfMoney += event.getAmountOfMoneyToCancel();
-        reservedAmountOfMoney -= event.getAmountOfMoneyToCancel();
-    }
-
-    @EventHandler
-    public void onMoneyReservationConfirmed(CashReservationConfirmedEvent event) {
-        reservedAmountOfMoney -= event.getAmountOfMoneyConfirmedInCents();
-    }
-
-    /* UTILITY METHODS */
-    private long obtainCurrentAvailableItems(OrderBookId orderBookIdentifier) {
-        long available = 0;
-        if (availableItems.containsKey(orderBookIdentifier)) {
-            available = availableItems.get(orderBookIdentifier);
-        }
-        return available;
-    }
-
-    private long obtainCurrentReservedItems(OrderBookId orderBookIdentifier) {
-        long reserved = 0;
-        if (reservedItems.containsKey(orderBookIdentifier)) {
-            reserved = reservedItems.get(orderBookIdentifier);
-        }
-        return reserved;
-    }
-
-    public PortfolioId getIdentifier() {
-        return portfolioId;
     }
 }
