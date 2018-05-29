@@ -16,54 +16,49 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 
-/**
- * @author Jettro Coenradie
- */
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 public class PortfolioManagementUserListenerTest {
+
+    private final CommandGateway commandGateway = mock(CommandGateway.class);
+
+    private final PortfolioManagementUserListener listener = new PortfolioManagementUserListener(commandGateway);
 
     @Test
     public void checkPortfolioCreationAfterUserCreated() {
-        CommandBus commandBus = Mockito.mock(CommandBus.class);
-        PortfolioManagementUserListener listener = new PortfolioManagementUserListener();
-        listener.setCommandBus(commandBus);
+        UserId userId = new UserId();
 
-        UserId userIdentifier = new UserId();
-        UserCreatedEvent event = new UserCreatedEvent(userIdentifier, "Test", "testuser", "testpassword");
+        listener.on(new UserCreatedEvent(userId, "Test", "testuser", "testpassword"));
 
-        listener.createNewPortfolioWhenUserIsCreated(event);
-
-        Mockito.verify(commandBus).dispatch(Matchers.argThat(new GenericCommandMessageMatcher(userIdentifier)));
+        verify(commandGateway).send(argThat(new CreatePortfolioCommandMatcher(userId)));
     }
 
-    private class GenericCommandMessageMatcher extends ArgumentMatcher<GenericCommandMessage> {
+    // TODO #28 replace this by a direct command equals call. This requires instantiating the aggregate ids ourselves
+    private class CreatePortfolioCommandMatcher extends ArgumentMatcher<CreatePortfolioCommand> {
 
         private UserId userId;
 
-        private GenericCommandMessageMatcher(UserId userId) {
+        private CreatePortfolioCommandMatcher(UserId userId) {
             this.userId = userId;
         }
 
         @Override
         public boolean matches(Object argument) {
-            if (!(argument instanceof GenericCommandMessage)) {
+            if (!(argument instanceof CreatePortfolioCommand)) {
                 return false;
             }
-            if (!(((GenericCommandMessage) argument).getPayload() instanceof CreatePortfolioCommand)) {
-                return false;
-            }
-            CreatePortfolioCommand createPortfolioCommand = ((GenericCommandMessage<CreatePortfolioCommand>) argument).getPayload();
+
+            CreatePortfolioCommand createPortfolioCommand = (CreatePortfolioCommand) argument;
             return createPortfolioCommand.getUserId().equals(userId);
         }
     }
-
 }

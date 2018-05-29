@@ -16,38 +16,33 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
- * <p>Listener that is used to create a new portfolio for each new user that is created.</p>
- *
- * @author Jettro Coenradie
+ * Listener that is used to create a new portfolio for each new user that is created.
+ * TODO #28 might benefit from a cleaner approach still. Think about this
  */
-@Component
+@Service
 public class PortfolioManagementUserListener {
 
-    private final static Logger logger = LoggerFactory.getLogger(PortfolioManagementUserListener.class);
-    private CommandBus commandBus;
+    private static final Logger logger = LoggerFactory.getLogger(PortfolioManagementUserListener.class);
 
-    @EventHandler
-    public void createNewPortfolioWhenUserIsCreated(UserCreatedEvent event) {
-        logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
-                event.getUserId());
-        CreatePortfolioCommand command = new CreatePortfolioCommand(new PortfolioId(), event.getUserId());
-        commandBus.dispatch(new GenericCommandMessage<>(command));
+    private final CommandGateway commandGateway;
+
+    public PortfolioManagementUserListener(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 
-    @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
+    @EventHandler
+    public void on(UserCreatedEvent event) {
+        logger.debug("About to dispatch a new command to create a Portfolio for the new user {}", event.getUserId());
+        commandGateway.send(new CreatePortfolioCommand(new PortfolioId(), event.getUserId()));
     }
 }
