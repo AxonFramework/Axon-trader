@@ -19,8 +19,8 @@ package org.axonframework.samples.trader.query.orderbook;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jettro Coenradie
@@ -35,16 +35,16 @@ public class OrderBookEntry {
     private String companyName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ORDERENTRY_SELL", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
-    private Set<OrderEntry> sellOrders = new HashSet<>();
+    private List<OrderEntry> sellOrders = new ArrayList<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ORDERENTRY_BUY", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
-    private Set<OrderEntry> buyOrders = new HashSet<>();
+    private List<OrderEntry> buyOrders = new ArrayList<>();
 
-    public Set<OrderEntry> sellOrders() {
+    public List<OrderEntry> sellOrders() {
         return sellOrders;
     }
 
-    public Set<OrderEntry> buyOrders() {
+    public List<OrderEntry> buyOrders() {
         return buyOrders;
     }
 
@@ -72,19 +72,19 @@ public class OrderBookEntry {
         this.companyName = companyName;
     }
 
-    public Set<OrderEntry> getBuyOrders() {
+    public List<OrderEntry> getBuyOrders() {
         return buyOrders;
     }
 
-    public void setBuyOrders(Set<OrderEntry> buyOrders) {
+    public void setBuyOrders(List<OrderEntry> buyOrders) {
         this.buyOrders = buyOrders;
     }
 
-    public Set<OrderEntry> getSellOrders() {
+    public List<OrderEntry> getSellOrders() {
         return sellOrders;
     }
 
-    public void setSellOrders(Set<OrderEntry> sellOrders) {
+    public void setSellOrders(List<OrderEntry> sellOrders) {
         this.sellOrders = sellOrders;
     }
 }

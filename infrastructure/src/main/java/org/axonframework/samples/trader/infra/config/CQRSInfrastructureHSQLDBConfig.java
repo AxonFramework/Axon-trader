@@ -48,6 +48,12 @@ public class CQRSInfrastructureHSQLDBConfig {
     public JdbcEventStorageEngine eventStorageEngine(ConnectionProvider connectionProvider) {
         return new JdbcEventStorageEngine(connectionProvider, NoTransactionManager.INSTANCE);
     }
+
+    @Bean
+    public EventStore eventStore(ConnectionProvider connectionProvider) {
+        return new EmbeddedEventStore(eventStorageEngine(connectionProvider));
+    }
+
     @Bean
     public EventTableFactory eventSchemaFactory() {
         return HsqlEventTableFactory.INSTANCE;
