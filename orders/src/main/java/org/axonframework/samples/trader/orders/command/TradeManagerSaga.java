@@ -16,70 +16,26 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class TradeManagerSaga {
+import java.io.Serializable;
 
-    private transient CommandBus commandBus;
-    private long totalItems;
-    private long pricePerItem;
-    private TransactionId transactionIdentifier;
-    private OrderBookId orderbookIdentifier;
-    private PortfolioId portfolioIdentifier;
+public abstract class TradeManagerSaga implements Serializable {
 
-    /*-------------------------------------------------------------------------------------------*/
-    /* Getters and setters                                                                       */
-    /*-------------------------------------------------------------------------------------------*/
+    transient CommandGateway commandGateway;
+
+    TransactionId transactionId;
+    OrderBookId orderBookId;
+    PortfolioId portfolioId;
+    long totalItems;
+    long pricePerItem;
+
     @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
-    }
-
-    protected CommandBus getCommandBus() {
-        return commandBus;
-    }
-
-    protected OrderBookId getOrderbookIdentifier() {
-        return orderbookIdentifier;
-    }
-
-    protected void setOrderbookIdentifier(OrderBookId orderbookIdentifier) {
-        this.orderbookIdentifier = orderbookIdentifier;
-    }
-
-    protected PortfolioId getPortfolioIdentifier() {
-        return portfolioIdentifier;
-    }
-
-    protected void setPortfolioIdentifier(PortfolioId portfolioIdentifier) {
-        this.portfolioIdentifier = portfolioIdentifier;
-    }
-
-    protected long getPricePerItem() {
-        return pricePerItem;
-    }
-
-    protected void setPricePerItem(long pricePerItem) {
-        this.pricePerItem = pricePerItem;
-    }
-
-    protected long getTotalItems() {
-        return totalItems;
-    }
-
-    protected void setTotalItems(long totalItems) {
-        this.totalItems = totalItems;
-    }
-
-    protected TransactionId getTransactionIdentifier() {
-        return transactionIdentifier;
-    }
-
-    protected void setTransactionIdentifier(TransactionId transactionIdentifier) {
-        this.transactionIdentifier = transactionIdentifier;
+    public void setCommandGateway(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 }

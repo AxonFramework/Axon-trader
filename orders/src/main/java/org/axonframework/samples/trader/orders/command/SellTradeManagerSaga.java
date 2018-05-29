@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventhandling.saga.EndSaga;
 import org.axonframework.eventhandling.saga.SagaEventHandler;
 import org.axonframework.eventhandling.saga.StartSaga;
@@ -30,131 +29,123 @@ import org.axonframework.spring.stereotype.Saga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Jettro Coenradie
- */
 @Saga
 public class SellTradeManagerSaga extends TradeManagerSaga {
 
-    private static final long serialVersionUID = 5337051021661868242L;
-    private final static Logger logger = LoggerFactory.getLogger(SellTradeManagerSaga.class);
+    private static final Logger logger = LoggerFactory.getLogger(SellTradeManagerSaga.class);
 
     @StartSaga
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(SellTransactionStartedEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(
-                    "A new sell transaction is started with identifier {}, for portfolio with identifier {} and orderbook with identifier {}",
-                    event.getTransactionId(),
-                    event.getPortfolioId(),
-                    event.getOrderBookId());
-            logger.debug("The sell transaction with identifier {} is for selling {} items for the price of {}",
-                         event.getTransactionId(),
-                         event.getTotalItems(),
-                         event.getPricePerItem());
-        }
+        transactionId = event.getTransactionId();
+        orderBookId = event.getOrderBookId();
+        portfolioId = event.getPortfolioId();
+        pricePerItem = event.getPricePerItem();
+        totalItems = event.getTotalItems();
 
-        setTransactionIdentifier(event.getTransactionId());
-        setOrderbookIdentifier(event.getOrderBookId());
-        setPortfolioIdentifier(event.getPortfolioId());
-        setPricePerItem(event.getPricePerItem());
-        setTotalItems(event.getTotalItems());
+        logger.debug(
+                "A new sell transaction is started with identifier {}, for portfolio with identifier {} and order book with identifier {}",
+                transactionId,
+                portfolioId,
+                orderBookId
+        );
+        logger.debug(
+                "The sell transaction with identifier {} is for selling {} items for the price of {}",
+                transactionId, totalItems, pricePerItem
+        );
 
-        ReserveItemsCommand reserveItemsCommand =
-                new ReserveItemsCommand(getPortfolioIdentifier(),
-                                        getOrderbookIdentifier(),
-                                        getTransactionIdentifier(),
-                                        event.getTotalItems());
-        getCommandBus().dispatch(new GenericCommandMessage<>(reserveItemsCommand));
+        commandGateway.send(new ReserveItemsCommand(portfolioId, orderBookId, transactionId, totalItems));
     }
 
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    @SuppressWarnings("unused")
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(ItemsReservedEvent event) {
-        logger.debug("Items for transaction {} are reserved", getTransactionIdentifier());
-        ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(getTransactionIdentifier());
-        getCommandBus().dispatch(new GenericCommandMessage<>(confirmTransactionCommand));
+        logger.debug("Items for transaction {} are reserved", transactionId);
+
+        commandGateway.send(new ConfirmTransactionCommand(transactionId));
     }
 
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    @SuppressWarnings("unused")
     @EndSaga
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(NotEnoughItemsAvailableToReserveInPortfolioEvent event) {
-        logger.debug("Cannot continue with transaction with id {} since the items needed cannot be reserved",
-                     getTotalItems());
+        logger.debug(
+                "Cannot continue with transaction with id {} since the items needed cannot be reserved", totalItems
+        );
     }
 
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(SellTransactionConfirmedEvent event) {
         logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionId());
 
-        CreateSellOrderCommand command = new CreateSellOrderCommand(new OrderId(),
-                                                                    getPortfolioIdentifier(),
-                                                                    getOrderbookIdentifier(),
-                                                                    getTransactionIdentifier(),
-                                                                    getTotalItems(),
-                                                                    getPricePerItem());
-        getCommandBus().dispatch(new GenericCommandMessage<>(command));
+        commandGateway.send(new CreateSellOrderCommand(new OrderId(),
+                                                       portfolioId,
+                                                       orderBookId,
+                                                       transactionId,
+                                                       totalItems,
+                                                       pricePerItem));
     }
 
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(SellTransactionCancelledEvent event) {
         long amountOfCancelledItems = event.getTotalAmountOfItems() - event.getAmountOfExecutedItems();
-        logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
-                     event.getTransactionId(),
-                     amountOfCancelledItems);
-        CancelItemReservationForPortfolioCommand command =
-                new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(),
-                                                             getOrderbookIdentifier(),
-                                                             getTransactionIdentifier(),
-                                                             amountOfCancelledItems);
-        getCommandBus().dispatch(new GenericCommandMessage<>(command));
+        logger.debug(
+                "Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
+                transactionId, amountOfCancelledItems
+        );
+
+        commandGateway.send(new CancelItemReservationForPortfolioCommand(portfolioId,
+                                                                         orderBookId,
+                                                                         transactionId,
+                                                                         amountOfCancelledItems));
     }
 
-    @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
+    @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionId")
     public void handle(TradeExecutedEvent event) {
-        logger.debug("Sell Transaction {} is executed, items for transaction are {} for a price of {}",
-                     getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice());
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
-                                                                            event.getTradeCount(),
-                                                                            event.getTradePrice());
-        getCommandBus().dispatch(new GenericCommandMessage<>(command));
+        long tradeCount = event.getTradeCount();
+        long tradePrice = event.getTradePrice();
+
+        logger.debug(
+                "Sell Transaction {} is executed, items for transaction are {} for a price of {}",
+                transactionId, tradeCount, tradePrice
+        );
+        commandGateway.send(new ExecutedTransactionCommand(transactionId, tradeCount, tradePrice));
     }
 
 
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(SellTransactionExecutedEvent event) {
-        logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                     event.getTransactionId(), event.getAmountOfItems(), event.getItemPrice());
+        long amountOfItems = event.getAmountOfItems();
+        long itemPrice = event.getItemPrice();
 
-        ConfirmItemReservationForPortfolioCommand confirmCommand =
-                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(),
-                                                              getOrderbookIdentifier(),
-                                                              getTransactionIdentifier(),
-                                                              event.getAmountOfItems());
-        getCommandBus().dispatch(new GenericCommandMessage<>(confirmCommand));
-        DepositCashCommand depositCommand =
-                new DepositCashCommand(getPortfolioIdentifier(),
-                                       event.getItemPrice() * event.getAmountOfItems());
-        getCommandBus().dispatch(new GenericCommandMessage<>(depositCommand));
+        logger.debug(
+                "Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
+                transactionId, amountOfItems, itemPrice
+        );
+
+        commandGateway.send(new ConfirmItemReservationForPortfolioCommand(portfolioId,
+                                                                          orderBookId,
+                                                                          transactionId,
+                                                                          amountOfItems));
+        commandGateway.send(new DepositCashCommand(portfolioId, itemPrice * amountOfItems));
     }
 
-    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    @SagaEventHandler(associationProperty = "transactionId")
     public void handle(SellTransactionPartiallyExecutedEvent event) {
-        logger.debug("Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
-                     event.getTransactionId(),
-                     event.getAmountOfExecutedItems(),
-                     event.getItemPrice());
+        long amountOfExecutedItems = event.getAmountOfExecutedItems();
+        long itemPrice = event.getItemPrice();
 
-        ConfirmItemReservationForPortfolioCommand confirmCommand =
-                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(),
-                                                              getOrderbookIdentifier(),
-                                                              getTransactionIdentifier(),
-                                                              event.getAmountOfExecutedItems());
-        getCommandBus().dispatch(new GenericCommandMessage<>(confirmCommand));
-        DepositCashCommand depositCommand =
-                new DepositCashCommand(getPortfolioIdentifier(),
-                                       event.getItemPrice() * event.getAmountOfExecutedItems());
-        getCommandBus().dispatch(new GenericCommandMessage<>(depositCommand));
+        logger.debug(
+                "Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
+                transactionId, amountOfExecutedItems, itemPrice
+        );
+
+        commandGateway.send(new ConfirmItemReservationForPortfolioCommand(portfolioId,
+                                                                          orderBookId,
+                                                                          transactionId,
+                                                                          amountOfExecutedItems));
+        commandGateway.send(new DepositCashCommand(portfolioId, itemPrice * amountOfExecutedItems));
     }
 }
