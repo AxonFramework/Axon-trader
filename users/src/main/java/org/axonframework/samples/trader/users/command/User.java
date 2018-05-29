@@ -16,52 +16,50 @@
 
 package org.axonframework.samples.trader.users.command;
 
+import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
-import org.axonframework.commandhandling.model.AggregateRoot;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.api.users.UserAuthenticatedEvent;
-import org.axonframework.samples.trader.api.users.UserCreatedEvent;
-import org.axonframework.samples.trader.api.users.UserId;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.samples.trader.api.users.*;
 import org.axonframework.samples.trader.users.util.DigestUtils;
+import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-/**
- * @author Jettro Coenradie
- */
-@AggregateRoot
+@Aggregate(repository = "userRepository")
 public class User {
-    private static final long serialVersionUID = 3291411359839192350L;
+
     @AggregateIdentifier
     private UserId userId;
     private String passwordHash;
 
     public User() {
+        // Required by Axon Framework
     }
 
-    public User(UserId userId, String username, String name, String password) {
-        apply(new UserCreatedEvent(userId, name, username, hashOf(password.toCharArray())));
+    @CommandHandler
+    public User(CreateUserCommand cmd) {
+        apply(new UserCreatedEvent(cmd.getUserId(),
+                                   cmd.getName(),
+                                   cmd.getUsername(),
+                                   hashOf(cmd.getPassword().toCharArray())));
     }
 
-    public boolean authenticate(char[] password) {
-        boolean success = this.passwordHash.equals(hashOf(password));
+    @CommandHandler
+    public boolean handle(AuthenticateUserCommand cmd) {
+        boolean success = this.passwordHash.equals(hashOf(cmd.getPassword()));
         if (success) {
             apply(new UserAuthenticatedEvent(userId));
         }
         return success;
     }
 
-    @EventHandler
-    public void onUserCreated(UserCreatedEvent event) {
+    @EventSourcingHandler
+    public void on(UserCreatedEvent event) {
         this.userId = event.getUserId();
         this.passwordHash = event.getPassword();
     }
 
     private String hashOf(char[] password) {
         return DigestUtils.sha1(String.valueOf(password));
-    }
-
-    public UserId getIdentifier() {
-        return userId;
     }
 }
