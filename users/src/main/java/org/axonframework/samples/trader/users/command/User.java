@@ -25,7 +25,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-@Aggregate(repository = "userRepository")
+@Aggregate(repository = "userAggregateRepository")
 public class User {
 
     @AggregateIdentifier

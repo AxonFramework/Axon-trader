@@ -35,11 +35,11 @@ public class CompanyConfig {
         return new EventCountSnapshotTriggerDefinition(snapshotter, SNAPSHOT_THRESHOLD);
     }
 
-    @Bean(name = "companyRepository")
-    public Repository<Company> companyRepository(AggregateFactory<Company> companyAggregateFactory,
-                                                 EventStore eventStore,
-                                                 Cache cache,
-                                                 SnapshotTriggerDefinition snapshotTriggerDefinition) {
+    @Bean(name = "companyAggregateRepository")
+    public Repository<Company> companyAggregateRepository(AggregateFactory<Company> companyAggregateFactory,
+                                                          EventStore eventStore,
+                                                          Cache cache,
+                                                          SnapshotTriggerDefinition snapshotTriggerDefinition) {
         return new CachingEventSourcingRepository<>(
                 companyAggregateFactory,
                 eventStore,

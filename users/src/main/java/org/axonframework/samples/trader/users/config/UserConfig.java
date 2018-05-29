@@ -29,11 +29,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UserConfig {
 
-    @Bean(name = "userRepository")
-    public Repository<User> userRepository(AggregateFactory<User> userAggregateFactory,
-                                           EventStore eventStore,
-                                           Cache cache,
-                                           SnapshotTriggerDefinition snapshotTriggerDefinition) {
+    @Bean(name = "userAggregateRepository")
+    public Repository<User> userAggregateRepository(AggregateFactory<User> userAggregateFactory,
+                                                    EventStore eventStore,
+                                                    Cache cache,
+                                                    SnapshotTriggerDefinition snapshotTriggerDefinition) {
         return new CachingEventSourcingRepository<>(userAggregateFactory, eventStore, cache, snapshotTriggerDefinition);
     }
 }

@@ -33,11 +33,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OrderConfig {
 
-    @Bean(name = "portfolioRepository")
-    public Repository<Portfolio> portfolioRepository(AggregateFactory<Portfolio> portfolioAggregateFactory,
-                                                     EventStore eventStore,
-                                                     Cache cache,
-                                                     SnapshotTriggerDefinition snapshotTriggerDefinition) {
+    @Bean(name = "portfolioAggregateRepository")
+    public Repository<Portfolio> portfolioAggregateRepository(AggregateFactory<Portfolio> portfolioAggregateFactory,
+                                                              EventStore eventStore,
+                                                              Cache cache,
+                                                              SnapshotTriggerDefinition snapshotTriggerDefinition) {
         return new CachingEventSourcingRepository<>(
                 portfolioAggregateFactory,
                 eventStore,
@@ -45,11 +45,12 @@ public class OrderConfig {
                 snapshotTriggerDefinition);
     }
 
-    @Bean(name = "transactionRepository")
-    public Repository<Transaction> transactionRepository(AggregateFactory<Transaction> transactionAggregateFactory,
-                                                         EventStore eventStore,
-                                                         Cache cache,
-                                                         SnapshotTriggerDefinition snapshotTriggerDefinition) {
+    @Bean(name = "transactionAggregateRepository")
+    public Repository<Transaction> transactionAggregateRepository(
+            AggregateFactory<Transaction> transactionAggregateFactory,
+            EventStore eventStore,
+            Cache cache,
+            SnapshotTriggerDefinition snapshotTriggerDefinition) {
         return new CachingEventSourcingRepository<>(
                 transactionAggregateFactory,
                 eventStore,
