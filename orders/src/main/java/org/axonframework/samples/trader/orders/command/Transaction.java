@@ -16,23 +16,17 @@
 
 package org.axonframework.samples.trader.orders.command;
 
+import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
-import org.axonframework.commandhandling.model.AggregateRoot;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.axonframework.samples.trader.api.orders.transaction.*;
-import org.axonframework.samples.trader.api.portfolio.PortfolioId;
+import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-/**
- * @author Jettro Coenradie
- */
-@AggregateRoot
+@Aggregate
 public class Transaction {
-
-    private static final long serialVersionUID = 1299083385130634014L;
 
     @AggregateIdentifier
     private TransactionId transactionId;
@@ -40,121 +34,111 @@ public class Transaction {
     private long amountOfExecutedItems;
     private TransactionType type;
 
-
     @SuppressWarnings("UnusedDeclaration")
     public Transaction() {
+        // Required by Axon Framework
     }
 
-    public Transaction(TransactionId transactionId,
-                       TransactionType type,
-                       OrderBookId orderbookIdentifier,
-                       PortfolioId portfolioIdentifier,
-                       long amountOfItems,
-                       long pricePerItem) {
-        switch (type) {
-            case BUY:
-                apply(new BuyTransactionStartedEvent(transactionId,
-                                                     orderbookIdentifier,
-                                                     portfolioIdentifier,
-                                                     amountOfItems,
-                                                     pricePerItem));
-                break;
-            case SELL:
-                apply(new SellTransactionStartedEvent(transactionId,
-                                                      orderbookIdentifier,
-                                                      portfolioIdentifier,
-                                                      amountOfItems,
-                                                      pricePerItem));
-                break;
+    @CommandHandler
+    public Transaction(StartBuyTransactionCommand cmd) {
+        apply(new BuyTransactionStartedEvent(cmd.getTransactionId(),
+                                             cmd.getOrderBookId(),
+                                             cmd.getPortfolioId(),
+                                             cmd.getTradeCount(),
+                                             cmd.getPricePerItem()));
+    }
+
+    @CommandHandler
+    public Transaction(StartSellTransactionCommand cmd) {
+        apply(new SellTransactionStartedEvent(cmd.getTransactionId(),
+                                              cmd.getOrderBookId(),
+                                              cmd.getPortfolioId(),
+                                              cmd.getTradeCount(),
+                                              cmd.getPricePerItem()));
+    }
+
+    @SuppressWarnings("unused")
+    @CommandHandler
+    public void handle(ConfirmTransactionCommand cmd) {
+        if (type == TransactionType.BUY) {
+            apply(new BuyTransactionConfirmedEvent(transactionId));
+        } else if (type == TransactionType.SELL) {
+            apply(new SellTransactionConfirmedEvent(transactionId));
         }
     }
 
-    public void confirm() {
-        switch (this.type) {
-            case BUY:
-                apply(new BuyTransactionConfirmedEvent(transactionId));
-                break;
-            case SELL:
-                apply(new SellTransactionConfirmedEvent(transactionId));
-                break;
+    @SuppressWarnings("unused")
+    @CommandHandler
+    public void handle(CancelTransactionCommand cmd) {
+        if (type == TransactionType.BUY) {
+            apply(new BuyTransactionCancelledEvent(transactionId, amountOfItems, amountOfExecutedItems));
+        } else if (type == TransactionType.SELL) {
+            apply(new SellTransactionCancelledEvent(transactionId, amountOfItems, amountOfExecutedItems));
         }
     }
 
-    public void cancel() {
-        switch (this.type) {
-            case BUY:
-                apply(new BuyTransactionCancelledEvent(transactionId, amountOfItems, amountOfExecutedItems));
-                break;
-            case SELL:
-                apply(new SellTransactionCancelledEvent(transactionId, amountOfItems, amountOfExecutedItems));
-                break;
-        }
-    }
-
-    public void execute(long amountOfItems, long itemPrice) {
-        switch (this.type) {
-            case BUY:
-                if (isPartiallyExecuted(amountOfItems)) {
-                    apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
-                                                                   amountOfItems,
-                                                                   amountOfItems + amountOfExecutedItems,
-                                                                   itemPrice));
-                } else {
-                    apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
-                }
-                break;
-            case SELL:
-                if (isPartiallyExecuted(amountOfItems)) {
-                    apply(new SellTransactionPartiallyExecutedEvent(transactionId,
-                                                                    amountOfItems,
-                                                                    amountOfItems + amountOfExecutedItems,
-                                                                    itemPrice));
-                } else {
-                    apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
-                }
-                break;
+    @CommandHandler
+    public void handle(ExecutedTransactionCommand cmd) {
+        long amountOfItems = cmd.getAmountOfItems();
+        long itemPrice = cmd.getItemPrice();
+        if (type == TransactionType.BUY) {
+            if (isPartiallyExecuted(amountOfItems)) {
+                apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
+                                                               amountOfItems,
+                                                               amountOfItems + amountOfExecutedItems,
+                                                               itemPrice));
+            } else {
+                apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
+            }
+        } else if (type == TransactionType.SELL) {
+            if (isPartiallyExecuted(amountOfItems)) {
+                apply(new SellTransactionPartiallyExecutedEvent(transactionId,
+                                                                amountOfItems,
+                                                                amountOfItems + amountOfExecutedItems,
+                                                                itemPrice));
+            } else {
+                apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
+            }
         }
     }
 
     private boolean isPartiallyExecuted(long amountOfItems) {
-        return this.amountOfExecutedItems + amountOfItems < this.amountOfItems;
+        return amountOfExecutedItems + amountOfItems < this.amountOfItems;
     }
 
-    @EventHandler
-    public void onBuyTransactionStarted(BuyTransactionStartedEvent event) {
-        this.transactionId = event.getTransactionId();
-        this.amountOfItems = event.getTotalItems();
-        this.type = TransactionType.BUY;
+    @EventSourcingHandler
+    public void on(BuyTransactionStartedEvent event) {
+        transactionId = event.getTransactionId();
+        amountOfItems = event.getTotalItems();
+        type = TransactionType.BUY;
     }
 
-    @EventHandler
-    public void onSellTransactionStarted(SellTransactionStartedEvent event) {
-        this.transactionId = event.getTransactionId();
-        this.amountOfItems = event.getTotalItems();
-        this.type = TransactionType.SELL;
+    @EventSourcingHandler
+    public void on(SellTransactionStartedEvent event) {
+        transactionId = event.getTransactionId();
+        amountOfItems = event.getTotalItems();
+        type = TransactionType.SELL;
     }
 
-    @EventHandler
-    public void onTransactionExecuted(BuyTransactionExecutedEvent event) {
-        this.amountOfExecutedItems = this.amountOfItems;
+    @SuppressWarnings("unused")
+    @EventSourcingHandler
+    public void on(BuyTransactionExecutedEvent event) {
+        amountOfExecutedItems = amountOfItems;
     }
 
-    @EventHandler
-    public void onTransactionExecuted(SellTransactionExecutedEvent event) {
-        this.amountOfExecutedItems = this.amountOfItems;
+    @SuppressWarnings("unused")
+    @EventSourcingHandler
+    public void on(SellTransactionExecutedEvent event) {
+        amountOfExecutedItems = amountOfItems;
     }
 
-    @EventHandler
-    public void onTransactionPartiallyExecuted(SellTransactionPartiallyExecutedEvent event) {
-        this.amountOfExecutedItems += event.getAmountOfExecutedItems();
+    @EventSourcingHandler
+    public void on(SellTransactionPartiallyExecutedEvent event) {
+        amountOfExecutedItems += event.getAmountOfExecutedItems();
     }
 
-    @EventHandler
-    public void onTransactionPartiallyExecuted(BuyTransactionPartiallyExecutedEvent event) {
-        this.amountOfExecutedItems += event.getAmountOfExecutedItems();
-    }
-
-    public TransactionId getIdentifier() {
-        return transactionId;
+    @EventSourcingHandler
+    public void on(BuyTransactionPartiallyExecutedEvent event) {
+        amountOfExecutedItems += event.getAmountOfExecutedItems();
     }
 }
