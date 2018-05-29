@@ -4,8 +4,8 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.api.users.CreateUserCommand;
@@ -23,12 +23,14 @@ import java.util.List;
  * Base class for all DBInit implementations
  */
 public abstract class BaseDBInit implements DBInit {
+
     private CommandBus commandBus;
     private CompanyQueryRepository companyRepository;
     private PortfolioQueryRepository portfolioRepository;
     private OrderBookQueryRepository orderBookRepository;
 
-    protected BaseDBInit(CommandBus commandBus, CompanyQueryRepository companyRepository, PortfolioQueryRepository portfolioRepository, OrderBookQueryRepository orderBookRepository) {
+    protected BaseDBInit(CommandBus commandBus, CompanyQueryRepository companyRepository,
+                         PortfolioQueryRepository portfolioRepository, OrderBookQueryRepository orderBookRepository) {
         this.commandBus = commandBus;
         this.companyRepository = companyRepository;
         this.portfolioRepository = portfolioRepository;
@@ -72,7 +74,11 @@ public abstract class BaseDBInit implements DBInit {
     }
 
     void createCompanies(UserId userIdentifier) {
-        CreateCompanyCommand command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Philips", 1000, 10000);
+        CreateCompanyCommand command = new CreateCompanyCommand(new CompanyId(),
+                                                                userIdentifier,
+                                                                "Philips",
+                                                                1000,
+                                                                10000);
         commandBus.dispatch(new GenericCommandMessage<>(command));
 
         command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Shell", 500, 5000);

@@ -18,8 +18,11 @@ package org.axonframework.samples.trader.webui.companies;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.StartBuyTransactionCommand;
 import org.axonframework.samples.trader.api.orders.transaction.StartSellTransactionCommand;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
@@ -30,9 +33,6 @@ import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.query.users.UserEntry;
 import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
 import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -46,8 +46,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
 import java.util.List;
+import javax.validation.Valid;
 
 /**
  * @author Jettro Coenradie
@@ -90,7 +90,7 @@ public class CompanyController {
         CompanyEntry company = companyRepository.findOne(companyId);
         OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
-                .getIdentifier());
+                                                                                                            .getIdentifier());
         model.addAttribute("company", company);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
@@ -127,17 +127,19 @@ public class CompanyController {
 
             if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
                 bindingResult.rejectValue("tradeCount",
-                        "error.order.sell.tomanyitems",
-                        "Not enough items available to create sell order.");
+                                          "error.order.sell.tomanyitems",
+                                          "Not enough items available to create sell order.");
                 addPortfolioItemInfoToModel(order.getCompanyId(), model);
                 return "company/sell";
             }
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
-                    new OrderBookId(bookEntry.getIdentifier()),
-                    new PortfolioId(portfolioEntry.getIdentifier()),
-                    order.getTradeCount(),
-                    order.getItemPrice());
+                                                                                  new OrderBookId(bookEntry
+                                                                                                          .getIdentifier()),
+                                                                                  new PortfolioId(portfolioEntry
+                                                                                                          .getIdentifier()),
+                                                                                  order.getTradeCount(),
+                                                                                  order.getItemPrice());
 
             commandBus.dispatch(new GenericCommandMessage<>(command));
 
@@ -157,17 +159,19 @@ public class CompanyController {
 
             if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
                 bindingResult.rejectValue("tradeCount",
-                        "error.order.buy.notenoughmoney",
-                        "Not enough cash to spend to buy the items for the price you want");
+                                          "error.order.buy.notenoughmoney",
+                                          "Not enough cash to spend to buy the items for the price you want");
                 addPortfolioMoneyInfoToModel(portfolioEntry, model);
                 return "company/buy";
             }
 
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
-                    new OrderBookId(bookEntry.getIdentifier()),
-                    new PortfolioId(portfolioEntry.getIdentifier()),
-                    order.getTradeCount(),
-                    order.getItemPrice());
+                                                                                new OrderBookId(bookEntry
+                                                                                                        .getIdentifier()),
+                                                                                new PortfolioId(portfolioEntry
+                                                                                                        .getIdentifier()),
+                                                                                order.getTradeCount(),
+                                                                                order.getItemPrice());
             commandBus.dispatch(new GenericCommandMessage<>(command));
             return "redirect:/company/{companyId}";
         }

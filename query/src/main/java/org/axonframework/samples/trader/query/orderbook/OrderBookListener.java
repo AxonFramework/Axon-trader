@@ -18,10 +18,10 @@ package org.axonframework.samples.trader.query.orderbook;
 
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.AbstractOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
@@ -32,9 +32,6 @@ import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeEx
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Jettro Coenradie
- */
 @Component
 public class OrderBookListener {
 
@@ -58,7 +55,7 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().toString());
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
 
         OrderEntry buyOrder = createPlacedOrder(event, BUY);
         orderBook.buyOrders().add(buyOrder);
@@ -68,7 +65,7 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().toString());
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
 
         OrderEntry sellOrder = createPlacedOrder(event, SELL);
         orderBook.sellOrders().add(sellOrder);

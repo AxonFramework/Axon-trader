@@ -16,15 +16,12 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.stock.CancelItemReservationForPortfolioCommand;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-/**
- * @author Jettro Coenradie
- */
 public class CancelItemReservationForPortfolioCommandMatcher
         extends BaseCommandMatcher<CancelItemReservationForPortfolioCommand> {
 
@@ -40,26 +37,28 @@ public class CancelItemReservationForPortfolioCommandMatcher
         this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, int amountOfItemsToCancel) {
-        return new CancelItemReservationForPortfolioCommandMatcher(orderbookIdentifier, portfolioIdentifier, amountOfItemsToCancel);
+    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
+                                      int amountOfItemsToCancel) {
+        return new CancelItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
+                                                                   portfolioIdentifier,
+                                                                   amountOfItemsToCancel);
     }
 
     @Override
     protected boolean doMatches(CancelItemReservationForPortfolioCommand command) {
         return command.getOrderBookId().equals(orderBookIdentifier)
-                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
+                && command.getPortfolioId().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToCancel() == amountOfItemsToCancel;
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelItemReservationForPortfolioCommand with amountOfItemsToCancel [")
-                .appendValue(amountOfItemsToCancel)
-                .appendText("] for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("] and for OrderBook with identifier [")
-                .appendValue(orderBookIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfItemsToCancel)
+                   .appendText("] for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("] and for OrderBook with identifier [")
+                   .appendValue(orderBookIdentifier)
+                   .appendText("]");
     }
-
 }

@@ -16,17 +16,13 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Jettro Coenradie
- */
 public class TransactionCommandHandlingTest {
 
     private AggregateTestFixture<Transaction> fixture;
@@ -44,72 +40,80 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testStartBuyTransaction() {
-        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId, orderBook, portfolio, 200, 20);
+        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId,
+                                                                            orderBook,
+                                                                            portfolio,
+                                                                            200,
+                                                                            20);
         fixture.given()
-                .when(command)
-                .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
+               .when(command)
+               .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
     }
 
     @Test
     public void testStartSellTransaction() {
-        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId, orderBook, portfolio, 200, 20);
+        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId,
+                                                                              orderBook,
+                                                                              portfolio,
+                                                                              200,
+                                                                              20);
         fixture.given()
-                .when(command)
-                .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
+               .when(command)
+               .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
     }
 
     @Test
     public void testConfirmTransaction() {
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20))
-                .when(command)
-                .expectEvents(new BuyTransactionConfirmedEvent(transactionId));
+               .when(command)
+               .expectEvents(new BuyTransactionConfirmedEvent(transactionId));
     }
 
     @Test
     public void testCancelTransaction() {
         CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20))
-                .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 0));
+               .when(command)
+               .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 0));
     }
 
     @Test
     public void testCancelTransaction_partiallyExecuted() {
         CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
-                new BuyTransactionPartiallyExecutedEvent(transactionId, 100, 100, 20))
-                .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 100));
+                      new BuyTransactionPartiallyExecutedEvent(transactionId, 100, 100, 20))
+               .when(command)
+               .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 100));
     }
 
     @Test
     public void testExecuteTransaction() {
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 200, 20);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
-                new BuyTransactionConfirmedEvent(transactionId))
-                .when(command)
-                .expectEvents(new BuyTransactionExecutedEvent(transactionId, 200, 20));
+                      new BuyTransactionConfirmedEvent(transactionId))
+               .when(command)
+               .expectEvents(new BuyTransactionExecutedEvent(transactionId, 200, 20));
     }
 
     @Test
     public void testExecuteTransaction_partiallyExecuted() {
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 50, 20);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
-                new BuyTransactionConfirmedEvent(transactionId))
-                .when(command)
-                .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20));
+                      new BuyTransactionConfirmedEvent(transactionId))
+               .when(command)
+               .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20));
     }
 
     @Test
     public void testExecuteTransaction_completeAfterPartiallyExecuted() {
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 150, 20);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
-                new BuyTransactionConfirmedEvent(transactionId),
-                new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20)
+                      new BuyTransactionConfirmedEvent(transactionId),
+                      new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20)
         )
-                .when(command)
-                .expectEvents(new BuyTransactionExecutedEvent(transactionId, 150, 20));
+               .when(command)
+               .expectEvents(new BuyTransactionExecutedEvent(transactionId, 150, 20));
         // TODO moeten we nu ook nog een partially executed event gooien?
     }
 }

@@ -16,15 +16,12 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.stock.ConfirmItemReservationForPortfolioCommand;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-/**
- * @author Jettro Coenradie
- */
 public class ConfirmItemReservationForPortfolioCommandMatcher
         extends BaseCommandMatcher<ConfirmItemReservationForPortfolioCommand> {
 
@@ -39,25 +36,28 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
         this.amountOfConfirmedItems = amountOfConfirmedItems;
     }
 
-    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, int amountOfConfirmedItems) {
-        return new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier, portfolioIdentifier, amountOfConfirmedItems);
+    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
+                                      int amountOfConfirmedItems) {
+        return new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
+                                                                    portfolioIdentifier,
+                                                                    amountOfConfirmedItems);
     }
 
     @Override
     protected boolean doMatches(ConfirmItemReservationForPortfolioCommand command) {
-        return command.getOrderBookIdentifier().equals(orderbookIdentifier)
-                && command.getPortfolioIdentifier().equals(portfolioIdentifier)
+        return command.getOrderBookId().equals(orderbookIdentifier)
+                && command.getPortfolioId().equals(portfolioIdentifier)
                 && amountOfConfirmedItems == command.getAmountOfItemsToConfirm();
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("ConfirmItemReservationForPortfolioCommand with amountOfConfirmedItems [")
-                .appendValue(amountOfConfirmedItems)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderbookIdentifier)
-                .appendText("] and for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfConfirmedItems)
+                   .appendText("] for OrderBook with identifier [")
+                   .appendValue(orderbookIdentifier)
+                   .appendText("] and for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

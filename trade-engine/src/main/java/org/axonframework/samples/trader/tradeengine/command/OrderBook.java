@@ -20,14 +20,14 @@ import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateMember;
 import org.axonframework.commandhandling.model.AggregateRoot;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.OrderId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -35,12 +35,8 @@ import java.util.TreeSet;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-/**
- * @author Allard Buijze
- */
 @AggregateRoot
 public class OrderBook {
-    private static final long serialVersionUID = 6778782949492587631L;
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
@@ -93,13 +89,13 @@ public class OrderBook {
 
     @EventHandler
     protected void onOrderBookCreated(OrderBookCreatedEvent event) {
-        this.orderBookId = event.getOrderBookIdentifier();
+        this.orderBookId = event.getOrderBookId();
     }
 
     @EventHandler
     protected void onBuyPlaced(BuyOrderPlacedEvent event) {
         buyOrders.add(new Order(event.getOrderId(),
-                event.getTransactionIdentifier(),
+                event.getTransactionId(),
                 event.getItemPrice(),
                 event.getTradeCount(),
                 event.getPortfolioId()));
@@ -108,7 +104,7 @@ public class OrderBook {
     @EventHandler
     protected void onSellPlaced(SellOrderPlacedEvent event) {
         sellOrders.add(new Order(event.getOrderId(),
-                event.getTransactionIdentifier(),
+                event.getTransactionId(),
                 event.getItemPrice(),
                 event.getTradeCount(),
                 event.getPortfolioId()));

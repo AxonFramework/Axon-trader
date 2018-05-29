@@ -16,8 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command;
 
-import org.axonframework.samples.trader.api.orders.trades.*;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.OrderId;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.CashReservationRejectedEvent;
 import org.axonframework.samples.trader.api.portfolio.cash.CashReservedEvent;
 import org.axonframework.samples.trader.orders.command.matchers.*;
@@ -28,9 +31,6 @@ import org.junit.Test;
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
 
-/**
- * @author Jettro Coenradie
- */
 public class BuyTradeManagerSagaTest {
 
     private static final long TOTAL_ITEMS = 100;
@@ -50,85 +50,91 @@ public class BuyTradeManagerSagaTest {
     @Test
     public void testHandle_SellTransactionStarted() throws Exception {
         fixture.givenAggregate(transactionIdentifier.toString()).published()
-                .whenAggregate(transactionIdentifier.toString()).publishes(
+               .whenAggregate(transactionIdentifier.toString()).publishes(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
-                        portfolioIdentifier,
-                        TOTAL_ITEMS,
-                        PRICE_PER_ITEM))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(ReserveMoneyFromPortfolioCommandMatcher.newInstance(
-                                portfolioIdentifier,
-                                TOTAL_ITEMS * PRICE_PER_ITEM)));
+                                               orderbookIdentifier,
+                                               portfolioIdentifier,
+                                               TOTAL_ITEMS,
+                                               PRICE_PER_ITEM))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(ReserveMoneyFromPortfolioCommandMatcher.newInstance(
+                               portfolioIdentifier,
+                               TOTAL_ITEMS * PRICE_PER_ITEM)));
     }
 
     @Test
     public void testHandle_MoneyIsReserved() throws Exception {
         fixture.givenAggregate(transactionIdentifier.toString()).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
-                        portfolioIdentifier,
-                        TOTAL_ITEMS,
-                        PRICE_PER_ITEM))
-                .whenAggregate(portfolioIdentifier.toString()).publishes(
+                                               orderbookIdentifier,
+                                               portfolioIdentifier,
+                                               TOTAL_ITEMS,
+                                               PRICE_PER_ITEM))
+               .whenAggregate(portfolioIdentifier.toString()).publishes(
                 new CashReservedEvent(portfolioIdentifier, transactionIdentifier,
-                        TOTAL_ITEMS
-                                * PRICE_PER_ITEM))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(ConfirmTransactionCommandMatcher.newInstance(
-                                transactionIdentifier)));
+                                      TOTAL_ITEMS
+                                              * PRICE_PER_ITEM))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(ConfirmTransactionCommandMatcher.newInstance(
+                               transactionIdentifier)));
     }
 
     @Test
     public void testHandle_NotEnoughMoneyToReserved() throws Exception {
         fixture.givenAggregate(transactionIdentifier.toString()).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
-                        portfolioIdentifier,
-                        TOTAL_ITEMS,
-                        PRICE_PER_ITEM))
-                .whenAggregate(portfolioIdentifier.toString()).publishes(
+                                               orderbookIdentifier,
+                                               portfolioIdentifier,
+                                               TOTAL_ITEMS,
+                                               PRICE_PER_ITEM))
+               .whenAggregate(portfolioIdentifier.toString()).publishes(
                 new CashReservationRejectedEvent(
                         portfolioIdentifier, transactionIdentifier, TOTAL_ITEMS * PRICE_PER_ITEM))
-                .expectActiveSagas(0);
+               .expectActiveSagas(0);
     }
 
     @Test
     public void testHandle_TransactionConfirmed() throws Exception {
         fixture.givenAggregate(transactionIdentifier.toString()).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
-                        portfolioIdentifier,
-                        TOTAL_ITEMS,
-                        PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(
+                                               orderbookIdentifier,
+                                               portfolioIdentifier,
+                                               TOTAL_ITEMS,
+                                               PRICE_PER_ITEM))
+               .andThenAggregate(portfolioIdentifier.toString()).published(
                 new CashReservedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_ITEMS * PRICE_PER_ITEM))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(
-                        CreateBuyOrderCommandMatcher.newInstance(portfolioIdentifier,
-                                orderbookIdentifier,
-                                TOTAL_ITEMS,
-                                PRICE_PER_ITEM)));
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionConfirmedEvent(
+                transactionIdentifier))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(exactSequenceOf(
+                       CreateBuyOrderCommandMatcher.newInstance(portfolioIdentifier,
+                                                                orderbookIdentifier,
+                                                                TOTAL_ITEMS,
+                                                                PRICE_PER_ITEM)));
     }
 
     @Test
     public void testHandle_TransactionCancelled() throws Exception {
-        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(transactionIdentifier,
+        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(
+                transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionCancelledEvent(transactionIdentifier, TOTAL_ITEMS, 0))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(CancelMoneyReservationFromPortfolioCommandMatcher.newInstance(
-                        portfolioIdentifier,
-                        TOTAL_ITEMS * PRICE_PER_ITEM)));
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionCancelledEvent(
+                transactionIdentifier,
+                TOTAL_ITEMS,
+                0))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(exactSequenceOf(CancelMoneyReservationFromPortfolioCommandMatcher
+                                                                         .newInstance(
+                                                                                 portfolioIdentifier,
+                                                                                 TOTAL_ITEMS * PRICE_PER_ITEM)));
     }
 
     @Test
@@ -137,27 +143,30 @@ public class BuyTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
 
         TransactionId sellTransactionIdentifier = new TransactionId();
-        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(transactionIdentifier,
+        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(
+                transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
+               .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
-                .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .whenAggregate(orderbookIdentifier.toString()).publishes(new TradeExecutedEvent(orderbookIdentifier,
-                TOTAL_ITEMS,
-                99,
-                buyOrderIdentifier,
-                sellOrderIdentifier,
-                transactionIdentifier,
-                sellTransactionIdentifier))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(ExecutedTransactionCommandMatcher.newInstance(TOTAL_ITEMS,
-                        99,
-                        transactionIdentifier),
-                        andNoMore()));
+               .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(
+                transactionIdentifier))
+               .whenAggregate(orderbookIdentifier.toString()).publishes(new TradeExecutedEvent(orderbookIdentifier,
+                                                                                               TOTAL_ITEMS,
+                                                                                               99,
+                                                                                               buyOrderIdentifier,
+                                                                                               sellOrderIdentifier,
+                                                                                               transactionIdentifier,
+                                                                                               sellTransactionIdentifier))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(exactSequenceOf(ExecutedTransactionCommandMatcher
+                                                                         .newInstance(TOTAL_ITEMS,
+                                                                                      99,
+                                                                                      transactionIdentifier),
+                                                                 andNoMore()));
     }
 
     @Test
@@ -166,30 +175,36 @@ public class BuyTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
         TransactionId sellTransactionIdentifier = new TransactionId();
 
-        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(transactionIdentifier,
+        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(
+                transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
+               .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
-                .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier, TOTAL_ITEMS,
-                99,
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+               .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(
+                transactionIdentifier))
+               .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
+                                                                                                  TOTAL_ITEMS,
+                                                                                                  99,
+                                                                                                  buyOrderIdentifier,
+                                                                                                  sellOrderIdentifier,
+                                                                                                  transactionIdentifier,
+                                                                                                  sellTransactionIdentifier))
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionExecutedEvent(
                 transactionIdentifier,
-                sellTransactionIdentifier))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionExecutedEvent(transactionIdentifier, TOTAL_ITEMS, 99))
-                .expectActiveSagas(0)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(
-                                ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier,
-                                        TOTAL_ITEMS * 99),
-                                AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier,
-                                        orderbookIdentifier,
-                                        TOTAL_ITEMS)));
+                TOTAL_ITEMS,
+                99))
+               .expectActiveSagas(0)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(
+                               ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier,
+                                                                                               TOTAL_ITEMS * 99),
+                               AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier,
+                                                                             orderbookIdentifier,
+                                                                             TOTAL_ITEMS)));
     }
 
     @Test
@@ -204,33 +219,33 @@ public class BuyTradeManagerSagaTest {
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(portfolioIdentifier,
-                transactionIdentifier,
-                TOTAL_ITEMS
-                        * PRICE_PER_ITEM))
-                .andThenAggregate(transactionIdentifier.toString())
-                .published(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
-                TOTAL_ITEMS,
-                5,
-                buyOrderIdentifier,
-                sellOrderIdentifier,
-                transactionIdentifier,
-                sellTransactionIdentifier))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionExecutedEvent(
+               .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(portfolioIdentifier,
+                                                                                                 transactionIdentifier,
+                                                                                                 TOTAL_ITEMS
+                                                                                                         * PRICE_PER_ITEM))
+               .andThenAggregate(transactionIdentifier.toString())
+               .published(new BuyTransactionConfirmedEvent(transactionIdentifier))
+               .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
+                                                                                                  TOTAL_ITEMS,
+                                                                                                  5,
+                                                                                                  buyOrderIdentifier,
+                                                                                                  sellOrderIdentifier,
+                                                                                                  transactionIdentifier,
+                                                                                                  sellTransactionIdentifier))
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionExecutedEvent(
                 transactionIdentifier,
                 TOTAL_ITEMS,
                 5))
-                .expectActiveSagas(0)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(
-                                CancelMoneyReservationFromPortfolioCommandMatcher.newInstance(portfolioIdentifier,
-                                        TOTAL_ITEMS * 5),
-                                ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier,
-                                        TOTAL_ITEMS * 5),
-                                AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier,
-                                        orderbookIdentifier,
-                                        TOTAL_ITEMS)));
+               .expectActiveSagas(0)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(
+                               CancelMoneyReservationFromPortfolioCommandMatcher.newInstance(portfolioIdentifier,
+                                                                                             TOTAL_ITEMS * 5),
+                               ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier,
+                                                                                               TOTAL_ITEMS * 5),
+                               AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier,
+                                                                             orderbookIdentifier,
+                                                                             TOTAL_ITEMS)));
     }
 
     @Test
@@ -239,28 +254,36 @@ public class BuyTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
         TransactionId sellTransactionIdentifier = new TransactionId();
 
-        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(transactionIdentifier,
+        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(
+                transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
+               .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
-                .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
-                50,
-                99,
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+               .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(
+                transactionIdentifier))
+               .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
+                                                                                                  50,
+                                                                                                  99,
+                                                                                                  buyOrderIdentifier,
+                                                                                                  sellOrderIdentifier,
+                                                                                                  transactionIdentifier,
+                                                                                                  sellTransactionIdentifier))
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionPartiallyExecutedEvent(
                 transactionIdentifier,
-                sellTransactionIdentifier))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionPartiallyExecutedEvent(transactionIdentifier, 50, 50, 99))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(
-                                ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier, 50 * 99),
-                                AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier, orderbookIdentifier, 50)));
+                50,
+                50,
+                99))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(
+                               ConfirmMoneyReservationFromPortfolionCommandMatcher
+                                       .newInstance(portfolioIdentifier, 50 * 99),
+                               AddItemsToPortfolioCommandMatcher
+                                       .newInstance(portfolioIdentifier, orderbookIdentifier, 50)));
     }
 
     @Test
@@ -275,30 +298,32 @@ public class BuyTradeManagerSagaTest {
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(portfolioIdentifier,
-                transactionIdentifier,
-                TOTAL_ITEMS
-                        * PRICE_PER_ITEM))
-                .andThenAggregate(transactionIdentifier.toString())
-                .published(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
-                50,
-                5,
-                buyOrderIdentifier,
-                sellOrderIdentifier,
-                transactionIdentifier,
-                sellTransactionIdentifier))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionPartiallyExecutedEvent(
+               .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(portfolioIdentifier,
+                                                                                                 transactionIdentifier,
+                                                                                                 TOTAL_ITEMS
+                                                                                                         * PRICE_PER_ITEM))
+               .andThenAggregate(transactionIdentifier.toString())
+               .published(new BuyTransactionConfirmedEvent(transactionIdentifier))
+               .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
+                                                                                                  50,
+                                                                                                  5,
+                                                                                                  buyOrderIdentifier,
+                                                                                                  sellOrderIdentifier,
+                                                                                                  transactionIdentifier,
+                                                                                                  sellTransactionIdentifier))
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionPartiallyExecutedEvent(
                 transactionIdentifier,
                 50,
                 50,
                 5))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(
-                                CancelMoneyReservationFromPortfolioCommandMatcher.newInstance(portfolioIdentifier, 250),
-                                ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier, 50 * 5),
-                                AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier, orderbookIdentifier, 50)));
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(
+                               CancelMoneyReservationFromPortfolioCommandMatcher.newInstance(portfolioIdentifier, 250),
+                               ConfirmMoneyReservationFromPortfolionCommandMatcher
+                                       .newInstance(portfolioIdentifier, 50 * 5),
+                               AddItemsToPortfolioCommandMatcher
+                                       .newInstance(portfolioIdentifier, orderbookIdentifier, 50)));
     }
 
     @Test
@@ -307,27 +332,35 @@ public class BuyTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
         TransactionId sellTransactionIdentifier = new TransactionId();
 
-        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(transactionIdentifier,
+        fixture.givenAggregate(transactionIdentifier.toString()).published(new BuyTransactionStartedEvent(
+                transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
+               .andThenAggregate(portfolioIdentifier.toString()).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS * PRICE_PER_ITEM))
-                .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
-                .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
-                50,
-                99,
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+               .andThenAggregate(transactionIdentifier.toString()).published(new BuyTransactionConfirmedEvent(
+                transactionIdentifier))
+               .andThenAggregate(orderbookIdentifier.toString()).published(new TradeExecutedEvent(orderbookIdentifier,
+                                                                                                  50,
+                                                                                                  99,
+                                                                                                  buyOrderIdentifier,
+                                                                                                  sellOrderIdentifier,
+                                                                                                  transactionIdentifier,
+                                                                                                  sellTransactionIdentifier))
+               .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionPartiallyExecutedEvent(
                 transactionIdentifier,
-                sellTransactionIdentifier))
-                .whenAggregate(transactionIdentifier.toString()).publishes(new BuyTransactionPartiallyExecutedEvent(transactionIdentifier, 50, 50, 99))
-                .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(
-                        exactSequenceOf(
-                                ConfirmMoneyReservationFromPortfolionCommandMatcher.newInstance(portfolioIdentifier, 50 * 99),
-                                AddItemsToPortfolioCommandMatcher.newInstance(portfolioIdentifier, orderbookIdentifier, 50)));
+                50,
+                50,
+                99))
+               .expectActiveSagas(1)
+               .expectDispatchedCommandsMatching(
+                       exactSequenceOf(
+                               ConfirmMoneyReservationFromPortfolionCommandMatcher
+                                       .newInstance(portfolioIdentifier, 50 * 99),
+                               AddItemsToPortfolioCommandMatcher
+                                       .newInstance(portfolioIdentifier, orderbookIdentifier, 50)));
     }
 }

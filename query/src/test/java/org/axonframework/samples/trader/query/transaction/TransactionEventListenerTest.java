@@ -17,15 +17,15 @@
 package org.axonframework.samples.trader.query.transaction;
 
 import org.axonframework.samples.trader.api.company.CompanyId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.BuyTransactionStartedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.SellTransactionCancelledEvent;
 import org.axonframework.samples.trader.api.orders.transaction.SellTransactionStartedEvent;
+import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -36,10 +36,6 @@ import static org.axonframework.samples.trader.api.orders.TransactionType.SELL;
 import static org.axonframework.samples.trader.query.transaction.TransactionState.CANCELLED;
 import static org.axonframework.samples.trader.query.transaction.TransactionState.STARTED;
 
-
-/**
- * @author Jettro Coenradie
- */
 public class TransactionEventListenerTest {
 
     public static final TransactionId transactionIdentifier = new TransactionId();
@@ -64,16 +60,16 @@ public class TransactionEventListenerTest {
         listener.setOrderBookQueryRepository(orderBookQueryRepository);
 
         Mockito.when(orderBookQueryRepository.findOne(orderBookIdentifier.toString()))
-                .thenReturn(createOrderBookEntry());
+               .thenReturn(createOrderBookEntry());
     }
 
     @Test
     public void handleBuyTransactionStartedEvent() {
         BuyTransactionStartedEvent event = new BuyTransactionStartedEvent(transactionIdentifier,
-                orderBookIdentifier,
-                portfolioIdentifier,
-                DEFAULT_TOTAL_ITEMS,
-                DEFAULT_ITEM_PRICE);
+                                                                          orderBookIdentifier,
+                                                                          portfolioIdentifier,
+                                                                          DEFAULT_TOTAL_ITEMS,
+                                                                          DEFAULT_ITEM_PRICE);
         listener.handleEvent(event);
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
@@ -90,10 +86,10 @@ public class TransactionEventListenerTest {
     @Test
     public void handleSellTransactionStartedEvent() {
         SellTransactionStartedEvent event = new SellTransactionStartedEvent(transactionIdentifier,
-                orderBookIdentifier,
-                portfolioIdentifier,
-                DEFAULT_TOTAL_ITEMS,
-                DEFAULT_ITEM_PRICE);
+                                                                            orderBookIdentifier,
+                                                                            portfolioIdentifier,
+                                                                            DEFAULT_TOTAL_ITEMS,
+                                                                            DEFAULT_ITEM_PRICE);
         listener.handleEvent(event);
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(

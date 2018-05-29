@@ -19,8 +19,13 @@ package org.axonframework.samples.trader.query.orderbook;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.api.company.OrderBookAddedToCompanyEvent;
-import org.axonframework.samples.trader.api.orders.trades.*;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.OrderId;
+import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.CompanyListener;
@@ -110,7 +115,12 @@ public class OrderBookListenerIntegrationTest {
         OrderBookEntry orderBook = createOrderBook(company);
 
         OrderBookId orderBookId = new OrderBookId(orderBook.getIdentifier());
-        SellOrderPlacedEvent event = new SellOrderPlacedEvent(orderBookId, orderId, transactionId, 300, 100, portfolioId);
+        SellOrderPlacedEvent event = new SellOrderPlacedEvent(orderBookId,
+                                                              orderId,
+                                                              transactionId,
+                                                              300,
+                                                              100,
+                                                              portfolioId);
 
         orderBookListener.handleSellOrderPlaced(event);
         Iterable<OrderBookEntry> all = orderBookRepository.findAll();
@@ -129,11 +139,11 @@ public class OrderBookListenerIntegrationTest {
         OrderId sellOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
         SellOrderPlacedEvent sellOrderPlacedEvent = new SellOrderPlacedEvent(orderBookId,
-                sellOrderId,
-                sellTransactionId,
-                400,
-                100,
-                portfolioId);
+                                                                             sellOrderId,
+                                                                             sellTransactionId,
+                                                                             400,
+                                                                             100,
+                                                                             portfolioId);
 
         orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
 
@@ -141,10 +151,10 @@ public class OrderBookListenerIntegrationTest {
         TransactionId buyTransactionId = new TransactionId();
         BuyOrderPlacedEvent buyOrderPlacedEvent = new BuyOrderPlacedEvent(orderBookId
                 , buyOrderId,
-                buyTransactionId,
-                300,
-                150,
-                portfolioId);
+                                                                          buyTransactionId,
+                                                                          300,
+                                                                          150,
+                                                                          portfolioId);
 
         orderBookListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
 
@@ -157,12 +167,12 @@ public class OrderBookListenerIntegrationTest {
 
 
         TradeExecutedEvent event = new TradeExecutedEvent(orderBookId,
-                300,
-                125,
-                buyOrderId,
-                sellOrderId,
-                buyTransactionId,
-                sellTransactionId);
+                                                          300,
+                                                          125,
+                                                          buyOrderId,
+                                                          sellOrderId,
+                                                          buyTransactionId,
+                                                          sellTransactionId);
         orderBookListener.handleTradeExecuted(event);
 
         Iterable<TradeExecutedEntry> tradeExecutedEntries = tradeExecutedRepository.findAll();

@@ -16,8 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command;
 
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.*;
 import org.axonframework.samples.trader.api.orders.transaction.*;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolioEvent;
 import org.axonframework.samples.trader.orders.command.matchers.*;
@@ -28,9 +31,6 @@ import org.junit.Test;
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
 
-/**
- * @author Jettro Coenradie
- */
 public class SellTradeManagerSagaTest {
 
     private TransactionId transactionIdentifier = new TransactionId();

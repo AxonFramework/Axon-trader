@@ -22,6 +22,7 @@ import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
 import org.axonframework.samples.trader.api.users.UserAccount;
+import org.axonframework.samples.trader.api.users.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -69,7 +70,8 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
         FutureCallback<AuthenticateUserCommand, UserAccount> accountCallback = new FutureCallback<>();
-        AuthenticateUserCommand command = new AuthenticateUserCommand(username, password.toCharArray());
+        UserId userId = new UserId(); // TODO replace this with the actual aggregate identifier
+        AuthenticateUserCommand command = new AuthenticateUserCommand(userId, username, password.toCharArray());
         try {
             commandBus.dispatch(new GenericCommandMessage<>(command), accountCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before

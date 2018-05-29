@@ -18,14 +18,14 @@ package org.axonframework.samples.trader.webui.admin;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
+import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * @author Jettro Coenradie
- */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -81,9 +78,9 @@ public class AdminController {
     ) {
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(new PortfolioId(
                 portfolioIdentifier),
-                new OrderBookId(
-                        orderBookIdentifier),
-                amount);
+                                                                            new OrderBookId(
+                                                                                    orderBookIdentifier),
+                                                                            amount);
         commandBus.dispatch(new GenericCommandMessage<>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }

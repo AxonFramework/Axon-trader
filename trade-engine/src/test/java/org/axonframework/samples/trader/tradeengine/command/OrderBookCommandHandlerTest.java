@@ -16,15 +16,15 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.*;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Allard Buijze
- */
 public class OrderBookCommandHandlerTest {
 
     private AggregateTestFixture<OrderBook> fixture;

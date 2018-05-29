@@ -17,14 +17,11 @@
 package org.axonframework.samples.trader.tradeengine.command;
 
 import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.api.orders.trades.OrderId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 
-/**
- * @author Allard Buijze
- */
 class Order {
 
     private OrderId orderId;

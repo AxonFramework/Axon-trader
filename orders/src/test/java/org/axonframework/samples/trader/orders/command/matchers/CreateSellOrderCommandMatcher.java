@@ -16,15 +16,12 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-/**
- * @author Jettro Coenradie
- */
 public class CreateSellOrderCommandMatcher extends BaseCommandMatcher<CreateSellOrderCommand> {
 
     private OrderBookId orderbookIdentifier;

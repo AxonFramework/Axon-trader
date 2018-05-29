@@ -19,11 +19,10 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateRoot;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.axonframework.samples.trader.api.orders.transaction.*;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
-import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
@@ -32,6 +31,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
  */
 @AggregateRoot
 public class Transaction {
+
     private static final long serialVersionUID = 1299083385130634014L;
 
     @AggregateIdentifier
@@ -54,17 +54,17 @@ public class Transaction {
         switch (type) {
             case BUY:
                 apply(new BuyTransactionStartedEvent(transactionId,
-                        orderbookIdentifier,
-                        portfolioIdentifier,
-                        amountOfItems,
-                        pricePerItem));
+                                                     orderbookIdentifier,
+                                                     portfolioIdentifier,
+                                                     amountOfItems,
+                                                     pricePerItem));
                 break;
             case SELL:
                 apply(new SellTransactionStartedEvent(transactionId,
-                        orderbookIdentifier,
-                        portfolioIdentifier,
-                        amountOfItems,
-                        pricePerItem));
+                                                      orderbookIdentifier,
+                                                      portfolioIdentifier,
+                                                      amountOfItems,
+                                                      pricePerItem));
                 break;
         }
     }
@@ -96,9 +96,9 @@ public class Transaction {
             case BUY:
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
-                            amountOfItems,
-                            amountOfItems + amountOfExecutedItems,
-                            itemPrice));
+                                                                   amountOfItems,
+                                                                   amountOfItems + amountOfExecutedItems,
+                                                                   itemPrice));
                 } else {
                     apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
                 }
@@ -106,9 +106,9 @@ public class Transaction {
             case SELL:
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new SellTransactionPartiallyExecutedEvent(transactionId,
-                            amountOfItems,
-                            amountOfItems + amountOfExecutedItems,
-                            itemPrice));
+                                                                    amountOfItems,
+                                                                    amountOfItems + amountOfExecutedItems,
+                                                                    itemPrice));
                 } else {
                     apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
                 }

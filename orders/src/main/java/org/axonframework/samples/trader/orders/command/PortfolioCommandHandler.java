@@ -66,9 +66,9 @@ public class PortfolioCommandHandler {
 
     @CommandHandler
     public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
-        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioId().toString());
         portfolio.execute(aggregateRoot -> {
-            aggregateRoot.confirmReservation(command.getOrderBookIdentifier(),
+            aggregateRoot.confirmReservation(command.getOrderBookId(),
                                              command.getTransactionId(),
                                              command.getAmountOfItemsToConfirm());
         });
@@ -76,7 +76,7 @@ public class PortfolioCommandHandler {
 
     @CommandHandler
     public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
-        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioIdentifier().toString());
+        Aggregate<Portfolio> portfolio = portfolioRepository.load(command.getPortfolioId().toString());
         portfolio.execute(aggregateRoot -> {
             aggregateRoot.cancelReservation(command.getOrderBookId(),
                                             command.getTransactionId(),

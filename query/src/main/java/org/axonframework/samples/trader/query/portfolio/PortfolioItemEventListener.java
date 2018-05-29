@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Jettro Coenradie
- */
 @Component
 public class PortfolioItemEventListener {
 
@@ -79,8 +76,8 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemsReservedEvent event) {
-        logger.debug("Handle ItemsReservedEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
-        ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().toString(),
+        logger.debug("Handle ItemsReservedEvent for orderbook with identifier {}", event.getOrderBookId());
+        ItemEntry itemEntry = createItemEntry(event.getOrderBookId().toString(),
                 event.getAmountOfItemsReserved());
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioId().toString());

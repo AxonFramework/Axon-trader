@@ -22,9 +22,6 @@ import org.axonframework.samples.trader.query.company.repositories.CompanyQueryR
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Jettro Coenradie
- */
 @Component
 public class CompanyListener {
 
@@ -33,7 +30,7 @@ public class CompanyListener {
     @EventHandler
     public void handleCompanyCreatedEvent(CompanyCreatedEvent event) {
         CompanyEntry companyEntry = new CompanyEntry();
-        companyEntry.setIdentifier(event.getCompanyIdentifier().toString());
+        companyEntry.setIdentifier(event.getCompanyId().toString());
         companyEntry.setValue(event.getCompanyValue());
         companyEntry.setAmountOfShares(event.getAmountOfShares());
         companyEntry.setTradeStarted(true);

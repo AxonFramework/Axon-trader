@@ -16,15 +16,12 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.stock.ReserveItemsCommand;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-/**
- * @author Jettro Coenradie
- */
 public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItemsCommand> {
 
     private OrderBookId orderbookIdentifier;
@@ -38,7 +35,8 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
         this.amountOfReservedItems = amountOfReservedItems;
     }
 
-    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, int amountOfReservedItems) {
+    public static Matcher newInstance(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
+                                      int amountOfReservedItems) {
         return new ReservedItemsCommandMatcher(orderbookIdentifier, portfolioIdentifier, amountOfReservedItems);
     }
 
@@ -52,11 +50,11 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
     @Override
     public void describeTo(Description description) {
         description.appendText("ReserveItemsCommand with amountOfReservedItems [")
-                .appendValue(amountOfReservedItems)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderbookIdentifier)
-                .appendText("] and for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfReservedItems)
+                   .appendText("] for OrderBook with identifier [")
+                   .appendValue(orderbookIdentifier)
+                   .appendText("] and for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
 }

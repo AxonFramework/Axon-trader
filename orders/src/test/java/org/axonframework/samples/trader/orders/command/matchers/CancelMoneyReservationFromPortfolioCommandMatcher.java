@@ -16,14 +16,11 @@
 
 package org.axonframework.samples.trader.orders.command.matchers;
 
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.CancelCashReservationCommand;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-/**
- * @author Jettro Coenradie
- */
 public class CancelMoneyReservationFromPortfolioCommandMatcher
         extends BaseCommandMatcher<CancelCashReservationCommand> {
 
@@ -49,10 +46,9 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher
     @Override
     public void describeTo(Description description) {
         description.appendText("CancelCashReservationCommand with amountOfMoneyToCancel [")
-                .appendValue(amountOfMoneyToCancel)
-                .appendText("] for Portfolio with identifier [")
-                .appendValue(portfolioIdentifier)
-                .appendText("]");
+                   .appendValue(amountOfMoneyToCancel)
+                   .appendText("] for Portfolio with identifier [")
+                   .appendValue(portfolioIdentifier)
+                   .appendText("]");
     }
-
 }

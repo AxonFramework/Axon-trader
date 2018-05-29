@@ -27,9 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-/**
- * @author Jettro Coenradie
- */
 public class UserCommandHandlerTest {
 
     private AggregateTestFixture<User> fixture;
@@ -49,7 +46,7 @@ public class UserCommandHandlerTest {
 
 
     @Test
-    public void testHandleCreateUser() throws Exception {
+    public void testHandleCreateUser() {
         UserId aggregateIdentifier = new UserId();
         fixture.given()
                 .when(new CreateUserCommand(aggregateIdentifier, "Buyer 1", "buyer1", "buyer1"))
@@ -57,7 +54,7 @@ public class UserCommandHandlerTest {
     }
 
     @Test
-    public void testHandleAuthenticateUser() throws Exception {
+    public void testHandleAuthenticateUser() {
         UserId aggregateIdentifier = new UserId();
 
         UserEntry userEntry = new UserEntry();
@@ -67,7 +64,7 @@ public class UserCommandHandlerTest {
         Mockito.when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 
         fixture.given(new UserCreatedEvent(aggregateIdentifier, "Buyer 1", "buyer1", DigestUtils.sha1("buyer1")))
-                .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
+                .when(new AuthenticateUserCommand(aggregateIdentifier, "buyer1", "buyer1".toCharArray()))
                 .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier));
     }
 }

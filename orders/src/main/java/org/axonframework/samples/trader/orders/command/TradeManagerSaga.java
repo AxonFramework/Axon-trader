@@ -17,14 +17,11 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * @author Jettro Coenradie
- */
 public abstract class TradeManagerSaga {
 
     private transient CommandBus commandBus;

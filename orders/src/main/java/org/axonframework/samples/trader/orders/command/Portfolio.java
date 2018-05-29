@@ -19,10 +19,10 @@ package org.axonframework.samples.trader.orders.command;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateRoot;
 import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.api.portfolio.stock.*;
 import org.axonframework.samples.trader.api.users.UserId;
@@ -43,6 +43,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
  */
 @AggregateRoot
 public class Portfolio {
+
     private static final long serialVersionUID = 996371335141649977L;
 
     @AggregateIdentifier
@@ -64,16 +65,26 @@ public class Portfolio {
         apply(new ItemsAddedToPortfolioEvent(portfolioId, orderBookIdentifier, amountOfItemsToAdd));
     }
 
-    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, long amountOfItemsToReserve) {
+    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
+                             long amountOfItemsToReserve) {
         if (!availableItems.containsKey(orderBookIdentifier)) {
-            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, orderBookIdentifier, transactionIdentifier));
+            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId,
+                                                                orderBookIdentifier,
+                                                                transactionIdentifier));
         } else {
             Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
             if (availableAmountOfItems < amountOfItemsToReserve) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolioEvent(
-                        portfolioId, orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
+                        portfolioId,
+                        orderBookIdentifier,
+                        transactionIdentifier,
+                        availableAmountOfItems,
+                        amountOfItemsToReserve));
             } else {
-                apply(new ItemsReservedEvent(portfolioId, orderBookIdentifier, transactionIdentifier, amountOfItemsToReserve));
+                apply(new ItemsReservedEvent(portfolioId,
+                                             orderBookIdentifier,
+                                             transactionIdentifier,
+                                             amountOfItemsToReserve));
             }
         }
     }
@@ -87,7 +98,8 @@ public class Portfolio {
                 amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, long amountOfItemsToCancel) {
+    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
+                                  long amountOfItemsToCancel) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
                 orderBookIdentifier,
@@ -133,11 +145,11 @@ public class Portfolio {
 
     @EventHandler
     public void onItemsReserved(ItemsReservedEvent event) {
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfItemsReserved());
+        long available = obtainCurrentAvailableItems(event.getOrderBookId());
+        availableItems.put(event.getOrderBookId(), available - event.getAmountOfItemsReserved());
 
-        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfItemsReserved());
+        long reserved = obtainCurrentReservedItems(event.getOrderBookId());
+        reservedItems.put(event.getOrderBookId(), reserved + event.getAmountOfItemsReserved());
     }
 
     @EventHandler

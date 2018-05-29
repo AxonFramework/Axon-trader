@@ -20,7 +20,7 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
-import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
+import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
