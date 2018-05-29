@@ -40,7 +40,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
  * When buying items you need to reserve cash. Reservations need to be confirmed or cancelled. It is up to the user
  * to confirm and cancel the right amounts. The Portfolio does not keep track of it.
  */
-@Aggregate
+@Aggregate(repository = "portfolioRepository")
 public class Portfolio {
 
     private static final long DEFAULT_ITEM_VALUE = 0L;

@@ -17,6 +17,7 @@
 package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
  * TODO #28 might benefit from a cleaner approach still. Think about this
  */
 @Service
+@ProcessingGroup("commandPublishingEventHandlers")
 public class PortfolioManagementUserListener {
 
     private static final Logger logger = LoggerFactory.getLogger(PortfolioManagementUserListener.class);

@@ -25,7 +25,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-@Aggregate
+@Aggregate(repository = "transactionRepository")
 public class Transaction {
 
     @AggregateIdentifier

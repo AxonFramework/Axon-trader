@@ -25,10 +25,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CompaniesConfig {
+public class CompanyConfig {
 
     private static final int SNAPSHOT_THRESHOLD = 50;
 
+    //TODO #28 this should become an overall snapshot trigger definition i.o. in the company config
     @Bean
     public SnapshotTriggerDefinition snapshotTriggerDefinition(Snapshotter snapshotter) {
         return new EventCountSnapshotTriggerDefinition(snapshotter, SNAPSHOT_THRESHOLD);

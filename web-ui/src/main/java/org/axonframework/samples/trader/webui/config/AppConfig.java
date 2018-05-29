@@ -16,15 +16,15 @@
 
 package org.axonframework.samples.trader.webui.config;
 
-import org.axonframework.samples.trader.company.config.CompaniesConfig;
+import org.axonframework.samples.trader.company.config.CompanyConfig;
 import org.axonframework.samples.trader.infra.config.CQRSInfrastructureConfig;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
 import org.axonframework.samples.trader.listener.config.ExternalListenersConfig;
-import org.axonframework.samples.trader.orders.config.OrdersConfig;
+import org.axonframework.samples.trader.orders.config.OrderConfig;
 import org.axonframework.samples.trader.query.config.QueryConfig;
 import org.axonframework.samples.trader.query.users.config.UsersQueryConfig;
 import org.axonframework.samples.trader.tradeengine.config.TradeEngineConfig;
-import org.axonframework.samples.trader.users.config.UsersConfig;
+import org.axonframework.samples.trader.users.config.UserConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
@@ -34,10 +34,10 @@ import org.springframework.context.annotation.ImportResource;
         CQRSInfrastructureConfig.class,
         PersistenceInfrastructureConfig.class,
         TradeEngineConfig.class,
-        CompaniesConfig.class,
-        OrdersConfig.class,
+        CompanyConfig.class,
+        OrderConfig.class,
         ExternalListenersConfig.class,
-        UsersConfig.class,
+        UserConfig.class,
         UsersQueryConfig.class,
         QueryConfig.class
 })

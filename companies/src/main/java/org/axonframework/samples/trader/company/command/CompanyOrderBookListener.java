@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
  * This listener is used to create order book instances when we have created a new company</p>
  */
 @Service
-@ProcessingGroup("companiesEventProcessor")
+@ProcessingGroup("commandPublishingEventHandlers")
 public class CompanyOrderBookListener {
 
     private static final Logger logger = LoggerFactory.getLogger(CompanyOrderBookListener.class);
