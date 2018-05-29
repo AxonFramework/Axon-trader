@@ -100,7 +100,7 @@ public class OrderBookListenerIntegrationTest {
         assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
         assertEquals("Test Company", orderBookEntry.getCompanyName());
         assertEquals(1, orderBookEntry.buyOrders().size());
-        assertEquals(300, orderBookEntry.buyOrders().get(0).getTradeCount());
+        assertEquals(300, orderBookEntry.buyOrders().iterator().next().getTradeCount());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class OrderBookListenerIntegrationTest {
         assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
         assertEquals("Test Company", orderBookEntry.getCompanyName());
         assertEquals(1, orderBookEntry.sellOrders().size());
-        assertEquals(300, orderBookEntry.sellOrders().get(0).getTradeCount());
+        assertEquals(300, orderBookEntry.sellOrders().iterator().next().getTradeCount());
     }
 
     @Test
