@@ -16,14 +16,16 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.commandhandling.model.EntityId;
+import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.samples.trader.api.orders.OrderId;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 
-class Order {
+public class Order {
 
+    @EntityId
     private OrderId orderId;
     private TransactionId transactionId;
     private final long itemPrice;
@@ -60,19 +62,18 @@ class Order {
         return orderId;
     }
 
-    private void recordTraded(long tradeCount) {
-        this.itemsRemaining -= tradeCount;
-    }
-
     public TransactionId getTransactionId() {
         return transactionId;
     }
 
-    @EventHandler
+    @EventSourcingHandler
     protected void onTradeExecuted(TradeExecutedEvent event) {
-        if (orderId.equals(event.getBuyOrderId())
-                || orderId.equals(event.getSellOrderId())) {
+        if (orderId.equals(event.getBuyOrderId()) || orderId.equals(event.getSellOrderId())) {
             recordTraded(event.getTradeCount());
         }
+    }
+
+    private void recordTraded(long tradeCount) {
+        this.itemsRemaining -= tradeCount;
     }
 }

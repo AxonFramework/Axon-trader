@@ -16,53 +16,56 @@
 
 package org.axonframework.samples.trader.tradeengine.command;
 
-import org.axonframework.commandhandling.model.AggregateIdentifier;
-import org.axonframework.commandhandling.model.AggregateMember;
-import org.axonframework.commandhandling.model.AggregateRoot;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.api.orders.OrderBookId;
-import org.axonframework.samples.trader.api.orders.OrderId;
-import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.OrderBookCreatedEvent;
-import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
-import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
-import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
-import org.axonframework.samples.trader.api.portfolio.PortfolioId;
+import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.model.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateMember;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.samples.trader.api.orders.OrderBookId;
+import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.CreateBuyOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;
+import org.axonframework.samples.trader.api.orders.trades.CreateSellOrderCommand;
+import org.axonframework.samples.trader.api.orders.trades.OrderBookCreatedEvent;
+import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
+import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
+import org.axonframework.spring.stereotype.Aggregate;
 
-@AggregateRoot
+@Aggregate(repository = "companyAggregateRepository")
 public class OrderBook {
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
 
     @AggregateMember
-    private SortedSet<Order> buyOrders = new TreeSet<>(new OrderComparator());
+    private SortedSet<Order> buyOrders;
     @AggregateMember
-    private SortedSet<Order> sellOrders = new TreeSet<>(new OrderComparator());
+    private SortedSet<Order> sellOrders;
 
     @SuppressWarnings("UnusedDeclaration")
     public OrderBook() {
+        // Required by Axon Framework
     }
 
-    public OrderBook(OrderBookId identifier) {
-        apply(new OrderBookCreatedEvent(identifier));
+    @CommandHandler
+    public OrderBook(CreateOrderBookCommand cmd) {
+        apply(new OrderBookCreatedEvent(cmd.getOrderBookId()));
     }
 
-    public void addBuyOrder(OrderId orderId, TransactionId transactionId, long tradeCount,
-                            long itemPrice, PortfolioId portfolioId) {
-        apply(new BuyOrderPlacedEvent(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId));
+    @CommandHandler
+    public void handle(CreateBuyOrderCommand cmd) {
+        apply(new BuyOrderPlacedEvent(orderBookId, cmd.getOrderId(), cmd.getTransactionId(), cmd.getTradeCount(), cmd.getItemPrice(), cmd.getPortfolioId()));
         executeTrades();
     }
 
-    public void addSellOrder(OrderId orderId, TransactionId transactionId, long tradeCount,
-                             long itemPrice, PortfolioId portfolioId) {
-        apply(new SellOrderPlacedEvent(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId));
+    @CommandHandler
+    public void handle(CreateSellOrderCommand cmd) {
+        apply(new SellOrderPlacedEvent(orderBookId, cmd.getOrderId(), cmd.getTransactionId(), cmd.getTradeCount(), cmd.getItemPrice(), cmd.getPortfolioId()));
         executeTrades();
     }
 
@@ -75,48 +78,51 @@ public class OrderBook {
                 long matchedTradeCount = Math.min(highestBuyer.getItemsRemaining(), lowestSeller.getItemsRemaining());
                 long matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
                 apply(new TradeExecutedEvent(orderBookId,
-                        matchedTradeCount,
-                        matchedTradePrice,
-                        highestBuyer.getOrderId(),
-                        lowestSeller.getOrderId(),
-                        highestBuyer.getTransactionId(),
-                        lowestSeller.getTransactionId()));
+                                             matchedTradeCount,
+                                             matchedTradePrice,
+                                             highestBuyer.getOrderId(),
+                                             lowestSeller.getOrderId(),
+                                             highestBuyer.getTransactionId(),
+                                             lowestSeller.getTransactionId()));
             } else {
                 tradingDone = true;
             }
         }
     }
 
-    @EventHandler
-    protected void onOrderBookCreated(OrderBookCreatedEvent event) {
+    @EventSourcingHandler
+    protected void on(OrderBookCreatedEvent event) {
         this.orderBookId = event.getOrderBookId();
+        buyOrders = new TreeSet<>(new OrderComparator());
+        sellOrders = new TreeSet<>(new OrderComparator());
     }
 
-    @EventHandler
-    protected void onBuyPlaced(BuyOrderPlacedEvent event) {
+    @EventSourcingHandler
+    protected void on(BuyOrderPlacedEvent event) {
         buyOrders.add(new Order(event.getOrderId(),
-                event.getTransactionId(),
-                event.getItemPrice(),
-                event.getTradeCount(),
-                event.getPortfolioId()));
+                                event.getTransactionId(),
+                                event.getItemPrice(),
+                                event.getTradeCount(),
+                                event.getPortfolioId()));
     }
 
-    @EventHandler
-    protected void onSellPlaced(SellOrderPlacedEvent event) {
+    @EventSourcingHandler
+    protected void on(SellOrderPlacedEvent event) {
         sellOrders.add(new Order(event.getOrderId(),
-                event.getTransactionId(),
-                event.getItemPrice(),
-                event.getTradeCount(),
-                event.getPortfolioId()));
+                                 event.getTransactionId(),
+                                 event.getItemPrice(),
+                                 event.getTradeCount(),
+                                 event.getPortfolioId()));
     }
 
-    @EventHandler
-    protected void onTradeExecuted(TradeExecutedEvent event) {
+    @EventSourcingHandler
+    protected void on(TradeExecutedEvent event) {
         Order highestBuyer = buyOrders.last();
-        Order lowestSeller = sellOrders.first();
         if (highestBuyer.getItemsRemaining() <= event.getTradeCount()) {
             buyOrders.remove(highestBuyer);
         }
+
+        Order lowestSeller = sellOrders.first();
         if (lowestSeller.getItemsRemaining() <= event.getTradeCount()) {
             sellOrders.remove(lowestSeller);
         }
@@ -125,10 +131,9 @@ public class OrderBook {
     private static class OrderComparator implements Comparator<Order> {
 
         public int compare(Order o1, Order o2) {
-            // copied from Java 7 Long.compareTo to support java 6
             long x = o1.getItemPrice();
             long y = o2.getItemPrice();
-            return (x < y) ? -1 : ((x == y) ? 0 : 1);
+            return Long.compare(x, y);
         }
     }
 }
