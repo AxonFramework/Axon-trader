@@ -38,11 +38,10 @@ public class OrderConfig {
                                                               EventStore eventStore,
                                                               Cache cache,
                                                               SnapshotTriggerDefinition snapshotTriggerDefinition) {
-        return new CachingEventSourcingRepository<>(
-                portfolioAggregateFactory,
-                eventStore,
-                cache,
-                snapshotTriggerDefinition);
+        return new CachingEventSourcingRepository<>(portfolioAggregateFactory,
+                                                    eventStore,
+                                                    cache,
+                                                    snapshotTriggerDefinition);
     }
 
     @Bean(name = "transactionAggregateRepository")
@@ -51,11 +50,10 @@ public class OrderConfig {
             EventStore eventStore,
             Cache cache,
             SnapshotTriggerDefinition snapshotTriggerDefinition) {
-        return new CachingEventSourcingRepository<>(
-                transactionAggregateFactory,
-                eventStore,
-                cache,
-                snapshotTriggerDefinition);
+        return new CachingEventSourcingRepository<>(transactionAggregateFactory,
+                                                    eventStore,
+                                                    cache,
+                                                    snapshotTriggerDefinition);
     }
 
 

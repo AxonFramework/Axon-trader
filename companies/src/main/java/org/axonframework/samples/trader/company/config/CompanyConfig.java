@@ -18,7 +18,11 @@ package org.axonframework.samples.trader.company.config;
 
 import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.common.caching.Cache;
-import org.axonframework.eventsourcing.*;
+import org.axonframework.eventsourcing.AggregateFactory;
+import org.axonframework.eventsourcing.CachingEventSourcingRepository;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.Snapshotter;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.company.command.Company;
 import org.springframework.context.annotation.Bean;
@@ -40,10 +44,9 @@ public class CompanyConfig {
                                                           EventStore eventStore,
                                                           Cache cache,
                                                           SnapshotTriggerDefinition snapshotTriggerDefinition) {
-        return new CachingEventSourcingRepository<>(
-                companyAggregateFactory,
-                eventStore,
-                cache,
-                snapshotTriggerDefinition);
+        return new CachingEventSourcingRepository<>(companyAggregateFactory,
+                                                    eventStore,
+                                                    cache,
+                                                    snapshotTriggerDefinition);
     }
 }
