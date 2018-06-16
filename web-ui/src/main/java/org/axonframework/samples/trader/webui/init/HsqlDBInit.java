@@ -9,7 +9,7 @@ import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQu
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
-import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class HsqlDBInit extends BaseDBInit {
     private EventSchema eventSchema;
     private SagaSqlSchema sagaSqlSchema;
     private DataSource dataSource;
-    private UserQueryRepository userQueryRepository;
+    private UserViewRepository userViewRepository;
     private CompanyQueryRepository companyQueryRepository;
     private OrderBookQueryRepository orderBookQueryRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
@@ -50,7 +50,7 @@ public class HsqlDBInit extends BaseDBInit {
                       EventTableFactory eventTableFactory,
                       EventSchema eventSchema,
                       SagaSqlSchema sagaSqlSchema, DataSource dataSource,
-                      UserQueryRepository userQueryRepository, CompanyQueryRepository companyQueryRepository,
+                      UserViewRepository userViewRepository, CompanyQueryRepository companyQueryRepository,
                       OrderBookQueryRepository orderBookQueryRepository,
                       PortfolioQueryRepository portfolioQueryRepository,
                       TradeExecutedQueryRepository tradeExecutedQueryRepository,
@@ -60,7 +60,7 @@ public class HsqlDBInit extends BaseDBInit {
         this.eventSchema = eventSchema;
         this.sagaSqlSchema = sagaSqlSchema;
         this.dataSource = dataSource;
-        this.userQueryRepository = userQueryRepository;
+        this.userViewRepository = userViewRepository;
         this.companyQueryRepository = companyQueryRepository;
         this.orderBookQueryRepository = orderBookQueryRepository;
         this.portfolioQueryRepository = portfolioQueryRepository;
@@ -80,7 +80,7 @@ public class HsqlDBInit extends BaseDBInit {
             sql_dropTableAssocValueEntry(connection).execute();
             sql_dropTableSagaEntry(connection).execute();
 
-            userQueryRepository.deleteAll();
+            userViewRepository.deleteAll();
             transactionQueryRepository.deleteAll();
             tradeExecutedQueryRepository.deleteAll();
             orderBookQueryRepository.deleteAll();
@@ -126,7 +126,7 @@ public class HsqlDBInit extends BaseDBInit {
     @Override
     public void createItemsIfNoUsersExist() {
         logger.info("Check if data needs to be initialized.");
-        if (userQueryRepository.count() == 0) {
+        if (userViewRepository.count() == 0) {
             logger.info("Initializing the users.");
             createItems();
         }

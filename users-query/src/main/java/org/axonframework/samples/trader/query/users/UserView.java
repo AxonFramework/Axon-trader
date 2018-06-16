@@ -23,7 +23,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 
 @Entity
-public class UserEntry implements UserAccount, Serializable {
+public class UserView implements UserAccount, Serializable {
 
     @Id
     @javax.persistence.Id

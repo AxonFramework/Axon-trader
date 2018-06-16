@@ -18,27 +18,27 @@ package org.axonframework.samples.trader.query.users;
 
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
-import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserEventHandler {
 
-    private final UserQueryRepository userRepository;
+    private final UserViewRepository userRepository;
 
-    public UserEventHandler(UserQueryRepository userRepository) {
+    public UserEventHandler(UserViewRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @EventHandler
     public void on(UserCreatedEvent event) {
-        UserEntry userEntry = new UserEntry();
+        UserView userView = new UserView();
 
-        userEntry.setIdentifier(event.getUserId().toString());
-        userEntry.setName(event.getName());
-        userEntry.setUsername(event.getUsername());
-        userEntry.setPassword(event.getPassword());
+        userView.setIdentifier(event.getUserId().toString());
+        userView.setName(event.getName());
+        userView.setUsername(event.getUsername());
+        userView.setPassword(event.getPassword());
 
-        userRepository.save(userEntry);
+        userRepository.save(userView);
     }
 }

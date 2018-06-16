@@ -16,12 +16,12 @@
 
 package org.axonframework.samples.trader.query.users.repositories;
 
-import org.axonframework.samples.trader.query.users.UserEntry;
+import org.axonframework.samples.trader.query.users.UserView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserQueryRepository extends JpaRepository<UserEntry, String> {
+public interface UserViewRepository extends JpaRepository<UserView, String> {
 
-    UserEntry findByUsername(String username);
+    UserView findByUsername(String username);
 
-    UserEntry findByIdentifier(String identifier);
+    UserView findByIdentifier(String identifier);
 }

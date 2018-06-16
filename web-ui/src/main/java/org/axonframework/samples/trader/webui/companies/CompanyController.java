@@ -31,8 +31,8 @@ import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.axonframework.samples.trader.query.users.UserEntry;
-import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.query.users.UserView;
+import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.axonframework.samples.trader.webui.order.AbstractOrder;
 import org.axonframework.samples.trader.webui.order.BuyOrder;
 import org.axonframework.samples.trader.webui.order.SellOrder;
@@ -58,7 +58,7 @@ public class CompanyController {
 
     private CompanyQueryRepository companyRepository;
     private OrderBookQueryRepository orderBookRepository;
-    private UserQueryRepository userRepository;
+    private UserViewRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
     private CommandBus commandBus;
@@ -67,7 +67,7 @@ public class CompanyController {
     @Autowired
     public CompanyController(CompanyQueryRepository companyRepository,
                              CommandBus commandBus,
-                             UserQueryRepository userRepository,
+                             UserViewRepository userRepository,
                              OrderBookQueryRepository orderBookRepository,
                              TradeExecutedQueryRepository tradeExecutedRepository,
                              PortfolioQueryRepository portfolioQueryRepository) {
@@ -217,7 +217,7 @@ public class CompanyController {
      * @return The found portfolio for the logged in user.
      */
     private PortfolioEntry obtainPortfolioForUser() {
-        UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
+        UserView username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
         return portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
     }
 

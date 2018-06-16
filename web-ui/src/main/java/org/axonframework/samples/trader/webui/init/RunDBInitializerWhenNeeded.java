@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * <p>Special class used to initialize the database when starting the container. The database is only initialized
- * when the collection "UserEntry" is not yet available.</p>
+ * when the collection "UserView" is not yet available.</p>
  * <p>We need to check for the display name of the application context since we by default have two using spring-mvc
  * the way we do.</p>
  *

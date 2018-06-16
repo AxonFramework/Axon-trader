@@ -20,7 +20,7 @@ import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.api.portfolio.cash.*;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
-import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class PortfolioMoneyEventListener {
     private final static Logger logger = LoggerFactory.getLogger(PortfolioMoneyEventListener.class);
 
     private PortfolioQueryRepository portfolioRepository;
-    private UserQueryRepository userQueryRepository;
+    private UserViewRepository userViewRepository;
 
     @EventHandler
     public void handleEvent(PortfolioCreatedEvent event) {
@@ -45,8 +45,8 @@ public class PortfolioMoneyEventListener {
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setIdentifier(event.getPortfolioId().toString());
         portfolioEntry.setUserIdentifier(event.getUserId().toString());
-        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserId().toString())
-                .getFullName());
+        portfolioEntry.setUserName(userViewRepository.findByIdentifier(event.getUserId().toString())
+                                                     .getFullName());
         portfolioEntry.setAmountOfMoney(0);
         portfolioEntry.setReservedAmountOfMoney(0);
 
@@ -105,7 +105,7 @@ public class PortfolioMoneyEventListener {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setUserQueryRepository(UserQueryRepository userQueryRepository) {
-        this.userQueryRepository = userQueryRepository;
+    public void setUserViewRepository(UserViewRepository userViewRepository) {
+        this.userViewRepository = userViewRepository;
     }
 }

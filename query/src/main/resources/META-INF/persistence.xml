@@ -25,7 +25,7 @@
         <class>org.axonframework.samples.trader.query.portfolio.ItemEntry</class>
         <class>org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry</class>
         <class>org.axonframework.samples.trader.query.transaction.TransactionEntry</class>
-        <class>org.axonframework.samples.trader.query.users.UserEntry</class>
+        <class>org.axonframework.samples.trader.query.users.UserView</class>
         <properties>
             <property name="hibernate.archive.autodetection" value=""/>
             <property name="hibernate.show_sql" value="true"/>

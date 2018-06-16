@@ -14,7 +14,7 @@ import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.transaction.TransactionEntry;
-import org.axonframework.samples.trader.query.users.UserEntry;
+import org.axonframework.samples.trader.query.users.UserView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +80,7 @@ public class MongoDBInit extends BaseDBInit {
 
     @Override
     public void createItemsIfNoUsersExist() {
-        if (!mongoTemplate.collectionExists(UserEntry.class)) {
+        if (!mongoTemplate.collectionExists(UserView.class)) {
             createItems();
             logger.info("The database has been created and refreshed with some data.");
         }
@@ -94,7 +94,7 @@ public class MongoDBInit extends BaseDBInit {
 
         systemAxonSagaMongo.sagaCollection().drop();
 
-        mongoTemplate.dropCollection(UserEntry.class);
+        mongoTemplate.dropCollection(UserView.class);
         mongoTemplate.dropCollection(OrderBookEntry.class);
         mongoTemplate.dropCollection(OrderEntry.class);
         mongoTemplate.dropCollection(CompanyEntry.class);
