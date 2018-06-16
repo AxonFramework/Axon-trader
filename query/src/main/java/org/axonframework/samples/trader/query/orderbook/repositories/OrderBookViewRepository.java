@@ -16,15 +16,12 @@
 
 package org.axonframework.samples.trader.query.orderbook.repositories;
 
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-/**
- * @author Jettro Coenradie
- */
-public interface OrderBookQueryRepository extends PagingAndSortingRepository<OrderBookEntry, String> {
+public interface OrderBookViewRepository extends JpaRepository<OrderBookView, String> {
 
-    List<OrderBookEntry> findByCompanyIdentifier(String companyIdentifier);
+    List<OrderBookView> findByCompanyIdentifier(String companyIdentifier);
 }

@@ -26,7 +26,7 @@ import java.util.List;
  * @author Jettro Coenradie
  */
 @Entity
-public class OrderBookEntry {
+public class OrderBookView {
 
     @Id
     @javax.persistence.Id
@@ -35,16 +35,16 @@ public class OrderBookEntry {
     private String companyName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ORDERENTRY_SELL", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
-    private List<OrderEntry> sellOrders = new ArrayList<>();
+    private List<OrderView> sellOrders = new ArrayList<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ORDERENTRY_BUY", joinColumns = @JoinColumn(name = "ORDERBOOK_ID"), inverseJoinColumns = @JoinColumn(name = "ORDER_ID"))
-    private List<OrderEntry> buyOrders = new ArrayList<>();
+    private List<OrderView> buyOrders = new ArrayList<>();
 
-    public List<OrderEntry> sellOrders() {
+    public List<OrderView> sellOrders() {
         return sellOrders;
     }
 
-    public List<OrderEntry> buyOrders() {
+    public List<OrderView> buyOrders() {
         return buyOrders;
     }
 
@@ -72,19 +72,19 @@ public class OrderBookEntry {
         this.companyName = companyName;
     }
 
-    public List<OrderEntry> getBuyOrders() {
+    public List<OrderView> getBuyOrders() {
         return buyOrders;
     }
 
-    public void setBuyOrders(List<OrderEntry> buyOrders) {
+    public void setBuyOrders(List<OrderView> buyOrders) {
         this.buyOrders = buyOrders;
     }
 
-    public List<OrderEntry> getSellOrders() {
+    public List<OrderView> getSellOrders() {
         return sellOrders;
     }
 
-    public void setSellOrders(List<OrderEntry> sellOrders) {
+    public void setSellOrders(List<OrderView> sellOrders) {
         this.sellOrders = sellOrders;
     }
 }

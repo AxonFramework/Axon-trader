@@ -23,7 +23,7 @@ import javax.persistence.GeneratedValue;
  * @author Jettro Coenradie
  */
 @Entity
-public class OrderEntry {
+public class OrderView {
 
     @javax.persistence.Id
     @GeneratedValue

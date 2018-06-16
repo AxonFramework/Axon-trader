@@ -27,17 +27,15 @@ import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
-import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.CompanyEventHandler;
+import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.config.HsqlDbConfiguration;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
+import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,23 +50,23 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {PersistenceInfrastructureConfig.class, HsqlDbConfiguration.class})
 @ActiveProfiles("hsqldb")
 @SuppressWarnings("SpringJavaAutowiringInspection")
-public class OrderBookListenerIntegrationTest {
+public class OrderBookEventHandlerIntegrationTest {
 
     OrderId orderId = new OrderId();
     PortfolioId portfolioId = new PortfolioId();
     TransactionId transactionId = new TransactionId();
     OrderBookId orderBookId = new OrderBookId();
     CompanyId companyId = new CompanyId();
-    private OrderBookListener orderBookListener;
+    private OrderBookEventHandler orderBookEventHandler;
     @Autowired
-    private OrderBookQueryRepository orderBookRepository;
+    private OrderBookViewRepository orderBookRepository;
     @Autowired
     private TradeExecutedQueryRepository tradeExecutedRepository;
     @Autowired
     private CompanyViewRepository companyRepository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         orderBookRepository.deleteAll();
         companyRepository.deleteAll();
         tradeExecutedRepository.deleteAll();
@@ -76,44 +74,43 @@ public class OrderBookListenerIntegrationTest {
         CompanyEventHandler companyEventHandler = new CompanyEventHandler(companyRepository);
         companyEventHandler.on(new CompanyCreatedEvent(companyId, "Test Company", 100, 100));
 
-        orderBookListener = new OrderBookListener();
-        orderBookListener.setCompanyRepository(companyRepository);
-        orderBookListener.setOrderBookRepository(orderBookRepository);
-        orderBookListener.setTradeExecutedRepository(tradeExecutedRepository);
+        orderBookEventHandler = new OrderBookEventHandler(orderBookRepository,
+                                                          companyRepository,
+                                                          tradeExecutedRepository);
     }
 
     @Test
-    public void testHandleOrderBookCreatedEvent() throws Exception {
+    public void testHandleOrderBookCreatedEvent() {
         OrderBookAddedToCompanyEvent event = new OrderBookAddedToCompanyEvent(companyId, orderBookId);
 
-        orderBookListener.handleOrderBookAddedToCompanyEvent(event);
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Company", orderBookEntry.getCompanyName());
+        orderBookEventHandler.on(event);
+        Iterable<OrderBookView> all = orderBookRepository.findAll();
+        OrderBookView orderBookView = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookView);
+        assertEquals("Test Company", orderBookView.getCompanyName());
     }
 
     @Test
-    public void testHandleBuyOrderPlaced() throws Exception {
+    public void testHandleBuyOrderPlaced() {
         CompanyView company = createCompany();
-        OrderBookEntry orderBook = createOrderBook(company);
+        OrderBookView orderBook = createOrderBook(company);
 
         BuyOrderPlacedEvent event = new BuyOrderPlacedEvent(orderBookId, orderId, transactionId, 300, 100, portfolioId);
 
-        orderBookListener.handleBuyOrderPlaced(event);
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Company", orderBookEntry.getCompanyName());
-        assertEquals(1, orderBookEntry.buyOrders().size());
-        assertEquals(300, orderBookEntry.buyOrders().get(0).getTradeCount());
+        orderBookEventHandler.on(event);
+        Iterable<OrderBookView> all = orderBookRepository.findAll();
+        OrderBookView orderBookView = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookView);
+        assertEquals("Test Company", orderBookView.getCompanyName());
+        assertEquals(1, orderBookView.buyOrders().size());
+        assertEquals(300, orderBookView.buyOrders().get(0).getTradeCount());
     }
 
     @Test
     @Ignore // TODO Fix
-    public void testHandleSellOrderPlaced() throws Exception {
+    public void testHandleSellOrderPlaced() {
         CompanyView company = createCompany();
-        OrderBookEntry orderBook = createOrderBook(company);
+        OrderBookView orderBook = createOrderBook(company);
 
         OrderBookId orderBookId = new OrderBookId(orderBook.getIdentifier());
         SellOrderPlacedEvent event = new SellOrderPlacedEvent(orderBookId,
@@ -123,19 +120,19 @@ public class OrderBookListenerIntegrationTest {
                                                               100,
                                                               portfolioId);
 
-        orderBookListener.handleSellOrderPlaced(event);
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Company", orderBookEntry.getCompanyName());
-        assertEquals(1, orderBookEntry.sellOrders().size());
-        assertEquals(300, orderBookEntry.sellOrders().get(0).getTradeCount());
+        orderBookEventHandler.on(event);
+        Iterable<OrderBookView> all = orderBookRepository.findAll();
+        OrderBookView orderBookView = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookView);
+        assertEquals("Test Company", orderBookView.getCompanyName());
+        assertEquals(1, orderBookView.sellOrders().size());
+        assertEquals(300, orderBookView.sellOrders().get(0).getTradeCount());
     }
 
     @Test
-    public void testHandleTradeExecuted() throws Exception {
+    public void testHandleTradeExecuted() {
         CompanyView company = createCompany();
-        OrderBookEntry orderBook = createOrderBook(company);
+        OrderBookView orderBook = createOrderBook(company);
 
         OrderId sellOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
@@ -146,7 +143,7 @@ public class OrderBookListenerIntegrationTest {
                                                                              100,
                                                                              portfolioId);
 
-        orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
+        orderBookEventHandler.on(sellOrderPlacedEvent);
 
         OrderId buyOrderId = new OrderId();
         TransactionId buyTransactionId = new TransactionId();
@@ -157,14 +154,14 @@ public class OrderBookListenerIntegrationTest {
                                                                           150,
                                                                           portfolioId);
 
-        orderBookListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
+        orderBookEventHandler.on(buyOrderPlacedEvent);
 
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Company", orderBookEntry.getCompanyName());
-        assertEquals(1, orderBookEntry.sellOrders().size());
-        assertEquals(1, orderBookEntry.buyOrders().size());
+        Iterable<OrderBookView> all = orderBookRepository.findAll();
+        OrderBookView orderBookView = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookView);
+        assertEquals("Test Company", orderBookView.getCompanyName());
+        assertEquals(1, orderBookView.sellOrders().size());
+        assertEquals(1, orderBookView.buyOrders().size());
 
 
         TradeExecutedEvent event = new TradeExecutedEvent(orderBookId,
@@ -174,7 +171,7 @@ public class OrderBookListenerIntegrationTest {
                                                           sellOrderId,
                                                           buyTransactionId,
                                                           sellTransactionId);
-        orderBookListener.handleTradeExecuted(event);
+        orderBookEventHandler.on(event);
 
         Iterable<TradeExecutedEntry> tradeExecutedEntries = tradeExecutedRepository.findAll();
         assertTrue(tradeExecutedEntries.iterator().hasNext());
@@ -184,21 +181,21 @@ public class OrderBookListenerIntegrationTest {
         assertEquals(125, tradeExecutedEntry.getTradePrice());
 
         all = orderBookRepository.findAll();
-        orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Company", orderBookEntry.getCompanyName());
-        assertEquals(1, orderBookEntry.sellOrders().size());
-        assertEquals(0, orderBookEntry.buyOrders().size());
+        orderBookView = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookView);
+        assertEquals("Test Company", orderBookView.getCompanyName());
+        assertEquals(1, orderBookView.sellOrders().size());
+        assertEquals(0, orderBookView.buyOrders().size());
     }
 
 
-    private OrderBookEntry createOrderBook(CompanyView company) {
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setIdentifier(orderBookId.toString());
-        orderBookEntry.setCompanyIdentifier(company.getIdentifier());
-        orderBookEntry.setCompanyName(company.getName());
-        orderBookRepository.save(orderBookEntry);
-        return orderBookEntry;
+    private OrderBookView createOrderBook(CompanyView company) {
+        OrderBookView orderBookView = new OrderBookView();
+        orderBookView.setIdentifier(orderBookId.toString());
+        orderBookView.setCompanyIdentifier(company.getIdentifier());
+        orderBookView.setCompanyName(company.getName());
+        orderBookRepository.save(orderBookView);
+        return orderBookView;
     }
 
     private CompanyView createCompany() {

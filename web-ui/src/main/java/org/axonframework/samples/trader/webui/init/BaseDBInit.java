@@ -12,8 +12,8 @@ import org.axonframework.samples.trader.api.users.CreateUserCommand;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 
@@ -27,10 +27,10 @@ public abstract class BaseDBInit implements DBInit {
     private CommandBus commandBus;
     private CompanyViewRepository companyRepository;
     private PortfolioQueryRepository portfolioRepository;
-    private OrderBookQueryRepository orderBookRepository;
+    private OrderBookViewRepository orderBookRepository;
 
     protected BaseDBInit(CommandBus commandBus, CompanyViewRepository companyRepository,
-                         PortfolioQueryRepository portfolioRepository, OrderBookQueryRepository orderBookRepository) {
+                         PortfolioQueryRepository portfolioRepository, OrderBookViewRepository orderBookRepository) {
         this.commandBus = commandBus;
         this.companyRepository = companyRepository;
         this.portfolioRepository = portfolioRepository;
@@ -95,19 +95,19 @@ public abstract class BaseDBInit implements DBInit {
 
     void addItems(UserId user, String companyName, long amount) {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
-        OrderBookEntry orderBookEntry = obtainOrderBookByCompanyName(companyName);
+        OrderBookView orderBookView = obtainOrderBookByCompanyName(companyName);
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
-                new OrderBookId(orderBookEntry.getIdentifier()),
+                new OrderBookId(orderBookView.getIdentifier()),
                 amount);
         commandBus.dispatch(new GenericCommandMessage<>(command));
     }
 
-    OrderBookEntry obtainOrderBookByCompanyName(String companyName) {
+    OrderBookView obtainOrderBookByCompanyName(String companyName) {
         Iterable<CompanyView> companyEntries = companyRepository.findAll();
         for (CompanyView entry : companyEntries) {
             if (entry.getName().equals(companyName)) {
-                List<OrderBookEntry> orderBookEntries = orderBookRepository
+                List<OrderBookView> orderBookEntries = orderBookRepository
                         .findByCompanyIdentifier(entry.getIdentifier());
 
                 return orderBookEntries.get(0);

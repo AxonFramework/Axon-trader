@@ -22,8 +22,8 @@ import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationCance
 import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class PortfolioItemEventListener {
 
     private final static Logger logger = LoggerFactory.getLogger(PortfolioItemEventListener.class);
     private PortfolioQueryRepository portfolioRepository;
-    private OrderBookQueryRepository orderBookQueryRepository;
+    private OrderBookViewRepository orderBookViewRepository;
 
     @EventHandler
     public void handleEvent(ItemsAddedToPortfolioEvent event) {
@@ -89,11 +89,11 @@ public class PortfolioItemEventListener {
     }
 
     private ItemEntry createItemEntry(String identifier, long amount) {
-        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(identifier);
+        OrderBookView orderBookView = orderBookViewRepository.findOne(identifier);
         ItemEntry itemEntry = new ItemEntry();
         itemEntry.setIdentifier(identifier);
-        itemEntry.setCompanyIdentifier(orderBookEntry.getCompanyIdentifier());
-        itemEntry.setCompanyName(orderBookEntry.getCompanyName());
+        itemEntry.setCompanyIdentifier(orderBookView.getCompanyIdentifier());
+        itemEntry.setCompanyName(orderBookView.getCompanyName());
         itemEntry.setAmount(amount);
         return itemEntry;
     }
@@ -106,7 +106,7 @@ public class PortfolioItemEventListener {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setOrderBookQueryRepository(OrderBookQueryRepository orderBookQueryRepository) {
-        this.orderBookQueryRepository = orderBookQueryRepository;
+    public void setOrderBookViewRepository(OrderBookViewRepository orderBookViewRepository) {
+        this.orderBookViewRepository = orderBookViewRepository;
     }
 }

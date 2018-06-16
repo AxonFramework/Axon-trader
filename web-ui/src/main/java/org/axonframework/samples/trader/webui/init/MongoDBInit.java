@@ -7,9 +7,9 @@ import org.axonframework.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
 import org.axonframework.mongo.eventsourcing.eventstore.MongoTemplate;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.OrderEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.OrderView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
@@ -49,7 +49,7 @@ public class MongoDBInit extends BaseDBInit {
                        org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
                        org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate systemAxonSagaMongo,
                        PortfolioQueryRepository portfolioRepository,
-                       OrderBookQueryRepository orderBookRepository, org.springframework.data.mongodb.core.MongoTemplate springTemplate) {
+                       OrderBookViewRepository orderBookRepository, org.springframework.data.mongodb.core.MongoTemplate springTemplate) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
         this.systemAxonMongo = systemMongo;
         this.mongoEventStorageEngine = mongoEventStorageEngine;
@@ -95,8 +95,8 @@ public class MongoDBInit extends BaseDBInit {
         systemAxonSagaMongo.sagaCollection().drop();
 
         mongoTemplate.dropCollection(UserView.class);
-        mongoTemplate.dropCollection(OrderBookEntry.class);
-        mongoTemplate.dropCollection(OrderEntry.class);
+        mongoTemplate.dropCollection(OrderBookView.class);
+        mongoTemplate.dropCollection(OrderView.class);
         mongoTemplate.dropCollection(CompanyView.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
         mongoTemplate.dropCollection(PortfolioEntry.class);

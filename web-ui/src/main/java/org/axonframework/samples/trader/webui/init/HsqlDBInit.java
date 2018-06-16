@@ -5,7 +5,7 @@ import org.axonframework.eventhandling.saga.repository.jdbc.SagaSqlSchema;
 import org.axonframework.eventsourcing.eventstore.jdbc.EventSchema;
 import org.axonframework.eventsourcing.eventstore.jdbc.EventTableFactory;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
@@ -37,7 +37,7 @@ public class HsqlDBInit extends BaseDBInit {
     private DataSource dataSource;
     private UserViewRepository userViewRepository;
     private CompanyViewRepository companyViewRepository;
-    private OrderBookQueryRepository orderBookQueryRepository;
+    private OrderBookViewRepository orderBookViewRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
     private TradeExecutedQueryRepository tradeExecutedQueryRepository;
     private TransactionQueryRepository transactionQueryRepository;
@@ -46,12 +46,12 @@ public class HsqlDBInit extends BaseDBInit {
     public HsqlDBInit(CommandBus commandBus,
                       CompanyViewRepository companyRepository,
                       PortfolioQueryRepository portfolioRepository,
-                      OrderBookQueryRepository orderBookRepository,
+                      OrderBookViewRepository orderBookRepository,
                       EventTableFactory eventTableFactory,
                       EventSchema eventSchema,
                       SagaSqlSchema sagaSqlSchema, DataSource dataSource,
                       UserViewRepository userViewRepository, CompanyViewRepository companyViewRepository,
-                      OrderBookQueryRepository orderBookQueryRepository,
+                      OrderBookViewRepository orderBookViewRepository,
                       PortfolioQueryRepository portfolioQueryRepository,
                       TradeExecutedQueryRepository tradeExecutedQueryRepository,
                       TransactionQueryRepository transactionQueryRepository) {
@@ -62,7 +62,7 @@ public class HsqlDBInit extends BaseDBInit {
         this.dataSource = dataSource;
         this.userViewRepository = userViewRepository;
         this.companyViewRepository = companyViewRepository;
-        this.orderBookQueryRepository = orderBookQueryRepository;
+        this.orderBookViewRepository = orderBookViewRepository;
         this.portfolioQueryRepository = portfolioQueryRepository;
         this.tradeExecutedQueryRepository = tradeExecutedQueryRepository;
         this.transactionQueryRepository = transactionQueryRepository;
@@ -83,7 +83,7 @@ public class HsqlDBInit extends BaseDBInit {
             userViewRepository.deleteAll();
             transactionQueryRepository.deleteAll();
             tradeExecutedQueryRepository.deleteAll();
-            orderBookQueryRepository.deleteAll();
+            orderBookViewRepository.deleteAll();
             portfolioQueryRepository.deleteAll();
             companyViewRepository.deleteAll();
 

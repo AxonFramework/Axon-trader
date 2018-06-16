@@ -22,8 +22,8 @@ import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class AdminController {
 
     private CommandBus commandBus;
     private PortfolioQueryRepository portfolioQueryRepository;
-    private OrderBookQueryRepository orderBookQueryRepository;
+    private OrderBookViewRepository orderBookViewRepository;
 
     @RequestMapping(value = "/portfolio")
     public String show(Model model) {
@@ -55,7 +55,7 @@ public class AdminController {
         PortfolioEntry portfolio = portfolioQueryRepository.findOne(portfolioIdentifier);
         model.addAttribute("portfolio", portfolio);
 
-        Iterable<OrderBookEntry> orderBooks = orderBookQueryRepository.findAll();
+        Iterable<OrderBookView> orderBooks = orderBookViewRepository.findAll();
         model.addAttribute("orderbooks", orderBooks);
 
         return "admin/portfolio/detail";
@@ -94,8 +94,8 @@ public class AdminController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setOrderBookQueryRepository(OrderBookQueryRepository orderBookQueryRepository) {
-        this.orderBookQueryRepository = orderBookQueryRepository;
+    public void setOrderBookViewRepository(OrderBookViewRepository orderBookViewRepository) {
+        this.orderBookViewRepository = orderBookViewRepository;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

@@ -20,8 +20,8 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.axonframework.samples.trader.api.orders.transaction.*;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @ProcessingGroup("queryModel")
 public class TransactionEventListener {
 
-    private OrderBookQueryRepository orderBookQueryRepository;
+    private OrderBookViewRepository orderBookViewRepository;
     private TransactionQueryRepository transactionQueryRepository;
 
     @EventHandler
@@ -121,7 +121,7 @@ public class TransactionEventListener {
     }
 
     private void startTransaction(AbstractTransactionStartedEvent event, TransactionType type) {
-        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderBookId().toString());
+        OrderBookView orderBookView = orderBookViewRepository.findOne(event.getOrderBookId().toString());
 
         TransactionEntry entry = new TransactionEntry();
         entry.setAmountOfExecutedItems(0);
@@ -132,15 +132,15 @@ public class TransactionEventListener {
         entry.setPortfolioIdentifier(event.getPortfolioId().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);
-        entry.setCompanyName(orderBookEntry.getCompanyName());
+        entry.setCompanyName(orderBookView.getCompanyName());
 
         transactionQueryRepository.save(entry);
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setOrderBookQueryRepository(OrderBookQueryRepository orderBookQueryRepository) {
-        this.orderBookQueryRepository = orderBookQueryRepository;
+    public void setOrderBookViewRepository(OrderBookViewRepository orderBookViewRepository) {
+        this.orderBookViewRepository = orderBookViewRepository;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

@@ -19,8 +19,8 @@
     <persistence-unit name="trader" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>org.axonframework.samples.trader.query.company.CompanyView</class>
-        <class>org.axonframework.samples.trader.query.orderbook.OrderEntry</class>
-        <class>org.axonframework.samples.trader.query.orderbook.OrderBookEntry</class>
+        <class>org.axonframework.samples.trader.query.orderbook.OrderView</class>
+        <class>org.axonframework.samples.trader.query.orderbook.OrderBookView</class>
         <class>org.axonframework.samples.trader.query.portfolio.PortfolioEntry</class>
         <class>org.axonframework.samples.trader.query.portfolio.ItemEntry</class>
         <class>org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry</class>

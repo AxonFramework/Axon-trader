@@ -25,8 +25,8 @@ import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
@@ -57,7 +57,7 @@ import javax.validation.Valid;
 public class CompanyController {
 
     private CompanyViewRepository companyRepository;
-    private OrderBookQueryRepository orderBookRepository;
+    private OrderBookViewRepository orderBookRepository;
     private UserViewRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
@@ -68,7 +68,7 @@ public class CompanyController {
     public CompanyController(CompanyViewRepository companyRepository,
                              CommandBus commandBus,
                              UserViewRepository userRepository,
-                             OrderBookQueryRepository orderBookRepository,
+                             OrderBookViewRepository orderBookRepository,
                              TradeExecutedQueryRepository tradeExecutedRepository,
                              PortfolioQueryRepository portfolioQueryRepository) {
         this.companyRepository = companyRepository;
@@ -88,7 +88,7 @@ public class CompanyController {
     @RequestMapping(value = "/{companyId}", method = RequestMethod.GET)
     public String details(@PathVariable String companyId, Model model) {
         CompanyView company = companyRepository.findOne(companyId);
-        OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
+        OrderBookView bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                                                                                                             .getIdentifier());
         model.addAttribute("company", company);
@@ -122,7 +122,7 @@ public class CompanyController {
     @RequestMapping(value = "/sell/{companyId}", method = RequestMethod.POST)
     public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
-            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
+            OrderBookView bookEntry = obtainOrderBookForCompany(order.getCompanyId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
             if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
@@ -154,7 +154,7 @@ public class CompanyController {
     public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
 
-            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
+            OrderBookView bookEntry = obtainOrderBookForCompany(order.getCompanyId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
             if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
@@ -182,8 +182,8 @@ public class CompanyController {
 
     private void addPortfolioItemInfoToModel(String identifier, Model model) {
         PortfolioEntry portfolioEntry = obtainPortfolioForUser();
-        OrderBookEntry orderBookEntry = obtainOrderBookForCompany(identifier);
-        addPortfolioItemInfoToModel(portfolioEntry, orderBookEntry.getIdentifier(), model);
+        OrderBookView orderBookView = obtainOrderBookForCompany(identifier);
+        addPortfolioItemInfoToModel(portfolioEntry, orderBookView.getIdentifier(), model);
     }
 
     private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, Model model) {
@@ -207,7 +207,7 @@ public class CompanyController {
      * @param companyId Identifier for the company to obtain the orderBook for
      * @return Found OrderBook for the company belonging to the provided identifier
      */
-    private OrderBookEntry obtainOrderBookForCompany(String companyId) {
+    private OrderBookView obtainOrderBookForCompany(String companyId) {
         return orderBookRepository.findByCompanyIdentifier(companyId).get(0);
     }
 

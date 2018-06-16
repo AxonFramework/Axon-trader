@@ -23,8 +23,8 @@ import org.axonframework.samples.trader.api.orders.transaction.SellTransactionCa
 import org.axonframework.samples.trader.api.orders.transaction.SellTransactionStartedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,13 +53,13 @@ public class TransactionEventListenerTest {
     @Before
     public void setUp() throws Exception {
         transactionQueryRepository = Mockito.mock(TransactionQueryRepository.class);
-        OrderBookQueryRepository orderBookQueryRepository = Mockito.mock(OrderBookQueryRepository.class);
+        OrderBookViewRepository orderBookViewRepository = Mockito.mock(OrderBookViewRepository.class);
 
         listener = new TransactionEventListener();
         listener.setTransactionQueryRepository(transactionQueryRepository);
-        listener.setOrderBookQueryRepository(orderBookQueryRepository);
+        listener.setOrderBookViewRepository(orderBookViewRepository);
 
-        Mockito.when(orderBookQueryRepository.findOne(orderBookIdentifier.toString()))
+        Mockito.when(orderBookViewRepository.findOne(orderBookIdentifier.toString()))
                .thenReturn(createOrderBookEntry());
     }
 
@@ -131,11 +131,11 @@ public class TransactionEventListenerTest {
         )));
     }
 
-    private OrderBookEntry createOrderBookEntry() {
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setIdentifier(orderBookIdentifier.toString());
-        orderBookEntry.setCompanyIdentifier(companyIdentifier.toString());
-        orderBookEntry.setCompanyName(DEFAULT_COMPANY_NAME);
-        return orderBookEntry;
+    private OrderBookView createOrderBookEntry() {
+        OrderBookView orderBookView = new OrderBookView();
+        orderBookView.setIdentifier(orderBookIdentifier.toString());
+        orderBookView.setCompanyIdentifier(companyIdentifier.toString());
+        orderBookView.setCompanyName(DEFAULT_COMPANY_NAME);
+        return orderBookView;
     }
 }

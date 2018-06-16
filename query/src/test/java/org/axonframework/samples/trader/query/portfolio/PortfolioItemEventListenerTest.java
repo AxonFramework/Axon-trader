@@ -23,8 +23,8 @@ import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationCance
 import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.users.UserId;
@@ -55,14 +55,14 @@ public class PortfolioItemEventListenerTest {
     public void setUp() throws Exception {
         portfolioQueryRepository = Mockito.mock(PortfolioQueryRepository.class);
 
-        OrderBookQueryRepository orderBookQueryRepository = Mockito.mock(OrderBookQueryRepository.class);
+        OrderBookViewRepository orderBookViewRepository = Mockito.mock(OrderBookViewRepository.class);
 
         listener = new PortfolioItemEventListener();
         listener.setPortfolioRepository(portfolioQueryRepository);
-        listener.setOrderBookQueryRepository(orderBookQueryRepository);
+        listener.setOrderBookViewRepository(orderBookViewRepository);
 
-        OrderBookEntry orderBookEntry = createOrderBookEntry();
-        Mockito.when(orderBookQueryRepository.findOne(itemIdentifier.toString())).thenReturn(orderBookEntry);
+        OrderBookView orderBookView = createOrderBookEntry();
+        Mockito.when(orderBookViewRepository.findOne(itemIdentifier.toString())).thenReturn(orderBookView);
 
         PortfolioEntry portfolioEntry = createPortfolioEntry();
         Mockito.when(portfolioQueryRepository.findOne(portfolioIdentifier.toString())).thenReturn(portfolioEntry);
@@ -143,12 +143,12 @@ public class PortfolioItemEventListenerTest {
         return portfolioEntry;
     }
 
-    private OrderBookEntry createOrderBookEntry() {
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setIdentifier(itemIdentifier.toString());
-        orderBookEntry.setCompanyIdentifier(companyIdentifier.toString());
-        orderBookEntry.setCompanyName("Test Company");
-        return orderBookEntry;
+    private OrderBookView createOrderBookEntry() {
+        OrderBookView orderBookView = new OrderBookView();
+        orderBookView.setIdentifier(itemIdentifier.toString());
+        orderBookView.setCompanyIdentifier(companyIdentifier.toString());
+        orderBookView.setCompanyName("Test Company");
+        return orderBookView;
     }
 
     private ItemEntry createItemEntry(OrderBookId itemIdentifier, CompanyId companyIdentifier) {

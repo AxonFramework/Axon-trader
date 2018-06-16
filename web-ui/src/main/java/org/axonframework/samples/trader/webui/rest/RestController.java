@@ -20,8 +20,8 @@ import com.thoughtworks.xstream.XStream;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.messaging.interceptors.JSR303ViolationException;
-import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
 import org.slf4j.Logger;
@@ -51,16 +51,16 @@ public class RestController {
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
     private CommandBus commandBus;
     private PortfolioQueryRepository portfolioQueryRepository;
-    private OrderBookQueryRepository orderBookQueryRepository;
+    private OrderBookViewRepository orderBookViewRepository;
 
     private XStream xStream;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public RestController(CommandBus commandBus, PortfolioQueryRepository portfolioQueryRepository,
-                          OrderBookQueryRepository orderBookQueryRepository) {
+                          OrderBookViewRepository orderBookViewRepository) {
         this.portfolioQueryRepository = portfolioQueryRepository;
-        this.orderBookQueryRepository = orderBookQueryRepository;
+        this.orderBookViewRepository = orderBookViewRepository;
         this.xStream = new XStream();
         this.commandBus = commandBus;
     }
@@ -108,9 +108,9 @@ public class RestController {
     public
     @ResponseBody
     String obtainOrderBooks() {
-        Iterable<OrderBookEntry> all = orderBookQueryRepository.findAll();
-        List<OrderBookEntry> orderBookEntries = new ArrayList<>();
-        for (OrderBookEntry entry : all) {
+        Iterable<OrderBookView> all = orderBookViewRepository.findAll();
+        List<OrderBookView> orderBookEntries = new ArrayList<>();
+        for (OrderBookView entry : all) {
             orderBookEntries.add(entry);
         }
 

@@ -27,73 +27,80 @@ import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
+import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @ProcessingGroup("queryModel")
-public class OrderBookListener {
+public class OrderBookEventHandler {
 
     private static final String BUY = "Buy";
     private static final String SELL = "Sell";
 
-    private OrderBookQueryRepository orderBookRepository;
-    private CompanyViewRepository companyRepository;
-    private TradeExecutedQueryRepository tradeExecutedRepository;
+    private final OrderBookViewRepository orderBookRepository;
+    private final CompanyViewRepository companyRepository;
+    private final TradeExecutedQueryRepository tradeExecutedRepository;
 
-
-    @EventHandler
-    public void handleOrderBookAddedToCompanyEvent(OrderBookAddedToCompanyEvent event) {
-        CompanyView companyView = companyRepository.findOne(event.getCompanyId().toString());
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setCompanyIdentifier(event.getCompanyId().toString());
-        orderBookEntry.setCompanyName(companyView.getName());
-        orderBookEntry.setIdentifier(event.getOrderBookId().toString());
-        orderBookRepository.save(orderBookEntry);
+    public OrderBookEventHandler(OrderBookViewRepository orderBookRepository,
+                                 CompanyViewRepository companyRepository,
+                                 TradeExecutedQueryRepository tradeExecutedRepository) {
+        this.orderBookRepository = orderBookRepository;
+        this.companyRepository = companyRepository;
+        this.tradeExecutedRepository = tradeExecutedRepository;
     }
 
     @EventHandler
-    public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
+    public void on(OrderBookAddedToCompanyEvent event) {
+        CompanyView companyView = companyRepository.findOne(event.getCompanyId().toString());
 
-        OrderEntry buyOrder = createPlacedOrder(event, BUY);
+        OrderBookView orderBookView = new OrderBookView();
+        orderBookView.setCompanyIdentifier(event.getCompanyId().toString());
+        orderBookView.setCompanyName(companyView.getName());
+        orderBookView.setIdentifier(event.getOrderBookId().toString());
+
+        orderBookRepository.save(orderBookView);
+    }
+
+    @EventHandler
+    public void on(BuyOrderPlacedEvent event) {
+        OrderBookView orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
+
+        OrderView buyOrder = createPlacedOrder(event, BUY);
         orderBook.buyOrders().add(buyOrder);
 
         orderBookRepository.save(orderBook);
     }
 
     @EventHandler
-    public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
+    public void on(SellOrderPlacedEvent event) {
+        OrderBookView orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
 
-        OrderEntry sellOrder = createPlacedOrder(event, SELL);
+        OrderView sellOrder = createPlacedOrder(event, SELL);
         orderBook.sellOrders().add(sellOrder);
 
         orderBookRepository.save(orderBook);
     }
 
     @EventHandler
-    public void handleTradeExecuted(TradeExecutedEvent event) {
+    public void on(TradeExecutedEvent event) {
         OrderId buyOrderId = event.getBuyOrderId();
         OrderId sellOrderId = event.getSellOrderId();
 
         OrderBookId orderBookIdentifier = event.getOrderBookId();
-        OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
+        OrderBookView orderBookView = orderBookRepository.findOne(orderBookIdentifier.toString());
 
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
-        tradeExecutedEntry.setCompanyName(orderBookEntry.getCompanyName());
-        tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getIdentifier());
+        tradeExecutedEntry.setCompanyName(orderBookView.getCompanyName());
+        tradeExecutedEntry.setOrderBookIdentifier(orderBookView.getIdentifier());
         tradeExecutedEntry.setTradeCount(event.getTradeCount());
         tradeExecutedEntry.setTradePrice(event.getTradePrice());
 
         tradeExecutedRepository.save(tradeExecutedEntry);
 
-        // TODO find a better solution or maybe pull them apart
-        OrderEntry foundBuyOrder = null;
-        for (OrderEntry order : orderBookEntry.buyOrders()) {
+        OrderView foundBuyOrder = null;
+        for (OrderView order : orderBookView.buyOrders()) {
             if (order.getIdentifier().equals(buyOrderId.toString())) {
                 long itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining - event.getTradeCount());
@@ -102,10 +109,10 @@ public class OrderBookListener {
             }
         }
         if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining() == 0) {
-            orderBookEntry.buyOrders().remove(foundBuyOrder);
+            orderBookView.buyOrders().remove(foundBuyOrder);
         }
-        OrderEntry foundSellOrder = null;
-        for (OrderEntry order : orderBookEntry.sellOrders()) {
+        OrderView foundSellOrder = null;
+        for (OrderView order : orderBookView.sellOrders()) {
             if (order.getIdentifier().equals(sellOrderId.toString())) {
                 long itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining - event.getTradeCount());
@@ -114,13 +121,14 @@ public class OrderBookListener {
             }
         }
         if (null != foundSellOrder && foundSellOrder.getItemsRemaining() == 0) {
-            orderBookEntry.sellOrders().remove(foundSellOrder);
+            orderBookView.sellOrders().remove(foundSellOrder);
         }
-        orderBookRepository.save(orderBookEntry);
+        orderBookRepository.save(orderBookView);
     }
 
-    private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
-        OrderEntry entry = new OrderEntry();
+    private OrderView createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
+        OrderView entry = new OrderView();
+
         entry.setIdentifier(event.getOrderId().toString());
         entry.setItemsRemaining(event.getTradeCount());
         entry.setTradeCount(event.getTradeCount());
@@ -129,23 +137,5 @@ public class OrderBookListener {
         entry.setItemPrice(event.getItemPrice());
 
         return entry;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setOrderBookRepository(OrderBookQueryRepository orderBookRepository) {
-        this.orderBookRepository = orderBookRepository;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setCompanyRepository(CompanyViewRepository companyRepository) {
-        this.companyRepository = companyRepository;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setTradeExecutedRepository(TradeExecutedQueryRepository tradeExecutedRepository) {
-        this.tradeExecutedRepository = tradeExecutedRepository;
     }
 }
