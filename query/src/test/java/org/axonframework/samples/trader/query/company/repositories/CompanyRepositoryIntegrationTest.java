@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.query.company.repositories;
 
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
+import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.config.HsqlDbConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,16 +36,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class CompanyRepositoryIntegrationTest {
 
     @Autowired
-    private CompanyQueryRepository companyRepository;
+    private CompanyViewRepository companyRepository;
 
     @Test
     public void storeCompanyInRepository() {
-        CompanyEntry companyEntry = new CompanyEntry();
-        companyEntry.setIdentifier(new CompanyId().toString());
-        companyEntry.setValue(100000);
-        companyEntry.setAmountOfShares(1000);
-        companyEntry.setTradeStarted(true);
+        CompanyView companyView = new CompanyView();
+        companyView.setIdentifier(new CompanyId().toString());
+        companyView.setValue(100000);
+        companyView.setAmountOfShares(1000);
+        companyView.setTradeStarted(true);
 
-        companyRepository.save(companyEntry);
+        companyRepository.save(companyView);
     }
 }

@@ -20,7 +20,7 @@ import org.axonframework.eventhandling.EventProcessor;
 import org.axonframework.eventhandling.SimpleEventHandlerInvoker;
 import org.axonframework.eventhandling.SubscribingEventProcessor;
 import org.axonframework.eventsourcing.eventstore.EventStore;
-import org.axonframework.samples.trader.query.company.CompanyListener;
+import org.axonframework.samples.trader.query.company.CompanyEventHandler;
 import org.axonframework.samples.trader.query.orderbook.OrderBookListener;
 import org.axonframework.samples.trader.query.portfolio.PortfolioItemEventListener;
 import org.axonframework.samples.trader.query.portfolio.PortfolioMoneyEventListener;
@@ -38,7 +38,7 @@ public class QueryConfig {
     private EventStore eventStore;
 
     @Autowired
-    private CompanyListener companyListener;
+    private CompanyEventHandler companyEventHandler;
     @Autowired
     private OrderBookListener orderBookListener;
     @Autowired
@@ -52,7 +52,7 @@ public class QueryConfig {
     public EventProcessor queryEventProcessor() {
         SubscribingEventProcessor eventProcessor = new SubscribingEventProcessor("queryEventProcessor",
                 new SimpleEventHandlerInvoker(
-                        companyListener,
+                        companyEventHandler,
                         orderBookListener,
                         portfolioItemEventListener,
                         portfolioMoneyEventListener,

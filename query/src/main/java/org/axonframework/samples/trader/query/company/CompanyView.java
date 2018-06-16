@@ -20,11 +20,8 @@ import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
 
-/**
- * @author Jettro Coenradie
- */
 @Entity
-public class CompanyEntry {
+public class CompanyView {
 
     @Id
     @javax.persistence.Id

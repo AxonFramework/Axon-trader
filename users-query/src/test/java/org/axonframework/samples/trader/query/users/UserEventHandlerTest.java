@@ -24,7 +24,7 @@ public class UserEventHandlerTest {
     }
 
     @Test
-    public void testOnUserCreatedEventAnUserEntryIsSaved() {
+    public void testOnUserCreatedEventAnUserViewIsSaved() {
         UserId expectedUserId = new UserId();
         String expectedName = "name";
         String expectedUserName = "userName";

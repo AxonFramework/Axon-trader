@@ -24,8 +24,8 @@ import org.axonframework.samples.trader.api.orders.trades.AbstractOrderPlacedEve
 import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
@@ -39,16 +39,16 @@ public class OrderBookListener {
     private static final String SELL = "Sell";
 
     private OrderBookQueryRepository orderBookRepository;
-    private CompanyQueryRepository companyRepository;
+    private CompanyViewRepository companyRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
 
 
     @EventHandler
     public void handleOrderBookAddedToCompanyEvent(OrderBookAddedToCompanyEvent event) {
-        CompanyEntry companyEntry = companyRepository.findOne(event.getCompanyId().toString());
+        CompanyView companyView = companyRepository.findOne(event.getCompanyId().toString());
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setCompanyIdentifier(event.getCompanyId().toString());
-        orderBookEntry.setCompanyName(companyEntry.getName());
+        orderBookEntry.setCompanyName(companyView.getName());
         orderBookEntry.setIdentifier(event.getOrderBookId().toString());
         orderBookRepository.save(orderBookEntry);
     }
@@ -137,7 +137,7 @@ public class OrderBookListener {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setCompanyRepository(CompanyQueryRepository companyRepository) {
+    public void setCompanyRepository(CompanyViewRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 

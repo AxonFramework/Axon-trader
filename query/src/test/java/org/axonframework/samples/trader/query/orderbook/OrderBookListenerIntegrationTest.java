@@ -27,9 +27,9 @@ import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.axonframework.samples.trader.query.company.CompanyListener;
-import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.company.CompanyEventHandler;
+import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.config.HsqlDbConfiguration;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
@@ -65,7 +65,7 @@ public class OrderBookListenerIntegrationTest {
     @Autowired
     private TradeExecutedQueryRepository tradeExecutedRepository;
     @Autowired
-    private CompanyQueryRepository companyRepository;
+    private CompanyViewRepository companyRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -73,9 +73,8 @@ public class OrderBookListenerIntegrationTest {
         companyRepository.deleteAll();
         tradeExecutedRepository.deleteAll();
 
-        CompanyListener companyListener = new CompanyListener();
-        companyListener.setCompanyRepository(companyRepository);
-        companyListener.handleCompanyCreatedEvent(new CompanyCreatedEvent(companyId, "Test Company", 100, 100));
+        CompanyEventHandler companyEventHandler = new CompanyEventHandler(companyRepository);
+        companyEventHandler.on(new CompanyCreatedEvent(companyId, "Test Company", 100, 100));
 
         orderBookListener = new OrderBookListener();
         orderBookListener.setCompanyRepository(companyRepository);
@@ -96,7 +95,7 @@ public class OrderBookListenerIntegrationTest {
 
     @Test
     public void testHandleBuyOrderPlaced() throws Exception {
-        CompanyEntry company = createCompany();
+        CompanyView company = createCompany();
         OrderBookEntry orderBook = createOrderBook(company);
 
         BuyOrderPlacedEvent event = new BuyOrderPlacedEvent(orderBookId, orderId, transactionId, 300, 100, portfolioId);
@@ -113,7 +112,7 @@ public class OrderBookListenerIntegrationTest {
     @Test
     @Ignore // TODO Fix
     public void testHandleSellOrderPlaced() throws Exception {
-        CompanyEntry company = createCompany();
+        CompanyView company = createCompany();
         OrderBookEntry orderBook = createOrderBook(company);
 
         OrderBookId orderBookId = new OrderBookId(orderBook.getIdentifier());
@@ -135,7 +134,7 @@ public class OrderBookListenerIntegrationTest {
 
     @Test
     public void testHandleTradeExecuted() throws Exception {
-        CompanyEntry company = createCompany();
+        CompanyView company = createCompany();
         OrderBookEntry orderBook = createOrderBook(company);
 
         OrderId sellOrderId = new OrderId();
@@ -193,7 +192,7 @@ public class OrderBookListenerIntegrationTest {
     }
 
 
-    private OrderBookEntry createOrderBook(CompanyEntry company) {
+    private OrderBookEntry createOrderBook(CompanyView company) {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setIdentifier(orderBookId.toString());
         orderBookEntry.setCompanyIdentifier(company.getIdentifier());
@@ -202,15 +201,15 @@ public class OrderBookListenerIntegrationTest {
         return orderBookEntry;
     }
 
-    private CompanyEntry createCompany() {
+    private CompanyView createCompany() {
         CompanyId companyId = new CompanyId();
-        CompanyEntry companyEntry = new CompanyEntry();
-        companyEntry.setIdentifier(companyId.toString());
-        companyEntry.setName("Test Company");
-        companyEntry.setAmountOfShares(100000);
-        companyEntry.setTradeStarted(true);
-        companyEntry.setValue(1000);
-        companyRepository.save(companyEntry);
-        return companyEntry;
+        CompanyView companyView = new CompanyView();
+        companyView.setIdentifier(companyId.toString());
+        companyView.setName("Test Company");
+        companyView.setAmountOfShares(100000);
+        companyView.setTradeStarted(true);
+        companyView.setValue(1000);
+        companyRepository.save(companyView);
+        return companyView;
     }
 }

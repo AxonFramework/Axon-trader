@@ -18,7 +18,7 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="trader" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.axonframework.samples.trader.query.company.CompanyEntry</class>
+        <class>org.axonframework.samples.trader.query.company.CompanyView</class>
         <class>org.axonframework.samples.trader.query.orderbook.OrderEntry</class>
         <class>org.axonframework.samples.trader.query.orderbook.OrderBookEntry</class>
         <class>org.axonframework.samples.trader.query.portfolio.PortfolioEntry</class>

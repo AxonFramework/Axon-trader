@@ -16,12 +16,9 @@
 
 package org.axonframework.samples.trader.query.company.repositories;
 
-import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.axonframework.samples.trader.query.company.CompanyView;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * @author Jettro Coenradie
- */
-public interface CompanyQueryRepository extends PagingAndSortingRepository<CompanyEntry, String> {
+public interface CompanyViewRepository extends JpaRepository<CompanyView, String> {
 
 }

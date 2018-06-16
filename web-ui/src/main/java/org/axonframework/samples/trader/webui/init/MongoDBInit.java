@@ -5,8 +5,8 @@ import com.mongodb.DBObject;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
 import org.axonframework.mongo.eventsourcing.eventstore.MongoTemplate;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.OrderEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
@@ -43,7 +43,7 @@ public class MongoDBInit extends BaseDBInit {
 
     @Autowired
     public MongoDBInit(CommandBus commandBus,
-                       CompanyQueryRepository companyRepository,
+                       CompanyViewRepository companyRepository,
                        MongoTemplate systemMongo,
                        MongoEventStorageEngine mongoEventStorageEngine,
                        org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
@@ -97,7 +97,7 @@ public class MongoDBInit extends BaseDBInit {
         mongoTemplate.dropCollection(UserView.class);
         mongoTemplate.dropCollection(OrderBookEntry.class);
         mongoTemplate.dropCollection(OrderEntry.class);
-        mongoTemplate.dropCollection(CompanyEntry.class);
+        mongoTemplate.dropCollection(CompanyView.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
         mongoTemplate.dropCollection(PortfolioEntry.class);
         mongoTemplate.dropCollection(TransactionEntry.class);

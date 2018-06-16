@@ -23,8 +23,8 @@ import org.axonframework.samples.trader.api.orders.transaction.StartBuyTransacti
 import org.axonframework.samples.trader.api.orders.transaction.StartSellTransactionCommand;
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -56,7 +56,7 @@ import javax.validation.Valid;
 @RequestMapping("/company")
 public class CompanyController {
 
-    private CompanyQueryRepository companyRepository;
+    private CompanyViewRepository companyRepository;
     private OrderBookQueryRepository orderBookRepository;
     private UserViewRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
@@ -65,7 +65,7 @@ public class CompanyController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public CompanyController(CompanyQueryRepository companyRepository,
+    public CompanyController(CompanyViewRepository companyRepository,
                              CommandBus commandBus,
                              UserViewRepository userRepository,
                              OrderBookQueryRepository orderBookRepository,
@@ -87,7 +87,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/{companyId}", method = RequestMethod.GET)
     public String details(@PathVariable String companyId, Model model) {
-        CompanyEntry company = companyRepository.findOne(companyId);
+        CompanyView company = companyRepository.findOne(companyId);
         OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                                                                                                             .getIdentifier());
@@ -222,7 +222,7 @@ public class CompanyController {
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
-        CompanyEntry company = companyRepository.findOne(identifier);
+        CompanyView company = companyRepository.findOne(identifier);
         order.setCompanyId(identifier);
         order.setCompanyName(company.getName());
     }

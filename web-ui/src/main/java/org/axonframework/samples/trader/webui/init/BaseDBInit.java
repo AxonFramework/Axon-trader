@@ -10,8 +10,8 @@ import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.api.users.CreateUserCommand;
 import org.axonframework.samples.trader.api.users.UserId;
-import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
+import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -25,11 +25,11 @@ import java.util.List;
 public abstract class BaseDBInit implements DBInit {
 
     private CommandBus commandBus;
-    private CompanyQueryRepository companyRepository;
+    private CompanyViewRepository companyRepository;
     private PortfolioQueryRepository portfolioRepository;
     private OrderBookQueryRepository orderBookRepository;
 
-    protected BaseDBInit(CommandBus commandBus, CompanyQueryRepository companyRepository,
+    protected BaseDBInit(CommandBus commandBus, CompanyViewRepository companyRepository,
                          PortfolioQueryRepository portfolioRepository, OrderBookQueryRepository orderBookRepository) {
         this.commandBus = commandBus;
         this.companyRepository = companyRepository;
@@ -104,8 +104,8 @@ public abstract class BaseDBInit implements DBInit {
     }
 
     OrderBookEntry obtainOrderBookByCompanyName(String companyName) {
-        Iterable<CompanyEntry> companyEntries = companyRepository.findAll();
-        for (CompanyEntry entry : companyEntries) {
+        Iterable<CompanyView> companyEntries = companyRepository.findAll();
+        for (CompanyView entry : companyEntries) {
             if (entry.getName().equals(companyName)) {
                 List<OrderBookEntry> orderBookEntries = orderBookRepository
                         .findByCompanyIdentifier(entry.getIdentifier());
