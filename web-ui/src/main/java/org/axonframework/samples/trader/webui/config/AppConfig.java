@@ -21,7 +21,6 @@ import org.axonframework.samples.trader.infra.config.CQRSInfrastructureConfig;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
 import org.axonframework.samples.trader.listener.config.ExternalListenersConfig;
 import org.axonframework.samples.trader.orders.config.OrderConfig;
-import org.axonframework.samples.trader.query.config.QueryConfig;
 import org.axonframework.samples.trader.tradeengine.config.TradeEngineConfig;
 import org.axonframework.samples.trader.users.config.UserConfig;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +35,7 @@ import org.springframework.context.annotation.ImportResource;
         CompanyConfig.class,
         OrderConfig.class,
         ExternalListenersConfig.class,
-        UserConfig.class,
-        QueryConfig.class
+        UserConfig.class
 })
 @ImportResource("classpath:META-INF/spring/security-context.xml")
 public class AppConfig {

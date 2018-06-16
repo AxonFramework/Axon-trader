@@ -16,6 +16,7 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.PortfolioCreatedEvent;
 import org.axonframework.samples.trader.api.portfolio.cash.*;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Component;
  * @author Jettro Coenradie
  */
 @Component
+@ProcessingGroup("queryModel")
 public class PortfolioMoneyEventListener {
 
     private final static Logger logger = LoggerFactory.getLogger(PortfolioMoneyEventListener.class);

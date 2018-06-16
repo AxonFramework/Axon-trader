@@ -16,6 +16,7 @@
 
 package org.axonframework.samples.trader.query.transaction;
 
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.axonframework.samples.trader.api.orders.transaction.*;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
  * @author Jettro Coenradie
  */
 @Component
+@ProcessingGroup("queryModel")
 public class TransactionEventListener {
 
     private OrderBookQueryRepository orderBookQueryRepository;

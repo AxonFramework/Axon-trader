@@ -16,6 +16,7 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationCancelledForPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@ProcessingGroup("queryModel")
 public class PortfolioItemEventListener {
 
     private final static Logger logger = LoggerFactory.getLogger(PortfolioItemEventListener.class);
