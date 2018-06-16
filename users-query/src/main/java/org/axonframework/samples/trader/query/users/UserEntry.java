@@ -19,12 +19,9 @@ package org.axonframework.samples.trader.query.users;
 import org.axonframework.samples.trader.api.users.UserAccount;
 import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
+import javax.persistence.Entity;
 
-/**
- * @author Jettro Coenradie
- */
 @Entity
 public class UserEntry implements UserAccount, Serializable {
 

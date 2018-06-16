@@ -17,32 +17,28 @@
 package org.axonframework.samples.trader.query.users;
 
 import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.axonframework.samples.trader.query.users.repositories.UserQueryRepository;
+import org.springframework.stereotype.Service;
 
-/**
- * @author Jettro Coenradie
- */
-@Component
-public class UserListener {
+@Service
+public class UserEventHandler {
 
-    private UserQueryRepository userRepository;
+    private final UserQueryRepository userRepository;
+
+    public UserEventHandler(UserQueryRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @EventHandler
-    public void handleUserCreated(UserCreatedEvent event) {
+    public void on(UserCreatedEvent event) {
         UserEntry userEntry = new UserEntry();
+
         userEntry.setIdentifier(event.getUserId().toString());
         userEntry.setName(event.getName());
         userEntry.setUsername(event.getUsername());
         userEntry.setPassword(event.getPassword());
 
         userRepository.save(userEntry);
-    }
-
-    @Autowired
-    public void setUserRepository(UserQueryRepository userRepository) {
-        this.userRepository = userRepository;
     }
 }
