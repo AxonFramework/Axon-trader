@@ -18,8 +18,8 @@ package org.axonframework.samples.trader.webui.dashboard;
 
 import org.axonframework.samples.trader.query.portfolio.PortfolioView;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
-import org.axonframework.samples.trader.query.transaction.TransactionEntry;
-import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
+import org.axonframework.samples.trader.query.transaction.TransactionView;
+import org.axonframework.samples.trader.query.transaction.repositories.TransactionViewRepository;
 import org.axonframework.samples.trader.webui.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class DashboardController {
 
     private final static Logger logger = LoggerFactory.getLogger(DashboardController.class);
     private PortfolioViewRepository portfolioRepository;
-    private TransactionQueryRepository transactionRepository;
+    private TransactionViewRepository transactionRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public String show(Model model) {
@@ -54,7 +54,7 @@ public class DashboardController {
         }
         model.addAttribute("portfolio", portfolio);
 
-        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(portfolio
+        List<TransactionView> transactions = transactionRepository.findByPortfolioId(portfolio
                                                                                                       .getIdentifier());
         model.addAttribute("transactions", transactions);
         return "dashboard/index";
@@ -68,7 +68,7 @@ public class DashboardController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setTransactionRepository(TransactionQueryRepository transactionRepository) {
+    public void setTransactionRepository(TransactionViewRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 }

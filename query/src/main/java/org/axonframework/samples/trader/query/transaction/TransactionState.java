@@ -16,9 +16,6 @@
 
 package org.axonframework.samples.trader.query.transaction;
 
-/**
- * @author Jettro Coenradie
- */
 public enum TransactionState {
-    STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLYEXECUTED
+    STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLY_EXECUTED
 }

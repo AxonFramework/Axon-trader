@@ -32,7 +32,7 @@ import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.config.HsqlDbConfiguration;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.junit.*;
 import org.junit.runner.*;
@@ -173,12 +173,12 @@ public class OrderBookEventHandlerIntegrationTest {
                                                           sellTransactionId);
         orderBookEventHandler.on(event);
 
-        Iterable<TradeExecutedEntry> tradeExecutedEntries = tradeExecutedRepository.findAll();
+        Iterable<TradeExecutedView> tradeExecutedEntries = tradeExecutedRepository.findAll();
         assertTrue(tradeExecutedEntries.iterator().hasNext());
-        TradeExecutedEntry tradeExecutedEntry = tradeExecutedEntries.iterator().next();
-        assertEquals("Test Company", tradeExecutedEntry.getCompanyName());
-        assertEquals(300, tradeExecutedEntry.getTradeCount());
-        assertEquals(125, tradeExecutedEntry.getTradePrice());
+        TradeExecutedView tradeExecutedView = tradeExecutedEntries.iterator().next();
+        assertEquals("Test Company", tradeExecutedView.getCompanyName());
+        assertEquals(300, tradeExecutedView.getTradeCount());
+        assertEquals(125, tradeExecutedView.getTradePrice());
 
         all = orderBookRepository.findAll();
         orderBookView = all.iterator().next();

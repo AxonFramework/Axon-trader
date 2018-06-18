@@ -20,22 +20,23 @@ import org.axonframework.samples.trader.api.orders.TransactionType;
 import org.hamcrest.Description;
 import org.mockito.*;
 
-/**
- * @author Jettro Coenradie
- */
-public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
+public class TransactionEntryMatcher extends ArgumentMatcher<TransactionView> {
 
-    private String problem;
+    private final TransactionState state;
+    private final TransactionType type;
+    private final String companyName;
+    private final int amountOfItems;
+    private final int amountOfItemsExecuted;
+    private final long pricePerItem;
 
-    private TransactionState state;
-    private TransactionType type;
-    private String companyName;
-    private int amountOfItems;
-    private int amountOfItemsExecuted;
-    private long pricePerItem;
+    private String problemDescription;
 
-    public TransactionEntryMatcher(int amountOfItems, int amountOfItemsExecuted, String companyName, long pricePerItem,
-                                   TransactionState state, TransactionType type) {
+    public TransactionEntryMatcher(int amountOfItems,
+                                   int amountOfItemsExecuted,
+                                   String companyName,
+                                   long pricePerItem,
+                                   TransactionState state,
+                                   TransactionType type) {
         this.amountOfItems = amountOfItems;
         this.amountOfItemsExecuted = amountOfItemsExecuted;
         this.companyName = companyName;
@@ -46,47 +47,49 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
 
     @Override
     public boolean matches(Object argument) {
-        if (!(argument instanceof TransactionEntry)) {
-            problem = String.format("Wrong argument type, required %s but received %s",
-                                    TransactionEntry.class.getName(),
-                                    argument.getClass().getName());
+        if (!(argument instanceof TransactionView)) {
+            problemDescription = String.format("Wrong argument type, required %s but received %s",
+                                               TransactionView.class.getName(),
+                                               argument.getClass().getName());
             return false;
         }
-        TransactionEntry transactionEntry = (TransactionEntry) argument;
-        if (amountOfItems != transactionEntry.getAmountOfItems()) {
-            problem = String.format("Amount of items is not %d but %d",
-                                    amountOfItems,
-                                    transactionEntry.getAmountOfItems());
+        TransactionView transactionView = (TransactionView) argument;
+        if (amountOfItems != transactionView.getAmountOfItems()) {
+            problemDescription = String.format("Amount of items is not %d but %d",
+                                               amountOfItems,
+                                               transactionView.getAmountOfItems());
             return false;
         }
-        if (amountOfItemsExecuted != transactionEntry.getAmountOfExecutedItems()) {
-            problem = String.format("Amount of executed items is not %d but %d",
-                                    amountOfItemsExecuted,
-                                    transactionEntry.getAmountOfExecutedItems());
+        if (amountOfItemsExecuted != transactionView.getAmountOfExecutedItems()) {
+            problemDescription = String.format("Amount of executed items is not %d but %d",
+                                               amountOfItemsExecuted,
+                                               transactionView.getAmountOfExecutedItems());
             return false;
         }
-        if (!companyName.equals(transactionEntry.getCompanyName())) {
-            problem = String.format("Company name is not %s but %s", companyName, transactionEntry.getCompanyName());
+        if (!companyName.equals(transactionView.getCompanyName())) {
+            problemDescription = String.format("Company name is not %s but %s",
+                                               companyName,
+                                               transactionView.getCompanyName());
             return false;
         }
-        if (pricePerItem != transactionEntry.getPricePerItem()) {
-            problem = String.format("Price per item is not %d but %d",
-                                    pricePerItem,
-                                    transactionEntry.getPricePerItem());
+        if (pricePerItem != transactionView.getPricePerItem()) {
+            problemDescription = String.format("Price per item is not %d but %d",
+                                               pricePerItem,
+                                               transactionView.getPricePerItem());
             return false;
         }
-        if (state != transactionEntry.getState()) {
-            problem = String.format("State is not %s but %s", state, transactionEntry.getState());
+        if (state != transactionView.getState()) {
+            problemDescription = String.format("State is not %s but %s", state, transactionView.getState());
             return false;
         }
-        if (type != transactionEntry.getType()) {
-            problem = String.format("Type is not %s but %s", type, transactionEntry.getType());
+        if (type != transactionView.getType()) {
+            problemDescription = String.format("Type is not %s but %s", type, transactionView.getType());
         }
         return true;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(problem);
+        description.appendText(problemDescription);
     }
 }

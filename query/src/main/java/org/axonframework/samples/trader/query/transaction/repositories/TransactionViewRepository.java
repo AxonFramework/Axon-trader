@@ -16,15 +16,13 @@
 
 package org.axonframework.samples.trader.query.transaction.repositories;
 
-import org.axonframework.samples.trader.query.transaction.TransactionEntry;
+import org.axonframework.samples.trader.query.transaction.TransactionView;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
-/**
- * @author Jettro Coenradie
- */
-public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String> {
+public interface TransactionViewRepository extends JpaRepository<TransactionView, String> {
 
-    List<TransactionEntry> findByPortfolioIdentifier(String portfolioIdentifier);
+    List<TransactionView> findByPortfolioId(String portfolioId);
 }

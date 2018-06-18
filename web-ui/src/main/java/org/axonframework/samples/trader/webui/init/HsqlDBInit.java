@@ -8,7 +8,7 @@ import org.axonframework.samples.trader.query.company.repositories.CompanyViewRe
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
+import org.axonframework.samples.trader.query.transaction.repositories.TransactionViewRepository;
 import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class HsqlDBInit extends BaseDBInit {
     private OrderBookViewRepository orderBookViewRepository;
     private PortfolioViewRepository portfolioViewRepository;
     private TradeExecutedQueryRepository tradeExecutedQueryRepository;
-    private TransactionQueryRepository transactionQueryRepository;
+    private TransactionViewRepository transactionViewRepository;
 
     @Autowired
     public HsqlDBInit(CommandBus commandBus,
@@ -54,7 +54,7 @@ public class HsqlDBInit extends BaseDBInit {
                       OrderBookViewRepository orderBookViewRepository,
                       PortfolioViewRepository portfolioViewRepository,
                       TradeExecutedQueryRepository tradeExecutedQueryRepository,
-                      TransactionQueryRepository transactionQueryRepository) {
+                      TransactionViewRepository transactionViewRepository) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
         this.eventTableFactory = eventTableFactory;
         this.eventSchema = eventSchema;
@@ -65,7 +65,7 @@ public class HsqlDBInit extends BaseDBInit {
         this.orderBookViewRepository = orderBookViewRepository;
         this.portfolioViewRepository = portfolioViewRepository;
         this.tradeExecutedQueryRepository = tradeExecutedQueryRepository;
-        this.transactionQueryRepository = transactionQueryRepository;
+        this.transactionViewRepository = transactionViewRepository;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class HsqlDBInit extends BaseDBInit {
             sql_dropTableSagaEntry(connection).execute();
 
             userViewRepository.deleteAll();
-            transactionQueryRepository.deleteAll();
+            transactionViewRepository.deleteAll();
             tradeExecutedQueryRepository.deleteAll();
             orderBookViewRepository.deleteAll();
             portfolioViewRepository.deleteAll();

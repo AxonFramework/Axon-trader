@@ -29,7 +29,7 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioView;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.query.users.UserView;
 import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
@@ -89,7 +89,7 @@ public class CompanyController {
     public String details(@PathVariable String companyId, Model model) {
         CompanyView company = companyRepository.findOne(companyId);
         OrderBookView bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
-        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
+        List<TradeExecutedView> executedTrades = tradeExecutedRepository.findByOrderBookId(bookEntry
                                                                                                             .getIdentifier());
         model.addAttribute("company", company);
         model.addAttribute("sellOrders", bookEntry.sellOrders());

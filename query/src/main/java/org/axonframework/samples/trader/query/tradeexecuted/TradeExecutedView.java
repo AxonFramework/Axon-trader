@@ -19,20 +19,17 @@ package org.axonframework.samples.trader.query.tradeexecuted;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
-/**
- * @author Jettro Coenradie
- */
 @Entity
-public class TradeExecutedEntry {
+public class TradeExecutedView {
 
     @javax.persistence.Id
     @GeneratedValue
-    private Long jpaId;
+    private Long generatedId;
 
     private long tradeCount;
     private long tradePrice;
     private String companyName;
-    private String orderBookIdentifier;
+    private String orderBookId;
 
     public long getTradeCount() {
         return tradeCount;
@@ -58,19 +55,19 @@ public class TradeExecutedEntry {
         this.tradePrice = tradePrice;
     }
 
-    public String getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public String getOrderBookId() {
+        return orderBookId;
     }
 
-    public void setOrderBookIdentifier(String orderBookIdentifier) {
-        this.orderBookIdentifier = orderBookIdentifier;
+    public void setOrderBookId(String orderBookId) {
+        this.orderBookId = orderBookId;
     }
 
-    public Long getJpaId() {
-        return jpaId;
+    public Long getGeneratedId() {
+        return generatedId;
     }
 
-    public void setJpaId(Long jpaId) {
-        this.jpaId = jpaId;
+    public void setGeneratedId(Long generatedId) {
+        this.generatedId = generatedId;
     }
 }

@@ -28,7 +28,7 @@ import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.springframework.stereotype.Service;
 
@@ -91,13 +91,13 @@ public class OrderBookEventHandler {
         OrderBookId orderBookIdentifier = event.getOrderBookId();
         OrderBookView orderBookView = orderBookRepository.findOne(orderBookIdentifier.toString());
 
-        TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
-        tradeExecutedEntry.setCompanyName(orderBookView.getCompanyName());
-        tradeExecutedEntry.setOrderBookIdentifier(orderBookView.getIdentifier());
-        tradeExecutedEntry.setTradeCount(event.getTradeCount());
-        tradeExecutedEntry.setTradePrice(event.getTradePrice());
+        TradeExecutedView tradeExecutedView = new TradeExecutedView();
+        tradeExecutedView.setCompanyName(orderBookView.getCompanyName());
+        tradeExecutedView.setOrderBookId(orderBookView.getIdentifier());
+        tradeExecutedView.setTradeCount(event.getTradeCount());
+        tradeExecutedView.setTradePrice(event.getTradePrice());
 
-        tradeExecutedRepository.save(tradeExecutedEntry);
+        tradeExecutedRepository.save(tradeExecutedView);
 
         OrderView foundBuyOrder = null;
         for (OrderView order : orderBookView.buyOrders()) {

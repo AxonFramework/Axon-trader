@@ -16,15 +16,12 @@
 
 package org.axonframework.samples.trader.query.tradeexecuted.repositories;
 
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-/**
- * @author Jettro Coenradie
- */
-public interface TradeExecutedQueryRepository extends PagingAndSortingRepository<TradeExecutedEntry, String> {
+public interface TradeExecutedQueryRepository extends JpaRepository<TradeExecutedView, String> {
 
-    List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier);
+    List<TradeExecutedView> findByOrderBookId(String orderBookId);
 }

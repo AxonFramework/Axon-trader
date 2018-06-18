@@ -23,8 +23,8 @@
         <class>org.axonframework.samples.trader.query.orderbook.OrderBookView</class>
         <class>org.axonframework.samples.trader.query.portfolio.PortfolioView</class>
         <class>org.axonframework.samples.trader.query.portfolio.ItemEntry</class>
-        <class>org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry</class>
-        <class>org.axonframework.samples.trader.query.transaction.TransactionEntry</class>
+        <class>org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView</class>
+        <class>org.axonframework.samples.trader.query.transaction.TransactionView</class>
         <class>org.axonframework.samples.trader.query.users.UserView</class>
         <properties>
             <property name="hibernate.archive.autodetection" value=""/>

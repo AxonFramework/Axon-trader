@@ -21,17 +21,14 @@ import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
 
-/**
- * @author Jettro Coenradie
- */
 @Entity
-public class TransactionEntry {
+public class TransactionView {
 
     @Id
     @javax.persistence.Id
     private String identifier;
-    private String orderbookIdentifier;
-    private String portfolioIdentifier;
+    private String orderBookId;
+    private String portfolioId;
 
     private String companyName;
     private long amountOfItems;
@@ -72,20 +69,20 @@ public class TransactionEntry {
         this.identifier = identifier;
     }
 
-    public String getOrderbookIdentifier() {
-        return orderbookIdentifier;
+    public String getOrderBookId() {
+        return orderBookId;
     }
 
-    public void setOrderbookIdentifier(String orderbookIdentifier) {
-        this.orderbookIdentifier = orderbookIdentifier;
+    public void setOrderBookId(String orderBookId) {
+        this.orderBookId = orderBookId;
     }
 
-    public String getPortfolioIdentifier() {
-        return portfolioIdentifier;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
-    public void setPortfolioIdentifier(String portfolioIdentifier) {
-        this.portfolioIdentifier = portfolioIdentifier;
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
 
     public long getPricePerItem() {
