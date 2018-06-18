@@ -14,8 +14,8 @@ import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 
 import java.util.List;
 
@@ -26,11 +26,11 @@ public abstract class BaseDBInit implements DBInit {
 
     private CommandBus commandBus;
     private CompanyViewRepository companyRepository;
-    private PortfolioQueryRepository portfolioRepository;
+    private PortfolioViewRepository portfolioRepository;
     private OrderBookViewRepository orderBookRepository;
 
     protected BaseDBInit(CommandBus commandBus, CompanyViewRepository companyRepository,
-                         PortfolioQueryRepository portfolioRepository, OrderBookViewRepository orderBookRepository) {
+                         PortfolioViewRepository portfolioRepository, OrderBookViewRepository orderBookRepository) {
         this.commandBus = commandBus;
         this.companyRepository = companyRepository;
         this.portfolioRepository = portfolioRepository;
@@ -89,15 +89,15 @@ public abstract class BaseDBInit implements DBInit {
     }
 
     void addMoney(UserId buyer1, long amount) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(buyer1.toString());
-        depositMoneyToPortfolio(portfolioEntry.getIdentifier(), amount);
+        PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(buyer1.toString());
+        depositMoneyToPortfolio(portfolioView.getIdentifier(), amount);
     }
 
     void addItems(UserId user, String companyName, long amount) {
-        PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
+        PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(user.toString());
         OrderBookView orderBookView = obtainOrderBookByCompanyName(companyName);
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
-                new PortfolioId(portfolioEntry.getIdentifier()),
+                new PortfolioId(portfolioView.getIdentifier()),
                 new OrderBookId(orderBookView.getIdentifier()),
                 amount);
         commandBus.dispatch(new GenericCommandMessage<>(command));

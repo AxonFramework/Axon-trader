@@ -16,13 +16,10 @@
 
 package org.axonframework.samples.trader.query.portfolio.repositories;
 
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * @author Jettro Coenradie
- */
-public interface PortfolioQueryRepository extends PagingAndSortingRepository<PortfolioEntry, String> {
+public interface PortfolioViewRepository extends JpaRepository<PortfolioView, String> {
 
-    PortfolioEntry findByUserIdentifier(String userIdentifier);
+    PortfolioView findByUserIdentifier(String userIdentifier);
 }

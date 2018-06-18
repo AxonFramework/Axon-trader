@@ -21,7 +21,7 @@
         <class>org.axonframework.samples.trader.query.company.CompanyView</class>
         <class>org.axonframework.samples.trader.query.orderbook.OrderView</class>
         <class>org.axonframework.samples.trader.query.orderbook.OrderBookView</class>
-        <class>org.axonframework.samples.trader.query.portfolio.PortfolioEntry</class>
+        <class>org.axonframework.samples.trader.query.portfolio.PortfolioView</class>
         <class>org.axonframework.samples.trader.query.portfolio.ItemEntry</class>
         <class>org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry</class>
         <class>org.axonframework.samples.trader.query.transaction.TransactionEntry</class>

@@ -19,17 +19,14 @@ package org.axonframework.samples.trader.query.portfolio;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
-/**
- * @author Jettro Coenradie
- */
 @Entity
 public class ItemEntry {
 
     @javax.persistence.Id
     @GeneratedValue
-    private Long jpaId;
+    private Long generatedId;
 
-    private String identifier; //orderbookIdentifier
+    private String identifier; // OrderBook identifier
     private String companyIdentifier;
     private String companyName;
     private long amount;
@@ -76,11 +73,11 @@ public class ItemEntry {
                 '}';
     }
 
-    public Long getJpaId() {
-        return jpaId;
+    public Long getGeneratedId() {
+        return generatedId;
     }
 
-    public void setJpaId(Long jpaId) {
-        this.jpaId = jpaId;
+    public void setGeneratedId(Long generatedId) {
+        this.generatedId = generatedId;
     }
 }

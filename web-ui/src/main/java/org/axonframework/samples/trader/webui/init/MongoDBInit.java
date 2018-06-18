@@ -10,8 +10,8 @@ import org.axonframework.samples.trader.query.company.repositories.CompanyViewRe
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.OrderView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.query.users.UserView;
@@ -48,7 +48,7 @@ public class MongoDBInit extends BaseDBInit {
                        MongoEventStorageEngine mongoEventStorageEngine,
                        org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
                        org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate systemAxonSagaMongo,
-                       PortfolioQueryRepository portfolioRepository,
+                       PortfolioViewRepository portfolioRepository,
                        OrderBookViewRepository orderBookRepository, org.springframework.data.mongodb.core.MongoTemplate springTemplate) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
         this.systemAxonMongo = systemMongo;
@@ -99,7 +99,7 @@ public class MongoDBInit extends BaseDBInit {
         mongoTemplate.dropCollection(OrderView.class);
         mongoTemplate.dropCollection(CompanyView.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
-        mongoTemplate.dropCollection(PortfolioEntry.class);
+        mongoTemplate.dropCollection(PortfolioView.class);
         mongoTemplate.dropCollection(TransactionEntry.class);
     }
 

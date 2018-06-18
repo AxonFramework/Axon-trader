@@ -22,8 +22,8 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +50,16 @@ public class RestController {
 
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
     private CommandBus commandBus;
-    private PortfolioQueryRepository portfolioQueryRepository;
+    private PortfolioViewRepository portfolioViewRepository;
     private OrderBookViewRepository orderBookViewRepository;
 
     private XStream xStream;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public RestController(CommandBus commandBus, PortfolioQueryRepository portfolioQueryRepository,
+    public RestController(CommandBus commandBus, PortfolioViewRepository portfolioViewRepository,
                           OrderBookViewRepository orderBookViewRepository) {
-        this.portfolioQueryRepository = portfolioQueryRepository;
+        this.portfolioViewRepository = portfolioViewRepository;
         this.orderBookViewRepository = orderBookViewRepository;
         this.xStream = new XStream();
         this.commandBus = commandBus;
@@ -86,9 +86,9 @@ public class RestController {
     public
     @ResponseBody
     String obtainPortfolios() {
-        Iterable<PortfolioEntry> all = portfolioQueryRepository.findAll();
-        List<PortfolioEntry> portfolioEntries = new ArrayList<>();
-        for (PortfolioEntry entry : all) {
+        Iterable<PortfolioView> all = portfolioViewRepository.findAll();
+        List<PortfolioView> portfolioEntries = new ArrayList<>();
+        for (PortfolioView entry : all) {
             portfolioEntries.add(entry);
         }
 
@@ -99,7 +99,7 @@ public class RestController {
     public
     @ResponseBody
     String obtainPortfolio(@PathVariable String identifier) {
-        PortfolioEntry entry = portfolioQueryRepository.findOne(identifier);
+        PortfolioView entry = portfolioViewRepository.findOne(identifier);
 
         return xStream.toXML(entry);
     }

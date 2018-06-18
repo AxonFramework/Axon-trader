@@ -18,15 +18,17 @@ package org.axonframework.samples.trader.query.portfolio;
 
 import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 
-/**
- * @author Jettro Coenradie
- */
 @Entity
-public class PortfolioEntry {
+public class PortfolioView {
 
     @Id
     @javax.persistence.Id
@@ -37,31 +39,39 @@ public class PortfolioEntry {
     private long reservedAmountOfMoney;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "PORTFOLIO_ITEM_POSSESSION", joinColumns = @JoinColumn(name = "PORTFOLIO_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
+    @JoinTable(
+            name = "PORTFOLIO_ITEM_POSSESSION",
+            joinColumns = @JoinColumn(name = "PORTFOLIO_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
+    )
     private Map<String, ItemEntry> itemsInPossession = new HashMap<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "PORTFOLIO_ITEM_RESERVED", joinColumns = @JoinColumn(name = "PORTFOLIO_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
+    @JoinTable(
+            name = "PORTFOLIO_ITEM_RESERVED",
+            joinColumns = @JoinColumn(name = "PORTFOLIO_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
+    )
     private Map<String, ItemEntry> itemsReserved = new HashMap<>();
 
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
-    public long obtainAmountOfAvailableItemsFor(String orderbookIdentifier) {
-        long possession = obtainAmountOfItemsInPossessionFor(orderbookIdentifier);
-        long reserved = obtainAmountOfReservedItemsFor(orderbookIdentifier);
+    public long obtainAmountOfAvailableItemsFor(String orderBookId) {
+        long possession = obtainAmountOfItemsInPossessionFor(orderBookId);
+        long reserved = obtainAmountOfReservedItemsFor(orderBookId);
         return possession - reserved;
     }
 
-    public long obtainAmountOfReservedItemsFor(String orderbookIdentifier) {
-        ItemEntry item = findReservedItemByIdentifier(orderbookIdentifier);
+    public long obtainAmountOfReservedItemsFor(String orderBookId) {
+        ItemEntry item = findReservedItemByIdentifier(orderBookId);
         if (null == item) {
             return 0;
         }
         return item.getAmount();
     }
 
-    public long obtainAmountOfItemsInPossessionFor(String orderbookIdentifier) {
-        ItemEntry item = findItemInPossession(orderbookIdentifier);
+    public long obtainAmountOfItemsInPossessionFor(String orderBookId) {
+        ItemEntry item = findItemInPossession(orderBookId);
         if (null == item) {
             return 0;
         }
@@ -72,12 +82,12 @@ public class PortfolioEntry {
         return amountOfMoney - reservedAmountOfMoney;
     }
 
-    public ItemEntry findReservedItemByIdentifier(String orderbookIdentifier) {
-        return itemsReserved.get(orderbookIdentifier);
+    public ItemEntry findReservedItemByIdentifier(String orderBookId) {
+        return itemsReserved.get(orderBookId);
     }
 
-    public ItemEntry findItemInPossession(String orderbookIdentifier) {
-        return itemsInPossession.get(orderbookIdentifier);
+    public ItemEntry findItemInPossession(String orderBookId) {
+        return itemsInPossession.get(orderBookId);
     }
 
     public void addReservedItem(ItemEntry itemEntry) {
@@ -179,7 +189,7 @@ public class PortfolioEntry {
 
     @Override
     public String toString() {
-        return "PortfolioEntry{" +
+        return "PortfolioView{" +
                 "amountOfMoney=" + amountOfMoney +
                 ", identifier='" + identifier + '\'' +
                 ", userIdentifier='" + userIdentifier + '\'' +

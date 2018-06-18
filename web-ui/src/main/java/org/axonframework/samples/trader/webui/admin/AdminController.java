@@ -24,8 +24,8 @@ import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,12 +38,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminController {
 
     private CommandBus commandBus;
-    private PortfolioQueryRepository portfolioQueryRepository;
+    private PortfolioViewRepository portfolioViewRepository;
     private OrderBookViewRepository orderBookViewRepository;
 
     @RequestMapping(value = "/portfolio")
     public String show(Model model) {
-        Iterable<PortfolioEntry> portfolios = portfolioQueryRepository.findAll();
+        Iterable<PortfolioView> portfolios = portfolioViewRepository.findAll();
         model.addAttribute("portfolios", portfolios);
 
         return "admin/portfolio/list";
@@ -52,7 +52,7 @@ public class AdminController {
     @RequestMapping(value = "/portfolio/{identifier}")
     public String showPortfolio(@PathVariable("identifier") String portfolioIdentifier,
                                 Model model) {
-        PortfolioEntry portfolio = portfolioQueryRepository.findOne(portfolioIdentifier);
+        PortfolioView portfolio = portfolioViewRepository.findOne(portfolioIdentifier);
         model.addAttribute("portfolio", portfolio);
 
         Iterable<OrderBookView> orderBooks = orderBookViewRepository.findAll();
@@ -100,7 +100,7 @@ public class AdminController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setPortfolioQueryRepository(PortfolioQueryRepository portfolioQueryRepository) {
-        this.portfolioQueryRepository = portfolioQueryRepository;
+    public void setPortfolioViewRepository(PortfolioViewRepository portfolioViewRepository) {
+        this.portfolioViewRepository = portfolioViewRepository;
     }
 }

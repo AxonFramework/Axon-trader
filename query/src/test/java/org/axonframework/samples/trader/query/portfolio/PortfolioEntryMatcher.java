@@ -19,19 +19,19 @@ package org.axonframework.samples.trader.query.portfolio;
 import org.hamcrest.Description;
 import org.mockito.*;
 
-/**
- * @author Jettro Coenradie
- */
-public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
+public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioView> {
 
-    private int itemsInPossession;
-    private String itemIdentifier;
-    private int amountOfItemInPossession;
-    private int itemsInReservation;
-    private int amountOfItemInReservation;
+    private final int itemsInPossession;
+    private final String itemIdentifier;
+    private final int amountOfItemInPossession;
+    private final int itemsInReservation;
+    private final int amountOfItemInReservation;
 
-    public PortfolioEntryMatcher(String itemIdentifier, int itemsInPossession, int amountOfItemInPossession,
-                                 int itemsInReservation, int amountOfItemInReservation) {
+    public PortfolioEntryMatcher(String itemIdentifier,
+                                 int itemsInPossession,
+                                 int amountOfItemInPossession,
+                                 int itemsInReservation,
+                                 int amountOfItemInReservation) {
         this.itemsInPossession = itemsInPossession;
         this.itemIdentifier = itemIdentifier;
         this.amountOfItemInPossession = amountOfItemInPossession;
@@ -41,21 +41,21 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
 
     @Override
     public boolean matches(Object argument) {
-        if (!(argument instanceof PortfolioEntry)) {
+        if (!(argument instanceof PortfolioView)) {
             return false;
         }
-        PortfolioEntry portfolioEntry = (PortfolioEntry) argument;
+        PortfolioView portfolioView = (PortfolioView) argument;
 
-        return portfolioEntry.getItemsInPossession().size() == itemsInPossession
-                && amountOfItemInPossession == portfolioEntry.findItemInPossession(itemIdentifier).getAmount()
-                && portfolioEntry.getItemsReserved().size() == itemsInReservation
-                && !(itemsInReservation != 0 && (amountOfItemInReservation != portfolioEntry
+        return portfolioView.getItemsInPossession().size() == itemsInPossession
+                && amountOfItemInPossession == portfolioView.findItemInPossession(itemIdentifier).getAmount()
+                && portfolioView.getItemsReserved().size() == itemsInReservation
+                && !(itemsInReservation != 0 && (amountOfItemInReservation != portfolioView
                 .findReservedItemByIdentifier(itemIdentifier).getAmount()));
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("PortfolioEntry with itemsInPossession [")
+        description.appendText("PortfolioView with itemsInPossession [")
                    .appendValue(itemsInPossession)
                    .appendText("] and amountOfItemsInPossession [")
                    .appendValue(amountOfItemInPossession)

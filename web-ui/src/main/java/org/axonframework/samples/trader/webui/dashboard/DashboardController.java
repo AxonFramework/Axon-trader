@@ -16,8 +16,8 @@
 
 package org.axonframework.samples.trader.webui.dashboard;
 
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 import org.axonframework.samples.trader.query.transaction.TransactionEntry;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.samples.trader.webui.util.SecurityUtil;
@@ -39,7 +39,7 @@ import java.util.List;
 public class DashboardController {
 
     private final static Logger logger = LoggerFactory.getLogger(DashboardController.class);
-    private PortfolioQueryRepository portfolioRepository;
+    private PortfolioViewRepository portfolioRepository;
     private TransactionQueryRepository transactionRepository;
 
     @RequestMapping(method = RequestMethod.GET)
@@ -47,7 +47,7 @@ public class DashboardController {
         String identifier = SecurityUtil.obtainLoggedinUserIdentifier();
         logger.debug("Requested to obtain the portfolio for the user: {}", identifier);
 
-        PortfolioEntry portfolio = portfolioRepository.findByUserIdentifier(identifier);
+        PortfolioView portfolio = portfolioRepository.findByUserIdentifier(identifier);
         if (portfolio == null) {
             throw new RuntimeException("You most certainly changed the id of the current logged in user " +
                                                "and the user did not logout.");
@@ -62,7 +62,7 @@ public class DashboardController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setPortfolioRepository(PortfolioQueryRepository portfolioRepository) {
+    public void setPortfolioRepository(PortfolioViewRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
     }
 

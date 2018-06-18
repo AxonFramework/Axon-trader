@@ -20,45 +20,41 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-/**
- * @author Jettro Coenradie
- */
-public class PortfolioEntryTest {
+public class PortfolioViewTest {
 
     private static final long AMOUNT_ITEMS = 100;
     private static final long AMOUNT_RESERVED = 40;
     private static final int AMOUNT_SELL = 10;
-    private static final String ORDERBOOK_IDENTIFIER = "item1";
+    private static final String ORDER_BOOK_ID = "item1";
     private static final int AMOUNT_OF_MONEY = 1000;
     private static final int RESERVED_AMOUNT_OF_MONEY = 200;
 
     @Test
     public void testRemovingItems() {
-        PortfolioEntry portfolio = createDefaultPortfolio();
+        PortfolioView portfolio = createDefaultPortfolio();
 
-        portfolio.removeReservedItem(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
-        portfolio.removeItemsInPossession(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
+        portfolio.removeReservedItem(ORDER_BOOK_ID, AMOUNT_SELL);
+        portfolio.removeItemsInPossession(ORDER_BOOK_ID, AMOUNT_SELL);
 
-        assertEquals(AMOUNT_RESERVED - AMOUNT_SELL,
-                     portfolio.findReservedItemByIdentifier(ORDERBOOK_IDENTIFIER).getAmount());
-        assertEquals(AMOUNT_ITEMS - AMOUNT_SELL, portfolio.findItemInPossession(ORDERBOOK_IDENTIFIER).getAmount());
+        assertEquals(AMOUNT_RESERVED - AMOUNT_SELL, portfolio.findReservedItemByIdentifier(ORDER_BOOK_ID).getAmount());
+        assertEquals(AMOUNT_ITEMS - AMOUNT_SELL, portfolio.findItemInPossession(ORDER_BOOK_ID).getAmount());
     }
 
     @Test
     public void testObtainAvailableItems() {
-        PortfolioEntry portfolio = createDefaultPortfolio();
+        PortfolioView portfolio = createDefaultPortfolio();
 
-        assertEquals(AMOUNT_ITEMS - AMOUNT_RESERVED, portfolio.obtainAmountOfAvailableItemsFor(ORDERBOOK_IDENTIFIER));
+        assertEquals(AMOUNT_ITEMS - AMOUNT_RESERVED, portfolio.obtainAmountOfAvailableItemsFor(ORDER_BOOK_ID));
     }
 
     @Test
     public void testObtainBudget() {
-        PortfolioEntry portfolio = createDefaultPortfolio();
+        PortfolioView portfolio = createDefaultPortfolio();
         assertEquals(AMOUNT_OF_MONEY - RESERVED_AMOUNT_OF_MONEY, portfolio.obtainMoneyToSpend());
     }
 
-    private PortfolioEntry createDefaultPortfolio() {
-        PortfolioEntry portfolio = new PortfolioEntry();
+    private PortfolioView createDefaultPortfolio() {
+        PortfolioView portfolio = new PortfolioView();
 
         portfolio.addItemInPossession(createItem(AMOUNT_ITEMS));
         portfolio.addReservedItem(createItem(AMOUNT_RESERVED));

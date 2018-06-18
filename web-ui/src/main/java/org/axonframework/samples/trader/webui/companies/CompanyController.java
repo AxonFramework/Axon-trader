@@ -27,8 +27,8 @@ import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
+import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedEntry;
 import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.samples.trader.query.users.UserView;
@@ -60,7 +60,7 @@ public class CompanyController {
     private OrderBookViewRepository orderBookRepository;
     private UserViewRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
-    private PortfolioQueryRepository portfolioQueryRepository;
+    private PortfolioViewRepository portfolioViewRepository;
     private CommandBus commandBus;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -70,13 +70,13 @@ public class CompanyController {
                              UserViewRepository userRepository,
                              OrderBookViewRepository orderBookRepository,
                              TradeExecutedQueryRepository tradeExecutedRepository,
-                             PortfolioQueryRepository portfolioQueryRepository) {
+                             PortfolioViewRepository portfolioViewRepository) {
         this.companyRepository = companyRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
         this.orderBookRepository = orderBookRepository;
         this.tradeExecutedRepository = tradeExecutedRepository;
-        this.portfolioQueryRepository = portfolioQueryRepository;
+        this.portfolioViewRepository = portfolioViewRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -123,9 +123,9 @@ public class CompanyController {
     public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             OrderBookView bookEntry = obtainOrderBookForCompany(order.getCompanyId());
-            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+            PortfolioView portfolioView = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
+            if (portfolioView.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
                 bindingResult.rejectValue("tradeCount",
                                           "error.order.sell.tomanyitems",
                                           "Not enough items available to create sell order.");
@@ -136,7 +136,7 @@ public class CompanyController {
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
                                                                                   new OrderBookId(bookEntry
                                                                                                           .getIdentifier()),
-                                                                                  new PortfolioId(portfolioEntry
+                                                                                  new PortfolioId(portfolioView
                                                                                                           .getIdentifier()),
                                                                                   order.getTradeCount(),
                                                                                   order.getItemPrice());
@@ -155,20 +155,20 @@ public class CompanyController {
         if (!bindingResult.hasErrors()) {
 
             OrderBookView bookEntry = obtainOrderBookForCompany(order.getCompanyId());
-            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+            PortfolioView portfolioView = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
+            if (portfolioView.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
                 bindingResult.rejectValue("tradeCount",
                                           "error.order.buy.notenoughmoney",
                                           "Not enough cash to spend to buy the items for the price you want");
-                addPortfolioMoneyInfoToModel(portfolioEntry, model);
+                addPortfolioMoneyInfoToModel(portfolioView, model);
                 return "company/buy";
             }
 
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
                                                                                 new OrderBookId(bookEntry
                                                                                                         .getIdentifier()),
-                                                                                new PortfolioId(portfolioEntry
+                                                                                new PortfolioId(portfolioView
                                                                                                         .getIdentifier()),
                                                                                 order.getTradeCount(),
                                                                                 order.getItemPrice());
@@ -181,24 +181,24 @@ public class CompanyController {
     }
 
     private void addPortfolioItemInfoToModel(String identifier, Model model) {
-        PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+        PortfolioView portfolioView = obtainPortfolioForUser();
         OrderBookView orderBookView = obtainOrderBookForCompany(identifier);
-        addPortfolioItemInfoToModel(portfolioEntry, orderBookView.getIdentifier(), model);
+        addPortfolioItemInfoToModel(portfolioView, orderBookView.getIdentifier(), model);
     }
 
-    private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, Model model) {
+    private void addPortfolioItemInfoToModel(PortfolioView entry, String orderBookIdentifier, Model model) {
         model.addAttribute("itemsInPossession", entry.obtainAmountOfItemsInPossessionFor(orderBookIdentifier));
         model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemsFor(orderBookIdentifier));
     }
 
     private void addPortfolioMoneyInfoToModel(Model model) {
-        PortfolioEntry portfolioEntry = obtainPortfolioForUser();
-        addPortfolioMoneyInfoToModel(portfolioEntry, model);
+        PortfolioView portfolioView = obtainPortfolioForUser();
+        addPortfolioMoneyInfoToModel(portfolioView, model);
     }
 
-    private void addPortfolioMoneyInfoToModel(PortfolioEntry portfolioEntry, Model model) {
-        model.addAttribute("moneyInPossession", portfolioEntry.getAmountOfMoney());
-        model.addAttribute("moneyReserved", portfolioEntry.getReservedAmountOfMoney());
+    private void addPortfolioMoneyInfoToModel(PortfolioView portfolioView, Model model) {
+        model.addAttribute("moneyInPossession", portfolioView.getAmountOfMoney());
+        model.addAttribute("moneyReserved", portfolioView.getReservedAmountOfMoney());
     }
 
     /**
@@ -216,9 +216,9 @@ public class CompanyController {
      *
      * @return The found portfolio for the logged in user.
      */
-    private PortfolioEntry obtainPortfolioForUser() {
+    private PortfolioView obtainPortfolioForUser() {
         UserView username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
-        return portfolioQueryRepository.findByUserIdentifier(username.getIdentifier());
+        return portfolioViewRepository.findByUserIdentifier(username.getIdentifier());
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
