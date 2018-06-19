@@ -3,6 +3,8 @@ We from the AxonFramework Team are currently undertaking a rigorous adjustment t
 Due too some circumstances, these are live changes for everybody to see. This does mean that the master branch might be broken at times. 
 We are extremely sorry for any inconvenience caused through this and are remediating the issue as soon as possible. Kind regards, the AxonFramework Team.
 
+---
+
 This is a sample application to demonstrate the possibilities of the Axon framework in a high load environment. We have chosen to create a Trader application. All you need to run it is java, mongodb and maven.
 
 
