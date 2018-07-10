@@ -46,8 +46,6 @@
 
     <context-param>
         <param-name>spring.profiles.default</param-name>
-        <!-- You can pass the active profile to overrule the default -->
-        <!-- -Dspring.profiles.active=mongodb -->
         <param-value>hsqldb</param-value>
     </context-param>
 

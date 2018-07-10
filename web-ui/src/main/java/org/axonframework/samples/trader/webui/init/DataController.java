@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * @author Jettro Coenradie
- */
 @Controller
 @RequestMapping("/data")
 public class DataController {
@@ -49,7 +46,9 @@ public class DataController {
                              @RequestParam(value = "page", defaultValue = "1") int pageNumber,
                              @RequestParam(value = "itemsperpage", defaultValue = "5") int itemsPerPage,
                              Model model) {
-        DataResults dataResults = dbInit.obtainCollection(collectionName, itemsPerPage, (pageNumber - 1) * itemsPerPage + 1);
+        DataResults dataResults = dbInit.obtainCollection(collectionName,
+                                                          itemsPerPage,
+                                                          (pageNumber - 1) * itemsPerPage + 1);
 
         model.addAttribute("items", dataResults.getItems());
 
@@ -60,14 +59,6 @@ public class DataController {
         model.addAttribute("itemsPerPage", itemsPerPage);
         model.addAttribute("collectionName", collectionName);
         return "data/collection";
-    }
-
-    @RequestMapping(value = "/init", method = RequestMethod.GET)
-    public String initializeMongo(Model model) {
-        dbInit.createItems();
-
-        model.addAttribute("info", "Mongo database is initialized.");
-        return "data/info";
     }
 
     @RequestMapping(value = "/portfolio/money/{identifier}/{amount}")

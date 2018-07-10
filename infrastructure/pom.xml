@@ -39,17 +39,6 @@
             <artifactId>axon-spring</artifactId>
             <version>${axon.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-mongo</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>${springdata.mongodb.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>

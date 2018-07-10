@@ -44,12 +44,6 @@
 
         <dependency>
             <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>${springdata.mongodb.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${springdata.jpa.version}</version>
         </dependency>

@@ -146,12 +146,6 @@
             <version>${spring.security.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-mongo</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-
         <!-- web -->
         <dependency>
             <groupId>javax.servlet</groupId>

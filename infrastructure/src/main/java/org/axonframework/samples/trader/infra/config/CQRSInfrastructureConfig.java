@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan("org.axonframework.samples.trader")
-@Import({CQRSInfrastructureHSQLDBConfig.class, CQRSInfrastructureMongoDBConfig.class})
+@Import(CQRSInfrastructureHSQLDBConfig.class)
 public class CQRSInfrastructureConfig {
 
     @Bean
