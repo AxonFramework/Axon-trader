@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.query.company.repositories;
+package org.axonframework.samples.trader.query.transaction;
 
-import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.transaction.TransactionView;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface CompanyViewRepository extends JpaRepository<CompanyView, String> {
+import java.util.List;
 
+public interface TransactionViewRepository extends JpaRepository<TransactionView, String> {
+
+    List<TransactionView> findByPortfolioId(String portfolioId);
 }

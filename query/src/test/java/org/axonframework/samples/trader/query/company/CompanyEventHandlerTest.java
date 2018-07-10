@@ -2,7 +2,6 @@ package org.axonframework.samples.trader.query.company;
 
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.company.CompanyId;
-import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;

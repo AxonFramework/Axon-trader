@@ -19,7 +19,6 @@ package org.axonframework.samples.trader.query.users;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
-import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.springframework.stereotype.Service;
 
 @Service

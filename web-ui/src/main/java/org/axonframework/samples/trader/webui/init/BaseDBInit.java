@@ -11,11 +11,11 @@ import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioC
 import org.axonframework.samples.trader.api.users.CreateUserCommand;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.samples.trader.query.company.CompanyView;
-import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
+import org.axonframework.samples.trader.query.company.CompanyViewRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioView;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioViewRepository;
 
 import java.util.List;
 

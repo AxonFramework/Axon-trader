@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.query.transaction.repositories;
+package org.axonframework.samples.trader.query.users;
 
-import org.axonframework.samples.trader.query.transaction.TransactionView;
+import org.axonframework.samples.trader.query.users.UserView;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.List;
+public interface UserViewRepository extends JpaRepository<UserView, String> {
 
-public interface TransactionViewRepository extends JpaRepository<TransactionView, String> {
+    UserView findByUsername(String username);
 
-    List<TransactionView> findByPortfolioId(String portfolioId);
+    UserView findByIdentifier(String identifier);
 }

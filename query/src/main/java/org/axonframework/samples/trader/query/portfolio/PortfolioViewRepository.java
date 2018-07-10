@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.query.orderbook.repositories;
+package org.axonframework.samples.trader.query.portfolio;
 
-import org.axonframework.samples.trader.query.orderbook.OrderBookView;
+import org.axonframework.samples.trader.query.portfolio.PortfolioView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface PortfolioViewRepository extends JpaRepository<PortfolioView, String> {
 
-public interface OrderBookViewRepository extends JpaRepository<OrderBookView, String> {
-
-    List<OrderBookView> findByCompanyIdentifier(String companyIdentifier);
+    PortfolioView findByUserIdentifier(String userIdentifier);
 }

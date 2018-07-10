@@ -17,7 +17,7 @@
 package org.axonframework.samples.trader.webui.order;
 
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;

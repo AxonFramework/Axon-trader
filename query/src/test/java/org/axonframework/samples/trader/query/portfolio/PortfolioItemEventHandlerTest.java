@@ -26,8 +26,7 @@ import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfoli
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.junit.*;
 
 import static org.mockito.Matchers.argThat;

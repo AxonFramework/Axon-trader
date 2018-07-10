@@ -17,9 +17,9 @@
 package org.axonframework.samples.trader.webui.dashboard;
 
 import org.axonframework.samples.trader.query.portfolio.PortfolioView;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
+import org.axonframework.samples.trader.query.portfolio.PortfolioViewRepository;
 import org.axonframework.samples.trader.query.transaction.TransactionView;
-import org.axonframework.samples.trader.query.transaction.repositories.TransactionViewRepository;
+import org.axonframework.samples.trader.query.transaction.TransactionViewRepository;
 import org.axonframework.samples.trader.webui.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

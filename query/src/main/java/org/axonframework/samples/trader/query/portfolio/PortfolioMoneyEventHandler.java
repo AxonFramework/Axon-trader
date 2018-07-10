@@ -24,8 +24,7 @@ import org.axonframework.samples.trader.api.portfolio.cash.CashReservationCancel
 import org.axonframework.samples.trader.api.portfolio.cash.CashReservationConfirmedEvent;
 import org.axonframework.samples.trader.api.portfolio.cash.CashReservedEvent;
 import org.axonframework.samples.trader.api.portfolio.cash.CashWithdrawnEvent;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
-import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
+import org.axonframework.samples.trader.query.users.UserViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

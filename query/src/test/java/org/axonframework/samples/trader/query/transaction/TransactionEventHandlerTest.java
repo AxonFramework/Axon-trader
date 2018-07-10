@@ -24,8 +24,7 @@ import org.axonframework.samples.trader.api.orders.transaction.SellTransactionSt
 import org.axonframework.samples.trader.api.orders.transaction.TransactionId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.transaction.repositories.TransactionViewRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.junit.*;
 
 import static org.axonframework.samples.trader.api.orders.TransactionType.BUY;

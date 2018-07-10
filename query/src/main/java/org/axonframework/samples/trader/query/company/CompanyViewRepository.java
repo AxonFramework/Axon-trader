@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package org.axonframework.samples.trader.query.tradeexecuted.repositories;
+package org.axonframework.samples.trader.query.company;
 
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
+import org.axonframework.samples.trader.query.company.CompanyView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface CompanyViewRepository extends JpaRepository<CompanyView, String> {
 
-public interface TradeExecutedQueryRepository extends JpaRepository<TradeExecutedView, String> {
-
-    List<TradeExecutedView> findByOrderBookId(String orderBookId);
 }

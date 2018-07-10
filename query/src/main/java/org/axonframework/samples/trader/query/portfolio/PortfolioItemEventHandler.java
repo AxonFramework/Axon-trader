@@ -24,8 +24,7 @@ import org.axonframework.samples.trader.api.portfolio.stock.ItemReservationConfi
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsAddedToPortfolioEvent;
 import org.axonframework.samples.trader.api.portfolio.stock.ItemsReservedEvent;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

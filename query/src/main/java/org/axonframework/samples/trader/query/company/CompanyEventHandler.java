@@ -19,7 +19,6 @@ package org.axonframework.samples.trader.query.company;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
-import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
 import org.springframework.stereotype.Service;
 
 @Service

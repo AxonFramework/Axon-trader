@@ -26,10 +26,9 @@ import org.axonframework.samples.trader.api.orders.trades.BuyOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.query.company.CompanyView;
-import org.axonframework.samples.trader.query.company.repositories.CompanyViewRepository;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
+import org.axonframework.samples.trader.query.company.CompanyViewRepository;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
-import org.axonframework.samples.trader.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedQueryRepository;
 import org.springframework.stereotype.Service;
 
 @Service

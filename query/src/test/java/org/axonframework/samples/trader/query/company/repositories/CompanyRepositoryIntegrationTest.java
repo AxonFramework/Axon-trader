@@ -19,6 +19,7 @@ package org.axonframework.samples.trader.query.company.repositories;
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
 import org.axonframework.samples.trader.query.company.CompanyView;
+import org.axonframework.samples.trader.query.company.CompanyViewRepository;
 import org.axonframework.samples.trader.query.config.HsqlDbConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;

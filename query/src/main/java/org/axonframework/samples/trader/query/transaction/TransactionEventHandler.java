@@ -33,8 +33,7 @@ import org.axonframework.samples.trader.api.orders.transaction.SellTransactionEx
 import org.axonframework.samples.trader.api.orders.transaction.SellTransactionPartiallyExecutedEvent;
 import org.axonframework.samples.trader.api.orders.transaction.SellTransactionStartedEvent;
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
-import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
-import org.axonframework.samples.trader.query.transaction.repositories.TransactionViewRepository;
+import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.springframework.stereotype.Service;
 
 @Service

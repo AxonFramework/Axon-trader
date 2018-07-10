@@ -2,7 +2,6 @@ package org.axonframework.samples.trader.query.users;
 
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.axonframework.samples.trader.api.users.UserId;
-import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
