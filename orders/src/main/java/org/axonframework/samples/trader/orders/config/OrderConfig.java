@@ -16,46 +16,14 @@
 
 package org.axonframework.samples.trader.orders.config;
 
-import org.axonframework.commandhandling.model.Repository;
-import org.axonframework.common.caching.Cache;
 import org.axonframework.config.SagaConfiguration;
-import org.axonframework.eventsourcing.AggregateFactory;
-import org.axonframework.eventsourcing.CachingEventSourcingRepository;
-import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.samples.trader.orders.command.BuyTradeManagerSaga;
-import org.axonframework.samples.trader.orders.command.Portfolio;
 import org.axonframework.samples.trader.orders.command.SellTradeManagerSaga;
-import org.axonframework.samples.trader.orders.command.Transaction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OrderConfig {
-
-    @Bean(name = "portfolioAggregateRepository")
-    public Repository<Portfolio> portfolioAggregateRepository(AggregateFactory<Portfolio> portfolioAggregateFactory,
-                                                              EventStore eventStore,
-                                                              Cache cache,
-                                                              SnapshotTriggerDefinition snapshotTriggerDefinition) {
-        return new CachingEventSourcingRepository<>(portfolioAggregateFactory,
-                                                    eventStore,
-                                                    cache,
-                                                    snapshotTriggerDefinition);
-    }
-
-    @Bean(name = "transactionAggregateRepository")
-    public Repository<Transaction> transactionAggregateRepository(
-            AggregateFactory<Transaction> transactionAggregateFactory,
-            EventStore eventStore,
-            Cache cache,
-            SnapshotTriggerDefinition snapshotTriggerDefinition) {
-        return new CachingEventSourcingRepository<>(transactionAggregateFactory,
-                                                    eventStore,
-                                                    cache,
-                                                    snapshotTriggerDefinition);
-    }
-
 
     @Bean
     public SagaConfiguration<BuyTradeManagerSaga> buyTradeSagaConfiguration() {

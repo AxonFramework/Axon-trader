@@ -16,15 +16,9 @@
 
 package org.axonframework.samples.trader.company.config;
 
-import org.axonframework.commandhandling.model.Repository;
-import org.axonframework.common.caching.Cache;
-import org.axonframework.eventsourcing.AggregateFactory;
-import org.axonframework.eventsourcing.CachingEventSourcingRepository;
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
-import org.axonframework.eventsourcing.eventstore.EventStore;
-import org.axonframework.samples.trader.company.command.Company;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,19 +28,8 @@ public class CompanyConfig {
     private static final int SNAPSHOT_THRESHOLD = 50;
 
     //TODO #28 this should become an overall snapshot trigger definition i.o. in the company config
-    @Bean
+    @Bean(name = "defaultSnapshotTriggerDefinition")
     public SnapshotTriggerDefinition snapshotTriggerDefinition(Snapshotter snapshotter) {
         return new EventCountSnapshotTriggerDefinition(snapshotter, SNAPSHOT_THRESHOLD);
-    }
-
-    @Bean(name = "companyAggregateRepository")
-    public Repository<Company> companyAggregateRepository(AggregateFactory<Company> companyAggregateFactory,
-                                                          EventStore eventStore,
-                                                          Cache cache,
-                                                          SnapshotTriggerDefinition snapshotTriggerDefinition) {
-        return new CachingEventSourcingRepository<>(companyAggregateFactory,
-                                                    eventStore,
-                                                    cache,
-                                                    snapshotTriggerDefinition);
     }
 }

@@ -25,7 +25,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-@Aggregate(repository = "userAggregateRepository")
+@Aggregate(snapshotTriggerDefinition = "defaultSnapshotTriggerDefinition")
 public class User {
 
     @AggregateIdentifier
