@@ -19,7 +19,11 @@ package org.axonframework.samples.trader.infra.config;
 import net.sf.ehcache.CacheManager;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.common.caching.EhCacheAdapter;
+import org.axonframework.eventsourcing.AggregateFactory;
+import org.axonframework.eventsourcing.GenericAggregateFactory;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.spring.config.CommandHandlerSubscriber;
 import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPostProcessor;
@@ -41,6 +45,23 @@ public class CQRSInfrastructureConfig {
         commandBus.registerDispatchInterceptor(new BeanValidationInterceptor<>());
 
         return commandBus;
+    }
+
+    @Bean
+    public CommandGateway commandGateway() {
+        SimpleCommandBus commandBus = new SimpleCommandBus();
+        return new DefaultCommandGateway(commandBus);
+    }
+
+    @Bean
+    public AggregateFactory aggregateFactory() {
+        return new GenericAggregateFactory<>(UnsuitableAggregate.class);
+    }
+
+    private static class UnsuitableAggregate {
+
+        private UnsuitableAggregate(Object uuid) {
+        }
     }
 
     @Bean

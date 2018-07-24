@@ -35,6 +35,7 @@ import org.axonframework.samples.trader.api.orders.transaction.SellTransactionSt
 import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.transaction.repositories.TransactionViewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,6 +45,7 @@ public class TransactionEventHandler {
     private final OrderBookViewRepository orderBookViewRepository;
     private final TransactionViewRepository transactionViewRepository;
 
+    @Autowired
     public TransactionEventHandler(OrderBookViewRepository orderBookViewRepository,
                                    TransactionViewRepository transactionViewRepository) {
         this.orderBookViewRepository = orderBookViewRepository;
