@@ -55,7 +55,7 @@ public class HsqlDBInit extends BaseDBInit {
                       PortfolioViewRepository portfolioViewRepository,
                       TradeExecutedQueryRepository tradeExecutedQueryRepository,
                       TransactionViewRepository transactionViewRepository) {
-        super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
+        super(commandBus, userViewRepository, companyRepository, portfolioRepository, orderBookRepository);
         this.eventTableFactory = eventTableFactory;
         this.eventSchema = eventSchema;
         this.sagaSqlSchema = sagaSqlSchema;

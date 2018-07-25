@@ -16,6 +16,8 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioView;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
+import org.axonframework.samples.trader.query.users.UserView;
+import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 
 import java.util.List;
 
@@ -25,13 +27,15 @@ import java.util.List;
 public abstract class BaseDBInit implements DBInit {
 
     private CommandBus commandBus;
+    private UserViewRepository userRepository;
     private CompanyViewRepository companyRepository;
     private PortfolioViewRepository portfolioRepository;
     private OrderBookViewRepository orderBookRepository;
 
-    protected BaseDBInit(CommandBus commandBus, CompanyViewRepository companyRepository,
+    protected BaseDBInit(CommandBus commandBus, UserViewRepository userRepository, CompanyViewRepository companyRepository,
                          PortfolioViewRepository portfolioRepository, OrderBookViewRepository orderBookRepository) {
         this.commandBus = commandBus;
+        this.userRepository = userRepository;
         this.companyRepository = companyRepository;
         this.portfolioRepository = portfolioRepository;
         this.orderBookRepository = orderBookRepository;
@@ -51,45 +55,67 @@ public abstract class BaseDBInit implements DBInit {
         createCompanies(buyer1);
 
         addMoney(buyer1, 100000);
-        addItems(buyer2, "Philips", 10000l);
+        //addItems(buyer2, "Philips", 10000l);
         addMoney(buyer3, 100000);
-        addItems(buyer4, "Shell", 10000l);
+        //addItems(buyer4, "Shell", 10000l);
         addMoney(buyer5, 100000);
-        addItems(buyer6, "Bp", 10000l);
+        //addItems(buyer6, "Bp", 10000l);
 
         additionalDBSteps();
     }
 
     public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
-        DepositCashCommand command =
+
+        PortfolioView portfolioView = new PortfolioView();
+        portfolioView.setAmountOfMoney(amountOfMoney);
+        portfolioView.setIdentifier(portfolioIdentifier);
+
+        /*DepositCashCommand command =
                 new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
-        commandBus.dispatch(new GenericCommandMessage<>(command));
+        commandBus.dispatch(new GenericCommandMessage<>(command));*/
     }
 
     UserId createuser(String longName, String userName) {
         UserId userId = new UserId();
-        CreateUserCommand createUser = new CreateUserCommand(userId, longName, userName, userName);
-        commandBus.dispatch(new GenericCommandMessage<>(createUser));
+        UserView userView = new UserView();
+        userView.setIdentifier(userId.toString());
+        userView.setName(longName);
+        userView.setUsername(userName);
+        userRepository.save(userView);
+//        CreateUserCommand createUser = new CreateUserCommand(userId, longName, userName, userName);
+//        commandBus.dispatch(new GenericCommandMessage<>(createUser));
         return userId;
     }
 
     void createCompanies(UserId userIdentifier) {
-        CreateCompanyCommand command = new CreateCompanyCommand(new CompanyId(),
-                                                                userIdentifier,
-                                                                "Philips",
-                                                                1000,
-                                                                10000);
+        //改为repository.save方式初始化数据
+        CompanyView companyView = new CompanyView();
+        companyView.setIdentifier(new CompanyId().toString());
+        companyView.setAmountOfShares(10000);
+        companyView.setName("Philips");
+        companyView.setValue(1000);
+        companyView.setUserIdentifier(userIdentifier.toString());
+
+        /*CreateCompanyCommand command = new CreateCompanyCommand(new CompanyId(),
+                userIdentifier,
+                "Philips",
+                1000,
+                10000);
+
         commandBus.dispatch(new GenericCommandMessage<>(command));
 
         command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Shell", 500, 5000);
         commandBus.dispatch(new GenericCommandMessage<>(command));
 
         command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Bp", 15000, 100000);
-        commandBus.dispatch(new GenericCommandMessage<>(command));
+        commandBus.dispatch(new GenericCommandMessage<>(command));*/
     }
 
     void addMoney(UserId buyer1, long amount) {
         PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(buyer1.toString());
+        if (portfolioView == null)
+            portfolioView = new PortfolioView();
+        portfolioView.setIdentifier(new PortfolioId().toString());
         depositMoneyToPortfolio(portfolioView.getIdentifier(), amount);
     }
 

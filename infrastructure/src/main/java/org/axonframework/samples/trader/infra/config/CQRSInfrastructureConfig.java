@@ -22,8 +22,6 @@ import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.common.caching.EhCacheAdapter;
-import org.axonframework.eventsourcing.AggregateFactory;
-import org.axonframework.eventsourcing.GenericAggregateFactory;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.spring.config.CommandHandlerSubscriber;
 import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPostProcessor;
@@ -36,7 +34,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan("org.axonframework.samples.trader")
-@Import({CQRSInfrastructureHSQLDBConfig.class, CQRSInfrastructureMongoDBConfig.class})
+@Import({CQRSInfrastructureHSQLDBConfig.class, CQRSInfrastructureMongoDBConfig.class, UserDefinedAggregateFactory.class})
 public class CQRSInfrastructureConfig {
 
     @Bean
@@ -48,20 +46,8 @@ public class CQRSInfrastructureConfig {
     }
 
     @Bean
-    public CommandGateway commandGateway() {
-        SimpleCommandBus commandBus = new SimpleCommandBus();
+    public CommandGateway commandGateway(CommandBus commandBus) {
         return new DefaultCommandGateway(commandBus);
-    }
-
-    @Bean
-    public AggregateFactory aggregateFactory() {
-        return new GenericAggregateFactory<>(UnsuitableAggregate.class);
-    }
-
-    private static class UnsuitableAggregate {
-
-        private UnsuitableAggregate(Object uuid) {
-        }
     }
 
     @Bean
