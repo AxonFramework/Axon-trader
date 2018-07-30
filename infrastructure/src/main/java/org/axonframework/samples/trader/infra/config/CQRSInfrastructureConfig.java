@@ -19,6 +19,8 @@ package org.axonframework.samples.trader.infra.config;
 import net.sf.ehcache.CacheManager;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.common.caching.EhCacheAdapter;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.spring.config.CommandHandlerSubscriber;
@@ -32,7 +34,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan("org.axonframework.samples.trader")
-@Import({CQRSInfrastructureHSQLDBConfig.class, CQRSInfrastructureMongoDBConfig.class})
+@Import({CQRSInfrastructureHSQLDBConfig.class, CQRSInfrastructureMongoDBConfig.class, UserDefinedAggregateFactory.class})
 public class CQRSInfrastructureConfig {
 
     @Bean
@@ -41,6 +43,11 @@ public class CQRSInfrastructureConfig {
         commandBus.registerDispatchInterceptor(new BeanValidationInterceptor<>());
 
         return commandBus;
+    }
+
+    @Bean
+    public CommandGateway commandGateway(CommandBus commandBus) {
+        return new DefaultCommandGateway(commandBus);
     }
 
     @Bean

@@ -24,6 +24,7 @@ import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,6 +39,7 @@ public class PortfolioManagementUserListener {
 
     private final CommandGateway commandGateway;
 
+    @Autowired
     public PortfolioManagementUserListener(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }

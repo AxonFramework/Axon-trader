@@ -16,6 +16,7 @@
 
 package org.axonframework.samples.trader.query.company;
 
+import org.axonframework.samples.trader.api.users.UserId;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
@@ -30,6 +31,8 @@ public class CompanyView {
     private long value;
     private long amountOfShares;
     private boolean tradeStarted;
+
+    private String userIdentifier;
 
     public long getAmountOfShares() {
         return amountOfShares;
@@ -69,5 +72,13 @@ public class CompanyView {
 
     public void setValue(long value) {
         this.value = value;
+    }
+
+    public String getUserIdentifier() {
+        return userIdentifier;
+    }
+
+    public void setUserIdentifier(String userIdentifier) {
+        this.userIdentifier = userIdentifier;
     }
 }

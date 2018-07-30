@@ -26,6 +26,7 @@
         <class>org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView</class>
         <class>org.axonframework.samples.trader.query.transaction.TransactionView</class>
         <class>org.axonframework.samples.trader.query.users.UserView</class>
+        <class>org.axonframework.samples.trader.query.kds.StallView</class>
         <properties>
             <property name="hibernate.archive.autodetection" value=""/>
             <property name="hibernate.show_sql" value="true"/>

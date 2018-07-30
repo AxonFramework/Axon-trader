@@ -23,6 +23,9 @@ import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
 import org.axonframework.samples.trader.api.users.UserAccount;
 import org.axonframework.samples.trader.api.users.UserId;
+import org.axonframework.samples.trader.query.users.UserCommandHandler;
+import org.axonframework.samples.trader.query.users.UserView;
+import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -53,6 +56,12 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
 
     private final static Collection<GrantedAuthority> userAuthorities;
 
+    @Autowired
+    private UserViewRepository userViewRepository;
+
+    @Autowired
+    private UserCommandHandler userCommandHandler;
+
     static {
         userAuthorities = new HashSet<>();
         userAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -73,14 +82,19 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         UserId userId = new UserId(); // TODO replace this with the actual aggregate identifier
         AuthenticateUserCommand command = new AuthenticateUserCommand(userId, username, password.toCharArray());
         try {
+            commandBus.subscribe(command.getClass().getCanonicalName(), userCommandHandler);
             commandBus.dispatch(new GenericCommandMessage<>(command), accountCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before
             // the command is dispatched.
         } catch (JSR303ViolationException e) {
             return null;
         }
-        UserAccount account;
-        try {
+
+        UserAccount account = userViewRepository.findByUsername("buyer1");
+        ((UserView) account).setUsername(username);
+        ((UserView) account).setPassword(password);
+        //TODO:后续放开注释，处理注册回调结果
+        /*try {
             account = accountCallback.get();
             if (account == null) {
                 throw new BadCredentialsException("Invalid username and/or password");
@@ -89,7 +103,7 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
             throw new AuthenticationServiceException("Credentials could not be verified", e);
         } catch (ExecutionException e) {
             throw new AuthenticationServiceException("Credentials could not be verified", e);
-        }
+        }*/
 
         UsernamePasswordAuthenticationToken result =
                 new UsernamePasswordAuthenticationToken(account, authentication.getCredentials(), userAuthorities);

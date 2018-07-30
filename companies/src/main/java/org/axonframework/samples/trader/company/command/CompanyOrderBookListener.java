@@ -25,6 +25,7 @@ import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,6 +39,7 @@ public class CompanyOrderBookListener {
 
     private final CommandGateway commandGateway;
 
+    @Autowired
     public CompanyOrderBookListener(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
