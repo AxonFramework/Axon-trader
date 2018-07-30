@@ -3,10 +3,8 @@ package org.axonframework.samples.trader.webui.init;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.samples.trader.api.company.CompanyId;
-import org.axonframework.samples.trader.api.company.CreateCompanyCommand;
 import org.axonframework.samples.trader.api.orders.OrderBookId;
 import org.axonframework.samples.trader.api.portfolio.PortfolioId;
-import org.axonframework.samples.trader.api.portfolio.cash.DepositCashCommand;
 import org.axonframework.samples.trader.api.portfolio.stock.AddItemsToPortfolioCommand;
 import org.axonframework.samples.trader.api.users.CreateUserCommand;
 import org.axonframework.samples.trader.api.users.UserId;
@@ -16,6 +14,7 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookViewRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioView;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioViewRepository;
+import org.axonframework.samples.trader.query.users.UserCommandHandler;
 import org.axonframework.samples.trader.query.users.UserView;
 import org.axonframework.samples.trader.query.users.repositories.UserViewRepository;
 
@@ -31,14 +30,17 @@ public abstract class BaseDBInit implements DBInit {
     private CompanyViewRepository companyRepository;
     private PortfolioViewRepository portfolioRepository;
     private OrderBookViewRepository orderBookRepository;
+    private UserCommandHandler userCommandHandler;
 
     protected BaseDBInit(CommandBus commandBus, UserViewRepository userRepository, CompanyViewRepository companyRepository,
-                         PortfolioViewRepository portfolioRepository, OrderBookViewRepository orderBookRepository) {
+                         PortfolioViewRepository portfolioRepository, OrderBookViewRepository orderBookRepository,
+                         UserCommandHandler userCommandHandler) {
         this.commandBus = commandBus;
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
         this.portfolioRepository = portfolioRepository;
         this.orderBookRepository = orderBookRepository;
+        this.userCommandHandler = userCommandHandler;
     }
 
     @Override
@@ -55,7 +57,7 @@ public abstract class BaseDBInit implements DBInit {
         createCompanies(buyer1);
 
         addMoney(buyer1, 100000);
-        //addItems(buyer2, "Philips", 10000l);
+//        addItems(buyer1, "Philips", 10000l);
         addMoney(buyer3, 100000);
         //addItems(buyer4, "Shell", 10000l);
         addMoney(buyer5, 100000);
@@ -64,15 +66,22 @@ public abstract class BaseDBInit implements DBInit {
         additionalDBSteps();
     }
 
-    public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
+    public void depositMoneyToPortfolio(UserId buyer1, long amountOfMoney) {
 
         PortfolioView portfolioView = new PortfolioView();
+        portfolioView.setIdentifier(new PortfolioId().toString());
         portfolioView.setAmountOfMoney(amountOfMoney);
-        portfolioView.setIdentifier(portfolioIdentifier);
+        portfolioView.setUserIdentifier(buyer1.toString());
+        portfolioRepository.save(portfolioView);
 
         /*DepositCashCommand command =
                 new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
         commandBus.dispatch(new GenericCommandMessage<>(command));*/
+    }
+
+    @Override
+    public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
+
     }
 
     UserId createuser(String longName, String userName) {
@@ -82,8 +91,9 @@ public abstract class BaseDBInit implements DBInit {
         userView.setName(longName);
         userView.setUsername(userName);
         userRepository.save(userView);
-//        CreateUserCommand createUser = new CreateUserCommand(userId, longName, userName, userName);
-//        commandBus.dispatch(new GenericCommandMessage<>(createUser));
+        CreateUserCommand createUser = new CreateUserCommand(userId, longName, userName, userName);
+        commandBus.subscribe(createUser.getClass().getCanonicalName(), userCommandHandler);
+        commandBus.dispatch(new GenericCommandMessage<>(createUser));
         return userId;
     }
 
@@ -95,6 +105,13 @@ public abstract class BaseDBInit implements DBInit {
         companyView.setName("Philips");
         companyView.setValue(1000);
         companyView.setUserIdentifier(userIdentifier.toString());
+        companyRepository.save(companyView);
+
+        OrderBookView orderBookView = new OrderBookView();
+        orderBookView.setCompanyIdentifier(companyView.getIdentifier());
+        orderBookView.setCompanyName(companyView.getName());
+        orderBookView.setIdentifier(new OrderBookId().toString());
+        orderBookRepository.save(orderBookView);
 
         /*CreateCompanyCommand command = new CreateCompanyCommand(new CompanyId(),
                 userIdentifier,
@@ -114,9 +131,7 @@ public abstract class BaseDBInit implements DBInit {
     void addMoney(UserId buyer1, long amount) {
         PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(buyer1.toString());
         if (portfolioView == null)
-            portfolioView = new PortfolioView();
-        portfolioView.setIdentifier(new PortfolioId().toString());
-        depositMoneyToPortfolio(portfolioView.getIdentifier(), amount);
+            depositMoneyToPortfolio(buyer1, amount);
     }
 
     void addItems(UserId user, String companyName, long amount) {
