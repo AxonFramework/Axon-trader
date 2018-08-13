@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.query.users;
 
-import org.axonframework.samples.trader.query.users.UserView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserViewRepository extends JpaRepository<UserView, String> {

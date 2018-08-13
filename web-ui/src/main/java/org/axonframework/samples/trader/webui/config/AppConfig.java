@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.webui.config;
 
-import org.axonframework.samples.trader.company.config.CompanyConfig;
 import org.axonframework.samples.trader.infra.config.CQRSInfrastructureConfig;
 import org.axonframework.samples.trader.infra.config.PersistenceInfrastructureConfig;
 import org.axonframework.samples.trader.listener.config.ExternalListenersConfig;
@@ -29,7 +28,6 @@ import org.springframework.context.annotation.ImportResource;
 @Import({
         CQRSInfrastructureConfig.class,
         PersistenceInfrastructureConfig.class,
-        CompanyConfig.class,
         OrderConfig.class,
         ExternalListenersConfig.class
 })

@@ -9,15 +9,17 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @Profile("hsqldb")
-@EnableJpaRepositories(basePackages = "org.axonframework.samples.trader.query.*.repositories",
+@EnableJpaRepositories(
+        basePackages = "org.axonframework.samples.trader.query.*",
         transactionManagerRef = "jpaTransactionManager",
-        entityManagerFactoryRef = "entityManagerFactoryBean")
+        entityManagerFactoryRef = "entityManagerFactoryBean"
+)
 public class HsqlDbConfiguration {
 
     @Bean(name = "entityManagerFactoryBean")

@@ -16,9 +16,7 @@
 
 package org.axonframework.samples.trader.query.transaction;
 
-import org.axonframework.samples.trader.query.transaction.TransactionView;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 

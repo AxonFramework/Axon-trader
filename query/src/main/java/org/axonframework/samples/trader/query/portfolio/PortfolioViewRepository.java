@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.query.portfolio;
 
-import org.axonframework.samples.trader.query.portfolio.PortfolioView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PortfolioViewRepository extends JpaRepository<PortfolioView, String> {

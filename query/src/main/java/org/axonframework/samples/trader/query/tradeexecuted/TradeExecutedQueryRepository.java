@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.query.tradeexecuted;
 
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

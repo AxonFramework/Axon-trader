@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.query.company;
 
-import org.axonframework.samples.trader.query.company.CompanyView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CompanyViewRepository extends JpaRepository<CompanyView, String> {

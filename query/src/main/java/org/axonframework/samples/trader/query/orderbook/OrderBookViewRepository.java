@@ -16,7 +16,6 @@
 
 package org.axonframework.samples.trader.query.orderbook;
 
-import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

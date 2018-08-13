@@ -20,6 +20,9 @@ import net.sf.ehcache.CacheManager;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.common.caching.EhCacheAdapter;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.Snapshotter;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.spring.config.CommandHandlerSubscriber;
 import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPostProcessor;
@@ -34,6 +37,8 @@ import org.springframework.context.annotation.Import;
 @ComponentScan("org.axonframework.samples.trader")
 @Import(CQRSInfrastructureHSQLDBConfig.class)
 public class CQRSInfrastructureConfig {
+
+    private static final int SNAPSHOT_THRESHOLD = 50;
 
     @Bean
     public CommandBus commandBus() {
@@ -69,5 +74,10 @@ public class CQRSInfrastructureConfig {
         ehCacheManagerFactoryBean.setShared(true);
 
         return ehCacheManagerFactoryBean;
+    }
+
+    @Bean(name = "defaultSnapshotTriggerDefinition")
+    public SnapshotTriggerDefinition snapshotTriggerDefinition(Snapshotter snapshotter) {
+        return new EventCountSnapshotTriggerDefinition(snapshotter, SNAPSHOT_THRESHOLD);
     }
 }
