@@ -37,7 +37,7 @@ public class UserEventHandler {
     public void on(UserCreatedEvent event) {
         UserView userView = new UserView();
 
-        userView.setIdentifier(event.getUserId().toString());
+        userView.setIdentifier(event.getUserId().getIdentifier());
         userView.setName(event.getName());
         userView.setUsername(event.getUsername());
         userView.setPassword(event.getPassword());

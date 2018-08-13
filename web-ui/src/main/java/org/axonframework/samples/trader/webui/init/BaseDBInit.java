@@ -89,12 +89,12 @@ public abstract class BaseDBInit implements DBInit {
     }
 
     void addMoney(UserId buyer1, long amount) {
-        PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(buyer1.toString());
+        PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(buyer1.getIdentifier());
         depositMoneyToPortfolio(portfolioView.getIdentifier(), amount);
     }
 
     void addItems(UserId user, String companyName, long amount) {
-        PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(user.toString());
+        PortfolioView portfolioView = portfolioRepository.findByUserIdentifier(user.getIdentifier());
         OrderBookView orderBookView = obtainOrderBookByCompanyName(companyName);
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
                 new PortfolioId(portfolioView.getIdentifier()),

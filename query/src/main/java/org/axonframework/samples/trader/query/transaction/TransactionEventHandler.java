@@ -62,15 +62,15 @@ public class TransactionEventHandler {
     }
 
     private void startTransaction(AbstractTransactionStartedEvent event, TransactionType type) {
-        OrderBookView orderBookView = orderBookViewRepository.findOne(event.getOrderBookId().toString());
+        OrderBookView orderBookView = orderBookViewRepository.findOne(event.getOrderBookId().getIdentifier());
 
         TransactionView entry = new TransactionView();
         entry.setAmountOfExecutedItems(0);
         entry.setAmountOfItems((int) event.getTotalItems());
         entry.setPricePerItem(event.getPricePerItem());
-        entry.setIdentifier(event.getTransactionId().toString());
-        entry.setOrderBookId(event.getOrderBookId().toString());
-        entry.setPortfolioId(event.getPortfolioId().toString());
+        entry.setIdentifier(event.getTransactionId().getIdentifier());
+        entry.setOrderBookId(event.getOrderBookId().getIdentifier());
+        entry.setPortfolioId(event.getPortfolioId().getIdentifier());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);
         entry.setCompanyName(orderBookView.getCompanyName());
@@ -80,22 +80,22 @@ public class TransactionEventHandler {
 
     @EventHandler
     public void on(BuyTransactionCancelledEvent event) {
-        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CANCELLED);
+        changeStateOfTransaction(event.getTransactionId().getIdentifier(), TransactionState.CANCELLED);
     }
 
     @EventHandler
     public void on(SellTransactionCancelledEvent event) {
-        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CANCELLED);
+        changeStateOfTransaction(event.getTransactionId().getIdentifier(), TransactionState.CANCELLED);
     }
 
     @EventHandler
     public void on(BuyTransactionConfirmedEvent event) {
-        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CONFIRMED);
+        changeStateOfTransaction(event.getTransactionId().getIdentifier(), TransactionState.CONFIRMED);
     }
 
     @EventHandler
     public void on(SellTransactionConfirmedEvent event) {
-        changeStateOfTransaction(event.getTransactionId().toString(), TransactionState.CONFIRMED);
+        changeStateOfTransaction(event.getTransactionId().getIdentifier(), TransactionState.CONFIRMED);
     }
 
     private void changeStateOfTransaction(String identifier, TransactionState newState) {
@@ -117,7 +117,7 @@ public class TransactionEventHandler {
     }
 
     private void executeTransaction(AbstractTransactionExecutedEvent event) {
-        TransactionView transactionView = transactionViewRepository.findOne(event.getTransactionId().toString());
+        TransactionView transactionView = transactionViewRepository.findOne(event.getTransactionId().getIdentifier());
 
         long value = transactionView.getAmountOfExecutedItems() * transactionView.getPricePerItem();
         long additionalValue = event.getAmountOfItems() * event.getItemPrice();
@@ -141,7 +141,7 @@ public class TransactionEventHandler {
     }
 
     private void partiallyExecuteTransaction(AbstractTransactionPartiallyExecutedEvent event) {
-        TransactionView transactionView = transactionViewRepository.findOne(event.getTransactionId().toString());
+        TransactionView transactionView = transactionViewRepository.findOne(event.getTransactionId().getIdentifier());
 
         long value = transactionView.getAmountOfExecutedItems() * transactionView.getPricePerItem();
         long additionalValue = event.getAmountOfExecutedItems() * event.getItemPrice();

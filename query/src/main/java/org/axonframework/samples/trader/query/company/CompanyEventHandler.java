@@ -37,7 +37,7 @@ public class CompanyEventHandler {
     public void on(CompanyCreatedEvent event) {
         CompanyView companyView = new CompanyView();
 
-        companyView.setIdentifier(event.getCompanyId().toString());
+        companyView.setIdentifier(event.getCompanyId().getIdentifier());
         companyView.setValue(event.getCompanyValue());
         companyView.setAmountOfShares(event.getAmountOfShares());
         companyView.setTradeStarted(true);

@@ -48,11 +48,11 @@ public class PortfolioMoneyEventHandler {
 
     @EventHandler
     public void on(PortfolioCreatedEvent event) {
-        String userIdString = event.getUserId().toString();
+        String userIdString = event.getUserId().getIdentifier();
         logger.debug("About to handle the PortfolioCreatedEvent for user with identifier {}", userIdString);
 
         PortfolioView portfolioView = new PortfolioView();
-        portfolioView.setIdentifier(event.getPortfolioId().toString());
+        portfolioView.setIdentifier(event.getPortfolioId().getIdentifier());
         portfolioView.setUserIdentifier(userIdString);
         portfolioView.setUserName(userViewRepository.findByIdentifier(userIdString).getFullName());
         portfolioView.setAmountOfMoney(0);
@@ -63,7 +63,7 @@ public class PortfolioMoneyEventHandler {
 
     @EventHandler
     public void on(CashDepositedEvent event) {
-        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().toString());
+        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().getIdentifier());
 
         portfolioView.setAmountOfMoney(portfolioView.getAmountOfMoney() + event.getMoneyAddedInCents());
 
@@ -72,7 +72,7 @@ public class PortfolioMoneyEventHandler {
 
     @EventHandler
     public void on(CashWithdrawnEvent event) {
-        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().toString());
+        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().getIdentifier());
 
         portfolioView.setAmountOfMoney(portfolioView.getAmountOfMoney() - event.getAmountPaidInCents());
 
@@ -81,7 +81,7 @@ public class PortfolioMoneyEventHandler {
 
     @EventHandler
     public void on(CashReservedEvent event) {
-        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().toString());
+        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().getIdentifier());
 
         portfolioView.setReservedAmountOfMoney(portfolioView.getReservedAmountOfMoney() + event.getAmountToReserve());
 
@@ -90,7 +90,7 @@ public class PortfolioMoneyEventHandler {
 
     @EventHandler
     public void on(CashReservationCancelledEvent event) {
-        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().toString());
+        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().getIdentifier());
 
         portfolioView.setReservedAmountOfMoney(
                 portfolioView.getReservedAmountOfMoney() - event.getAmountOfMoneyToCancel()
@@ -101,7 +101,7 @@ public class PortfolioMoneyEventHandler {
 
     @EventHandler
     public void on(CashReservationConfirmedEvent event) {
-        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().toString());
+        PortfolioView portfolioView = portfolioViewRepository.findOne(event.getPortfolioId().getIdentifier());
 
         long reservedAmountOfMoney = portfolioView.getReservedAmountOfMoney();
         long amountOfMoneyConfirmed = event.getAmountOfMoneyConfirmedInCents();
