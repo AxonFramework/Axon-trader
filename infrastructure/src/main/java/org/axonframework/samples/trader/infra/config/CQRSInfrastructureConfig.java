@@ -23,10 +23,13 @@ import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.config.DefaultConfigurer;
 import org.axonframework.config.EventHandlingConfiguration;
 import org.axonframework.config.ProcessingGroup;
+import org.axonframework.config.SagaConfiguration;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.samples.trader.company.command.Company;
+import org.axonframework.samples.trader.orders.command.BuyTradeManagerSaga;
 import org.axonframework.samples.trader.orders.command.Portfolio;
+import org.axonframework.samples.trader.orders.command.SellTradeManagerSaga;
 import org.axonframework.samples.trader.orders.command.Transaction;
 import org.axonframework.samples.trader.tradeengine.command.OrderBook;
 import org.axonframework.samples.trader.users.command.User;
@@ -107,6 +110,8 @@ public class CQRSInfrastructureConfig {
                                  .configureAggregate(OrderBook.class)
                                  .registerModule(queryModelConfiguration)
                                  .registerModule(commandPublisherConfiguration)
+                                 .registerModule(SagaConfiguration.subscribingSagaManager(SellTradeManagerSaga.class))
+                                 .registerModule(SagaConfiguration.subscribingSagaManager(BuyTradeManagerSaga.class))
                                  .buildConfiguration();
         configuration.start();
         return configuration;
