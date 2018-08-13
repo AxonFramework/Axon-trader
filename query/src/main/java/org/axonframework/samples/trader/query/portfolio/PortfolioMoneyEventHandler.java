@@ -27,6 +27,7 @@ import org.axonframework.samples.trader.api.portfolio.cash.CashWithdrawnEvent;
 import org.axonframework.samples.trader.query.users.UserViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +39,7 @@ public class PortfolioMoneyEventHandler {
     private final PortfolioViewRepository portfolioViewRepository;
     private final UserViewRepository userViewRepository;
 
+    @Autowired
     public PortfolioMoneyEventHandler(PortfolioViewRepository portfolioViewRepository,
                                       UserViewRepository userViewRepository) {
         this.portfolioViewRepository = portfolioViewRepository;

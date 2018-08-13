@@ -27,6 +27,7 @@ import org.axonframework.samples.trader.query.orderbook.OrderBookView;
 import org.axonframework.samples.trader.query.orderbook.OrderBookViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +39,7 @@ public class PortfolioItemEventHandler {
     private final PortfolioViewRepository portfolioViewRepository;
     private final OrderBookViewRepository orderBookViewRepository;
 
+    @Autowired
     public PortfolioItemEventHandler(PortfolioViewRepository portfolioViewRepository,
                                      OrderBookViewRepository orderBookViewRepository) {
         this.portfolioViewRepository = portfolioViewRepository;

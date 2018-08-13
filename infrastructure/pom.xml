@@ -100,6 +100,30 @@
             <artifactId>hsqldb</artifactId>
             <version>2.3.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-users</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-companies</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-orders</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework.samples</groupId>
+            <artifactId>axon-trader-trade-engine</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

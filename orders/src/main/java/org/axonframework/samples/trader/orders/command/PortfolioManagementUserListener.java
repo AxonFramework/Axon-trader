@@ -24,11 +24,12 @@ import org.axonframework.samples.trader.api.portfolio.PortfolioId;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * Listener that is used to create a new portfolio for each new user that is created.
- * TODO #28 might benefit from a cleaner approach still. Think about this
+ * TODO #28 the Portfolio aggregate should be instantiated from the Company aggregate, as is possible since axon 3.3
  */
 @Service
 @ProcessingGroup("commandPublishingEventHandlers")
@@ -38,6 +39,7 @@ public class PortfolioManagementUserListener {
 
     private final CommandGateway commandGateway;
 
+    @Autowired
     public PortfolioManagementUserListener(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }

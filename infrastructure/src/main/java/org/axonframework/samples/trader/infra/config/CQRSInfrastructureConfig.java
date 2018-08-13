@@ -16,29 +16,34 @@
 
 package org.axonframework.samples.trader.infra.config;
 
-import net.sf.ehcache.CacheManager;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.common.caching.EhCacheAdapter;
-import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.Snapshotter;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
+import org.axonframework.config.DefaultConfigurer;
+import org.axonframework.config.EventHandlingConfiguration;
+import org.axonframework.config.ProcessingGroup;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
+import org.axonframework.samples.trader.company.command.Company;
+import org.axonframework.samples.trader.orders.command.Portfolio;
+import org.axonframework.samples.trader.orders.command.Transaction;
+import org.axonframework.samples.trader.tradeengine.command.OrderBook;
+import org.axonframework.samples.trader.users.command.User;
 import org.axonframework.spring.config.CommandHandlerSubscriber;
 import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPostProcessor;
-import org.axonframework.spring.eventsourcing.SpringAggregateSnapshotterFactoryBean;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.util.Map;
+
 @Configuration
 @ComponentScan("org.axonframework.samples.trader")
 @Import(CQRSInfrastructureHSQLDBConfig.class)
 public class CQRSInfrastructureConfig {
-
-    private static final int SNAPSHOT_THRESHOLD = 50;
 
     @Bean
     public CommandBus commandBus() {
@@ -46,6 +51,11 @@ public class CQRSInfrastructureConfig {
         commandBus.registerDispatchInterceptor(new BeanValidationInterceptor<>());
 
         return commandBus;
+    }
+
+    @Bean
+    public CommandGateway commandGateway(CommandBus commandBus) {
+        return new DefaultCommandGateway(commandBus);
     }
 
     @Bean
@@ -59,25 +69,37 @@ public class CQRSInfrastructureConfig {
     }
 
     @Bean
-    public SpringAggregateSnapshotterFactoryBean springAggregateSnapshotterFactoryBean() {
-        return new SpringAggregateSnapshotterFactoryBean();
-    }
+    public org.axonframework.config.Configuration configuration(CommandBus commandBus,
+                                                                EventStore eventStore,
+                                                                ApplicationContext applicationContext) {
+        EventHandlingConfiguration queryModelConfiguration =
+                new EventHandlingConfiguration().registerSubscribingEventProcessor("queryModel");
+        EventHandlingConfiguration commandPublisherConfiguration =
+                new EventHandlingConfiguration().registerSubscribingEventProcessor("commandPublishingEventHandlers");
 
-    @Bean
-    public EhCacheAdapter ehCache(CacheManager cacheManager) {
-        return new EhCacheAdapter(cacheManager.getCache("testCache"));
-    }
+        Map<String, Object> eventHandlingComponents = applicationContext.getBeansWithAnnotation(ProcessingGroup.class);
 
-    @Bean
-    public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
-        EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
-        ehCacheManagerFactoryBean.setShared(true);
+        eventHandlingComponents.forEach((key, value) -> {
+            if (key.contains("Listener")) {
+                commandPublisherConfiguration.registerEventHandler(conf -> value);
+            } else {
+                queryModelConfiguration.registerEventHandler(conf -> value);
+            }
+        });
 
-        return ehCacheManagerFactoryBean;
-    }
-
-    @Bean(name = "defaultSnapshotTriggerDefinition")
-    public SnapshotTriggerDefinition snapshotTriggerDefinition(Snapshotter snapshotter) {
-        return new EventCountSnapshotTriggerDefinition(snapshotter, SNAPSHOT_THRESHOLD);
+        org.axonframework.config.Configuration configuration =
+                DefaultConfigurer.defaultConfiguration()
+                                 .configureCommandBus(conf -> commandBus)
+                                 .configureEventStore(conf -> eventStore)
+                                 .configureAggregate(User.class)
+                                 .configureAggregate(Company.class)
+                                 .configureAggregate(Portfolio.class)
+                                 .configureAggregate(Transaction.class)
+                                 .configureAggregate(OrderBook.class)
+                                 .registerModule(queryModelConfiguration)
+                                 .registerModule(commandPublisherConfiguration)
+                                 .buildConfiguration();
+        configuration.start();
+        return configuration;
     }
 }

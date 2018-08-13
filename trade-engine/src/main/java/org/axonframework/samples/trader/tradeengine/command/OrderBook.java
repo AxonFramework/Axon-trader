@@ -36,7 +36,7 @@ import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.spring.stereotype.Aggregate;
 
-@Aggregate(snapshotTriggerDefinition = "defaultSnapshotTriggerDefinition")
+@Aggregate
 public class OrderBook {
 
     @AggregateIdentifier

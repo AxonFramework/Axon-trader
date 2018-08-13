@@ -30,7 +30,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * This listener is used to create order book instances when we have created a new company</p>
- */
+ * TODO #28 the OrderBook aggregate should be instantiated from the Company aggregate, as is possible since axon 3.3
+ **/
 @Service
 @ProcessingGroup("commandPublishingEventHandlers")
 public class CompanyOrderBookListener {

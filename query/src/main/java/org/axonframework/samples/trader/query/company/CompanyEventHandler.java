@@ -19,6 +19,7 @@ package org.axonframework.samples.trader.query.company;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +28,7 @@ public class CompanyEventHandler {
 
     private final CompanyViewRepository companyRepository;
 
+    @Autowired
     public CompanyEventHandler(CompanyViewRepository companyRepository) {
         this.companyRepository = companyRepository;
     }

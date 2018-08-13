@@ -27,8 +27,9 @@ import org.axonframework.samples.trader.api.orders.trades.SellOrderPlacedEvent;
 import org.axonframework.samples.trader.api.orders.trades.TradeExecutedEvent;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.CompanyViewRepository;
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedQueryRepository;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,6 +43,7 @@ public class OrderBookEventHandler {
     private final CompanyViewRepository companyRepository;
     private final TradeExecutedQueryRepository tradeExecutedRepository;
 
+    @Autowired
     public OrderBookEventHandler(OrderBookViewRepository orderBookRepository,
                                  CompanyViewRepository companyRepository,
                                  TradeExecutedQueryRepository tradeExecutedRepository) {

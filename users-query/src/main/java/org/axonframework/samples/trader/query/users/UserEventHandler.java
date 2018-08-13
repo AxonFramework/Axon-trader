@@ -19,6 +19,7 @@ package org.axonframework.samples.trader.query.users;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +28,7 @@ public class UserEventHandler {
 
     private final UserViewRepository userRepository;
 
+    @Autowired
     public UserEventHandler(UserViewRepository userRepository) {
         this.userRepository = userRepository;
     }

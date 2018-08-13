@@ -24,7 +24,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
-@Aggregate(snapshotTriggerDefinition = "defaultSnapshotTriggerDefinition")
+@Aggregate
 public class Company {
 
     @AggregateIdentifier
