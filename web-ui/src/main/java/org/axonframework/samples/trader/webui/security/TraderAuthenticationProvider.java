@@ -23,6 +23,8 @@ import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
 import org.axonframework.samples.trader.api.users.UserAccount;
 import org.axonframework.samples.trader.api.users.UserId;
+import org.axonframework.samples.trader.query.users.UserView;
+import org.axonframework.samples.trader.query.users.UserViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -60,6 +62,8 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private CommandBus commandBus;
+    @Autowired
+    private UserViewRepository userViewRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -69,11 +73,12 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
-        FutureCallback<AuthenticateUserCommand, UserAccount> accountCallback = new FutureCallback<>();
-        UserId userId = new UserId(); // TODO replace this with the actual aggregate identifier
+        FutureCallback<AuthenticateUserCommand, Boolean> authenticatedCallback = new FutureCallback<>();
+        UserView user = userViewRepository.findByUsername(username);
+        UserId userId = new UserId(user.getIdentifier());
         AuthenticateUserCommand command = new AuthenticateUserCommand(userId, username, password.toCharArray());
         try {
-            commandBus.dispatch(new GenericCommandMessage<>(command), accountCallback);
+            commandBus.dispatch(new GenericCommandMessage<>(command), authenticatedCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before
             // the command is dispatched.
         } catch (JSR303ViolationException e) {
@@ -81,13 +86,11 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         }
         UserAccount account;
         try {
-            account = accountCallback.get();
+            account = authenticatedCallback.get() ? user : null;
             if (account == null) {
                 throw new BadCredentialsException("Invalid username and/or password");
             }
-        } catch (InterruptedException e) {
-            throw new AuthenticationServiceException("Credentials could not be verified", e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new AuthenticationServiceException("Credentials could not be verified", e);
         }
 
