@@ -68,6 +68,15 @@ public class CQRSInfrastructureConfig {
         return new CommandHandlerSubscriber();
     }
 
+    /**
+     * Ideally, this bean would be created by the axon-spring module automatically, by setting the
+     * {@link org.axonframework.spring.config.EnableAxon} on one of our configuration classes.
+     * This however throws 'interesting' lifecycle exceptions which didn't seem all that clear.
+     * In the interest of getting this application running again for the time being, I've resorted to using the
+     * {@link org.axonframework.config.Configuration} as shown below.
+     * If you are interested in other forms of setting up the configuration, the
+     * [Reference Guide](https://docs.axonframework.org/) would be an ideal place to start your investigation.
+     */
     @Bean
     public org.axonframework.config.Configuration configuration(CommandBus commandBus,
                                                                 EventStore eventStore,
