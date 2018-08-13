@@ -42,7 +42,7 @@ public class CompanyEventHandlerTest {
 
         CompanyView result = companyViewCaptor.getValue();
         assertNotNull(result);
-        assertEquals(expectedCompanyId.toString(), result.getIdentifier());
+        assertEquals(expectedCompanyId.getIdentifier(), result.getIdentifier());
         assertEquals(expectedCompanyName, result.getName());
         assertEquals(expectedCompanyValue, result.getValue());
         assertEquals(expectedAmountOfShares, result.getAmountOfShares());

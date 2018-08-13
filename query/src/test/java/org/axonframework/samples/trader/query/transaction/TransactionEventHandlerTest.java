@@ -52,7 +52,7 @@ public class TransactionEventHandlerTest {
 
     @Before
     public void setUp() {
-        when(orderBookViewRepository.findOne(orderBookIdentifier.toString())).thenReturn(createOrderBookEntry());
+        when(orderBookViewRepository.findOne(orderBookIdentifier.getIdentifier())).thenReturn(createOrderBookEntry());
 
         testSubject = new TransactionEventHandler(orderBookViewRepository, transactionViewRepository);
     }
@@ -86,17 +86,17 @@ public class TransactionEventHandlerTest {
     @Test
     public void handleSellTransactionCancelledEvent() {
         TransactionView transactionView = new TransactionView();
-        transactionView.setIdentifier(transactionIdentifier.toString());
+        transactionView.setIdentifier(transactionIdentifier.getIdentifier());
         transactionView.setAmountOfExecutedItems(0);
         transactionView.setPricePerItem(DEFAULT_ITEM_PRICE);
         transactionView.setState(STARTED);
         transactionView.setAmountOfItems(DEFAULT_TOTAL_ITEMS);
         transactionView.setCompanyName(DEFAULT_COMPANY_NAME);
-        transactionView.setOrderBookId(orderBookIdentifier.toString());
-        transactionView.setPortfolioId(portfolioIdentifier.toString());
+        transactionView.setOrderBookId(orderBookIdentifier.getIdentifier());
+        transactionView.setPortfolioId(portfolioIdentifier.getIdentifier());
         transactionView.setType(SELL);
 
-        when(transactionViewRepository.findOne(transactionIdentifier.toString())).thenReturn(transactionView);
+        when(transactionViewRepository.findOne(transactionIdentifier.getIdentifier())).thenReturn(transactionView);
 
         testSubject.on(new SellTransactionCancelledEvent(transactionIdentifier,
                                                          DEFAULT_TOTAL_ITEMS,
@@ -110,8 +110,8 @@ public class TransactionEventHandlerTest {
     private OrderBookView createOrderBookEntry() {
         OrderBookView orderBookView = new OrderBookView();
 
-        orderBookView.setIdentifier(orderBookIdentifier.toString());
-        orderBookView.setCompanyIdentifier(companyIdentifier.toString());
+        orderBookView.setIdentifier(orderBookIdentifier.getIdentifier());
+        orderBookView.setCompanyIdentifier(companyIdentifier.getIdentifier());
         orderBookView.setCompanyName(DEFAULT_COMPANY_NAME);
 
         return orderBookView;

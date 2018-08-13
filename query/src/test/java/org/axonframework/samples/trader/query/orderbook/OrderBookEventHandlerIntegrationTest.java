@@ -31,8 +31,8 @@ import org.axonframework.samples.trader.query.company.CompanyEventHandler;
 import org.axonframework.samples.trader.query.company.CompanyView;
 import org.axonframework.samples.trader.query.company.CompanyViewRepository;
 import org.axonframework.samples.trader.query.config.HsqlDbConfiguration;
-import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedQueryRepository;
+import org.axonframework.samples.trader.query.tradeexecuted.TradeExecutedView;
 import org.junit.*;
 import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,7 +190,7 @@ public class OrderBookEventHandlerIntegrationTest {
 
     private OrderBookView createOrderBook(CompanyView company) {
         OrderBookView orderBookView = new OrderBookView();
-        orderBookView.setIdentifier(orderBookId.toString());
+        orderBookView.setIdentifier(orderBookId.getIdentifier());
         orderBookView.setCompanyIdentifier(company.getIdentifier());
         orderBookView.setCompanyName(company.getName());
         orderBookRepository.save(orderBookView);
@@ -200,7 +200,7 @@ public class OrderBookEventHandlerIntegrationTest {
     private CompanyView createCompany() {
         CompanyId companyId = new CompanyId();
         CompanyView companyView = new CompanyView();
-        companyView.setIdentifier(companyId.toString());
+        companyView.setIdentifier(companyId.getIdentifier());
         companyView.setName("Test Company");
         companyView.setAmountOfShares(100000);
         companyView.setTradeStarted(true);

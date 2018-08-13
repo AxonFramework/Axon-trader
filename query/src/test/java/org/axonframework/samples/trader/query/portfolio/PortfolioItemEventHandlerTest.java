@@ -53,8 +53,8 @@ public class PortfolioItemEventHandlerTest {
 
     @Before
     public void setUp() {
-        when(orderBookViewRepository.findOne(itemId.toString())).thenReturn(createOrderBookEntry());
-        when(portfolioViewRepository.findOne(portfolioId.toString())).thenReturn(createPortfolioEntry());
+        when(orderBookViewRepository.findOne(itemId.getIdentifier())).thenReturn(createOrderBookEntry());
+        when(portfolioViewRepository.findOne(portfolioId.getIdentifier())).thenReturn(createPortfolioEntry());
 
         testSubject = new PortfolioItemEventHandler(portfolioViewRepository, orderBookViewRepository);
     }
@@ -64,7 +64,7 @@ public class PortfolioItemEventHandlerTest {
         testSubject.on(new ItemsAddedToPortfolioEvent(portfolioId, itemId, 100));
 
         verify(portfolioViewRepository).save(argThat(new PortfolioEntryMatcher(
-                itemId.toString(), 1, 2 * DEFAULT_AMOUNT_ITEMS, 1, DEFAULT_AMOUNT_ITEMS
+                itemId.getIdentifier(), 1, 2 * DEFAULT_AMOUNT_ITEMS, 1, DEFAULT_AMOUNT_ITEMS
         )));
     }
 
@@ -76,7 +76,7 @@ public class PortfolioItemEventHandlerTest {
                                                                      DEFAULT_AMOUNT_ITEMS));
 
         verify(portfolioViewRepository).save(argThat(new PortfolioEntryMatcher(
-                itemId.toString(), 1, 2 * DEFAULT_AMOUNT_ITEMS, 0, 0
+                itemId.getIdentifier(), 1, 2 * DEFAULT_AMOUNT_ITEMS, 0, 0
         )));
     }
 
@@ -89,7 +89,7 @@ public class PortfolioItemEventHandlerTest {
         testSubject.on(new ItemReservationConfirmedForPortfolioEvent(portfolioId, itemId, transactionId, 50));
 
         verify(portfolioViewRepository).save(argThat(new PortfolioEntryMatcher(
-                itemId.toString(), 1, DEFAULT_AMOUNT_ITEMS - 50, 1, DEFAULT_AMOUNT_ITEMS - 50
+                itemId.getIdentifier(), 1, DEFAULT_AMOUNT_ITEMS - 50, 1, DEFAULT_AMOUNT_ITEMS - 50
         )));
     }
 
@@ -98,14 +98,14 @@ public class PortfolioItemEventHandlerTest {
         testSubject.on(new ItemsReservedEvent(portfolioId, itemId, transactionId, DEFAULT_AMOUNT_ITEMS));
 
         verify(portfolioViewRepository).save(argThat(new PortfolioEntryMatcher(
-                itemId.toString(), 1, DEFAULT_AMOUNT_ITEMS, 1, 2 * DEFAULT_AMOUNT_ITEMS
+                itemId.getIdentifier(), 1, DEFAULT_AMOUNT_ITEMS, 1, 2 * DEFAULT_AMOUNT_ITEMS
         )));
     }
 
     private PortfolioView createPortfolioEntry() {
         PortfolioView portfolioView = new PortfolioView();
-        portfolioView.setIdentifier(portfolioId.toString());
-        portfolioView.setUserIdentifier(userId.toString());
+        portfolioView.setIdentifier(portfolioId.getIdentifier());
+        portfolioView.setUserIdentifier(userId.getIdentifier());
 
         portfolioView.addItemInPossession(createItemEntry(itemId, companyId));
         portfolioView.addReservedItem(createItemEntry(itemId, companyId));
@@ -116,16 +116,16 @@ public class PortfolioItemEventHandlerTest {
 
     private OrderBookView createOrderBookEntry() {
         OrderBookView orderBookView = new OrderBookView();
-        orderBookView.setIdentifier(itemId.toString());
-        orderBookView.setCompanyIdentifier(companyId.toString());
+        orderBookView.setIdentifier(itemId.getIdentifier());
+        orderBookView.setCompanyIdentifier(companyId.getIdentifier());
         orderBookView.setCompanyName("Test Company");
         return orderBookView;
     }
 
     private ItemEntry createItemEntry(OrderBookId itemIdentifier, CompanyId companyIdentifier) {
         ItemEntry itemInPossession = new ItemEntry();
-        itemInPossession.setIdentifier(itemIdentifier.toString());
-        itemInPossession.setCompanyIdentifier(companyIdentifier.toString());
+        itemInPossession.setIdentifier(itemIdentifier.getIdentifier());
+        itemInPossession.setCompanyIdentifier(companyIdentifier.getIdentifier());
         itemInPossession.setCompanyName("Test company");
         itemInPossession.setAmount(DEFAULT_AMOUNT_ITEMS);
         return itemInPossession;

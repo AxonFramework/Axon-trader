@@ -38,7 +38,7 @@ public class UserEventHandlerTest {
 
         UserView result = userViewCaptor.getValue();
         assertNotNull(result);
-        assertEquals(expectedUserId.toString(), result.getUserId());
+        assertEquals(expectedUserId.getIdentifier(), result.getUserId());
         assertEquals(expectedName, result.getName());
         assertEquals(expectedUserName, result.getUserName());
     }
