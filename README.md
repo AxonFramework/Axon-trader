@@ -17,16 +17,13 @@ Initial setup
 - Make sure you have java installed
 http://www.java.com/download/
 
-- Make sure you have maven installed
-http://maven.apache.org/download.html#Installation
-
 Running the sample
 ------------------
 - First you need to download the source code, if you are reading this file on your local machine you already have downloaded the source code. If you are on the main page of the Github project, you can easily find a url to clone the repository or to download a zip with all the sources.
 
 * Maven
 - Step into the main folder of the project
-> mvn tomcat7:run
+> ./mvnw tomcat7:run
 - Browse to http://localhost:8080 and you should see the user accounts that you can use to login.
 (You can always refresh the data by calling /data/init on the application)
 
