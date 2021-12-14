@@ -1,11 +1,12 @@
-### Note to user
-We from the AxonFramework Team are currently undertaking a rigorous adjustment to this application to ensure that you will have an as up-to-date set of standards on how to set up an Axon Framework application. 
-Due too some circumstances, these are live changes for everybody to see. This does mean that the master branch might be broken at times. 
-We are extremely sorry for any inconvenience caused through this and are remediating the issue as soon as possible. Kind regards, the AxonFramework Team.
+# Archived project
 
-*Note Update:* 
-Any issues which caused the application to not be able to run/build/start-up should currently be resolved.
-If any are still present, please add an issue to the issues list so that we can prioritize and resolve the problem at hand.
+This project has been discontinued and is not being updated to latest standards anymore. There are several sample applications around that show the usage of Axon Framework that are kept up-to-date continuously.
+
+A few examples (at the time of writing):
+- https://github.com/AxonIQ/hotel-demo
+- https://github.com/fraktalio/restaurant-demo
+- https://github.com/abuijze/bike-rental-demo
+- https://github.com/abuijze/bike-rental-extended
 
 ---
 
